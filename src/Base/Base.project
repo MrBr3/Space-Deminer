@@ -20,6 +20,10 @@
     <File Name="strings.cpp"/>
     <File Name="strings.hpp"/>
     <File Name="templates.hpp"/>
+    <VirtualDirectory Name="math">
+      <File Name="math/vector3.hpp"/>
+      <File Name="math/vector2.hpp"/>
+    </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>
   <VirtualDirectory Name="external">

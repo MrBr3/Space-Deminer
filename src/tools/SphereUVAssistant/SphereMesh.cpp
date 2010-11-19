@@ -19,6 +19,23 @@
 
 #include "./MainWindow.hpp"
 
+namespace Private_SphereMesh_
+{
+  class Circle
+  {
+  private:
+    Vector3* _vertices;
+    gsize _n_vertices;
+
+  public:
+
+    const Vector3& point(gsize i)const{return _vertices[i%_n_vertices];}
+
+    Circle(gsize n_vertices);
+    ~Circle()throw();
+  };
+}
+
 SphereMesh::SphereMesh()
 {
   _vertex_buffer_triangles  = 0;
@@ -91,4 +108,28 @@ void SphereMesh::deinit()
 void SphereMesh::set_segment_division(gint subdiv)
 {
   deinit();
+}
+
+namespace Private_SphereMesh_
+{
+  Circle::Circle(gsize n_vertices)
+  {
+    g_assert(n_vertices>0);
+
+    _n_vertices = n_vertices;
+    _vertices = new Vector3[_n_vertices];
+
+    for(gsize i=0; i<_n_vertices; ++i)
+    {
+      //_vertices[i].x  = cos();
+      //_vertices[i].x  = sin();
+      _vertices[i].z  = 0.f;
+    }
+  }
+
+  Circle::~Circle()throw()
+  {
+    g_assert(_vertices);
+    delete[] _vertices;
+  }
 }

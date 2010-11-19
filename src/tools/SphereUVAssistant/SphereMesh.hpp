@@ -27,6 +27,18 @@
  * */
 class SphereMesh : public Refable
 {
+public:
+  class Polygon
+  {
+  public:
+    Vector3 a,b,c;
+  };
+  class UV
+  {
+  public:
+    Vector2 a,b,c;
+  };
+
 private:
   bool _use_warped_uv;
 
