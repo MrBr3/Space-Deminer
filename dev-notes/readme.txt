@@ -1,0 +1,14 @@
+The project begun 2010-07-26
+
+|--<art> hier kommt alles rein, was mit der kust zu tun hat,
+| aber nicht geliefert wird, also zB die ganze artworks und
+| *.blender files
+|
+|--<bin> hierhin kommen die ausführbaren dateien rein
+|--<bin-d> die debugfähigen ausführbaren dateien
+|--<devnotes> todo liste
+|--<obj> und <obj-d> die objektdateien
+|--<share> die Dateien, die nichtausführbar sind, aber
+| mitgeliefert werden sollten - also texturen, hintergründe,
+| sounds...
+|--<src> nur der Quelltext (das was ich dir geschick hab')

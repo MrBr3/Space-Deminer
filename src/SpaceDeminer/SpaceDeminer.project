@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeLite_Project Name="SpaceDeminer" InternalType="Console">
+  <Description/>
+  <Dependencies/>
+  <VirtualDirectory Name="src">
+    <VirtualDirectory Name="ui">
+      <File Name="ui/main-window.hpp"/>
+      <File Name="ui/menu-alignment.cpp"/>
+      <File Name="ui/menu-alignment.hpp"/>
+      <File Name="ui/menu-frame.hpp"/>
+      <File Name="ui/menu-page.hpp"/>
+      <File Name="ui/main-window.cpp"/>
+      <File Name="ui/menu-back.cpp"/>
+      <File Name="ui/menu-back.hpp"/>
+      <File Name="ui/menu-frame.cpp"/>
+      <File Name="ui/menu-page.cpp"/>
+      <File Name="ui/menu.hpp"/>
+      <File Name="ui/menu.cpp"/>
+      <VirtualDirectory Name="menu-pages">
+        <File Name="ui/menu-pages/highscore-page.cpp"/>
+        <File Name="ui/menu-pages/main-page.cpp"/>
+        <File Name="ui/menu-pages/quit-page.cpp"/>
+        <File Name="ui/menu-pages/options-page.cpp"/>
+      </VirtualDirectory>
+      <VirtualDirectory Name="framework">
+        <File Name="ui/framework.hpp"/>
+        <File Name="ui/framework/engine.hpp"/>
+        <File Name="ui/framework/theme.hpp"/>
+        <File Name="ui/framework/widget.hpp"/>
+        <VirtualDirectory Name="widgets">
+          <File Name="ui/framework/widgets/bin.hpp"/>
+          <File Name="ui/framework/widgets/container.hpp"/>
+          <File Name="ui/framework/widgets/alignment.hpp"/>
+          <File Name="ui/framework/widgets/box.hpp"/>
+          <File Name="ui/framework/widgets/buttonbox.hpp"/>
+          <File Name="ui/framework/widgets/notebook.hpp"/>
+          <File Name="ui/framework/widgets/scrolledwindow.hpp"/>
+          <File Name="ui/framework/widgets/viewport.hpp"/>
+          <File Name="ui/framework/widgets/scrollbar.hpp"/>
+          <File Name="ui/framework/widgets/separator.hpp"/>
+          <File Name="ui/framework/widgets/treeview.hpp"/>
+          <File Name="ui/framework/widgets/checkbutton.hpp"/>
+          <File Name="ui/framework/widgets/button.hpp"/>
+          <File Name="ui/framework/widgets/label.hpp"/>
+          <File Name="ui/framework/widgets/radiobutton.hpp"/>
+          <File Name="ui/framework/widgets/combobox.hpp"/>
+          <File Name="ui/framework/widgets/entry.hpp"/>
+          <File Name="ui/framework/widgets/spinbutton.hpp"/>
+          <File Name="ui/framework/widgets/frame.hpp"/>
+          <File Name="ui/framework/widgets/misc.hpp"/>
+          <File Name="ui/framework/widgets/paned.hpp"/>
+          <File Name="ui/framework/widgets/imagewidget.hpp"/>
+          <File Name="ui/framework/widgets/bin.cpp"/>
+          <File Name="ui/framework/widgets/alignment.cpp"/>
+          <File Name="ui/framework/widgets/box.cpp"/>
+          <File Name="ui/framework/widgets/button.cpp"/>
+          <File Name="ui/framework/widgets/buttonbox.cpp"/>
+          <File Name="ui/framework/widgets/combobox.cpp"/>
+          <File Name="ui/framework/widgets/container.cpp"/>
+          <File Name="ui/framework/widgets/entry.cpp"/>
+          <File Name="ui/framework/widgets/frame.cpp"/>
+          <File Name="ui/framework/widgets/imagewidget.cpp"/>
+          <File Name="ui/framework/widgets/label.cpp"/>
+          <File Name="ui/framework/widgets/misc.cpp"/>
+          <File Name="ui/framework/widgets/notebook.cpp"/>
+          <File Name="ui/framework/widgets/paned.cpp"/>
+          <File Name="ui/framework/widgets/radiobutton.cpp"/>
+          <File Name="ui/framework/widgets/scrollbar.cpp"/>
+          <File Name="ui/framework/widgets/scrolledwindow.cpp"/>
+          <File Name="ui/framework/widgets/separator.cpp"/>
+          <File Name="ui/framework/widgets/spinbutton.cpp"/>
+          <File Name="ui/framework/widgets/treeview.cpp"/>
+          <File Name="ui/framework/widgets/viewport.cpp"/>
+          <File Name="ui/framework/widgets/checkbutton.cpp"/>
+          <File Name="ui/framework/widgets/dummy-widget.cpp"/>
+          <File Name="ui/framework/widgets/dummy-widget.hpp"/>
+          <File Name="ui/framework/widgets/layout.cpp"/>
+          <File Name="ui/framework/widgets/layout.hpp"/>
+        </VirtualDirectory>
+        <File Name="ui/framework/window.hpp"/>
+        <File Name="ui/framework/enums.hpp"/>
+        <File Name="ui/framework/resources.hpp"/>
+        <File Name="ui/framework/widget.cpp"/>
+        <File Name="ui/framework/engine-opengl.cpp"/>
+        <File Name="ui/framework/image.hpp"/>
+        <File Name="ui/framework/paint-tool.cpp"/>
+        <File Name="ui/framework/engine.cpp"/>
+        <File Name="ui/framework/window.cpp"/>
+        <File Name="ui/framework/font.hpp"/>
+        <File Name="ui/framework/dummy-theme.cpp"/>
+        <File Name="ui/framework/theme.cpp"/>
+        <File Name="ui/framework/font.cpp"/>
+        <File Name="ui/framework/segmentedimage.hpp"/>
+        <File Name="ui/framework/segmentedimage.cpp"/>
+      </VirtualDirectory>
+      <File Name="ui/opengl-area.cpp"/>
+      <File Name="ui/gui-test.cpp"/>
+      <File Name="ui/dark-theme.hpp"/>
+      <File Name="ui/dark-theme.cpp"/>
+      <File Name="main.cpp"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="game">
+      <File Name="game/difficulty.hpp"/>
+    </VirtualDirectory>
+    <File Name="options.hpp"/>
+    <File Name="options.cpp"/>
+  </VirtualDirectory>
+  <Dependencies Name="Debug">
+    <Project Name="Base"/>
+  </Dependencies>
+  <Dependencies Name="Release">
+    <Project Name="Base"/>
+  </Dependencies>
+  <Settings Type="Executable">
+    <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-g -DNDEBUG" Required="yes" PreCompiledHeader="">
+        <IncludePath Value="."/>
+      </Compiler>
+      <Linker Options="" Required="yes">
+        <LibraryPath Value="./../../lib-d"/>
+      </Linker>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="./../../bin-d/space-deminer" IntermediateDirectory="./../../obj-d/space-deminer" Command="./../../bin-d/space-deminer" CommandArguments="-ovideo-fullscreen=false" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
+      <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;"/>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <RebuildCommand/>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+    </Configuration>
+    <Configuration Name="Release" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="" Required="yes" PreCompiledHeader="">
+        <IncludePath Value="."/>
+      </Compiler>
+      <Linker Options="-O2" Required="yes">
+        <LibraryPath Value="./../../lib"/>
+      </Linker>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="./../../bin/space-deminer" IntermediateDirectory="./../../obj/space-deminer" Command="./../../bin/space-deminer" CommandArguments="-ovideo-fullscreen=true" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
+      <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;"/>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <RebuildCommand/>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+    </Configuration>
+    <GlobalSettings>
+      <Compiler Options="$$(pkg-config --cflags gtkmm-2.4 --cflags gtkglextmm-1.2)">
+        <IncludePath Value="./src"/>
+        <IncludePath Value="./../include"/>
+      </Compiler>
+      <Linker Options="$$(pkg-config --libs gtkmm-2.4 --libs gtkglextmm-1.2) -lbase">
+        <LibraryPath Value="."/>
+      </Linker>
+      <ResourceCompiler Options=""/>
+    </GlobalSettings>
+  </Settings>
+</CodeLite_Project>

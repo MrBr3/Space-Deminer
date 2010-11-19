@@ -1,0 +1,83 @@
+Gameplay:
+  Space Invader artig
+  Gegner sind Minen/Drohnen
+
+  Beleuchtung:
+    mehrere Bilder, die additiv geblendet werden, je nach anzahl und position der Lichter
+
+  Spielerraumschiff:
+    keine Leben - wenn schiff kaputt -- game over
+    Energie - gebraucht für viele mods
+    Intigrität: wenn weg explodoert das schiff
+
+  Tutorial?
+    Levelgruppe:
+      > ein nichtschießender Gegner
+      > ein schießender Gegner
+      > mehrere schießende Gegner > Geld
+    Neue Waffen + Defensivding
+      > ganz viele schießende genger
+      > ein paar zielende + schießende Gegner
+      > ein paar zielende + schnell schießende Gegner
+      > ein paar zielende + schnell schießende Gegner + Boss
+
+  verzerstörung von Gegner bekommt man Geld
+    in Form von Dollar, dass aufgesammelt werden muss
+    bei jedem 5en oder so oder wenn bestimmte Zeit der Zerstörung der letzten 5 unterschritten wird
+    zum erwerb von "Superwaffendefensivzeug" sollte man schon mehrere Levelgruppen sparen müssen
+   
+  mehrere level zu einer Gruppe zusammengefasst
+    Zwischen Levelgruppen Werkstatt
+      man zusätzliche Module kaufen kann oder abmontieren kann (die man in einer Werkstatt jederzeit wieder billig/kostenlos? anmontieren kann)
+        Module:
+          Waffen:
+            Gravitronenstrahler (brauchen sehr viel energie)
+            Torpedos (begrenzte Zahl)
+            EMPTorpedos (begrenzte Zahl)
+            Plasmakanonen (brauchen energie)
+            zweiter schusslauf ()
+            schusslaufkühler (verschnellert schusslaufwaffenfrequenz)
+            EMP (lähmt minen, die nach beendigung des levels automatisch eingesammelt und kostenpflichtig umprogrammiert werden können)
+            [standart] ein lauf
+          Defensiv (Schutz am Schiff):
+            Schutzschild (brauchen energie, schützen vor allem, außer vor gravitronenstrahlen)
+            Intigritätsverstärker (brauchen energie, schützen 100% vor gravitronenstralen/strukturbelastung, dämmt hitze)
+            Keramikfaser Panzerung (dämmt vor hitze sehr stark und dämmt intigritätsbelastung einbissle)
+            Kohlefaserstrukturverstärkung (dämmt hitze einbissle und strukturschäden mittel)
+            [standart] außenhülle
+          Defensiv (Zerstörung von gegnerischen Projektilen/verhinderung von Zielerfassung):
+            Kraftfeldimpuls -- sendet ein impuls, was (fast) alle Waffen zerstört - sehr teuer - Anzahl auf eins pro gekaufte batterie begrenzt
+            Täuschkörper
+            Störsender
+          Autoreparatur
+            Nanokit (brauchen viel strom)
+            Roboterkit 
+            Replikator (verschnellert reparatur/braucht sehr viel strom)
+            rohstoff sammler  (füllt lager auf)
+            zusätzlicher rohstofflager (verschnellert reparatur)
+            [standart] nix
+          Energie:
+            Nullpunktreaktor (unendlich Energie!)
+            Antimateriereaktor (müssen aufgetankt werden)
+            Fusionsreaktor (müssen aufgetankt werden)
+            wasserstoffsammler (füllt fusionsreaktortank/deuteriumtank laaangsam auf)
+            zusätzlicher Kondensator (lädt sich langsam auf und kann für kurze Zeit viel Energie zur verfügung stellen)
+            [standart] generator (mit wärmerückkopplung vom Raketenantrieb)
+  Cheats
+    wenn cheat "rich man" oder was lustiges aktiviert, dann verzehn/ver50ig facht sich der Lohn - dafür extra highscore
+
+  Highscore
+    nur drei wichtigsten highscores im Highscore Menüpunkt sichtbar, andere extra anzeigbar
+    wenn Spiel zu ende gespielt, wird das spiel von vorne gespielt mit allen Modulen, dann aber auf extra Highscores:
+     je ein  Highscore für die ersten 5 male durchgespielt (und je pro Schwierigkeitsstufe) (also zusätzlich 5*3 Highscores)
+    Highscores verschlüsselt abspeichern?
+
+  Homepage?
+    veröffentlichung von Höchstleistung? (nur verschlüsselt angenommen)
+
+UI
+  Menu:
+    Intern:
+      C++ Klasssen an gtkmm angelehnt
+    Hintergründe, die zufällig ausgewählt werden im "boah" Stil
+    
