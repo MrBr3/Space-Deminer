@@ -131,3 +131,7 @@
 /src/SpaceDeminer/SpaceDeminer.mk
 /src/tools/SphereUVAssistant/SphereUVAssistant.mk
 /SpaceDeminer.workspace.session
+/art/scenes/only-space/mixed-scene.001.blend1
+/art/scenes/only-space/mixed-scene.001.blend2
+/obj-d/sphere-uv-assistant/opengl.o
+/obj-d/sphere-uv-assistant/opengl.o.d

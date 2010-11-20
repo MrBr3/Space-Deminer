@@ -41,6 +41,7 @@ public:
 
 private:
   bool _use_warped_uv;
+  bool _initialized;
 
   gsize _n_triangles;
 
@@ -54,6 +55,9 @@ private:
   GLuint _vertex_buffer_uv_rectangular;
 
 public:
+
+  void init(gsize latitude_segments=42);
+
   /** \brief Gets, whether the UV-Mesh ist warped.
    * */
   bool get_use_warped_uv()const{return _use_warped_uv;}
@@ -67,10 +71,10 @@ public:
    *
    * The default value ist \todo set default value here
    *
-   * \param subdiv the number of latitude subdivisions - the longitude subdivision will be simply twice as
+   * \param subdiv the number of latitude segments - the number of longitude segments will be simply twice as
    *        large - values smaller than 12 are illegal and will be interpreted as 12.
    * */
-  void set_segment_division(gint subdiv);
+  void set_segment_division(gsize n_segments);
 
   /** \brief Signal getting called, when something on the sphere has changed and the sphere needs to be redrawn
    * */

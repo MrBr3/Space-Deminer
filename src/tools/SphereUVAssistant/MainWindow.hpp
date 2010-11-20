@@ -19,8 +19,7 @@
 
 #include <base.hpp>
 #include <gtkmm.h>
-#include <GL/glew.h>
-#include <gtkglmm.h>
+#include "opengl.hpp"
 
 #include "SphereMesh.hpp"
 #include "3DView.hpp"

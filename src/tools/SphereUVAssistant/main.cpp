@@ -24,7 +24,8 @@
 int main(int argc, char **argv)
 {
   Gtk::Main kit(argc, argv);
-  Gtk::GL::init(argc, argv);
+
+  init_opengl_stuff(argc, argv);
 
   {
     MainWindow main_window;

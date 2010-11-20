@@ -27,6 +27,8 @@
       <File Name="Options.cpp"/>
       <File Name="Options.hpp"/>
     </VirtualDirectory>
+    <File Name="opengl.hpp"/>
+    <File Name="opengl.cpp"/>
   </VirtualDirectory>
   <Dependencies Name="Debug">
     <Project Name="Base"/>

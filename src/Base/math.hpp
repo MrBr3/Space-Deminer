@@ -24,6 +24,11 @@
 
 #include <math.h>
 
+#include "./math/vector2.hpp"
+#include "./math/vector3.hpp"
+
+#define PI2 (G_PI*2.0)
+
 /** Gets the integer parte of the binear logarithm of n.
  * */
 inline guint blog_int(guint n)

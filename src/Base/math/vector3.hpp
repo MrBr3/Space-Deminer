@@ -24,6 +24,101 @@ class Vector3
 {
 public:
   gfloat x, y, z;
+
+  Vector3(gfloat x_, gfloat y_, gfloat z_)throw()
+  {
+    x = x_;
+    y = y_;
+    z = z_;
+  }
+
+  /** \brief Constructor setting all components to 0
+   * */
+  Vector3()throw()
+  {
+    x = 0.f;
+    y = 0.f;
+    z = 0.f;
+  }
+
+  Vector3(const Vector3& other)throw()
+  {
+    x = other.x;
+    y = other.y;
+    z = other.z;
+  }
+
+  void set(gfloat all)throw()
+  {
+    x=y=z=all;
+  }
+
+  void set(gfloat x_, gfloat y_, gfloat z_)throw()
+  {
+    x = x_;
+    y = y_;
+    z = z_;
+  }
+
+  void set(const Vector3& other)throw()
+  {
+    x = other.x;
+    y = other.y;
+    z = other.z;
+  }
+
+  Vector3 operator*(gfloat a)const throw(){return Vector3(x*a, y*a, z*a);}
+
+  /** \brief Gets the length of the vector squared.
+   *
+   * \return The length of the vector squared
+   * */
+  gfloat square_length()const throw()
+  {
+    return x*x + y*y + z*z;
+  }
+
+  /** \brief Gets the length of the vector.
+   *
+   * \return The length of the vector
+   * */
+  gfloat length()const throw()
+  {
+    return sqrt(square_length());
+  }
+
+  /** \brief Multiplies each component of the Vector with a.
+   *
+   * \param a a real number
+   *
+   * \return A reference to the Vector
+   * */
+   Vector3& operator*=(gfloat a) throw()
+   {
+     x  *= a;
+     y  *= a;
+     z  *= a;
+     return *this;
+   }
+
+  /** \brief Sets the Length of the Vector to 1.
+   *
+   * A vector without length won't be touched.
+   * */
+  void normalize()throw()
+  {
+    if(x!=0.f || y!=0.f || z!=0.f)
+    {
+      gfloat tmp  = length();
+      g_assert(tmp!=0.f);
+
+      tmp = 1.f/tmp;
+
+      x *= tmp;
+      y *= tmp;
+      z *= tmp;
+    }
+  }
 };
 
 #endif

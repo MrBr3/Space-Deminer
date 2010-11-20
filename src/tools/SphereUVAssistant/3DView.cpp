@@ -56,6 +56,8 @@ void View3D::on_realize()
 
   gl_drawable->gl_begin(get_gl_context());
 
+  sphere_mesh.init();
+
   _gl_initialized = true;
 }
 
@@ -77,6 +79,8 @@ bool View3D::on_expose_event(GdkEventExpose* event)
                0.f);
 
   glClear(GL_COLOR_BUFFER_BIT);
+
+  sphere_mesh.render();
 
   gl_drawable->swap_buffers();
   return true;
