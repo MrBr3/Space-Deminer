@@ -23,6 +23,7 @@
 #include "./refable.hpp"
 
 /**
+* \todo Decide, whether this class should be able to use RefPtrs.
 *
 * \note This class does NOT have a virtual destructor!
 */
@@ -76,10 +77,10 @@ public:
 
 public:
   t_obj* operator->()const{return m_object;}
-  //t_obj& operator*()const{return *m_object;} TODO: check, whether this is a good idea
+  t_obj& operator*()const{return *m_object;}
 
-  //operator       t_obj*()     {return m_object;} TODO: check, whether this is a good idea
-  //operator const t_obj*()const{return m_object;} TODO: check, whether this is a good idea
+  operator       t_obj*()     {return m_object;}
+  operator const t_obj*()const{return m_object;}
 
   operator bool()const{return m_object;}
   bool operator!()const{return !m_object;}
@@ -90,22 +91,26 @@ public:
   bool operator != (      t_obj* ol)const{return ol != m_object;}
   bool operator == (const t_obj* ol)const{return ol == m_object;}
   bool operator != (const t_obj* ol)const{return ol != m_object;}
-  bool operator == (const RefPtr<t_obj>& ol)const{return ol.m_object == ol;}
-  bool operator != (const RefPtr<t_obj>& ol)const{return ol.m_object != ol;}
+  bool operator == (const Glib::RefPtr<t_obj>& ol)const{return ol.m_object == ol;}
+  bool operator != (const Glib::RefPtr<t_obj>& ol)const{return ol.m_object != ol;}
 
 /*template<class t_obj2>bool operator == (const t_obj2* ol)const{return ol == m_object;}
   template<class t_obj2>bool operator != (const t_obj2* ol)const{return ol != m_object;}*/
   template<class t_obj2>bool operator == (t_obj2* ol)const{return ol == m_object;}
   template<class t_obj2>bool operator != (t_obj2* ol)const{return ol != m_object;}
-  template<class t_obj2>bool operator == (const RefPtr<t_obj>& ol)const{return ol == m_object;}
-  template<class t_obj2>bool operator != (const RefPtr<t_obj>& ol)const{return ol != m_object;}
+  //template<class t_obj2>bool operator == (const Glib::RefPtr<t_obj>& ol)const{return ol == m_object;}
+  //template<class t_obj2>bool operator != (const Glib::RefPtr<t_obj>& ol)const{return ol != m_object;}
 
-  operator=(const RefPtr<t_obj>& rptr){set_obj(rptr.operator->();}
-  ObsLink(const RefPtr<t_obj>& rptr)
+  /*ObsLink<t_obj>& operator=(const Glib::RefPtr<t_obj>& rptr)
+  {
+    set_obj(rptr.operator->());
+    return *this;
+  }
+  ObsLink(const Glib::RefPtr<t_obj>& rptr)
   {
     m_object  = nullptr;
-    set_obj(rptr.operator->();
-  }
+    set_obj(rptr.operator->());
+  }*/
 
 public:
   ObsLink(t_obj* o)
