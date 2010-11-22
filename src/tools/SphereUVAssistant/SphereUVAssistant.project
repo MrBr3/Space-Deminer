@@ -22,6 +22,9 @@
       <File Name="Image.hpp"/>
       <File Name="File.cpp"/>
       <File Name="File.hpp"/>
+      <File Name="Sphere.hpp"/>
+      <File Name="Sphere.cpp"/>
+      <File Name="Model.hpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Both">
       <File Name="Options.cpp"/>

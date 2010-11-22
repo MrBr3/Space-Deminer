@@ -1,5 +1,5 @@
 /* Space Deminer is a small 2D Arcade Game. Your task ist to eliminate
- * intelligent Mines created in the last galactic war.
+ * intelligent Mines created in the past galactic war.
  *
  * Copyright (C) 2010 the Space Deminer Development Team
  *
@@ -100,6 +100,11 @@ void SphereMesh::render()
 {
   if(!_initialized)
     return;
+  /*glBegin(GL_TRIANGLES);
+    glVertex3f(0.f, 1.f, 0.f);
+    glVertex3f(-1.f, -1.f, 0.f);
+    glVertex3f(1.f, -1.f, 0.f);
+  glEnd();*/
 
   g_assert(_vertex_buffer_triangles);
   g_assert(_vertex_buffer_normals);
@@ -123,7 +128,7 @@ void SphereMesh::render()
     glBindBufferARB(GL_ARRAY_BUFFER_ARB,_vertex_buffer_uv_rectangular);
   glTexCoordPointer(2,GL_FLOAT,0,0);
 
-  glDrawArrays(GL_TRIANGLES,0,_n_triangles*3);
+  glDrawArrays(GL_TRIANGLES, 0, _n_triangles*3);
 
   glDisableClientState(GL_VERTEX_ARRAY);
   glDisableClientState(GL_NORMAL_ARRAY);
@@ -166,7 +171,7 @@ void SphereMesh::set_segment_division(gsize n_segments)
 
   gfloat a  = 0.f;
   gfloat ia  = G_PI/gfloat(n_latitude_segments);
-  gfloat min_a  = ia - ia*0.01f;
+  gfloat min_a  = ia*0.5f;
   gfloat max_a  = G_PI - min_a;
 
   circle.create_polgons_cap(0.f, min_a);
@@ -225,7 +230,7 @@ namespace Private_SphereMesh_
     for(gsize i=0; i<_n_circle_vertices; ++i)
     {
       _circle_vertices[i].x  = cos(a);
-      _circle_vertices[i].x  = sin(a);
+      _circle_vertices[i].y  = sin(a);
       _circle_vertices[i].z  = 0.f;
 
       a += ia;
@@ -281,15 +286,15 @@ namespace Private_SphereMesh_
       {
         Vector3 lower_circle_a = point(i);
         Vector3 lower_circle_b = point(i+1);
-        lower_circle_a.z = lower_z;
-        lower_circle_b.z = lower_z;
 
         lower_circle_a  *= lower_radius;
         lower_circle_b  *= lower_radius;
+        lower_circle_a.z = lower_z;
+        lower_circle_b.z = lower_z;
 
-        curr_triangle().a.set(0.f, 0.f, 1.f);
+        curr_triangle().a.set(lower_circle_b);
         curr_triangle().b.set(lower_circle_a);
-        curr_triangle().c.set(lower_circle_b);
+        curr_triangle().c.set(0.f, 0.f, 1.f);
 
         curr_rect_uv().a.set(uv_x+0.5f*i_uv_x,
                              0.f);
@@ -320,7 +325,7 @@ namespace Private_SphereMesh_
         higher_circle_a  *= higher_radius;
         higher_circle_b  *= higher_radius;
         higher_circle_a.z = higher_z;
-        higher_circle_a.z = higher_z;
+        higher_circle_b.z = higher_z;
 
         curr_triangle().a.set(higher_circle_a);
         curr_triangle().b.set(higher_circle_b);
@@ -405,7 +410,7 @@ namespace Private_SphereMesh_
     delete (int*)0; // Just to ensure this will work
     delete[] (int*)0; // Just to ensure this will work
 
-    g_assert(i_triangle==n_triangles);
+    //g_assert(i_triangle==n_triangles);
 
     delete[] _circle_vertices;
 

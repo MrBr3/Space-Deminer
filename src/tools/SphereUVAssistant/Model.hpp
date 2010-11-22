@@ -17,23 +17,8 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-class View3D : public Gtk::GL::DrawingArea
-{
-  bool _gl_initialized;
-public:
+#include <base.hpp>
+#include <gtkmm.h>
+#include "opengl.hpp"
 
-  View3D();
-  ~View3D()throw();
-
-  void deinit();
-
-  void on_realize();
-  bool on_expose_event(GdkEventExpose* event);
-  void on_size_allocate(Gtk::Allocation& allocation);
-
-  void invalidate();
-
-  Glib::RefPtr<Sphere> sphere;
-
-  SphereMesh sphere_mesh;
-};
+#include "./Sphere.hpp"
