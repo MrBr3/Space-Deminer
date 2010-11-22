@@ -1,5 +1,5 @@
 /* Space Deminer is a small 2D Arcade Game. Your task ist to eliminate
- * intelligent Mines created in the last galactic war.
+ * intelligent Mines created in the past galactic war.
  *
  * Copyright (C) 2010 the Space Deminer Development Team
  *
@@ -17,9 +17,7 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <base.hpp>
-#include <gtkmm.h>
-#include "opengl.hpp"
+#include "./Model.hpp"
 
 #include "SphereMesh.hpp"
 #include "3DView.hpp"
