@@ -20,6 +20,13 @@
 class View3D : public Gtk::GL::DrawingArea
 {
   bool _gl_initialized;
+
+  bool _rotating_with_mouse;
+  bool using_mouse()const throw()
+  {
+    return _rotating_with_mouse;
+  }
+  int mouse_drag_start_x, mouse_drag_start_y;
 public:
 
   View3D();
@@ -30,6 +37,11 @@ public:
   void on_realize();
   bool on_expose_event(GdkEventExpose* event);
   void on_size_allocate(Gtk::Allocation& allocation);
+
+  bool on_scroll_event(GdkEventScroll* event);
+  bool on_button_press_event(GdkEventButton* event);
+  bool on_button_release_event(GdkEventButton* event);
+  bool on_motion_notify_event(GdkEventMotion* event);
 
   void invalidate();
 

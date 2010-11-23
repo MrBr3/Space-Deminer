@@ -78,7 +78,6 @@ SphereMesh::SphereMesh()
 
   _n_triangles  = 0;
 
-  _use_warped_uv  = false;
   _initialized  = false;
 }
 
@@ -96,15 +95,10 @@ SphereMesh::~SphereMesh()throw()
   deinit();
 }
 
-void SphereMesh::render()
+void SphereMesh::render(bool use_warped_uv)
 {
   if(!_initialized)
     return;
-  /*glBegin(GL_TRIANGLES);
-    glVertex3f(0.f, 1.f, 0.f);
-    glVertex3f(-1.f, -1.f, 0.f);
-    glVertex3f(1.f, -1.f, 0.f);
-  glEnd();*/
 
   g_assert(_vertex_buffer_triangles);
   g_assert(_vertex_buffer_normals);
@@ -122,7 +116,7 @@ void SphereMesh::render()
 
   glEnableClientState(GL_TEXTURE_COORD_ARRAY);
   glClientActiveTextureARB(GL_TEXTURE0_ARB+0);
-  if(_use_warped_uv)
+  if(use_warped_uv)
     glBindBufferARB(GL_ARRAY_BUFFER_ARB,_vertex_buffer_uv_warped);
   else
     glBindBufferARB(GL_ARRAY_BUFFER_ARB,_vertex_buffer_uv_rectangular);
@@ -171,7 +165,7 @@ void SphereMesh::set_segment_division(gsize n_segments)
 
   gfloat a  = 0.f;
   gfloat ia  = G_PI/gfloat(n_latitude_segments);
-  gfloat min_a  = ia*0.5f;
+  gfloat min_a  = ia*0.25f;
   gfloat max_a  = G_PI - min_a;
 
   circle.create_polgons_cap(0.f, min_a);

@@ -21,16 +21,18 @@
 
 View3D::View3D() : Gtk::GL::DrawingArea(Gdk::GL::Config::create(Gdk::GL::MODE_RGBA|Gdk::GL::MODE_DOUBLE|Gdk::GL::MODE_ALPHA))
 {
-  add_events(Gdk::POINTER_MOTION_MASK|Gdk::LEAVE_NOTIFY_MASK|Gdk::ENTER_NOTIFY_MASK);
-
-  show();
+  add_events(Gdk::POINTER_MOTION_MASK|Gdk::BUTTON_PRESS_MASK|Gdk::BUTTON_RELEASE_MASK|Gdk::SCROLL_MASK|Gdk::LEAVE_NOTIFY_MASK|Gdk::ENTER_NOTIFY_MASK);
 
   set_size_request(320, 320);
 
+  _rotating_with_mouse  = false;
+
   sphere  = Sphere::create();
   sphere->signal_invalidated().connect(sigc::mem_fun(*this, &View3D::invalidate));
-  sphere->set_rotation_speed(0.f, 0.f, 10.f);
+  //sphere->rotate_x(30.f);
+  //sphere->set_rotation_z_speed(10.f);
 
+  show();
   _gl_initialized = false;
 }
 
@@ -103,15 +105,85 @@ bool View3D::on_expose_event(GdkEventExpose* event)
 
   glLoadIdentity();
 
+  gfloat aspect = gfloat(get_width())/gfloat(get_height());
+  if(aspect<=0.f)
+    return false;
+  if(aspect>=1.f)
+    glOrtho(-aspect, aspect, 1.f, -1.f, sphere->get_scale()*1.001f, -sphere->get_scale()*1.001f);
+  else
+    glOrtho(-1.f, 1.f, 1.f/aspect, -1.f/aspect, sphere->get_scale()*1.001f, -sphere->get_scale()*1.001f);
+
   glRotatef(90.f, 1.f, 0.f, 0.f);
   glRotatef(sphere->get_x_rotation(), 1.f, 0.f, 0.f);
   glRotatef(sphere->get_z_rotation(), 0.f, 0.f, 1.f);
 
-  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  glScalef(sphere->get_scale(), sphere->get_scale(), sphere->get_scale());
+
+  if(sphere->get_draw_wireframed())
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  else
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
   glEnable(GL_CULL_FACE);
 
-  sphere_mesh.render();
+  sphere_mesh.render(sphere->get_use_warped_uv());
 
   gl_drawable->swap_buffers();
+  return true;
+}
+
+bool View3D::on_scroll_event(GdkEventScroll* event)
+{
+  gfloat zoom = 0.f;
+
+  if(event->direction==GDK_SCROLL_UP)
+    zoom  = 1.f;
+  else if(event->direction==GDK_SCROLL_DOWN)
+    zoom  = -1.f;
+
+  if(zoom==0.f)
+    return false;
+
+  sphere->set_scale(sphere->get_scale() + 0.1f*zoom);
+
+  return true;
+}
+
+bool View3D::on_button_press_event(GdkEventButton* event)
+{
+  if(using_mouse())
+    return false;
+
+  mouse_drag_start_x  = event->x;
+  mouse_drag_start_y  = event->y;
+
+  if(event->button==2)
+  _rotating_with_mouse  = true;
+  return true;
+}
+
+bool View3D::on_button_release_event(GdkEventButton* event)
+{
+  if(!using_mouse())
+    return false;
+
+  _rotating_with_mouse  = false;
+  return true;
+}
+
+bool View3D::on_motion_notify_event(GdkEventMotion* event)
+{
+  if(!using_mouse())
+    return false;
+
+  if(_rotating_with_mouse)
+  {
+    sphere->rotate_z(mouse_drag_start_x-event->x*1.f);
+    sphere->rotate_x(mouse_drag_start_y-event->y*1.f);
+
+    mouse_drag_start_x  = event->x;
+    mouse_drag_start_y  = event->y;
+  }
+
   return true;
 }

@@ -40,7 +40,6 @@ public:
   };
 
 private:
-  bool _use_warped_uv;
   bool _initialized;
 
   gsize _n_triangles;
@@ -57,15 +56,6 @@ private:
 public:
 
   void init(gsize latitude_segments=42);
-
-  /** \brief Gets, whether the UV-Mesh ist warped.
-   * */
-  bool get_use_warped_uv()const{return _use_warped_uv;}
-
-  /** \brief Sets, whether the UV-Mesh should be warped.
-   *
-   * */
-  void set_use_warped_uv(bool warped=true);
 
   /** \brief Sets the number of polygons, the Sphere will have.
    *
@@ -85,7 +75,7 @@ public:
    *
    * This Function won't change anything in lightning nor any texture settings - just the polygons, the uvmesh and the normals.
    * */
-  void render();
+  void render(bool use_warped_uv);
 
   SphereMesh();
   ~SphereMesh()throw();

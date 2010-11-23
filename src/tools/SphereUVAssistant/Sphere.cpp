@@ -35,6 +35,8 @@ Sphere::Sphere()
   _z_speed  = 0.f;
   _scale  = 1.f;
   _rotating = false;
+  _use_warped_uv  = false;
+  _draw_wireframed  = false;
 
   _sphere  = this;
 }
@@ -46,10 +48,20 @@ Sphere::~Sphere()throw()
   _sphere  = nullptr;
 }
 
-void Sphere::set_rotation_speed(gfloat x_speed, gfloat y_speed, gfloat z_speed)
+void Sphere::set_rotation_x_speed(gfloat x_speed)
 {
   _x_speed  = x_speed;
-  _y_speed  = y_speed;
+
+  if(!_rotating && (_x_speed || _y_speed || _z_speed))
+  {
+    _rotating = true;
+    Glib::signal_timeout().connect_once(sigc::mem_fun(*this, &Sphere::_rotate),
+                               1000*dt);
+  }
+}
+
+void Sphere::set_rotation_z_speed(gfloat z_speed)
+{
   _z_speed  = z_speed;
 
   if(!_rotating && (_x_speed || _y_speed || _z_speed))
