@@ -32,6 +32,7 @@ enum TextureHint
   TEXTURE_HINT_TILABLE = 1,
   TEXTURE_HINT_SIZEABLE = 2,
   TEXTURE_HINT_MIPMAPS = 4,
+  TEXTURE_HINT_FIT_SIZE = 8,///> When activated, the Texture's size will be resized to a 2^n x 2^m size (like Mipmaps and Tilable Textures)
 };
 
 inline TextureHint operator|(TextureHint a, TextureHint b){return TextureHint(int(a)|int(b));}

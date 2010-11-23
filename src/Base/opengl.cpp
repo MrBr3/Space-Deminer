@@ -64,7 +64,7 @@ void set_gl_texture_content(const Glib::RefPtr<const Gdk::Pixbuf>& pixbuf_, Text
     n_dest_components = 3;
   }
 
-  if((hint_&TEXTURE_HINT_TILABLE) || (hint_&TEXTURE_HINT_MIPMAPS))
+  if((hint_&TEXTURE_HINT_TILABLE) || (hint_&TEXTURE_HINT_MIPMAPS) || (TEXTURE_HINT_FIT_SIZE&hint_))
   {
     tex_width = 1<<(blog_int(tex_width)+1);
     tex_height = 1<<(blog_int(tex_height)+1);

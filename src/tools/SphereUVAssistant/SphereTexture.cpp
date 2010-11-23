@@ -54,6 +54,7 @@ void SphereTexture::init()
   {
     imagefile = ImageFile::create();
     imagefile->signal_imagefile_changed().connect(sigc::mem_fun(*this, &SphereTexture::init));
+    imagefile->set_filename("/home/robert/Desktop/earth+clouds.jpg");
   }
 
   deinit();
@@ -67,5 +68,5 @@ void SphereTexture::init()
   glBindTexture(GL_TEXTURE_2D, _texture);
   _initialized  = true;
 
-  set_gl_texture_content(pb, TEXTURE_HINT_SIZEABLE);
+  set_gl_texture_content(pb, TEXTURE_HINT_SIZEABLE|TEXTURE_HINT_FIT_SIZE);
 }

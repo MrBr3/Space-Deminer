@@ -272,9 +272,9 @@ namespace Private_SphereMesh_
       gfloat lower_radius = sin(angle_b);
       gfloat lower_z  = cos(angle_b);
 
-      gfloat uv_x = 0.f;
-      gfloat i_uv_x = 1.f/_n_circle_vertices;
-      gfloat lower_uv_y = angle_b/PI2;
+      gfloat uv_x = 1.f;
+      gfloat i_uv_x = -1.f/_n_circle_vertices;
+      gfloat lower_uv_y = angle_b/G_PI;
 
       for(gsize i=0; i<_n_circle_vertices; ++i)
       {
@@ -307,9 +307,9 @@ namespace Private_SphereMesh_
       gfloat higher_radius = sin(angle_a);
       gfloat higher_z  = cos(angle_a);
 
-      gfloat uv_x = 0.f;
-      gfloat i_uv_x = 1.f/_n_circle_vertices;
-      gfloat higher_uv_y = angle_a/PI2;
+      gfloat uv_x = 1.f;
+      gfloat i_uv_x = -1.f/_n_circle_vertices;
+      gfloat higher_uv_y = angle_a/G_PI;
 
       for(gsize i=0; i<_n_circle_vertices; ++i)
       {
@@ -347,16 +347,13 @@ namespace Private_SphereMesh_
     gfloat lower_radius = sin(angle_b);
     gfloat lower_z  = cos(angle_b);
 
-    gfloat uv_x = 0.f;
-    gfloat i_uv_x = 1.f/_n_circle_vertices;
-    gfloat higher_uv_y = angle_a/PI2;
-    gfloat lower_uv_y = angle_b/PI2;
-
-    //std::cout<<"lower_uv_y "<<lower_uv_y<<"\n";
+    gfloat uv_x = 1.f;
+    gfloat i_uv_x = -1.f/_n_circle_vertices;
+    gfloat higher_uv_y = angle_a/G_PI;
+    gfloat lower_uv_y = angle_b/G_PI;
 
     for(gsize i=0; i<_n_circle_vertices; ++i)
     {
-    std::cout<<"uv_x+i_uv_x "<<uv_x+i_uv_x<<"\n";
       Vector3 higher_circle_a = point(i);
       Vector3 higher_circle_b = point(i+1);
       Vector3 lower_circle_d = point(i);
