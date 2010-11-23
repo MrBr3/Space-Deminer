@@ -48,4 +48,5 @@ public:
   Glib::RefPtr<Sphere> sphere;
 
   SphereMesh sphere_mesh;
+  SphereTexture sphere_texture;
 };

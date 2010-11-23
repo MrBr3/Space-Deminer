@@ -73,6 +73,7 @@ void View3D::on_realize()
   gl_drawable->gl_begin(get_gl_context());
 
   sphere_mesh.init();
+  sphere_texture.init();
 
   _gl_initialized = true;
 }
@@ -125,6 +126,10 @@ bool View3D::on_expose_event(GdkEventExpose* event)
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
   glEnable(GL_CULL_FACE);
+
+  glEnable(GL_TEXTURE_2D);
+  //glEnable(GL_TEXTURE);
+  sphere_texture.bind();
 
   sphere_mesh.render(sphere->get_use_warped_uv());
 

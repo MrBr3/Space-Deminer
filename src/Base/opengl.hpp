@@ -34,6 +34,15 @@ enum TextureHint
   TEXTURE_HINT_MIPMAPS = 4,
 };
 
+inline TextureHint operator|(TextureHint a, TextureHint b){return TextureHint(int(a)|int(b));}
+inline TextureHint operator&(TextureHint a, TextureHint b){return TextureHint(int(a)&int(b));}
+inline TextureHint operator^(TextureHint a, TextureHint b){return TextureHint(int(a)^int(b));}
+inline TextureHint operator~(TextureHint a){return TextureHint(~int(a));}
+inline TextureHint& operator|=(TextureHint& a, TextureHint b){return a = a|b;}
+inline TextureHint& operator&=(TextureHint& a, TextureHint b){return a = a&b;}
+inline TextureHint& operator^=(TextureHint& a, TextureHint b){return a = a^b;}
+//inline TextureHint& operator~=(TextureHint& a){return a = ~a;}
+
 /** \brief Sets the content of an OpenGL Texture based on a Pixbuf
  *
  * \note The OpenGL Texture won't be generated. You múst call <tt>glGenTextures(...)</tt> and  <tt>glBindTexture(GL_TEXTURE_2D, ..);</tt> by yourself before calling this function

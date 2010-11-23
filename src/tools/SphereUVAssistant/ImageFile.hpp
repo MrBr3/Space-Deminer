@@ -17,3 +17,37 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
+class ImageFile : public Refable
+{
+  static ImageFile* _imagefile;
+
+  ImageFile();
+  ImageFile(const ImageFile&);
+
+  Glib::ustring _filename;
+
+  sigc::signal<void> _signal_imagefile_changed;
+
+public:
+  sigc::signal<void> signal_imagefile_changed(){return _signal_imagefile_changed;}
+
+  ~ImageFile()throw();
+
+  const Glib::ustring get_filename()const{return _filename;}
+  void set_filename(const Glib::ustring& filename);
+
+  /** \brief Creates a RefPtr ift there's a valif Imagefile other wise a null pointer.
+   *
+   * \return A RefPtr to a Pixbuf (can be nullptr)
+   * */
+  Glib::RefPtr<Gdk::Pixbuf> create_pixbuf();
+
+  static Glib::RefPtr<ImageFile> create()
+  {
+    if(!_imagefile)
+      return Glib::RefPtr<ImageFile>(new ImageFile);
+
+    _imagefile->reference();
+    return Glib::RefPtr<ImageFile>(_imagefile);
+  }
+};

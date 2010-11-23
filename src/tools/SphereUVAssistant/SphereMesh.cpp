@@ -246,19 +246,19 @@ namespace Private_SphereMesh_
     uv_warped[i_triangle].b = uv_rectangle[i_triangle].b;
     uv_warped[i_triangle].c = uv_rectangle[i_triangle].c;
     if(a_upper)
-      uv_warped[i_triangle].a.x = uv_warped[i_triangle].a.x*upper_radius + 0.5f;
+      uv_warped[i_triangle].a.x = 0.5f - uv_warped[i_triangle].a.x*upper_radius * 0.5f;
     else
-      uv_warped[i_triangle].a.x = uv_warped[i_triangle].a.x*lower_radius + 0.5f;
+      uv_warped[i_triangle].a.x = 0.5f - uv_warped[i_triangle].a.x*lower_radius * 0.5f;
 
     if(b_upper)
-      uv_warped[i_triangle].b.x = uv_warped[i_triangle].b.x*upper_radius + 0.5f;
+      uv_warped[i_triangle].b.x = 0.5f - uv_warped[i_triangle].b.x*upper_radius * 0.5f;
     else
-      uv_warped[i_triangle].b.x = uv_warped[i_triangle].b.x*lower_radius + 0.5f;
+      uv_warped[i_triangle].b.x = 0.5f - uv_warped[i_triangle].b.x*lower_radius * 0.5f;
 
     if(c_upper)
-      uv_warped[i_triangle].c.x = uv_warped[i_triangle].c.x*upper_radius + 0.5f;
+      uv_warped[i_triangle].c.x = 0.5f - uv_warped[i_triangle].c.x*upper_radius * 0.5f;
     else
-      uv_warped[i_triangle].c.x = uv_warped[i_triangle].c.x*lower_radius + 0.5f;
+      uv_warped[i_triangle].c.x = 0.5f - uv_warped[i_triangle].c.x*lower_radius * 0.5f;
 
     ++i_triangle;
   }
@@ -352,8 +352,11 @@ namespace Private_SphereMesh_
     gfloat higher_uv_y = angle_a/PI2;
     gfloat lower_uv_y = angle_b/PI2;
 
+    //std::cout<<"lower_uv_y "<<lower_uv_y<<"\n";
+
     for(gsize i=0; i<_n_circle_vertices; ++i)
     {
+    std::cout<<"uv_x+i_uv_x "<<uv_x+i_uv_x<<"\n";
       Vector3 higher_circle_a = point(i);
       Vector3 higher_circle_b = point(i+1);
       Vector3 lower_circle_d = point(i);

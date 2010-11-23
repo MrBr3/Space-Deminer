@@ -17,3 +17,40 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "./Model.hpp"
+
+ImageFile* ImageFile::_imagefile  = nullptr;
+
+ImageFile::ImageFile()
+{
+  g_assert(!_imagefile);
+
+  _imagefile  = this;
+}
+
+ImageFile::~ImageFile()throw()
+{
+  g_assert(_imagefile);
+
+  _imagefile  = nullptr;
+}
+
+Glib::RefPtr<Gdk::Pixbuf> ImageFile::create_pixbuf()
+{
+  try
+  {
+    return Gdk::Pixbuf::create_from_file(Glib::filename_from_utf8(_filename));
+  }catch(...)
+  {
+  }
+  return Glib::RefPtr<Gdk::Pixbuf>();
+}
+
+void ImageFile::set_filename(const Glib::ustring& filename)
+{
+  //Glib::RefPtr<Gio::File> file  = Gio::File::create_for_path(Glib::filename_from_utf8(filename));
+
+  _filename = filename;
+
+  _signal_imagefile_changed.emit();
+}

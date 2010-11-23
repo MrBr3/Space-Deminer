@@ -17,28 +17,55 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-class Image : public Refable
+ #include "MainWindow.hpp"
+
+SphereTexture::SphereTexture()
 {
-  Image* _image;
+  _texture  = 0;
+  _initialized  = false;
+}
 
-  Image();
-  Image(const Image&);
+SphereTexture::~SphereTexture()throw()
+{
+  deinit();
+}
 
-  Glib::ustring _filename;
+void SphereTexture::bind()
+{
+  if(!_initialized)
+    return;
 
-private:
+  glBindTexture(GL_TEXTURE_2D, _texture);
+}
 
-  ~Image()throw();
+void SphereTexture::deinit()
+{
+  if(!_initialized)
+    return;
 
-  const Glib::ustring get_filename()const{return _filename;}
-  void set_filename(const Glib::ustring& filename);
+  glDeleteTextures(1, &_texture);
+  _texture  = 0;
+  _initialized  = false;
+}
 
-  static Glib::RefPtr<Image> create()
+void SphereTexture::init()
+{
+  if(!imagefile)
   {
-    if(!_image)
-      return Glib::RefPtr<Image>(new Image);
-
-    _image->reference();
-    return Glib::RefPtr<Image>(_image);
+    imagefile = ImageFile::create();
+    imagefile->signal_imagefile_changed().connect(sigc::mem_fun(*this, &SphereTexture::init));
   }
-};
+
+  deinit();
+
+  Glib::RefPtr<Gdk::Pixbuf> pb  = imagefile->create_pixbuf();
+
+  if(!pb)
+    return;
+
+  glGenTextures(1, &_texture);
+  glBindTexture(GL_TEXTURE_2D, _texture);
+  _initialized  = true;
+
+  set_gl_texture_content(pb, TEXTURE_HINT_SIZEABLE);
+}

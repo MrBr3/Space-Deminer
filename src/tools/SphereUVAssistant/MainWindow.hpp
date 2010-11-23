@@ -20,6 +20,7 @@
 #include "./Model.hpp"
 
 #include "SphereMesh.hpp"
+#include "SphereTexture.hpp"
 #include "3DView.hpp"
 #include "FileSettings.hpp"
 #include "ViewSettings.hpp"

@@ -28,12 +28,13 @@ class Sphere : public Refable
 
   sigc::signal<void> _signal_invalidated;
 
+  void _invalidate(){_signal_invalidated.emit();}
+
   static Sphere* _sphere;
 
   Sphere();
   Sphere(const Sphere&);
 
-  void _invalidate(){_signal_invalidated.emit();}
   void _rotate();
 
 public:

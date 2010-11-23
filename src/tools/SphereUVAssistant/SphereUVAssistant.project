@@ -16,15 +16,15 @@
       <File Name="ViewSettings.cpp"/>
       <File Name="SphereMesh.cpp"/>
       <File Name="SphereMesh.hpp"/>
+      <File Name="SphereTexture.hpp"/>
+      <File Name="SphereTexture.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Model">
-      <File Name="Image.cpp"/>
-      <File Name="Image.hpp"/>
-      <File Name="File.cpp"/>
-      <File Name="File.hpp"/>
       <File Name="Sphere.hpp"/>
       <File Name="Sphere.cpp"/>
       <File Name="Model.hpp"/>
+      <File Name="ImageFile.hpp"/>
+      <File Name="ImageFile.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Both">
       <File Name="Options.cpp"/>

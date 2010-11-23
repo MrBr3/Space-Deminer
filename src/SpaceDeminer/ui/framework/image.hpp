@@ -80,15 +80,6 @@ namespace Framework
   private:
     int _width, _height;
   };
-
-  inline Image::Hint operator|(Image::Hint a, Image::Image::Hint b){return Image::Hint(int(a)|int(b));}
-  inline Image::Hint operator&(Image::Hint a, Image::Hint b){return Image::Hint(int(a)&int(b));}
-  inline Image::Hint operator^(Image::Hint a, Image::Hint b){return Image::Hint(int(a)^int(b));}
-  inline Image::Hint operator~(Image::Hint a){return Image::Hint(~int(a));}
-  inline Image::Hint& operator|=(Image::Hint& a, Image::Hint b){return a = a|b;}
-  inline Image::Hint& operator&=(Image::Hint& a, Image::Hint b){return a = a&b;}
-  inline Image::Hint& operator^=(Image::Hint& a, Image::Hint b){return a = a^b;}
-  //inline Image::Hint& operator~=(Image::Hint& a){return a = ~a;}
 }
 
 #endif

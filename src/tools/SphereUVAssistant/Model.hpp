@@ -22,3 +22,4 @@
 #include "opengl.hpp"
 
 #include "./Sphere.hpp"
+#include "./ImageFile.hpp"

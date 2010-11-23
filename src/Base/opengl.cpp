@@ -23,6 +23,9 @@
 
 void set_gl_texture_content(const Glib::RefPtr<const Gdk::Pixbuf>& pixbuf_, TextureHint hint_, Real& coord_max_u, Real& coord_max_v)
 {
+  if(!pixbuf_)
+    throw std::invalid_argument("**set_gl_texture_content** invalid argument \"pixbuf_\"");
+
   g_assert(blog_int(16)==4);
   g_assert(blog_int(32)==5);
   g_assert(blog_int(1)==0);

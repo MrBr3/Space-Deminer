@@ -17,24 +17,22 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "./Model.hpp"
-
-Image* Image::_image  = nullptr;
-
-Image::Image()
+class SphereTexture : public Refable
 {
-  g_assert(!_image);
+private:
+  bool _initialized;
+  GLuint _texture;
 
-  _image  = this;
-}
+  SphereTexture(const SphereTexture&);
 
-Image::~Image()throw()
-{
-  g_assert(_image);
+  Glib::RefPtr<ImageFile> imagefile;
 
-  _image  = nullptr;
-}
+public:
+  SphereTexture();
+  ~SphereTexture()throw();
 
-void Image::set_filename(const Glib::ustring& filename)
-{
-}
+  void bind();
+
+  void deinit();
+  void init();
+};
