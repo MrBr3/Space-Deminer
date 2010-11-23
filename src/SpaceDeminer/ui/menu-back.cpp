@@ -46,7 +46,7 @@ void MenuBack::expose(Framework::Widget::EventExpose& ee, const Framework::Widge
 
 void MenuBack::reload_image()
 {
-  Framework::ResPtr<Framework::Image> new_img = Framework::Image::create(load_image_(), Framework::Image::HINT_SIZEABLE, sigc::mem_fun(*this, &MenuBack::load_image_));
+  Framework::ResPtr<Framework::Image> new_img = Framework::Image::create(load_image_(), TEXTURE_HINT_SIZEABLE, sigc::mem_fun(*this, &MenuBack::load_image_));
 
   {
     Glib::Mutex::Lock _lock(_using_tex_mutex);
@@ -111,5 +111,5 @@ Glib::RefPtr<Gdk::Pixbuf> MenuBack::load_image_()
 void MenuBack::load_image(const Glib::ustring& filename)
 {
   _current_filename = filename;
-  _curr_back_image  = Framework::Image::create(load_image_(), Framework::Image::HINT_SIZEABLE, sigc::mem_fun(*this, &MenuBack::load_image_));
+  _curr_back_image  = Framework::Image::create(load_image_(), TEXTURE_HINT_SIZEABLE, sigc::mem_fun(*this, &MenuBack::load_image_));
 }

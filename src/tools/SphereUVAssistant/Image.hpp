@@ -17,3 +17,28 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
+class Image : public Refable
+{
+  Image* _image;
+
+  Image();
+  Image(const Image&);
+
+  Glib::ustring _filename;
+
+private:
+
+  ~Image()throw();
+
+  const Glib::ustring get_filename()const{return _filename;}
+  void set_filename(const Glib::ustring& filename);
+
+  static Glib::RefPtr<Image> create()
+  {
+    if(!_image)
+      return Glib::RefPtr<Image>(new Image);
+
+    _image->reference();
+    return Glib::RefPtr<Image>(_image);
+  }
+};

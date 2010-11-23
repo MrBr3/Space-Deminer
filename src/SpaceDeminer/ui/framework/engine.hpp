@@ -203,7 +203,7 @@ namespace Framework
   public:
     /** \brief Creates an image based
      * */
-    ResPtr<Image> create_image(const Glib::RefPtr<Gdk::Pixbuf>& pixbuf, Image::Hint hint=Image::HINT_DEFAULT, const Image::SlotRecreateFromPixbuf& slot_recreate=sigc::ptr_fun(&Image::cant_reload_from_pixbuf))
+    ResPtr<Image> create_image(const Glib::RefPtr<Gdk::Pixbuf>& pixbuf, Image::Hint hint=TEXTURE_HINT_DEFAULT, const Image::SlotRecreateFromPixbuf& slot_recreate=sigc::ptr_fun(&Image::cant_reload_from_pixbuf))
     {
       ResPtr<Image> img = v_create_image(pixbuf, hint, slot_recreate);
       if(!img->get_is_loaded())
@@ -220,7 +220,7 @@ namespace Framework
      *
      * \note This function calls Glib::filename_from_utf8 and apply_filename_macros internal - so you don't have to call them by yourself.
      * */
-    ResPtr<Image> create_image_from_file(const Glib::ustring& filename, Image::Hint hint=Image::HINT_DEFAULT)
+    ResPtr<Image> create_image_from_file(const Glib::ustring& filename, Image::Hint hint=TEXTURE_HINT_DEFAULT)
     {
       ResPtr<Image> img = v_create_image_from_file(Glib::filename_from_utf8(apply_filename_macros(filename)), hint);
       if(!img->get_is_loaded())

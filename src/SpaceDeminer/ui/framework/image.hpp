@@ -29,16 +29,7 @@ namespace Framework
   public:
     typedef sigc::slot<Glib::RefPtr<Gdk::Pixbuf> > SlotRecreateFromPixbuf;
 
-    enum Hint
-    {
-      HINT_NOT_TILABLE = 0,
-      HINT_NOT_SIZEABLE = 0,
-      HINT_NO_MIPMAPPING = 0,
-      HINT_DEFAULT = 0, ///> Identical to <tt>HINT_NOT_TILABLE | HINT_NOT_SIZEABLE | HINT_NO_MIPMAPPING</tt>
-      HINT_TILABLE = 1,
-      HINT_SIZEABLE = 2,
-      HINT_MIPMAPS = 4,
-    };
+    typedef TextureHint Hint;
 
     /** \brief Does nothing than throwing an instance of CantReloadRes.
      * */
@@ -62,7 +53,7 @@ namespace Framework
      *   Engine::get_singleton()->create_image(pixbuf);
      * \endcode
      * */
-    static ResPtr<Image> create(const Glib::RefPtr<Gdk::Pixbuf>& pixbuf, Hint hint=HINT_DEFAULT, const SlotRecreateFromPixbuf& slot_recreate=sigc::ptr_fun(&cant_reload_from_pixbuf));
+    static ResPtr<Image> create(const Glib::RefPtr<Gdk::Pixbuf>& pixbuf, Hint hint=TEXTURE_HINT_DEFAULT, const SlotRecreateFromPixbuf& slot_recreate=sigc::ptr_fun(&cant_reload_from_pixbuf));
 
     /**
      * Identical to:
@@ -70,7 +61,7 @@ namespace Framework
      *   Engine::get_singleton()->create_image(filename);
      * \endcode
      * */
-    static ResPtr<Image> create_from_file(const Glib::ustring& filename, Hint hint=HINT_DEFAULT);
+    static ResPtr<Image> create_from_file(const Glib::ustring& filename, Hint hint=TEXTURE_HINT_DEFAULT);
 
   protected:
     Image()

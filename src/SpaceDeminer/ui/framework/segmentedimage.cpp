@@ -71,7 +71,7 @@ namespace Framework
 
     g_assert(pixbuf);
 
-    image = Image::create(pixbuf, Image::HINT_SIZEABLE);
+    image = Image::create(pixbuf, TEXTURE_HINT_SIZEABLE);
     set_is_loaded(true);
   }
 

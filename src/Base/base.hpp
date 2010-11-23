@@ -32,5 +32,6 @@
 #include "./geometry.hpp"
 #include "./state-machine.hpp"
 #include "./cairo-stuff.hpp"
+#include "./opengl.hpp"
 
 #endif

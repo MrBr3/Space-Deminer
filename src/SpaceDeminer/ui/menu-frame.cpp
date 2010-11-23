@@ -116,8 +116,8 @@ MenuFrame::MenuFrame()  // TODO put this into an init() function?
   _se_corner  = engine->create_image(Gdk::Pixbuf::create_subpixbuf(full_image, se_c_x, se_c_y, se_c_w, se_c_h));
   _ne_corner  = engine->create_image(Gdk::Pixbuf::create_subpixbuf(full_image, ne_c_x, ne_c_y, ne_c_w, ne_c_h));
 
-  _e_edge_bottom_repeat_pattern  = engine->create_image(Gdk::Pixbuf::create_subpixbuf(full_image, e_er_x, e_er_y, e_er_w, e_er_h), Framework::Image::HINT_TILABLE);
-  _e_edge_top_repeat_pattern  = engine->create_image(Gdk::Pixbuf::create_subpixbuf(full_image, e_nr_x, e_nr_y, e_nr_w, e_nr_h), Framework::Image::HINT_TILABLE);
+  _e_edge_bottom_repeat_pattern  = engine->create_image(Gdk::Pixbuf::create_subpixbuf(full_image, e_er_x, e_er_y, e_er_w, e_er_h), TEXTURE_HINT_TILABLE);
+  _e_edge_top_repeat_pattern  = engine->create_image(Gdk::Pixbuf::create_subpixbuf(full_image, e_nr_x, e_nr_y, e_nr_w, e_nr_h), TEXTURE_HINT_TILABLE);
 
   _w_edge_top   = engine->create_image(Gdk::Pixbuf::create_subpixbuf(full_image, e_wn_x, e_wn_y, e_wn_w, e_wn_h));
   _s_edge_right = engine->create_image(Gdk::Pixbuf::create_subpixbuf(full_image, e_se_x, e_se_y, e_se_w, e_se_h));

@@ -17,3 +17,24 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "./Model.hpp"
+
+Image* Image::_image  = nullptr;
+
+Image::Image()
+{
+  g_assert(!_image);
+
+  _image  = this;
+}
+
+Image::~Image()throw()
+{
+  g_assert(_image);
+
+  _image  = nullptr;
+}
+
+void Image::set_filename(const Glib::ustring& filename)
+{
+}

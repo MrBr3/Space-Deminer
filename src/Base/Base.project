@@ -24,6 +24,8 @@
       <File Name="math/vector3.hpp"/>
       <File Name="math/vector2.hpp"/>
     </VirtualDirectory>
+    <File Name="opengl.hpp"/>
+    <File Name="opengl.cpp"/>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>
   <VirtualDirectory Name="external">
