@@ -85,6 +85,16 @@ namespace Framework
     Container::on_expose(paint_tool);
   }
 
+  bool Button::on_mouse_move(MouseEvent& mouse_event)
+  {
+
+  std::cout<<"btn-mm\n";
+    if(Container::on_mouse_move(mouse_event))
+      return true;
+
+    return true;
+  }
+
   //--------
 
   ToggleButton::ToggleButton()

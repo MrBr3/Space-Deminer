@@ -28,6 +28,7 @@ namespace Framework
 
   Label::Label(const Glib::ustring& label, bool use_memnotic) : _label(label), _memnotic(use_memnotic)
   {
+    set_name("label");
   }
 
   Label::~Label()throw()

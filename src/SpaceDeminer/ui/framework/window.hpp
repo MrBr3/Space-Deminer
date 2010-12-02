@@ -175,6 +175,13 @@ namespace Framework
       ObsLink<Window> get_window(int x, int y){g_assert(_window_manager);return _window_manager->get_window(x, y);}
       ObsLink<Window> get_window(const Widget::MouseEvent& mouse_event){g_assert(_window_manager);return _window_manager->get_window(mouse_event.x, mouse_event.y, true);}
       Widget* get_widget(Widget::MouseEvent& mouse_event);
+
+      /** \brief Calculates the x/y coordinates of mouse_event to be relative to w.
+       *
+       * \param w the widget, the coordinates will be relative to
+       *
+       * \param mouse_event the mouse_event, which's coordinates will be be corrected
+       * */
       void correct_coordinates(Widget* w, Widget::MouseEvent& mouse_event);
 
       MouseStateMachine()

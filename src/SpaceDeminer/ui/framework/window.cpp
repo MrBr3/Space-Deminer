@@ -1,5 +1,5 @@
 /* Space Deminer is a small 2D Arcade Game. Your task ist to eliminate
- * intelligent Mines created in the last galactic war.
+ * intelligent Mines created in the past galactic war.
  *
  * Copyright (C) 2010 the Space Deminer Development Team
  *
@@ -327,16 +327,31 @@ namespace Framework
 
         if(w)
         {
+          std::cout<<"www\n";
           g_assert(get_state_machine());
           get_state_machine()->correct_coordinates(w, mouse_event);
 
-          std::cout<<"w->get_name() "<<w->get_name().data()<<"\n";
+          bool b = false;
 
-          bool b  = w->on_mouse_enter(mouse_event);
-          if(w->on_mouse_move(mouse_event))
-            b = true;
+          if(w->get_name()=="button")
+            b=false;
 
-          get_state_machine()->activate_state(WindowManager::MOUSE_STATE_OVER);
+          while(w && !b)
+          {
+            b = w->on_mouse_enter(mouse_event);
+            b |= w->on_mouse_move(mouse_event);
+
+            if(!b)
+            {
+              w = w->get_parent();
+            }
+          }
+
+          if(w)
+          {
+            std::cout<<"--- w->get_name() "<<w->get_name().data()<<" ---\n";
+            //get_state_machine()->activate_state(WindowManager::MOUSE_STATE_OVER);
+          }
 
           return b;
         }

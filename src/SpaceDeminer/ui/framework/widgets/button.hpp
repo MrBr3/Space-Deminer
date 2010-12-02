@@ -53,6 +53,8 @@ namespace Framework
     void on_expose(EventExpose& paint_tool);
     void v_rearrange_children();
 
+    bool on_mouse_move(MouseEvent& mouse_event);
+
   private:
     ReliefType _relief_type;
     DrawParam _state;
