@@ -76,32 +76,53 @@ public:
   sigc::signal<void, t_obj*, t_obj*> signal_link_changed;
 
 public:
-  t_obj* operator->()const{return m_object;}
+  /**
+   * \note throws an assertion if m_object is \t nullptr
+   * */
+  t_obj* operator->()const{g_assert(m_object);return m_object;}
   t_obj& operator*()const{return *m_object;}
 
-  operator       t_obj*()     {return m_object;}
-  operator const t_obj*()const{return m_object;}
+  /*operator       t_obj*()     {return m_object;}
+  operator const t_obj*()const{return m_object;}*/
+
+  operator Glib::RefPtr<t_obj>(){return get_refptr();}
+
+  Glib::RefPtr<t_obj> get_refptr()
+  {
+    if(m_object)
+      m_object->reference();
+    return Glib::RefPtr<t_obj>(m_object);
+  }
 
   operator bool()const{return m_object;}
   bool operator!()const{return !m_object;}
 
-  bool operator == (const ObsLink<t_obj>& ol)const{return ol.m_object == m_object;}
+  /*bool operator == (const ObsLink<t_obj>& ol)const{return ol.m_object == m_object;}
   bool operator != (const ObsLink<t_obj>& ol)const{return ol.m_object != m_object;}
   bool operator == (      t_obj* ol)const{return ol == m_object;}
   bool operator != (      t_obj* ol)const{return ol != m_object;}
   bool operator == (const t_obj* ol)const{return ol == m_object;}
   bool operator != (const t_obj* ol)const{return ol != m_object;}
   bool operator == (const Glib::RefPtr<t_obj>& ol)const{return ol.m_object == ol;}
-  bool operator != (const Glib::RefPtr<t_obj>& ol)const{return ol.m_object != ol;}
+  bool operator != (const Glib::RefPtr<t_obj>& ol)const{return ol.m_object != ol;}*/
 
 /*template<class t_obj2>bool operator == (const t_obj2* ol)const{return ol == m_object;}
   template<class t_obj2>bool operator != (const t_obj2* ol)const{return ol != m_object;}*/
-  template<class t_obj2>bool operator == (t_obj2* ol)const{return ol == m_object;}
+  /*template<class t_obj2>bool operator == (t_obj2* ol)const{return ol == m_object;}
   template<class t_obj2>bool operator != (t_obj2* ol)const{return ol != m_object;}
-  //template<class t_obj2>bool operator == (const Glib::RefPtr<t_obj>& ol)const{return ol == m_object;}
-  //template<class t_obj2>bool operator != (const Glib::RefPtr<t_obj>& ol)const{return ol != m_object;}
+  template<class t_obj2>bool operator == (const Glib::RefPtr<t_obj>& ol)const{return ol == m_object;}
+  template<class t_obj2>bool operator != (const Glib::RefPtr<t_obj>& ol)const{return ol != m_object;}*/
 
-  /*ObsLink<t_obj>& operator=(const Glib::RefPtr<t_obj>& rptr)
+  template<class t_obj2>inline friend bool operator == (const Glib::RefPtr<t_obj2>& ol, ObsLink<t_obj>& self){return ol == self.m_object;}
+  template<class t_obj2>inline friend bool operator != (const Glib::RefPtr<t_obj2>& ol, ObsLink<t_obj>& self){return ol != self.m_object;}
+  template<class t_obj2>inline friend bool operator == (ObsLink<t_obj>& self, const Glib::RefPtr<t_obj2>& ol){return ol == self.m_object;}
+  template<class t_obj2>inline friend bool operator != (ObsLink<t_obj>& self, const Glib::RefPtr<t_obj2>& ol){return ol != self.m_object;}
+  template<class t_obj2>inline friend bool operator == (t_obj2* ol, ObsLink<t_obj>& self){return ol == self.m_object;}
+  template<class t_obj2>inline friend bool operator != (t_obj2* ol, ObsLink<t_obj>& self){return ol != self.m_object;}
+  template<class t_obj2>inline friend bool operator == (ObsLink<t_obj>& self, t_obj2* ol){return ol == self.m_object;}
+  template<class t_obj2>inline friend bool operator != (ObsLink<t_obj>& self, t_obj2* ol){return ol != self.m_object;}
+
+  ObsLink<t_obj>& operator=(const Glib::RefPtr<t_obj>& rptr)
   {
     set_obj(rptr.operator->());
     return *this;
@@ -110,7 +131,7 @@ public:
   {
     m_object  = nullptr;
     set_obj(rptr.operator->());
-  }*/
+  }
 
 public:
   ObsLink(t_obj* o)
