@@ -34,6 +34,9 @@ namespace Framework
     _size_request_height = 0;
     _custom_size_request_width  = false;
     _custom_size_request_height = false;
+
+    can_process_mouse_move_events = false;
+    can_process_mouse_drag_events = false;
   }
 
   Widget::~Widget()throw()

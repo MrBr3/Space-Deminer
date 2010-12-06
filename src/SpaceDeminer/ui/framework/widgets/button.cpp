@@ -28,6 +28,8 @@ namespace Framework
     child_dist.set(3);
 
     set_name("button");
+
+    can_process_mouse_move_events = true;
   }
 
   Button::Button(Glib::ustring& label, bool use_memnotic)
@@ -39,6 +41,8 @@ namespace Framework
     set_name("button");
 
     set_label(label, use_memnotic);
+
+    can_process_mouse_move_events = true;
   }
 
   Button::~Button()throw()

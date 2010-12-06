@@ -313,6 +313,27 @@ namespace Framework
 
   //----MouseEvents--------
 
+  Widget* WindowManager::MouseStateHandler::find_widget_accepting_mouse(Widget::MouseEvent& mouse_event, bool move/*, bool drag*/)
+  {
+    g_assert(get_state_machine());
+    Widget* w = get_state_machine()->get_widget(mouse_event);
+
+    if(w)
+    {
+      std::cout<<"www\n";
+      g_assert(get_state_machine());
+      get_state_machine()->correct_coordinates(w, mouse_event);
+
+      while(w && ((move && !w->can_process_mouse_move_events)/* ||
+                  (drag && !w->can_process_mouse_drag_events)*/))
+      {
+        w = w->get_parent();
+      }
+    }
+
+    return w;
+  }
+
   namespace Window_Private
   {
     typedef WindowManager::MouseStateHandler MouseStateHandler;
@@ -322,40 +343,25 @@ namespace Framework
     public:
       bool on_mouse_move(Widget::MouseEvent& mouse_event)
       {
-        g_assert(get_state_machine());
-        Widget* w = get_state_machine()->get_widget(mouse_event);
+        g_assert(!get_state_machine()->_mouse_focus);
+        g_assert(!get_state_machine()->_mouse_over);
+
+        bool b=false;
+
+        Widget* w = find_widget_accepting_mouse(mouse_event, true);
 
         if(w)
         {
-          std::cout<<"www\n";
-          g_assert(get_state_machine());
-          get_state_machine()->correct_coordinates(w, mouse_event);
+          b = w->on_mouse_enter(mouse_event);
+          b |= w->on_mouse_move(mouse_event);
 
-          bool b = false;
+          w->invalidate();
 
-          if(w->get_name()=="button")
-            b=false;
-
-          while(w && !b)
-          {
-            b = w->on_mouse_enter(mouse_event);
-            b |= w->on_mouse_move(mouse_event);
-
-            if(!b)
-            {
-              w = w->get_parent();
-            }
-          }
-
-          if(w)
-          {
-            std::cout<<"--- w->get_name() "<<w->get_name().data()<<" ---\n";
-            //get_state_machine()->activate_state(WindowManager::MOUSE_STATE_OVER);
-          }
-
-          return b;
+          get_state_machine()->_mouse_over  = w;
+          get_state_machine()->activate_state(WindowManager::MOUSE_STATE_OVER);
         }
-        return false;
+
+        return b;
       }
       bool on_mouse_enter(Widget::MouseEvent& mouse_event)
       {
@@ -404,7 +410,37 @@ namespace Framework
     public:
       bool on_mouse_move(Widget::MouseEvent& mouse_event)
       {
-        return false;
+        g_assert(!get_state_machine()->_mouse_focus);
+
+        bool b=false;
+
+        Widget* w = find_widget_accepting_mouse(mouse_event, true);
+
+        if(w)
+        {
+          bool changing_current = false;
+
+          if(w!=get_state_machine()->_mouse_over)
+          {
+            changing_current  = true;
+
+            if(get_state_machine()->_mouse_over)
+              b = get_state_machine()->_mouse_over->on_mouse_leave(mouse_event);
+            get_state_machine()->_mouse_over  = w;
+          }
+
+          if(w)
+          {
+            if(changing_current)
+              b |= w->on_mouse_enter(mouse_event);
+            b |= w->on_mouse_move(mouse_event);
+          }else
+          {
+            get_state_machine()->activate_state(WindowManager::MOUSE_STATE_OUTSIDE);
+          }
+        }
+
+        return b;
       }
       bool on_mouse_enter(Widget::MouseEvent& mouse_event)
       {
@@ -412,7 +448,16 @@ namespace Framework
       }
       bool on_mouse_leave(Widget::MouseEvent& mouse_event)
       {
-        return false;
+        bool b  = false;
+
+        if(get_state_machine()->_mouse_over)
+          b = get_state_machine()->_mouse_over->on_mouse_leave(mouse_event);
+
+        get_state_machine()->_mouse_focus = nullptr;
+        get_state_machine()->_mouse_over  = nullptr;
+
+        get_state_machine()->activate_state(WindowManager::MOUSE_STATE_OUTSIDE);
+        return true;
       }
       bool on_button_press(Widget::MouseButtonEvent& mouse_event)
       {
@@ -428,6 +473,10 @@ namespace Framework
 
       void on_activate()
       {
+        get_state_machine()->_mouse_focus  = nullptr;
+
+        if(!get_state_machine()->_mouse_over)
+          get_state_machine()->activate_state(WindowManager::MOUSE_STATE_OUTSIDE);
       }
 
       void on_deactivate()
@@ -451,7 +500,7 @@ namespace Framework
   Widget* WindowManager::MouseStateMachine::get_widget(Widget::MouseEvent& mouse_event)
   {
     g_assert(this);
-    Window* window  = get_window(mouse_event);
+    Glib::RefPtr<Window> window  = get_window(mouse_event);
 
     if(!window)
       return nullptr;

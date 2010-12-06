@@ -136,7 +136,7 @@ namespace Framework
     virtual void on_invalidate(Gdk::Region& region){}
 
     void set_window_manager(WindowManager* wm);
-    WindowManager* get_window_manager(){return _window_manager;}
+    const ObsLink<WindowManager>& get_window_manager(){return _window_manager;}
 
   private:
     Glib::RefPtr<Theme> _theme;
@@ -224,6 +224,10 @@ namespace Framework
 
     bool get_sensitive()const{return _sensitive;}
     void set_sensitive(bool s=true);
+
+    bool can_process_mouse_move_events;
+  private:
+    bool can_process_mouse_drag_events;
 
   private:
     SignalMouseEvent _signal_mouse_move, _signal_mouse_enter, _signal_mouse_leave;

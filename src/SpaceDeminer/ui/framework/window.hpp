@@ -199,8 +199,20 @@ namespace Framework
     class MouseStateHandler : public MouseStateMachine::State
     {
     public:
+      /** \brief Gets the widget, the mouse is pointing to and is able to process mouse-events
+       *
+       * After calling this function, the coordinates of the mouse_event will be relative to the widget returned.
+       *
+       * \param mouse_event a reference to a mouse event, defining the mouse pos, (relative to the WindowManager)
+       * \param move true if the widget must be able to process on_mouse_move callbacks in order to be found
+       * <!--\param drag - true if the widget must be able to process on_mouse_drag callbacks in order to be found-->
+       *
+       * \return a pointer to the widget - can be nullptr if no widget could be found
+       * */
+      Widget* find_widget_accepting_mouse(Widget::MouseEvent& mouse_event, bool move/*, bool drag*/);
+
       /**
-       * \note THe default implementation just searches the window, the mouse points in and sends
+       * \note The default implementation just searches the window, the mouse points in and sends
        * */
       virtual bool on_mouse_move(Widget::MouseEvent& mouse_event)=0;
       virtual bool on_mouse_enter(Widget::MouseEvent& mouse_event)=0;

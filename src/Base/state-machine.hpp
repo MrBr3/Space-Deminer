@@ -58,7 +58,7 @@ public:
      *
      * \return The state machine, the State has been added to or nullptr, if there is no one.
      * */
-    T_this* get_state_machine(){return _state_machine;}
+    const ObsLink<T_this>& get_state_machine(){return _state_machine;}
 
     /** \brief Overridable getting called when the state gets activated.
      * */
