@@ -1,6 +1,6 @@
 Next Steps:
 [ ] Mausinteraktion
-  [ ] Egvents mask
+  [ ] Events mask
 [ ] MainMenu
 [ ] Fokus
   [ ] Maske
@@ -20,7 +20,14 @@ Next Steps:
       [X] WindowManager sollte nicht mehr singleton sein
       [X] Themes sollten von den Window Managern zugewiesen werden
       [ ] Engine nicht mehr singleton und dem WIndowManager zugewiesen
-      [ ] Engine soll bei den von ihn erstellten Ressourcen mitzählen
+      [ ] Engine soll bei den von ihn erstellten Ressourcen mitzählen (warum nommal?)
+      [ ] Fonts
+        [ ] Ein neues Font objekt auf Basis eines alten erstellen können
+          [ ] mit zusätzlichen effekten
+            [ ] Schatten/Leuchten
+            [ ] Small Capitals
+          [ ] Farbe ändern können
+          [ ] wenn erste schriftart sich ändert, sollen abgeleitete schriftarten sich auch ändern
     [ ] Menü
       [ ] Muster honzufügen, anstatt einfarbigem 3333
       [ ] Back
