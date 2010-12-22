@@ -139,6 +139,8 @@ void set_gl_texture_content(const Glib::RefPtr<const Gdk::Pixbuf>& pixbuf_, Text
       src_line  += scr_rowstride;
       dest_line  += dest_rowstride;
     }
+    if(src_height>0)
+      src_line  -= scr_rowstride; // There, as the last "src_line  += scr_rowstride;" brings the line out of range
     for(; y<tex_height; ++y)
     {
       for(x=0; x<src_width; ++x)
