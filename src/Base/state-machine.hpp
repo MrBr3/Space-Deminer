@@ -29,6 +29,7 @@
 template<class T_this, class T_state, class T_id>
 class StateMachine : public Refable
 {
+  StateMachine();
   StateMachine(const T_this&);
 
   typedef typename Glib::RefPtr<T_state> StatePtr;
@@ -37,11 +38,15 @@ class StateMachine : public Refable
   typedef typename std::map<T_id, StatePtr>::iterator StateMapIter;
   typedef typename StateMap::const_iterator StateMapConstIter;
 public:
-  StateMachine()
+  StateMachine(T_id initial_state)
   {
+    _curr_state = initial_state;
   }
   ~StateMachine()throw()
   {
+    StatePtr curr_state  = get_active_state();
+    if(curr_state)
+      curr_state->on_deactivate();
   }
 
   /** \brief A Class realizing the different states.
@@ -123,7 +128,29 @@ public:
    * */
   void activate_state(T_id id)
   {
+    if(is_state_activated(id))
+      return;
+
+    {
+      StatePtr old_state  = get_active_state();
+      if(old_state)
+        old_state->on_deactivate();
+    }
+
     _curr_state = id;
+
+    {
+      StatePtr new_state  = get_active_state();
+      if(new_state)
+        new_state->on_activate();
+    }
+  }
+
+  /** \brief Checks, whether a certain state given by id is activated.
+   * */
+  bool is_state_activated(T_id id)const
+  {
+    return _state_map.find(id) == _state_map.find(_curr_state);
   }
 
 private:
