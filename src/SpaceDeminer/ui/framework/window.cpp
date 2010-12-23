@@ -320,7 +320,7 @@ namespace Framework
 
     if(w)
     {
-      std::cout<<"www\n";
+      //TEMP std::cout<<"www\n";
       g_assert(get_state_machine());
       get_state_machine()->correct_coordinates(w, mouse_event);
 
@@ -461,6 +461,11 @@ namespace Framework
       }
       bool on_button_press(Widget::MouseButtonEvent& mouse_event)
       {
+        ObsLink<Widget> w = get_state_machine()->_mouse_over;
+
+        w->on_button_press(mouse_event);
+
+        get_state_machine()->activate_state(WindowManager::MOUSE_STATE_PUSHED);
         return false;
       }
       bool on_button_release(Widget::MouseButtonEvent& mouse_event)
@@ -490,6 +495,116 @@ namespace Framework
       }
 
       ~MouseState_over()throw()
+      {
+      }
+    };
+
+    class MouseState_pushed : public MouseStateHandler
+    {
+    public:
+      int n_pushed;
+
+      bool on_mouse_move(Widget::MouseEvent& mouse_event)
+      {
+        g_assert(!get_state_machine()->_mouse_focus);
+
+        bool b=false;
+
+        ObsLink<Widget> w = get_state_machine()->_mouse_over;
+
+        g_assert(w);
+
+        if(w)
+        {
+          b |= w->on_mouse_move(mouse_event);
+        }
+
+        return b;
+      }
+      bool on_mouse_enter(Widget::MouseEvent& mouse_event)
+      {
+        return true;
+      }
+      bool on_mouse_leave(Widget::MouseEvent& mouse_event)
+      {
+        return true;
+      }
+      bool on_button_press(Widget::MouseButtonEvent& mouse_event)
+      {
+        if(mouse_event.pressed_times==1)
+          n_pushed++;
+        return false;
+      }
+      bool on_button_release(Widget::MouseButtonEvent& mouse_event)
+      {
+        ObsLink<Widget> curr_w = get_state_machine()->_mouse_over;
+
+        g_assert(curr_w);
+
+        bool b  = curr_w->on_button_release(mouse_event);
+
+        n_pushed--;
+
+        if(n_pushed > 0)
+          return b;
+
+        Widget* w = find_widget_accepting_mouse(mouse_event, true);
+
+        if(w==curr_w)
+        {
+          get_state_machine()->activate_state(WindowManager::MOUSE_STATE_OVER);
+          g_assert(n_pushed==0);
+          return b;
+        }
+
+        b |= curr_w->on_mouse_leave(mouse_event);
+
+        if(w)
+        {
+          b |= w->on_mouse_enter(mouse_event);
+          b |= w->on_mouse_move(mouse_event);
+
+          get_state_machine()->activate_state(WindowManager::MOUSE_STATE_OVER);
+          g_assert(n_pushed==0);
+        }else
+        {
+          get_state_machine()->activate_state(WindowManager::MOUSE_STATE_OUTSIDE);
+          g_assert(n_pushed==0);
+        }
+
+        return b;
+      }
+      void remove_any_focus(Widget* w)
+      {
+      }
+
+      void on_activate()
+      {
+        g_assert(n_pushed==0);
+
+        get_state_machine()->_mouse_focus  = nullptr;
+        n_pushed  = 1;
+
+        if(!get_state_machine()->_mouse_over)
+        {
+          get_state_machine()->activate_state(WindowManager::MOUSE_STATE_OUTSIDE);
+          g_assert(n_pushed==0);
+        }
+      }
+
+      void on_deactivate()
+      {
+        n_pushed  = 0;
+      }
+
+      static Glib::RefPtr<MouseState_pushed> create(){return Glib::RefPtr<MouseState_pushed>(new MouseState_pushed);}
+
+      MouseState_pushed()
+      {
+        n_pushed = 0;
+      }
+
+      ~MouseState_pushed()throw()
       {
       }
     };
@@ -556,6 +671,7 @@ namespace Framework
     mouse_state_machine._window_manager = this;
     mouse_state_machine.add_state(MOUSE_STATE_OUTSIDE, MouseState_outside::create());
     mouse_state_machine.add_state(MOUSE_STATE_OVER, MouseState_over::create());
+    mouse_state_machine.add_state(MOUSE_STATE_PUSHED, MouseState_pushed::create());
     mouse_state_machine.activate_state(MOUSE_STATE_OUTSIDE);
   }
 
@@ -618,6 +734,8 @@ namespace Framework
   {
     g_assert(e);
 
+    Glib::Mutex::Lock _lock(event_mutex);
+
     Widget::MouseEvent mouse_event;
 
     mouse_event.x  = e->x;
@@ -631,6 +749,8 @@ namespace Framework
     g_assert(this);
     g_assert(e);
 
+    Glib::Mutex::Lock _lock(event_mutex);
+
     Widget::MouseEvent mouse_event;
 
     mouse_event.x  = e->x;
@@ -643,11 +763,48 @@ namespace Framework
   {
     g_assert(e);
 
+    Glib::Mutex::Lock _lock(event_mutex);
+
     Widget::MouseEvent mouse_event;
 
     mouse_event.x  = e->x;
     mouse_event.y  = e->y;
 
     return on_mouse_enter(mouse_event);
+  }
+
+  bool WindowManager::handle_gtk_button_press_event(GdkEventButton* e)
+  {
+    g_assert(e);
+
+    Glib::Mutex::Lock _lock(event_mutex);
+
+    guint n = 1;
+
+    if(e->type==GDK_2BUTTON_PRESS)
+      n = 2;
+    else if(e->type==GDK_3BUTTON_PRESS)
+      n = 3;
+
+    Widget::MouseButtonEvent mouse_event(e->button, n);
+
+    mouse_event.x  = e->x;
+    mouse_event.y  = e->y;
+
+    return on_button_press(mouse_event);
+  }
+
+  bool WindowManager::handle_gtk_button_release_event(GdkEventButton* e)
+  {
+    g_assert(e);
+
+    Glib::Mutex::Lock _lock(event_mutex);
+
+    Widget::MouseButtonEvent mouse_event(e->button, 1);
+
+    mouse_event.x  = e->x;
+    mouse_event.y  = e->y;
+
+    return on_button_release(mouse_event);
   }
 }

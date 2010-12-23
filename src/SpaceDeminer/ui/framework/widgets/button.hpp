@@ -54,6 +54,8 @@ namespace Framework
     void v_rearrange_children();
 
     bool on_mouse_move(MouseEvent& mouse_event);
+    bool on_button_press(MouseButtonEvent& mouse_event);
+    bool on_button_release(MouseButtonEvent& mouse_event);
 
   private:
     ReliefType _relief_type;

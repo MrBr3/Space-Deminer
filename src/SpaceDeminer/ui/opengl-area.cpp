@@ -22,7 +22,7 @@
 
 MainWindow::GtkGlDrawingArea::GtkGlDrawingArea() : Gtk::GL::DrawingArea(Gdk::GL::Config::create(Gdk::GL::MODE_RGBA|Gdk::GL::MODE_DOUBLE|Gdk::GL::MODE_ALPHA|Gdk::GL::MODE_STENCIL)), window_manager(new Framework::WindowManager)
 {
-  add_events(Gdk::POINTER_MOTION_MASK|Gdk::LEAVE_NOTIFY_MASK|Gdk::ENTER_NOTIFY_MASK);
+  add_events(Gdk::BUTTON_PRESS_MASK|Gdk::BUTTON_RELEASE_MASK|Gdk::POINTER_MOTION_MASK|Gdk::LEAVE_NOTIFY_MASK|Gdk::ENTER_NOTIFY_MASK);
 
   _gl_initialized = false;
   window_manager->set_size(get_width(), get_height());
@@ -30,6 +30,8 @@ MainWindow::GtkGlDrawingArea::GtkGlDrawingArea() : Gtk::GL::DrawingArea(Gdk::GL:
   signal_motion_notify_event().connect(sigc::mem_fun(*window_manager.operator->(), &Framework::WindowManager::handle_gtk_motion_notify_event));
   signal_leave_notify_event().connect(sigc::mem_fun(*window_manager.operator->(), &Framework::WindowManager::handle_gtk_leave_notify_event));
   signal_enter_notify_event().connect(sigc::mem_fun(*window_manager.operator->(), &Framework::WindowManager::handle_gtk_enter_notify_event));
+  signal_button_press_event().connect(sigc::mem_fun(*window_manager.operator->(), &Framework::WindowManager::handle_gtk_button_press_event));
+  signal_button_release_event().connect(sigc::mem_fun(*window_manager.operator->(), &Framework::WindowManager::handle_gtk_button_release_event));
 }
 
 MainWindow::GtkGlDrawingArea::~GtkGlDrawingArea()

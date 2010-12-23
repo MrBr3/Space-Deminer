@@ -194,15 +194,28 @@ namespace Framework
     class MouseEvent
     {
     public:
-      int x, y;
+
+      /** \todo description
+       * */
+      int x;
+
+      /** \todo description
+       * */
+      int y;
     };
     class MouseButtonEvent : public MouseEvent
     {
+      ObsLink<Widget> widget;
     public:
+      /** \todo description
+       * */
       int btn;
-      Widget* widget;
 
-      MouseButtonEvent(int btn, Widget* widget=nullptr);
+      /** \brief used to differ between single, double and triple clicks
+       * */
+      guint pressed_times;
+
+      MouseButtonEvent(int btn, guint pressed_times, Widget* widget=nullptr);
     };
 
     typedef sigc::signal1<bool, MouseEvent&, InterruptableSigcAccumulator<false> > SignalMouseEvent;

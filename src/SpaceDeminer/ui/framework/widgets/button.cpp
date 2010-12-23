@@ -91,11 +91,22 @@ namespace Framework
 
   bool Button::on_mouse_move(MouseEvent& mouse_event)
   {
-
-  std::cout<<"btn-mm\n";
+    std::cout<<"Button Move ("<<mouse_event.x<<", "<<mouse_event.y<<")\n";
     if(Container::on_mouse_move(mouse_event))
       return true;
 
+    return true;
+  }
+
+  bool Button::on_button_press(MouseButtonEvent& mouse_event)
+  {
+    std::cout<<"Button Down ("<<mouse_event.x<<", "<<mouse_event.y<<")\n";
+    return true;
+  }
+
+  bool Button::on_button_release(MouseButtonEvent& mouse_event)
+  {
+    std::cout<<"Button Up  ("<<mouse_event.x<<", "<<mouse_event.y<<")\n";
     return true;
   }
 

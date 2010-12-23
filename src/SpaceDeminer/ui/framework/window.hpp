@@ -68,6 +68,8 @@ namespace Framework
   class WindowManager : public Refable
   {
     friend Window::~Window()throw();
+
+    Glib::Mutex event_mutex;
   public:
     class WindowIsAlreadyRegistered : public Glib::Exception
     {
@@ -146,6 +148,8 @@ namespace Framework
     bool handle_gtk_motion_notify_event(GdkEventMotion* e);
     bool handle_gtk_leave_notify_event(GdkEventCrossing* e);
     bool handle_gtk_enter_notify_event(GdkEventCrossing* e);
+    bool handle_gtk_button_press_event(GdkEventButton* e);
+    bool handle_gtk_button_release_event(GdkEventButton* e);
 
   private:
     typedef std::map<int, ObsLink<Window> > WindowMap;
@@ -157,6 +161,7 @@ namespace Framework
     {
       MOUSE_STATE_OUTSIDE = 0,
       MOUSE_STATE_OVER,
+      MOUSE_STATE_PUSHED,
     };
 
     ObsLink<Window> get_window(int x, int y, bool back_to_front=false);
@@ -184,7 +189,7 @@ namespace Framework
        * */
       void correct_coordinates(Widget* w, Widget::MouseEvent& mouse_event);
 
-      MouseStateMachine()
+      MouseStateMachine() : StateMachine<MouseStateMachine, MouseStateHandler, MouseState>(MOUSE_STATE_OUTSIDE)
       {
         _mouse_focus  = _mouse_over = nullptr;
       }
