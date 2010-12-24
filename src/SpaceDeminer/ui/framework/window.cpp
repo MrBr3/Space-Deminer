@@ -320,15 +320,16 @@ namespace Framework
 
     if(w)
     {
-      //TEMP std::cout<<"www\n";
       g_assert(get_state_machine());
-      get_state_machine()->correct_coordinates(w, mouse_event);
 
       while(w && ((move && !w->can_process_mouse_move_events)/* ||
                   (drag && !w->can_process_mouse_drag_events)*/))
       {
         w = w->get_parent();
       }
+
+      if(w)
+        get_state_machine()->correct_coordinates(w, mouse_event);
     }
 
     return w;
@@ -414,30 +415,30 @@ namespace Framework
 
         bool b=false;
 
+        Widget::MouseEvent old_mouse_event  = mouse_event;
+        get_state_machine()->correct_coordinates(get_state_machine()->_mouse_over, old_mouse_event);
+
         Widget* w = find_widget_accepting_mouse(mouse_event, true);
+
+        bool changing_current = false;
+
+        if(w!=get_state_machine()->_mouse_over)
+        {
+          changing_current  = true;
+
+          if(get_state_machine()->_mouse_over)
+            b = get_state_machine()->_mouse_over->on_mouse_leave(old_mouse_event);
+          get_state_machine()->_mouse_over  = w;
+        }
 
         if(w)
         {
-          bool changing_current = false;
-
-          if(w!=get_state_machine()->_mouse_over)
-          {
-            changing_current  = true;
-
-            if(get_state_machine()->_mouse_over)
-              b = get_state_machine()->_mouse_over->on_mouse_leave(mouse_event);
-            get_state_machine()->_mouse_over  = w;
-          }
-
-          if(w)
-          {
-            if(changing_current)
-              b |= w->on_mouse_enter(mouse_event);
-            b |= w->on_mouse_move(mouse_event);
-          }else
-          {
-            get_state_machine()->activate_state(WindowManager::MOUSE_STATE_OUTSIDE);
-          }
+          if(changing_current)
+            b |= w->on_mouse_enter(mouse_event);
+          b |= w->on_mouse_move(mouse_event);
+        }else
+        {
+          get_state_machine()->activate_state(WindowManager::MOUSE_STATE_OUTSIDE);
         }
 
         return b;
@@ -451,7 +452,12 @@ namespace Framework
         bool b  = false;
 
         if(get_state_machine()->_mouse_over)
+        {
+          get_state_machine()->_mouse_over->reference();
+          get_state_machine()->correct_coordinates(get_state_machine()->_mouse_over, mouse_event);
           b = get_state_machine()->_mouse_over->on_mouse_leave(mouse_event);
+          get_state_machine()->_mouse_over->unreference();
+        }
 
         get_state_machine()->_mouse_focus = nullptr;
         get_state_machine()->_mouse_over  = nullptr;
@@ -463,7 +469,13 @@ namespace Framework
       {
         ObsLink<Widget> w = get_state_machine()->_mouse_over;
 
+        g_assert(w);
+
+        get_state_machine()->correct_coordinates(w, mouse_event);
+
+        w->reference();
         w->on_button_press(mouse_event);
+        w->unreference();
 
         get_state_machine()->activate_state(WindowManager::MOUSE_STATE_PUSHED);
         return false;
@@ -506,13 +518,13 @@ namespace Framework
 
       bool on_mouse_move(Widget::MouseEvent& mouse_event)
       {
-        g_assert(!get_state_machine()->_mouse_focus);
-
         bool b=false;
 
-        ObsLink<Widget> w = get_state_machine()->_mouse_over;
+        Glib::RefPtr<Widget> w = ObsLink<Widget>(get_state_machine()->_mouse_over).get_refptr();
 
         g_assert(w);
+
+        get_state_machine()->correct_coordinates(w, mouse_event);
 
         if(w)
         {
@@ -533,13 +545,24 @@ namespace Framework
       {
         if(mouse_event.pressed_times==1)
           n_pushed++;
-        return false;
+
+        Glib::RefPtr<Widget> curr_w = ObsLink<Widget>(get_state_machine()->_mouse_over);
+        get_state_machine()->correct_coordinates(curr_w, mouse_event);
+        bool b  = curr_w->on_button_press(mouse_event);
+
+        return b;
       }
       bool on_button_release(Widget::MouseButtonEvent& mouse_event)
       {
-        ObsLink<Widget> curr_w = get_state_machine()->_mouse_over;
+        Glib::RefPtr<Widget> curr_w = ObsLink<Widget>(get_state_machine()->_mouse_over);
+
+        Widget::MouseButtonEvent w_mouse_event  = mouse_event;
+
+        Glib::RefPtr<Widget> w = ObsLink<Widget>(find_widget_accepting_mouse(w_mouse_event, true)).get_refptr();
 
         g_assert(curr_w);
+
+        get_state_machine()->correct_coordinates(curr_w, mouse_event);
 
         bool b  = curr_w->on_button_release(mouse_event);
 
@@ -548,7 +571,7 @@ namespace Framework
         if(n_pushed > 0)
           return b;
 
-        Widget* w = find_widget_accepting_mouse(mouse_event, true);
+        get_state_machine()->_mouse_focus  = nullptr;
 
         if(w==curr_w)
         {
@@ -557,12 +580,14 @@ namespace Framework
           return b;
         }
 
+        get_state_machine()->_mouse_over  = w;
+
         b |= curr_w->on_mouse_leave(mouse_event);
 
         if(w)
         {
-          b |= w->on_mouse_enter(mouse_event);
-          b |= w->on_mouse_move(mouse_event);
+          b |= w->on_mouse_enter(w_mouse_event);
+          b |= w->on_mouse_move(w_mouse_event);
 
           get_state_machine()->activate_state(WindowManager::MOUSE_STATE_OVER);
           g_assert(n_pushed==0);
@@ -582,7 +607,7 @@ namespace Framework
       {
         g_assert(n_pushed==0);
 
-        get_state_machine()->_mouse_focus  = nullptr;
+        get_state_machine()->_mouse_focus = get_state_machine()->_mouse_over;
         n_pushed  = 1;
 
         if(!get_state_machine()->_mouse_over)
@@ -595,6 +620,7 @@ namespace Framework
       void on_deactivate()
       {
         n_pushed  = 0;
+        get_state_machine()->_mouse_focus = nullptr;
       }
 
       static Glib::RefPtr<MouseState_pushed> create(){return Glib::RefPtr<MouseState_pushed>(new MouseState_pushed);}
@@ -625,6 +651,9 @@ namespace Framework
 
   void WindowManager::MouseStateMachine::correct_coordinates(Widget* w, Widget::MouseEvent& mouse_event)
   {
+    if(!w)
+      throw std::invalid_argument("WindowManager::MouseStateMachine::correct_coordinates needs a valid widget");
+
     Container* parent = w->get_parent();
 
     mouse_event.x -= w->get_allocation().get_x();

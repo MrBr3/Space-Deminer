@@ -205,7 +205,6 @@ namespace Framework
     };
     class MouseButtonEvent : public MouseEvent
     {
-      ObsLink<Widget> widget;
     public:
       /** \todo description
        * */
@@ -215,7 +214,7 @@ namespace Framework
        * */
       guint pressed_times;
 
-      MouseButtonEvent(int btn, guint pressed_times, Widget* widget=nullptr);
+      MouseButtonEvent(int btn, guint pressed_times);
     };
 
     typedef sigc::signal1<bool, MouseEvent&, InterruptableSigcAccumulator<false> > SignalMouseEvent;

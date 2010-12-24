@@ -21,10 +21,9 @@
 
 namespace Framework
 {
-  Widget::MouseButtonEvent::MouseButtonEvent(int btn, guint pressed_times, Widget* widget)
+  Widget::MouseButtonEvent::MouseButtonEvent(int btn, guint pressed_times)
   {
     this->btn = btn;
-    this->widget  = widget;
     this->pressed_times  = pressed_times;
   }
 
@@ -159,11 +158,8 @@ namespace Framework
 
     Widget* w = nullptr;
 
-    //TEMP std::cout<<get_name().c_str()<<"::find_widget\n";
-
     if(self_container)
     {
-    //TEMP std::cout<<"{\n";
       event.x -= get_allocation().get_x();
       event.y -= get_allocation().get_y();
 
@@ -174,7 +170,6 @@ namespace Framework
 
       event.x += get_allocation().get_x();
       event.y += get_allocation().get_y();
-    //TEMP std::cout<<"}\n";
     }
 
     return w ? w : this;

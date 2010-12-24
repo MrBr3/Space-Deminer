@@ -159,9 +159,10 @@ namespace Framework
   public:
     enum MouseState
     {
-      MOUSE_STATE_OUTSIDE = 0,
-      MOUSE_STATE_OVER,
-      MOUSE_STATE_PUSHED,
+      MOUSE_STATE_OUTSIDE = 0, ///< mouse_over==nullptr, mouse_focus==nullptr
+      MOUSE_STATE_OVER,        ///< mouse_over==the widget, the widget is currently pointing to, mouse_focus==nullptr
+      MOUSE_STATE_PUSHED,      ///< mouse_over==mouse_focus, mouse_focus==the widget, the widget is pointing to, when the button was pushed
+      //MOUSE_STATE_DRAG,      ///< mouse_over==the widget, the widget is currently pointing to, mouse_focus==the widget, the widget is pointing to, when the button was pushed
     };
 
     ObsLink<Window> get_window(int x, int y, bool back_to_front=false);
@@ -188,6 +189,10 @@ namespace Framework
        * \param mouse_event the mouse_event, which's coordinates will be be corrected
        * */
       void correct_coordinates(Widget* w, Widget::MouseEvent& mouse_event);
+      void correct_coordinates(Glib::RefPtr<Widget> w, Widget::MouseEvent& mouse_event)
+      {
+        correct_coordinates(w.operator->(), mouse_event);
+      }
 
       MouseStateMachine() : StateMachine<MouseStateMachine, MouseStateHandler, MouseState>(MOUSE_STATE_OUTSIDE)
       {
