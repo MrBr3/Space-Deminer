@@ -240,8 +240,7 @@ namespace Framework
     const Character& i = get_char('i');
     if(space.width < i.width)
     {
-      const Character& a = get_char('a');
-      space.width = a.width;
+      space.width = i.width + MAX(2, i.width/4);
     }
   }
 
