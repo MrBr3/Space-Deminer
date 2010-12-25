@@ -26,7 +26,9 @@ namespace Framework
 {
   class Button : public Bin
   {
+    typedef Bin ParentClass;
   public:
+
     enum DrawParam
     {
       DRAW_PARAM_RELIEF_NORMAL,
@@ -54,6 +56,8 @@ namespace Framework
     void v_rearrange_children();
 
     bool on_mouse_move(MouseEvent& mouse_event);
+    bool on_mouse_enter(MouseEvent& mouse_event);
+    bool on_mouse_leave(MouseEvent& mouse_event);
     bool on_button_press(MouseButtonEvent& mouse_event);
     bool on_button_release(MouseButtonEvent& mouse_event);
 

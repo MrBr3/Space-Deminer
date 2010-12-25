@@ -76,6 +76,10 @@ void DarkTheme::draw(Framework::PaintTool& ee, const Glib::ustring& what, Framew
       {
       case Framework::Button::DRAW_PARAM_RELIEF_PUSHED:
         button_pushed_simg->draw(ee, where);
+        break;
+      case Framework::Button::DRAW_PARAM_RELIEF_MOUSEOVER:
+        button_mouseover_simg->draw(ee, where);
+        break;
       case Framework::Button::DRAW_PARAM_RELIEF_NORMAL:
       default:
         button_normal_simg->draw(ee, where);

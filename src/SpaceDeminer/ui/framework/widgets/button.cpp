@@ -91,22 +91,56 @@ namespace Framework
 
   bool Button::on_mouse_move(MouseEvent& mouse_event)
   {
-    std::cout<<"Button Move ("<<mouse_event.x<<", "<<mouse_event.y<<")\n";
     if(Container::on_mouse_move(mouse_event))
       return true;
 
     return true;
   }
 
+  bool Button::on_mouse_enter(MouseEvent& mouse_event)
+  {
+    std::cout<<"Button:on_mouse_enter\n";
+
+    ParentClass::on_mouse_enter(mouse_event);
+
+    _state  = DRAW_PARAM_RELIEF_MOUSEOVER;
+
+    invalidate();
+
+    return true;
+  }
+  bool Button::on_mouse_leave(MouseEvent& mouse_event)
+  {
+    std::cout<<"Button:on_mouse_leave\n";
+    ParentClass::on_mouse_leave(mouse_event);
+
+    _state  = DRAW_PARAM_RELIEF_NORMAL;
+
+    invalidate();
+
+    return true;
+  }
+
   bool Button::on_button_press(MouseButtonEvent& mouse_event)
   {
-    std::cout<<"Button Down ("<<mouse_event.x<<", "<<mouse_event.y<<")\n";
+    std::cout<<"Button:on_button_press\n";
+    ParentClass::on_button_press(mouse_event);
+
+    _state  = DRAW_PARAM_RELIEF_PUSHED;
+
+    invalidate();
+
     return true;
   }
 
   bool Button::on_button_release(MouseButtonEvent& mouse_event)
   {
-    std::cout<<"Button Up  ("<<mouse_event.x<<", "<<mouse_event.y<<")\n";
+    std::cout<<"Button:on_button_release\n";
+    ParentClass::on_button_release(mouse_event);
+
+    _state  = DRAW_PARAM_RELIEF_MOUSEOVER;
+
+    invalidate();
     return true;
   }
 
