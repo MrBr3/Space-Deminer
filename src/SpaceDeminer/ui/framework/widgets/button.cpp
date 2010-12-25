@@ -141,6 +141,12 @@ namespace Framework
 
     _state  = DRAW_PARAM_RELIEF_MOUSEOVER;
 
+    if(mouse_event.x >= 0 &&
+       mouse_event.y >= 0 &&
+       mouse_event.x <  get_width() &&
+       mouse_event.y <  get_height())
+      on_clicked();
+
     invalidate();
     return true;
   }

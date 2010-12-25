@@ -71,6 +71,8 @@ namespace Framework
 
   protected:
     Theme::Metrics child_dist;
+
+    virtual void on_clicked(){_signal_clicked.emit();}
   };
 
   class ToggleButton : public Button
