@@ -2,13 +2,16 @@ Gameplay:
   Space Invader artig
   Gegner sind Minen/Drohnen
 
+  Hintergrund:
+    3D Planeten/Sterne/Nebel...
+
   Beleuchtung:
     mehrere Bilder, die additiv geblendet werden, je nach anzahl und position der Lichter
 
   Spielerraumschiff:
-    keine Leben - wenn schiff kaputt -- game over
+    keine Leben - wenn schiff kaputt -- game over (per optionen einstellbar? oder unterschiedliche schwierigkeit?)
     Energie - gebraucht für viele mods
-    Intigrität: wenn weg explodoert das schiff
+    Intigrität: wenn weg explodiert das schiff
 
   Tutorial?
     Levelgruppe:
@@ -22,7 +25,7 @@ Gameplay:
       > ein paar zielende + schnell schießende Gegner + Boss
 
   verzerstörung von Gegner bekommt man Geld
-    in Form von Dollar, dass aufgesammelt werden muss
+    in Form von Dollar (Euro oder Pund per Optionen einstellbar), dass aufgesammelt werden muss
     bei jedem 5en oder so oder wenn bestimmte Zeit der Zerstörung der letzten 5 unterschritten wird
     zum erwerb von "Superwaffendefensivzeug" sollte man schon mehrere Levelgruppen sparen müssen
    
@@ -69,7 +72,7 @@ Gameplay:
   Highscore
     nur drei wichtigsten highscores im Highscore Menüpunkt sichtbar, andere extra anzeigbar
     wenn Spiel zu ende gespielt, wird das spiel von vorne gespielt mit allen Modulen, dann aber auf extra Highscores:
-     je ein  Highscore für die ersten 5 male durchgespielt (und je pro Schwierigkeitsstufe) (also zusätzlich 5*3 Highscores)
+    je ein  Highscore für die ersten 5 male durchgespielt (und je pro Schwierigkeitsstufe) (also zusätzlich 5*3 Highscores)
     Highscores verschlüsselt abspeichern?
 
   Homepage?

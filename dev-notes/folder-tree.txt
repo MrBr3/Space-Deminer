@@ -11,4 +11,4 @@ The project begun 2010-07-26
 |--<share> die Dateien, die nichtausführbar sind, aber
 | mitgeliefert werden sollten - also texturen, hintergründe,
 | sounds...
-|--<src> nur der Quelltext (das was ich dir geschick hab')
+|--<src> nur der Quelltext

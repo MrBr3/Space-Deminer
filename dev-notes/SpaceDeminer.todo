@@ -1,13 +1,30 @@
 Next Steps:
-[ ] Mausinteraktion
-  [ ] Events mask
-[ ] MainMenu
-[ ] Fokus
-  [ ] Maske
-[ ] Memnotics
-  Widget* get_memnotic()
-  on_memnotic_pushed
-  on_memnotic_released
+[X] Mausinteraktion
+  [X] Events mask
+[X] MainMenu wieder zum laufen bringen
+[ ] CheckExpects
+[ ] Testen, wie on_mouse_move sich verhält, wenn das widget mit event plötzlich verschwindet
+  [ ] Mausbewegung
+  [ ] Maustaste runter
+  [ ] Mausbewegung mit Maustaste runter
+  [ ] Maustaste hoch
+  [ ] Widget betreten
+  [ ] Widget verlassen
+[ ] per Tasten navigieren können
+  [ ] Fokus
+    [ ] Maske anpassen
+  [ ] Tab
+  [ ] Pfeiltasten
+    [ ] wenn unverarbeitet, sollen container semiautomatisch untereinander ausmachen
+    [ ] sigc::slot<void> move_when(DIR_RIGHT/DIR_LEFT/... , Widget*) // gibt einen Slot zurück, welches bei entsprechendem Tastendruck den Fokus zum gegebenen Widget wechselt
+  [ ] Memnotics
+    [X] Draw Memnotics
+    [ ] Widget* get_memnotic(unichar memnotic) // liefert das Widget, das gegebene Memnotic erfüllt
+    [ ] on_memnotic_pushed
+    [ ] on_memnotic_released
+[ ] neues UI Design einführen
+  [ ] Buttons ohne Rahmen
+    [ ] Zeichnen außerhalb der Widgets erlauben (extra pass)
 
 
 [ ] Programm
@@ -33,4 +50,4 @@ Next Steps:
       [ ] Back
         [ ] Bei Auflösungswechsel nach 2 sekunden sanft von der schlechten zur guten Auflösung wechseln
   [ ] Interoperabilität
-    [ ] libsvg sogar unter windows nutzen
+    [ ] libsvg auch unter windows nutzen
