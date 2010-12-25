@@ -21,6 +21,7 @@
 #define _SPACE_DEMINER_BASE_H_
 
 #include "./dependencies.hpp"
+#include "./macros.hpp"
 #include "./paths.hpp"
 #include "./refable.hpp"
 #include "./static-manager.hpp"

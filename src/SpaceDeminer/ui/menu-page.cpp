@@ -86,10 +86,7 @@ void MenuPage::init()throw()
     }
 
     _dt_page_label.set_label(caption);
-  }catch(const Glib::Exception& e)
-  {
-    std::cout<<"**warning** couldn't init the page '"<<caption<<"' as "<<e.what()<<"\n";
-  }
+  }CATCH_ALL("**MenuPage::init** ", NOTHING_MACRO)
 
   on_open_first_time();
   _is_first_opening  = false;

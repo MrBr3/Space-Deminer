@@ -48,19 +48,7 @@ int main(int argc, char **argv)
     MainWindow window;
 
     kit.run(window);
-  }catch(const Glib::Exception& e)
-  {
-    std::cout<<"**main** an Glib::Exception has been detected: '"<<e.what()<<"'\n";
-    return 42;
-  }catch(const std::exception& e)
-  {
-    std::cout<<"**main** an std::exception has been detected: '"<<e.what()<<"'\n";
-    return 42;
-  }catch(...)
-  {
-    std::cout<<"**main** an unkown exception has been detected!\n";
-    return 42;
-  }
+  }CATCH_ALL("**main** ", return 42;)
 
 	return 0;
 }

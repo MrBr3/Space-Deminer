@@ -82,8 +82,8 @@ void Menu::activate_menu_page(MenuPageID id)throw(UnknownID)
   if(get_singleton()->_active_page)
   {
     get_singleton()->_active_page->on_close();
-    MenuAlignment::get_singleton()->main_area.remove();
-    MenuAlignment::get_singleton()->link_area.remove();
+    MenuAlignment::get_singleton()->main_area.remove_if_child();
+    MenuAlignment::get_singleton()->link_area.remove_if_child();
     MenuAlignment::get_singleton()->page_icon.clear();
   }else
   {

@@ -26,6 +26,7 @@
     </VirtualDirectory>
     <File Name="opengl.hpp"/>
     <File Name="opengl.cpp"/>
+    <File Name="macros.hpp"/>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>
   <VirtualDirectory Name="external">

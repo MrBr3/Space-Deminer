@@ -609,15 +609,7 @@ void start_gui_test()
     default:
       g_assert_not_reached();
     }
-  }catch(const std::exception& e)
-  {
-    std::cout<<"caught std::exception:\n\""<<e.what()<<"\"\n";
-    throw;
-  }catch(const Glib::Exception& e)
-  {
-    std::cout<<"caught Glib::Exception:\n\""<<e.what()<<"\"\n";
-    throw;
-  }
+  }CATCH_ALL("**GUITest::start_gui_test** ", throw;)
 }
 
 inline void GUITest::exchange_bytes(guint8* a, guint8* b, gsize n)

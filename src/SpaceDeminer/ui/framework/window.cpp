@@ -246,19 +246,7 @@ namespace Framework
 
       invalid_region  = Gdk::Region();
       full_area_invalid = false;
-    }catch(const Glib::Exception& e)
-    {
-      std::cout<<"**WindowManager::expose** an Glib::Exception has been detected: '"<<e.what()<<"'\n";
-      throw;
-    }catch(const std::exception& e)
-    {
-      std::cout<<"**WindowManager::expose** an std::exception has been detected: '"<<e.what()<<"'\n";
-      throw;
-    }catch(...)
-    {
-      std::cout<<"**WindowManager::expose** an unkown exception has been detected!\n";
-      throw;
-    }
+    }CATCH_ALL("**WindowManager::expose** ", throw;)
   }
 
   void WindowManager::debug_ui_widget_names(PaintTool& paint_tool, const Widget& w)
