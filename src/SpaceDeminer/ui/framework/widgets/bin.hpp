@@ -36,8 +36,18 @@ namespace Framework
     };
 
     /** \brief Removes a Widget
+     *
+     * \note throws an exception if there's no child.
      * */
     void remove();
+
+    /** \brief Removes a Widget if possible
+     * */
+    void remove_if_child()
+    {
+      if(get_child())
+        remove();
+    }
 
     Widget* get_child(){return _child;}
     const Widget* get_child()const{return _child;}
