@@ -24,7 +24,7 @@ using namespace Framework;
 
 DarkTheme::DarkTheme()
 {
-  default_font  = Font::create("sans", 12, false, false, 0.6f, 0.6f, 0.6f);
+  default_font  = Font::create("sans", 12, false, false, true, 0.6f, 0.6f, 0.6f);
 
   button_normal_simg =    SegmentedImage9::create_from_file(apply_filename_macros("$(exe-share)/ui/themes/dark-theme/button-01.png"),  0, 25, 25, 25, 3, 3, 3, 3);
   button_mouseover_simg = SegmentedImage9::create_from_file(apply_filename_macros("$(exe-share)/ui/themes/dark-theme/button-01.png"), 25, 25, 25, 25, 3, 3, 3, 3);

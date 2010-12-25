@@ -80,7 +80,7 @@ namespace Framework
 
   DummyTheme::DummyTheme()
   {
-    default_font  = Font::create("sans", 12, false, false, 0.6f, 0.6f, 0.6f);
+    default_font  = Font::create("sans", 12, false, false, true, 0.6f, 0.6f, 0.6f);
   }
 
   DummyTheme::~DummyTheme()throw()

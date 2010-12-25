@@ -40,7 +40,7 @@ namespace Framework
 
     gdouble get_height()const{return _height;}
 
-    static ResPtr<Font> create(const Glib::ustring& family, gdouble height, bool italic=false, bool bold=false, Real r=0.5f, Real g=0.5f, Real b=0.5f, Real a=1.f);
+    static ResPtr<Font> create(const Glib::ustring& family, gdouble height, bool italic=false, bool bold=false, bool use_memnotic=true, Real r=0.5f, Real g=0.5f, Real b=0.5f, Real a=1.f);
 
     /**
      * \param text_width_ if you already known the size of the text, you can use text_width_ and text_height_ to increase performance - in that case you are responsible to recalculate the size if something has changed. If <0 the width will be recalculated and stored in text_width_
@@ -54,7 +54,7 @@ namespace Framework
     virtual void on_deinit()=0;
 
     void init();
-    void init(const Glib::ustring& family, gdouble height, bool italic=false, bool bold=false, Real r=0.5f, Real g=0.5f, Real b=0.5f, Real a=1.f);
+    void init(const Glib::ustring& family, gdouble height, bool italic=false, bool bold=false, bool use_memnotic=true, Real r=0.5f, Real g=0.5f, Real b=0.5f, Real a=1.f);
     void deinit();
 
     Font();
@@ -66,7 +66,7 @@ namespace Framework
   private:
     Real _r, _g, _b, _a;
     Glib::ustring _family;
-    bool _italic, _bold;
+    bool _italic, _bold, _use_memnotic;
     gdouble _height;
 
     void v_purge_resource();

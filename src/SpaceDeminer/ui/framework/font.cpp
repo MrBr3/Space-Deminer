@@ -21,11 +21,11 @@
 
 namespace Framework
 {
-  ResPtr<Font> Font::create(const Glib::ustring& family, gdouble height, bool italic, bool bold, Real r, Real g, Real b, Real a)
+  ResPtr<Font> Font::create(const Glib::ustring& family, gdouble height, bool italic, bool bold, bool use_memnotic, Real r, Real g, Real b, Real a)
   {
     ResPtr<Font> font = Engine::get_singleton()->create_font();
 
-    font->init(family, height, italic, bold, r, g, b, a);
+    font->init(family, height, italic, bold, use_memnotic, r, g, b, a);
 
     return font;
   }
@@ -35,6 +35,9 @@ namespace Framework
     _r=_g=_b=0.5f;
     _a=1.f;
     _height = 10.;
+    _italic = false;
+    _bold = false;
+    _use_memnotic = true;
 
     _family = "sans";
   }
@@ -46,7 +49,7 @@ namespace Framework
     set_is_loaded(true);
   }
 
-  void Font::init(const Glib::ustring& family, gdouble height, bool italic, bool bold, Real r, Real g, Real b, Real a)
+  void Font::init(const Glib::ustring& family, gdouble height, bool italic, bool bold, bool use_memnotic, Real r, Real g, Real b, Real a)
   {
     _r  = r;
     _g  = g;
@@ -55,6 +58,7 @@ namespace Framework
 
     _italic = italic;
     _bold = bold;
+    _use_memnotic  = use_memnotic;
 
     _height = height;
 
@@ -112,6 +116,7 @@ namespace Framework
       y -= round(*text_height_ * y_align);
 
     int curr_x=x;
+    bool memnotic  = false;
 
     if(x_align)
       curr_x -= round(calc_line_width(text.begin(), text)*x_align);
@@ -120,7 +125,10 @@ namespace Framework
     {
       unichar c = *s_iter;
 
-      if(c=='\n') // TODO: Tab
+      if(!memnotic && c=='_')
+      {
+        memnotic = true;
+      }else if(c=='\n') // TODO: Tab
       {
         curr_x=x;
         y += line_dist;
@@ -141,6 +149,15 @@ namespace Framework
           //paint_tool.draw_color_rect(curr_x, y, _c.width, _real_height, 0.f, 0.f, 0.f, 1.f);
           paint_tool.draw_image(_c.img, curr_x, y);
         }
+        if(memnotic)
+        {
+          paint_tool.draw_color_rect(curr_x, y+_real_height-1, _c.width, 1, 1.f, 1.f, 1.f, 0.5f);
+          memnotic = false;
+        }
+
+        if(c==32)
+          std::cout<<"_c.width "<<_c.width<<"\n";
+
         curr_x += _c.width;
       }
     }
@@ -152,6 +169,7 @@ namespace Framework
 
     width = 0;
     height  = _real_height;
+    bool memnotic = false;
 
     int curr_line_width = 0;
 
@@ -159,7 +177,10 @@ namespace Framework
     {
       unichar c = *s_iter;
 
-      if(c=='\n') // TODO: Tab
+      if(!memnotic && c=='_')
+      {
+        memnotic  = true;
+      }else if(c=='\n') // TODO: Tab
       {
         width = MAX(curr_line_width, width);
         curr_line_width = 0;
@@ -170,6 +191,7 @@ namespace Framework
       }else
       {
         curr_line_width += get_char(c).width;
+        memnotic = false;
       }
     }
     width = MAX(curr_line_width, width);
@@ -178,12 +200,16 @@ namespace Framework
   int ImageFont::calc_line_width(const Glib::ustring::const_iterator& s_from, const Glib::ustring& text)
   {
     int w=0;
+    bool memnotic = false;
 
     for(Glib::ustring::const_iterator s_iter=text.begin(); s_iter!=text.end(); ++s_iter)
     {
       unichar c = *s_iter;
 
-      if(c=='\n') // TODO: Tab
+      if(!memnotic && c=='_')
+      {
+        memnotic  = true;
+      }else if(c=='\n') // TODO: Tab
       {
         break;
       }else if(c<32)
@@ -192,6 +218,7 @@ namespace Framework
       }else
       {
         w += get_char(c).width;
+        memnotic  = false;
       }
     }
 
