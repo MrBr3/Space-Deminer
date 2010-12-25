@@ -86,8 +86,13 @@ namespace Framework
       paint_tool.draw_widget_back("Button/Button", _state, *this);
     }
 
-    paint_tool.
+    if(get_state()==DRAW_PARAM_RELIEF_PUSHED)
+      paint_tool.push_offset(1, 1);
+
     Container::on_expose(paint_tool);
+
+    if(get_state()==DRAW_PARAM_RELIEF_PUSHED)
+      paint_tool.pop_offset();
   }
 
   bool Button::on_mouse_move(MouseEvent& mouse_event)
@@ -100,8 +105,6 @@ namespace Framework
 
   bool Button::on_mouse_enter(MouseEvent& mouse_event)
   {
-    std::cout<<"Button:on_mouse_enter\n";
-
     ParentClass::on_mouse_enter(mouse_event);
 
     _state  = DRAW_PARAM_RELIEF_MOUSEOVER;
@@ -112,7 +115,6 @@ namespace Framework
   }
   bool Button::on_mouse_leave(MouseEvent& mouse_event)
   {
-    std::cout<<"Button:on_mouse_leave\n";
     ParentClass::on_mouse_leave(mouse_event);
 
     _state  = DRAW_PARAM_RELIEF_NORMAL;
@@ -124,7 +126,6 @@ namespace Framework
 
   bool Button::on_button_press(MouseButtonEvent& mouse_event)
   {
-    std::cout<<"Button:on_button_press\n";
     ParentClass::on_button_press(mouse_event);
 
     _state  = DRAW_PARAM_RELIEF_PUSHED;
@@ -136,7 +137,6 @@ namespace Framework
 
   bool Button::on_button_release(MouseButtonEvent& mouse_event)
   {
-    std::cout<<"Button:on_button_release\n";
     ParentClass::on_button_release(mouse_event);
 
     _state  = DRAW_PARAM_RELIEF_MOUSEOVER;

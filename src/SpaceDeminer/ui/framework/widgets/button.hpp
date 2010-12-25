@@ -61,6 +61,8 @@ namespace Framework
     bool on_button_press(MouseButtonEvent& mouse_event);
     bool on_button_release(MouseButtonEvent& mouse_event);
 
+    DrawParam get_state()const{return _state;}
+
   private:
     ReliefType _relief_type;
     DrawParam _state;
