@@ -100,6 +100,8 @@ namespace Framework
       ~Character()throw(){}
     };
 
+    void ensure_space();
+
     int calc_line_width(const Glib::ustring::const_iterator& s_from, const Glib::ustring& text);
 
     typedef std::map<unichar,  Glib::RefPtr<Character> > MapCharacters;

@@ -155,9 +155,6 @@ namespace Framework
           memnotic = false;
         }
 
-        if(c==32)
-          std::cout<<"_c.width "<<_c.width<<"\n";
-
         curr_x += _c.width;
       }
     }
@@ -229,11 +226,23 @@ namespace Framework
   {
     ensure_characters("\x20\x7f");
     ensure_characters(_("[common-characters]"));
+    ensure_space();
   }
 
   void ImageFont::on_deinit()
   {
     _characters.clear();
+  }
+
+  void ImageFont::ensure_space()
+  {
+    Character& space  = *_characters.find(0x20)->second.operator->();
+    const Character& i = get_char('i');
+    if(space.width < i.width)
+    {
+      const Character& a = get_char('a');
+      space.width = a.width;
+    }
   }
 
   void ImageFont::ensure_characters(const Glib::ustring& str)
@@ -321,8 +330,9 @@ namespace Framework
 
             g_assert(character->img);
           }else if(a==32)
+          {
             character->width  = width;
-          else
+          }else
             character->width  = 0;
 
           _characters.insert(std::make_pair(a, character));
