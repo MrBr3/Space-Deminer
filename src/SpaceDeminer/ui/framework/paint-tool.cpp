@@ -75,10 +75,10 @@ namespace Framework
 
     ScissorRect scissor_rect(rect.get_x()+_total_offset.dx, rect.get_y()+_total_offset.dy, rect.get_x()+_total_offset.dx+rect.get_width(), rect.get_y()+_total_offset.dy+rect.get_height());
 
-    if(scissor_rect.left>scissor_rect.right)
+    /*if(scissor_rect.left>scissor_rect.right)
       std::cout<<"";
     if(scissor_rect.top>scissor_rect.bottom)
-      std::cout<<"";
+      std::cout<<"";*/
 
     g_assert(scissor_rect.left<=scissor_rect.right);
     g_assert(scissor_rect.top <=scissor_rect.bottom);
