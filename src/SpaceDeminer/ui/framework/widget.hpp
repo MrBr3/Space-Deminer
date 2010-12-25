@@ -126,8 +126,10 @@ namespace Framework
     {
       invalidate(_allocation);
     }
-    void invalidate(const Gdk::Rectangle& rect)
+    void invalidate(Gdk::Rectangle rect)
     {
+      rect.set_x(0);
+      rect.set_y(0);
       Gdk::Region region(rect);
       invalidate(region);
     }

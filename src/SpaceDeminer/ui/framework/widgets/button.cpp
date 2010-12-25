@@ -86,6 +86,7 @@ namespace Framework
       paint_tool.draw_widget_back("Button/Button", _state, *this);
     }
 
+    paint_tool.
     Container::on_expose(paint_tool);
   }
 
