@@ -21,7 +21,6 @@ class Sphere : public Refable
 {
   gfloat _rotation_x, _rotation_y, _rotation_z;
   gfloat _x_speed, _y_speed, _z_speed;
-  gfloat _scale;
   bool _rotating;
   bool _use_warped_uv;
 
@@ -80,8 +79,6 @@ public:
     _invalidate();
   }
   void rotate_z(gfloat dz){_rotation_z+=dz;_invalidate();}
-  gfloat get_scale()const{return _scale;}
-  void set_scale(gfloat new_scale){_scale = CLAMP(new_scale, 0.001f, 16.f);_invalidate();}
 
   void set_rotation_x_speed(gfloat x_speed);
   void set_rotation_z_speed(gfloat z_speed);

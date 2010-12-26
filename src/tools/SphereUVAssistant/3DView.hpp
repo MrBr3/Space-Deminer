@@ -29,6 +29,8 @@ class View3D : public Gtk::GL::DrawingArea
   }
   int mouse_drag_start_x, mouse_drag_start_y;
 
+  gfloat distance;
+
   sigc::signal<void, bool> _signal_wireframed_changed;
 public:
 

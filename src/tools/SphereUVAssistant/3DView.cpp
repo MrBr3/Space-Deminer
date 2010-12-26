@@ -30,8 +30,8 @@ View3D::View3D() : Gtk::GL::DrawingArea(Gdk::GL::Config::create(Gdk::GL::MODE_RG
 
   sphere  = Sphere::create();
   sphere->signal_invalidated().connect(sigc::mem_fun(*this, &View3D::invalidate));
-  //sphere->rotate_x(30.f);
-  //sphere->set_rotation_z_speed(10.f);
+
+  distance  = 1.f;
 
   show();
   _gl_initialized = false;
@@ -105,31 +105,25 @@ bool View3D::on_expose_event(GdkEventExpose* event)
 
   glClear(GL_COLOR_BUFFER_BIT);
 
-  glLoadIdentity();
-
-  gfloat aspect = gfloat(get_width())/gfloat(get_height());
-  if(aspect<=0.f)
-    return false;
-  if(aspect>=1.f)
-    glOrtho(-aspect, aspect, 1.f, -1.f, sphere->get_scale()*1.001f, -sphere->get_scale()*1.001f);
-  else
-    glOrtho(-1.f, 1.f, 1.f/aspect, -1.f/aspect, sphere->get_scale()*1.001f, -sphere->get_scale()*1.001f);
-
-  glRotatef(90.f, 1.f, 0.f, 0.f);
-  glRotatef(sphere->get_x_rotation(), 1.f, 0.f, 0.f);
-  glRotatef(sphere->get_z_rotation(), 0.f, 0.f, 1.f);
-
-  glScalef(sphere->get_scale(), sphere->get_scale(), sphere->get_scale());
+  glEnable(GL_CULL_FACE);
 
   if(get_draw_wireframed())
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   else
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-  glEnable(GL_CULL_FACE);
+  glLoadIdentity();
+
+  gfloat aspect = gfloat(get_width())/gfloat(get_height());
+  gluPerspective(50., aspect, 1e-3, 1000.);
+
+  glTranslatef(0., 0.f, -1.f -1e-2f - 1.5f*distance);
+
+  glRotatef(-90.f, 1.f, 0.f, 0.f);
+  glRotatef(sphere->get_x_rotation(), 1.f, 0.f, 0.f);
+  glRotatef(sphere->get_z_rotation(), 0.f, 0.f, 1.f);
 
   glEnable(GL_TEXTURE_2D);
-  //glEnable(GL_TEXTURE);
   sphere_texture.bind();
 
   sphere_mesh.render(sphere->get_use_warped_uv());
@@ -150,7 +144,8 @@ bool View3D::on_scroll_event(GdkEventScroll* event)
   if(zoom==0.f)
     return false;
 
-  sphere->set_scale(sphere->get_scale() + 0.1f*zoom);
+  distance  = CLAMP(distance-0.1f*zoom*distance, 0.f, 32.f);
+  invalidate();
 
   return true;
 }
@@ -184,8 +179,10 @@ bool View3D::on_motion_notify_event(GdkEventMotion* event)
 
   if(_rotating_with_mouse)
   {
-    sphere->rotate_z(mouse_drag_start_x-event->x*1.f);
-    sphere->rotate_x(mouse_drag_start_y-event->y*1.f);
+    gfloat r_frac = MIN(1.f, distance*distance);
+
+    sphere->rotate_z(-(mouse_drag_start_x-event->x*1.f) * r_frac);
+    sphere->rotate_x(-(mouse_drag_start_y-event->y*1.f) * r_frac);
 
     mouse_drag_start_x  = event->x;
     mouse_drag_start_y  = event->y;

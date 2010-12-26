@@ -29,11 +29,10 @@ Sphere::Sphere()
 
   _rotation_x  = 0.f;
   _rotation_y  = 0.f;
-  _rotation_z  = 0.f;
+  _rotation_z  = 90.f;
   _x_speed  = 0.f;
   _y_speed  = 0.f;
   _z_speed  = 0.f;
-  _scale  = 1.f;
   _rotating = false;
   _use_warped_uv  = false;
 
@@ -55,7 +54,7 @@ void Sphere::set_rotation_x_speed(gfloat x_speed)
   {
     _rotating = true;
     Glib::signal_timeout().connect_once(sigc::mem_fun(*this, &Sphere::_rotate),
-                               1000*dt);
+                                        1000*dt);
   }
 }
 
@@ -67,7 +66,7 @@ void Sphere::set_rotation_z_speed(gfloat z_speed)
   {
     _rotating = true;
     Glib::signal_timeout().connect_once(sigc::mem_fun(*this, &Sphere::_rotate),
-                               1000*dt);
+                                        1000*dt);
   }
 }
 
@@ -78,7 +77,7 @@ void Sphere::_rotate()
   if(_rotating)
   {
     Glib::signal_timeout().connect_once(sigc::mem_fun(*this, &Sphere::_rotate),
-                               1000*dt);
+                                        1000*dt);
 
     rotate_x(_x_speed * dt);
     rotate_y(_y_speed * dt);

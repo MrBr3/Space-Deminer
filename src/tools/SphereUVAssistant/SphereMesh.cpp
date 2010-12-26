@@ -272,8 +272,8 @@ namespace Private_SphereMesh_
       gfloat lower_radius = sin(angle_b);
       gfloat lower_z  = cos(angle_b);
 
-      gfloat uv_x = 1.f;
-      gfloat i_uv_x = -1.f/_n_circle_vertices;
+      gfloat uv_x = 0.f;
+      gfloat i_uv_x = 1.f/_n_circle_vertices;
       gfloat lower_uv_y = angle_b/G_PI;
 
       for(gsize i=0; i<_n_circle_vertices; ++i)
@@ -286,15 +286,15 @@ namespace Private_SphereMesh_
         lower_circle_a.z = lower_z;
         lower_circle_b.z = lower_z;
 
-        curr_triangle().a.set(lower_circle_b);
+        curr_triangle().c.set(lower_circle_b);
         curr_triangle().b.set(lower_circle_a);
-        curr_triangle().c.set(0.f, 0.f, 1.f);
+        curr_triangle().a.set(0.f, 0.f, 1.f);
 
-        curr_rect_uv().a.set(uv_x+0.5f*i_uv_x,
+        curr_rect_uv().c.set(uv_x+0.5f*i_uv_x,
                              0.f);
         curr_rect_uv().b.set(uv_x+i_uv_x,
                              lower_uv_y);
-        curr_rect_uv().c.set(uv_x,
+        curr_rect_uv().a.set(uv_x,
                              lower_uv_y);
 
         uv_x  += i_uv_x;
@@ -307,8 +307,8 @@ namespace Private_SphereMesh_
       gfloat higher_radius = sin(angle_a);
       gfloat higher_z  = cos(angle_a);
 
-      gfloat uv_x = 1.f;
-      gfloat i_uv_x = -1.f/_n_circle_vertices;
+      gfloat uv_x = 0.f;
+      gfloat i_uv_x = 1.f/_n_circle_vertices;
       gfloat higher_uv_y = angle_a/G_PI;
 
       for(gsize i=0; i<_n_circle_vertices; ++i)
@@ -321,15 +321,15 @@ namespace Private_SphereMesh_
         higher_circle_a.z = higher_z;
         higher_circle_b.z = higher_z;
 
-        curr_triangle().a.set(higher_circle_a);
+        curr_triangle().c.set(higher_circle_a);
         curr_triangle().b.set(higher_circle_b);
-        curr_triangle().c.set(0.f, 0.f, -1.f);
+        curr_triangle().a.set(0.f, 0.f, -1.f);
 
-        curr_rect_uv().a.set(uv_x,
+        curr_rect_uv().c.set(uv_x,
                              higher_uv_y);
         curr_rect_uv().b.set(uv_x+i_uv_x,
                              higher_uv_y);
-        curr_rect_uv().c.set(uv_x+0.5f*i_uv_x,
+        curr_rect_uv().a.set(uv_x+0.5f*i_uv_x,
                              1.f);
 
         uv_x  += i_uv_x;
@@ -347,51 +347,51 @@ namespace Private_SphereMesh_
     gfloat lower_radius = sin(angle_b);
     gfloat lower_z  = cos(angle_b);
 
-    gfloat uv_x = 1.f;
-    gfloat i_uv_x = -1.f/_n_circle_vertices;
+    gfloat uv_x = 0.f;
+    gfloat i_uv_x = 1.f/_n_circle_vertices;
     gfloat higher_uv_y = angle_a/G_PI;
     gfloat lower_uv_y = angle_b/G_PI;
 
     for(gsize i=0; i<_n_circle_vertices; ++i)
     {
-      Vector3 higher_circle_a = point(i);
-      Vector3 higher_circle_b = point(i+1);
-      Vector3 lower_circle_d = point(i);
-      Vector3 lower_circle_c = point(i+1);
+      Vector3 lower_circle_a = point(i);
+      Vector3 lower_circle_b = point(i+1);
+      Vector3 higher_circle_c = point(i+1);
+      Vector3 higher_circle_d = point(i);
 
-      higher_circle_a  *= higher_radius;
-      higher_circle_b  *= higher_radius;
-      higher_circle_a.z = higher_z;
-      higher_circle_b.z = higher_z;
+      lower_circle_a  *= lower_radius;
+      lower_circle_b  *= lower_radius;
+      lower_circle_a.z = lower_z;
+      lower_circle_b.z = lower_z;
 
-      lower_circle_c  *= lower_radius;
-      lower_circle_d  *= lower_radius;
-      lower_circle_c.z = lower_z;
-      lower_circle_d.z = lower_z;
+      higher_circle_c  *= higher_radius;
+      higher_circle_d  *= higher_radius;
+      higher_circle_c.z = higher_z;
+      higher_circle_d.z = higher_z;
 
-      curr_triangle().a.set(higher_circle_a);
-      curr_triangle().b.set(higher_circle_b);
-      curr_triangle().c.set(lower_circle_c);
+      curr_triangle().a.set(lower_circle_a);
+      curr_triangle().b.set(lower_circle_b);
+      curr_triangle().c.set(higher_circle_c);
 
       curr_rect_uv().a.set(uv_x,
-                           higher_uv_y);
-      curr_rect_uv().b.set(uv_x+i_uv_x,
-                           higher_uv_y);
-      curr_rect_uv().c.set(uv_x+i_uv_x,
                            lower_uv_y);
+      curr_rect_uv().b.set(uv_x+i_uv_x,
+                           lower_uv_y);
+      curr_rect_uv().c.set(uv_x+i_uv_x,
+                           higher_uv_y);
 
       triangle_pushed(higher_radius, lower_radius, true, true, false);
 
-      curr_triangle().a.set(lower_circle_c);
-      curr_triangle().b.set(lower_circle_d);
-      curr_triangle().c.set(higher_circle_a);
+      curr_triangle().a.set(higher_circle_c);
+      curr_triangle().b.set(higher_circle_d);
+      curr_triangle().c.set(lower_circle_a);
 
       curr_rect_uv().a.set(uv_x+i_uv_x,
-                           lower_uv_y);
-      curr_rect_uv().b.set(uv_x,
-                           lower_uv_y);
-      curr_rect_uv().c.set(uv_x,
                            higher_uv_y);
+      curr_rect_uv().b.set(uv_x,
+                           higher_uv_y);
+      curr_rect_uv().c.set(uv_x,
+                           lower_uv_y);
 
       triangle_pushed(higher_radius, lower_radius, false, false, true);
 
