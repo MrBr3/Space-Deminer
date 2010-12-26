@@ -26,6 +26,7 @@ View3D::View3D() : Gtk::GL::DrawingArea(Gdk::GL::Config::create(Gdk::GL::MODE_RG
   set_size_request(320, 320);
 
   _rotating_with_mouse  = false;
+  _draw_wireframed  = false;
 
   sphere  = Sphere::create();
   sphere->signal_invalidated().connect(sigc::mem_fun(*this, &View3D::invalidate));
@@ -120,7 +121,7 @@ bool View3D::on_expose_event(GdkEventExpose* event)
 
   glScalef(sphere->get_scale(), sphere->get_scale(), sphere->get_scale());
 
-  if(sphere->get_draw_wireframed())
+  if(get_draw_wireframed())
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   else
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

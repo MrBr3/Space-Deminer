@@ -17,7 +17,7 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-class ViewSettings
+class ViewSettings : public SettingsWidget
 {
 public:
   gfloat get_back_color_red()const{return .5f;}

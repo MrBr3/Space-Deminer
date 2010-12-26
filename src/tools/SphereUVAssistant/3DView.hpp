@@ -20,6 +20,7 @@
 class View3D : public Gtk::GL::DrawingArea
 {
   bool _gl_initialized;
+  bool _draw_wireframed;
 
   bool _rotating_with_mouse;
   bool using_mouse()const throw()
@@ -27,6 +28,8 @@ class View3D : public Gtk::GL::DrawingArea
     return _rotating_with_mouse;
   }
   int mouse_drag_start_x, mouse_drag_start_y;
+
+  sigc::signal<void, bool> _signal_wireframed_changed;
 public:
 
   View3D();
@@ -46,6 +49,25 @@ public:
   void invalidate();
 
   Glib::RefPtr<Sphere> sphere;
+
+  /** \brief Gets, whether the Mesh should be drawn wireframed.
+   * */
+  bool get_draw_wireframed()const{return _draw_wireframed;}
+
+  /** \brief Sets, whether the Mesh should be drawn wireframed.
+   *
+   * */
+  void set_draw_wireframed(bool draw_wireframed=true)
+  {
+    if(_draw_wireframed==draw_wireframed)
+      return;
+
+    _draw_wireframed  = draw_wireframed;
+    _signal_wireframed_changed.emit(draw_wireframed);
+    invalidate();
+  }
+
+  sigc::signal<void, bool> signal_wireframed_changed(){return _signal_wireframed_changed;}
 
   SphereMesh sphere_mesh;
   SphereTexture sphere_texture;

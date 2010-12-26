@@ -18,6 +18,8 @@
       <File Name="SphereMesh.hpp"/>
       <File Name="SphereTexture.hpp"/>
       <File Name="SphereTexture.cpp"/>
+      <File Name="SettingsWidget.hpp"/>
+      <File Name="SettingsWidget.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Model">
       <File Name="Sphere.hpp"/>

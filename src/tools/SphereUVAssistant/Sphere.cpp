@@ -36,7 +36,6 @@ Sphere::Sphere()
   _scale  = 1.f;
   _rotating = false;
   _use_warped_uv  = false;
-  _draw_wireframed  = false;
 
   _sphere  = this;
 }

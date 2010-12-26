@@ -24,7 +24,6 @@ class Sphere : public Refable
   gfloat _scale;
   bool _rotating;
   bool _use_warped_uv;
-  bool _draw_wireframed;
 
   sigc::signal<void> _signal_invalidated;
 
@@ -50,19 +49,6 @@ public:
   void set_use_warped_uv(bool warped=true)
   {
     _use_warped_uv  = warped;
-    _invalidate();
-  }
-
-  /** \brief Gets, whether the Mesh should be drawn wireframed.
-   * */
-  bool get_draw_wireframed()const{return _draw_wireframed;}
-
-  /** \brief Sets, whether the Mesh should be drawn wireframed.
-   *
-   * */
-  void set_draw_wireframed(bool draw_wireframed=true)
-  {
-    _draw_wireframed  = draw_wireframed;
     _invalidate();
   }
 

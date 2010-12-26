@@ -25,9 +25,55 @@ MainWindow::MainWindow()
 {
   add(_vbox);
     _vbox.show();
-    _vbox.pack_start(_view_hbox);
-      _view_hbox.show();
-      _view_hbox.pack_start(view_3d);
+    _vbox.pack_start(_menu_bar, false, false);
+      _menu_bar.show();
+    //_vbox.pack_start(_tool_bar, false, false);
+    //  _tool_bar.show();
+    _vbox.pack_start(_hpaned);
+      _hpaned.show();
+      _hpaned.set_border_width(LENGTH_BORDER_WIDTH);
+      _hpaned.pack1(view_3d);
+      _hpaned.pack2(_vpaned);
+        _vpaned.show();
+        _vpaned.pack1(_layers_scrollbars);
+          _layers_scrollbars.show();
+          _layers_scrollbars.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+          _layers_scrollbars.add(_layers);
+          _layers_scrollbars.set_shadow_type(Gtk::SHADOW_IN);
+            _layers.show();
+        _vpaned.pack2(_settings);
+          _settings.show();
+          _settings.pack_start(view_settings);
+            view_settings.show();
+        _vpaned.set_position(96);
+
+  _menu_bar.append(menu_file);
+    menu_file.set_label(_("_File"));
+    menu_file.set_use_underline();
+    menu_file.set_submenu(menu_file_menu);
+      menu_file_menu.append(menu_file_quit);
+        menu_file_quit.set_accel_key("<control>q");
+        menu_file_quit.set_label(_("_Quit"));
+        menu_file_quit.set_use_underline();
+        menu_file_quit.signal_activate().connect(sigc::ptr_fun(&Gtk::Main::quit));
+  _menu_bar.append(menu_view);
+    menu_view.set_label(_("_View"));
+    menu_view.set_use_underline();
+    menu_view.set_submenu(menu_view_menu);
+      menu_view_menu.append(menu_view_show_sidebar);
+        menu_view_show_sidebar.set_accel_key("F9");
+        menu_view_show_sidebar.set_label(_("Show _Sidebar"));
+        menu_view_show_sidebar.set_use_underline();
+        menu_view_show_sidebar.signal_toggled().connect(sigc::mem_fun(*this, &MainWindow::_adapt_show_sidebar));
+        menu_view_show_sidebar.set_active(true);
+      menu_view_menu.append(menu_view_wireframed);
+        menu_view_wireframed.set_accel_key("w");
+        menu_view_wireframed.set_label(_("_Wireframed"));
+        menu_view_wireframed.set_use_underline();
+        menu_view_wireframed.set_active(view_3d.get_draw_wireframed());
+        menu_view_wireframed.signal_toggled().connect(sigc::mem_fun(*this, &MainWindow::draw_wireframed_toggled));
+        view_3d.signal_wireframed_changed().connect(sigc::mem_fun(menu_view_wireframed, &MyCheckMenuItem::set_active));
+  _menu_bar.show_all_children();
 
   set_default_size(480, 360);
   set_title(_("SphereUVAssistant"));
@@ -43,4 +89,33 @@ MainWindow::~MainWindow()throw()
   view_3d.deinit();
 
   main_window = nullptr;
+}
+
+void MainWindow::_adapt_show_sidebar()
+{
+  g_assert(_hpaned.get_child2());
+
+  int side_width  = _hpaned.get_child2()->get_width();
+  bool maximized  = false;
+
+  if(get_window())
+    maximized = get_window()->get_state() & Gdk::WINDOW_STATE_MAXIMIZED;
+
+  if(!get_show_sidebar())
+  {
+    _hpaned.get_child2()->hide();
+    //_menu_bar.hide();
+    //_tool_bar.hide();
+
+    if(!maximized)
+      resize(get_width()-side_width, get_height());
+  }else
+  {
+    _hpaned.get_child2()->show();
+    //_menu_bar.show();
+    //_tool_bar.show();
+
+    if(!maximized)
+      resize(get_width()+side_width, get_height());
+  }
 }

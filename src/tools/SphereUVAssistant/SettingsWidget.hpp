@@ -17,22 +17,47 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdio.h>
-
-#include "./MainWindow.hpp"
-
-int main(int argc, char **argv)
+class PanelLabelWidget : public Gtk::HBox
 {
-  Gtk::Main kit(argc, argv);
+public:
+  typedef Gtk::HBox ParentClass;
 
-  init_opengl_stuff(argc, argv);
-
+  class DoubleSep : public Gtk::Alignment
   {
-    MainWindow main_window;
+    Gtk::VBox vbox;
+    Gtk::HSeparator s1, s2;
 
-    kit.run(main_window);
-  }
+  public:
+  DoubleSep();
+  };
 
-	return 0;
-}
-// inspired by http://www.richardrosenman.com/software/downloads/
+private:
+  Gtk::Label _caption;
+  DoubleSep s1, s2;
+  Glib::ustring _main_caption, _sub_caption;
+
+  void _update_widget();
+
+public:
+  void set_main_caption(const Glib::ustring& str);
+  void set_sub_caption(const Glib::ustring& str);
+
+  PanelLabelWidget();
+  ~PanelLabelWidget()throw();
+};
+
+class SettingsWidget : public Gtk::VBox
+{
+  typedef Gtk::VBox ParentClass;
+
+public:
+
+  PanelLabelWidget caption;
+
+  void set_main_caption(const Glib::ustring& str){caption.set_main_caption(str);}
+  void set_sub_caption(const Glib::ustring& str){caption.set_sub_caption(str);}
+
+public:
+  SettingsWidget();
+  ~SettingsWidget()throw();
+};

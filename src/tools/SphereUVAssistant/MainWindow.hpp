@@ -22,8 +22,12 @@
 #include "SphereMesh.hpp"
 #include "SphereTexture.hpp"
 #include "3DView.hpp"
+#include "SettingsWidget.hpp"
 #include "FileSettings.hpp"
 #include "ViewSettings.hpp"
+
+const gint LENGTH_BORDER_WIDTH = 4;
+const gint LENGTH_SMALLSPACE = 3;
 
 /** \brief Represents the MainWindow of the Tool
  *
@@ -34,8 +38,57 @@ class MainWindow : public Gtk::Window
   View3D view_3d;
   ViewSettings view_settings;
 
-  Gtk::HBox _view_hbox;
+  class MyMenuItem : public Gtk::MenuItem
+  {
+  public:
+    void set_accel_key(const Glib::ustring& key)
+    {
+      Gtk::MenuItem::set_accel_key(Gtk::AccelKey(key));
+    }
+  };
+  class MyCheckMenuItem : public Gtk::CheckMenuItem
+  {
+  public:
+    void set_accel_key(const Glib::ustring& key)
+    {
+      Gtk::CheckMenuItem::set_accel_key(Gtk::AccelKey(key));
+    }
+  };
+
+  MyMenuItem menu_file;
+  Gtk::Menu  menu_file_menu;
+    MyMenuItem menu_file_quit;
+  MyMenuItem menu_view;
+  Gtk::Menu  menu_view_menu;
+    MyCheckMenuItem menu_view_show_sidebar;
+    MyCheckMenuItem menu_view_wireframed;
+
+  Gtk::HPaned _hpaned;
+  Gtk::VPaned _vpaned;
   Gtk::VBox _vbox;
+  Gtk::VBox _settings;
+  Gtk::ScrolledWindow _layers_scrollbars;
+  Gtk::TreeView _layers;
+  Gtk::MenuBar _menu_bar;
+  //Gtk::Toolbar _tool_bar;
+
+  void draw_wireframed_toggled()
+  {
+    view_3d.set_draw_wireframed(menu_view_wireframed.get_active());
+  }
+
+  void toggle_show_sidebar()
+  {
+    set_show_sidebar(!get_show_sidebar());
+  }
+  bool get_show_sidebar()const{return menu_view_show_sidebar.get_active();}
+  void set_show_sidebar(bool j)
+  {
+    menu_view_show_sidebar.set_active(j);
+  }
+
+  void _adapt_show_sidebar();
+
 public:
   MainWindow();
   ~MainWindow()throw();

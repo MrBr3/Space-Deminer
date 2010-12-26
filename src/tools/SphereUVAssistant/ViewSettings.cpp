@@ -23,6 +23,7 @@ ViewSettings* view_settings = nullptr;
 
 ViewSettings::ViewSettings()
 {
+  set_main_caption(_("View Settings"));
 }
 
 ViewSettings::~ViewSettings()throw()
