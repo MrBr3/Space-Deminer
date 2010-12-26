@@ -20,6 +20,8 @@
       <File Name="SphereTexture.cpp"/>
       <File Name="SettingsWidget.hpp"/>
       <File Name="SettingsWidget.cpp"/>
+      <File Name="LayerView.hpp"/>
+      <File Name="LayerView.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Model">
       <File Name="Sphere.hpp"/>
@@ -27,6 +29,8 @@
       <File Name="Model.hpp"/>
       <File Name="ImageFile.hpp"/>
       <File Name="ImageFile.cpp"/>
+      <File Name="Layer.hpp"/>
+      <File Name="Layer.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Both">
       <File Name="Options.cpp"/>

@@ -25,6 +25,7 @@
 #include "SettingsWidget.hpp"
 #include "FileSettings.hpp"
 #include "ViewSettings.hpp"
+#include "LayerView.hpp"
 
 const gint LENGTH_BORDER_WIDTH = 4;
 const gint LENGTH_SMALLSPACE = 3;
@@ -68,7 +69,7 @@ class MainWindow : public Gtk::Window
   Gtk::VBox _vbox;
   Gtk::VBox _settings;
   Gtk::ScrolledWindow _layers_scrollbars;
-  Gtk::TreeView _layers;
+  LayerView _layers;
   Gtk::MenuBar _menu_bar;
   //Gtk::Toolbar _tool_bar;
 

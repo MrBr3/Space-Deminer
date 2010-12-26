@@ -17,10 +17,11 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <base.hpp>
-#include <gtkmm.h>
-#include "opengl.hpp"
+class LayerView : public Gtk::TreeView
+{
+public:
+  Glib::RefPtr<LayerModel> layer_model;
 
-#include "./Sphere.hpp"
-#include "./Layer.hpp"
-#include "./ImageFile.hpp"
+  LayerView();
+  ~LayerView()throw();
+};

@@ -17,10 +17,17 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <base.hpp>
-#include <gtkmm.h>
-#include "opengl.hpp"
+#include <MainWindow.hpp>
 
-#include "./Sphere.hpp"
-#include "./Layer.hpp"
-#include "./ImageFile.hpp"
+LayerView::LayerView()
+{
+  layer_model = LayerModel::create();
+
+  set_model(LayerModel::model());
+  append_column(_("Name"), LayerModel::columns().name);
+  append_column(_("Visibility"), LayerModel::columns().visibility);
+}
+
+LayerView::~LayerView()throw()
+{
+}

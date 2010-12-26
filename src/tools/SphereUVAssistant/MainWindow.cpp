@@ -76,7 +76,7 @@ MainWindow::MainWindow()
   _menu_bar.show_all_children();
 
   set_default_size(480, 360);
-  set_title(_("SphereUVAssistant"));
+  set_title(_("Planet Generator"));
 
   g_assert(!main_window);
   main_window = this;
