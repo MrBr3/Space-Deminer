@@ -17,7 +17,27 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "strings.hpp"
+#include "./base.hpp"
+
+void str_replace_all_with(Glib::ustring& str, const Glib::ustring& replace, const Glib::ustring& with)
+{
+  if(replace.empty())
+    throw std::invalid_argument("**str_replace_all_with** cannot search for an empty string");
+
+  Glib::ustring::size_type old_i=0;
+  bool first_loop=true;
+  while(1)
+  {
+    Glib::ustring::size_type i  = str.find(replace, old_i+(first_loop?0:with.length()));
+    old_i = i;
+    first_loop  = false;
+
+    if(i==Glib::ustring::npos)
+      return;
+
+    str = str.replace(i, replace.length(), with);
+  }
+}
 
 void str_replace_all_with(Glib::ustring& str, const Glib::ustring::value_type& replace, const Glib::ustring& with)
 {

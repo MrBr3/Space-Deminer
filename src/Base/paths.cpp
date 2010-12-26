@@ -17,7 +17,7 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "./paths.hpp"
+#include "./base.hpp"
 #include "./../extern/binreloc/binreloc.h"
 #include <exception>
 
@@ -30,11 +30,14 @@ namespace Private
     Glib::ustring path_exe_prefix;
     Glib::ustring path_exe_filename;
     Glib::ustring path_exe_path;
+    Glib::ustring app_name;
   }
 }
 
-void init_paths()
+void init_paths(const Glib::ustring& app_name)
 {
+  Private::Base::app_name = app_name;
+
   using namespace Private::Base;
 
   gchar* s;

@@ -27,6 +27,8 @@ int main(int argc, char **argv)
 
   init_opengl_stuff(argc, argv);
 
+  init_paths("planet-generator");
+
   {
     MainWindow main_window;
 

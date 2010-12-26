@@ -32,15 +32,10 @@ namespace Private
     extern Glib::ustring path_home;
     extern Glib::ustring path_exe_prefix;
     extern Glib::ustring path_exe_filename;
+    extern Glib::ustring app_name;
   }
 }
 #endif
-
-inline void replace(Glib::ustring& str, const Glib::ustring& what, const Glib::ustring& with)
-{
-  if(str.substr(0, what.length())==what)
-    str = with  + str.substr(what.length(), str.length()-what.length());
-}
 
 /** \brief Makes sure the Path won't end with a slash.
  *
@@ -65,20 +60,21 @@ inline Glib::ustring clip_last_slash(const Glib::ustring& str)
 
 inline Glib::ustring apply_filename_macros(Glib::ustring filename)
 {
-  replace(filename, "$(ui-menu-icon-path)", "$(exe-share)/ui/icons/48");
-  replace(filename, "$(ui-icon-path)", "$(exe-share)/ui/icons");
-  replace(filename, "$(exe-share)", "$(exe-prefix)/share/space-deminer");
-  replace(filename, "$(test-references)", "$(local-folder)/test-references");
-  replace(filename, "$(tmp)", "$(local-folder)/temp");
-  replace(filename, "$(local-folder)", "$(appdata)/.SpaceDeminer");
-  replace(filename, "$(appdata)", Private::Base::path_appdata);
-  replace(filename, "$(home)", Private::Base::path_home);
-  replace(filename, "$(exe-prefix)", Private::Base::path_exe_prefix);
-  replace(filename, "$(exe-filename)", Private::Base::path_exe_filename);
+  str_replace_all_with(filename, "$(ui-menu-icon-path)", "$(exe-share)/ui/icons/48");
+  str_replace_all_with(filename, "$(ui-icon-path)", "$(exe-share)/ui/icons");
+  str_replace_all_with(filename, "$(exe-share)", "$(exe-prefix)/share/$(app-name)");
+  str_replace_all_with(filename, "$(test-references)", "$(local-folder)/test-references");
+  str_replace_all_with(filename, "$(tmp)", "$(local-folder)/temp");
+  str_replace_all_with(filename, "$(local-folder)", "$(appdata)/.SpaceDeminer");
+  str_replace_all_with(filename, "$(appdata)", Private::Base::path_appdata);
+  str_replace_all_with(filename, "$(home)", Private::Base::path_home);
+  str_replace_all_with(filename, "$(exe-prefix)", Private::Base::path_exe_prefix);
+  str_replace_all_with(filename, "$(exe-filename)", Private::Base::path_exe_filename);
+  str_replace_all_with(filename, "$(app-name)", Private::Base::app_name);
 
   return filename;
 }
 
-void init_paths();
+void init_paths(const Glib::ustring& app_name);
 
 #endif

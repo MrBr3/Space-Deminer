@@ -28,7 +28,7 @@ int main(int argc, char **argv)
 {
   try
   {
-    init_paths();
+    init_paths("space-deminer");
 
     //----Load the correct Gtk-Theme--------
     {
