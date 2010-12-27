@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CodeLite_Workspace Name="SpaceDeminer" Database="./SpaceDeminer.tags">
   <Project Name="SpaceDeminer" Path="src/SpaceDeminer/SpaceDeminer.project" Active="No"/>
-  <Project Name="SphereUVAssistant" Path="src/tools/SphereUVAssistant/SphereUVAssistant.project" Active="Yes"/>
+  <Project Name="PlanetGenerator" Path="src/tools/PlanetGenerator/PlanetGenerator.project" Active="Yes"/>
   <Project Name="Base" Path="src/Base/Base.project"/>
   <BuildMatrix>
-    <WorkspaceConfiguration Name="Debug" Selected="yes">
+    <WorkspaceConfiguration Name="Debug" Selected="no">
       <Project Name="SpaceDeminer" ConfigName="Debug"/>
-      <Project Name="SphereUVAssistant" ConfigName="Debug"/>
+      <Project Name="PlanetGenerator" ConfigName="Debug"/>
       <Project Name="Base" ConfigName="Debug"/>
     </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="Release" Selected="no">
+    <WorkspaceConfiguration Name="Release" Selected="yes">
       <Project Name="SpaceDeminer" ConfigName="Release"/>
-      <Project Name="SphereUVAssistant" ConfigName="Release"/>
+      <Project Name="PlanetGenerator" ConfigName="Release"/>
       <Project Name="Base" ConfigName="Release"/>
     </WorkspaceConfiguration>
   </BuildMatrix>
