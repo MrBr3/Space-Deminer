@@ -23,6 +23,16 @@ MainWindow* main_window  = nullptr;
 
 MainWindow::MainWindow()
 {
+
+  g_assert(!main_window);
+  main_window = this;
+
+  view_settings = new ViewSettings;
+  _layers = Gtk::manage(new LayerView);
+
+  view_settings->signal_something_changed().connect(sigc::mem_fun(view_3d, &View3D::invalidate));
+  view_settings->bring_to_front();
+
   add(_vbox);
     _vbox.show();
     _vbox.pack_start(_menu_bar, false, false);
@@ -38,13 +48,11 @@ MainWindow::MainWindow()
         _vpaned.pack1(_layers_scrollbars);
           _layers_scrollbars.show();
           _layers_scrollbars.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
-          _layers_scrollbars.add(_layers);
+          _layers_scrollbars.add(*_layers);
           _layers_scrollbars.set_shadow_type(Gtk::SHADOW_IN);
-            _layers.show();
+            _layers->show();
         _vpaned.pack2(_settings);
           _settings.show();
-          _settings.pack_start(view_settings);
-            view_settings.show();
         _vpaned.set_position(96);
 
   _menu_bar.append(menu_file);
@@ -73,13 +81,14 @@ MainWindow::MainWindow()
         menu_view_wireframed.set_active(view_3d.get_draw_wireframed());
         menu_view_wireframed.signal_toggled().connect(sigc::mem_fun(*this, &MainWindow::draw_wireframed_toggled));
         view_3d.signal_wireframed_changed().connect(sigc::mem_fun(menu_view_wireframed, &MyCheckMenuItem::set_active));
+      menu_view_menu.append(menu_view_settings);
+        menu_view_settings.set_label(_("View _Settings"));
+        menu_view_settings.set_use_underline();
+        menu_view_settings.signal_activate().connect(sigc::mem_fun(*view_settings, &SettingsWidget::bring_to_front));
   _menu_bar.show_all_children();
 
   set_default_size(480, 360);
   set_title(_("Planet Generator"));
-
-  g_assert(!main_window);
-  main_window = this;
 
   show();
 }

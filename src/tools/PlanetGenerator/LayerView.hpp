@@ -19,6 +19,7 @@
 
 class LayerView : public Gtk::TreeView
 {
+  void on_row_activated(const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn* column);
 public:
   Glib::RefPtr<LayerModel> layer_model;
 

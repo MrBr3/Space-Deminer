@@ -120,6 +120,7 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   glTranslatef(0., 0.f, -1.f -1e-2f - 1.5f*distance);
 
   glRotatef(-90.f, 1.f, 0.f, 0.f);
+
   glRotatef(sphere->get_x_rotation(), 1.f, 0.f, 0.f);
   glRotatef(sphere->get_z_rotation(), 0.f, 0.f, 1.f);
 

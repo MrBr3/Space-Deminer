@@ -50,14 +50,59 @@ class SettingsWidget : public Gtk::VBox
 {
   typedef Gtk::VBox ParentClass;
 
-public:
+  static SettingsWidget* visible_settings;
 
+  Gtk::Table table;
+  Gtk::ScrolledWindow scroll;
+  guint n_entries;
+public:
   PanelLabelWidget caption;
 
   void set_main_caption(const Glib::ustring& str){caption.set_main_caption(str);}
   void set_sub_caption(const Glib::ustring& str){caption.set_sub_caption(str);}
 
+  void bring_to_front();
+
+public:
+  void append_color_widget(const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<Gdk::Color>& getter, const sigc::slot<void, const Gdk::Color&>& setter, sigc::signal<void>& signal_changed);
+  void append_boolean_widget(const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<bool>& getter, const sigc::slot<void, bool>& setter, sigc::signal<void>& signal_changed);
+
 public:
   SettingsWidget();
   ~SettingsWidget()throw();
+
+private:
+  std::list<Glib::RefPtr<Refable> > delete_with_dtor;
+
+  template<class T_get, class T_set>
+  class Update : public Refable
+  {
+    Update(const Update<T_get, T_set>&);
+  public:
+    sigc::slot<T_get> getter;
+    sigc::slot<void, T_set> setter;
+
+    void do_update()
+    {
+      setter(getter());
+    }
+
+    sigc::slot<void> update_slot(){return sigc::mem_fun(*this, &Update<T_get, T_set>::do_update);}
+
+    Update(const sigc::slot<T_get>& getter, const sigc::slot<void, T_set>& setter)
+    {
+      this->getter  = getter;
+      this->setter  = setter;
+    }
+  };
+
+  template<class T_get, class T_set>
+  sigc::slot<void> create_updater(const sigc::slot<T_get>& getter, const sigc::slot<void, T_set>& setter)
+  {
+    Glib::RefPtr<Update<T_get, T_set> > updater = Glib::RefPtr<Update<T_get, T_set> >(new Update<T_get, T_set>(getter, setter));
+
+    delete_with_dtor.push_back(updater);
+
+    return updater->update_slot();
+  }
 };

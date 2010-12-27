@@ -31,6 +31,8 @@
       <File Name="ImageFile.cpp"/>
       <File Name="Layer.hpp"/>
       <File Name="Layer.cpp"/>
+      <File Name="BaseTextureLayer.hpp"/>
+      <File Name="BaseTextureLayer.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Both">
       <File Name="Options.cpp"/>

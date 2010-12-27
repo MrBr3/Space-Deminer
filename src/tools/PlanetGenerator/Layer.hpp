@@ -30,11 +30,13 @@ public:
   public:
     Gtk::TreeModelColumn<Glib::ustring> name;
     Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf> > visibility;
+    Gtk::TreeModelColumn<Layer* > _layer;
 
     Columns()
     {
       add(name);
       add(visibility);
+      add(_layer);
     }
   }gtk_tree_model_columns;
 
@@ -51,28 +53,36 @@ public:
   std::list<Glib::RefPtr<Layer> > layers;
 
 public:
-  void add_layer(const Glib::RefPtr<Layer>& layer);
+  static void add_layer(const Glib::RefPtr<Layer>& layer);
 
   ~LayerModel()throw();
 
   static Glib::RefPtr<LayerModel> create(){return Glib::RefPtr<LayerModel>(new LayerModel);}
 };
 
+class SettingsWidget;
 class Layer : public Refable
 {
+  sigc::signal<void> _signal_activated;
+  sigc::signal<void> _signal_visibililty_changed;
+  sigc::signal<void> _signal_something_changed;
+
+protected:
+  void prepare_settings(const Glib::ustring& pre, SettingsWidget* sw);
+
 public:
   Gtk::TreeRow row;
 
   bool get_visible()const{return LayerModel::get_singletonA()->pb_visible==row[LayerModel::columns().visibility];}
+  void set_visible(bool v);
   Glib::ustring get_name()const{return row[LayerModel::columns().name];}
+
+  sigc::signal<void>& signal_activated(){return _signal_activated;}
+  sigc::signal<void>& signal_visibililty_changed(){return _signal_visibililty_changed;}
+  sigc::signal<void>& signal_something_changed(){return _signal_something_changed;}
 
   Layer(const Glib::ustring& name, bool visible);
   ~Layer()throw();
 };
 
-class BaseTextureLayer : public Layer
-{
-public:
-  BaseTextureLayer() : Layer(_("Base Texture"), true){}
-  ~BaseTextureLayer()throw(){}
-};
+#include "BaseTextureLayer.hpp"

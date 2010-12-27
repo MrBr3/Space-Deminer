@@ -26,6 +26,17 @@ Next Steps:
   [ ] Buttons ohne Rahmen
     [ ] Zeichnen außerhalb der Widgets erlauben (extra pass)
 
+Base
+  [ ] Interoperabilität
+    [ ] libsvg auch unter windows nutzen
+
+PlanetGenerator
+  [ ] Sphere
+    [ ] UV-Fehler bei Caps beheben
+    [ ] decide whether only quads
+  [ ] LayerView
+    [ ] mit einfachen Klick entsprechende Settings anzeigen
+    [ ] mit Klick auf das Auge zwischen sichtbar/unsichtbar umschalten
 
 [ ] Programm
   [ ] richtigen Pfade herausfinden (see apply_filename_macros)
@@ -49,5 +60,3 @@ Next Steps:
       [ ] Muster honzufügen, anstatt einfarbigem 3333
       [ ] Back
         [ ] Bei Auflösungswechsel nach 2 sekunden sanft von der schlechten zur guten Auflösung wechseln
-  [ ] Interoperabilität
-    [ ] libsvg auch unter windows nutzen

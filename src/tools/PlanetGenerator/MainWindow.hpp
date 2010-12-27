@@ -19,10 +19,11 @@
 
 #include "./Model.hpp"
 
+#include "SettingsWidget.hpp"
+
 #include "SphereMesh.hpp"
 #include "SphereTexture.hpp"
 #include "3DView.hpp"
-#include "SettingsWidget.hpp"
 #include "FileSettings.hpp"
 #include "ViewSettings.hpp"
 #include "LayerView.hpp"
@@ -37,7 +38,7 @@ const gint LENGTH_SMALLSPACE = 3;
 class MainWindow : public Gtk::Window
 {
   View3D view_3d;
-  ViewSettings view_settings;
+  ViewSettings* view_settings;
 
   class MyMenuItem : public Gtk::MenuItem
   {
@@ -63,13 +64,14 @@ class MainWindow : public Gtk::Window
   Gtk::Menu  menu_view_menu;
     MyCheckMenuItem menu_view_show_sidebar;
     MyCheckMenuItem menu_view_wireframed;
+    MyMenuItem menu_view_settings;
 
   Gtk::HPaned _hpaned;
   Gtk::VPaned _vpaned;
   Gtk::VBox _vbox;
   Gtk::VBox _settings;
   Gtk::ScrolledWindow _layers_scrollbars;
-  LayerView _layers;
+  LayerView* _layers;
   Gtk::MenuBar _menu_bar;
   //Gtk::Toolbar _tool_bar;
 
@@ -93,6 +95,11 @@ class MainWindow : public Gtk::Window
 public:
   MainWindow();
   ~MainWindow()throw();
+
+  void append_settings_widget(Gtk::Widget& w)
+  {
+    _settings.pack_start(w);
+  }
 };
 
 /** \brief As long as the MainWindow is created, this pointer will point towards it

@@ -17,30 +17,21 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <MainWindow.hpp>
-
-LayerView::LayerView()
+class BaseTextureLayer : public Layer
 {
-  layer_model = LayerModel::create();
+  Glib::ustring _filename;
 
-  set_model(LayerModel::model());
-  set_headers_visible(false);
-  append_column(_("Visibility"), LayerModel::columns().visibility);
-  append_column(_("Name"), LayerModel::columns().name);
-}
+  sigc::signal<void> _signal_filename_changed;
 
-LayerView::~LayerView()throw()
-{
-}
+public:
+  static BaseTextureLayer* singleton;
+  BaseTextureLayer();
+  ~BaseTextureLayer()throw();
 
-void LayerView::on_row_activated(const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn* column)
-{
-  Gtk::TreeModel::iterator iter = get_model()->get_iter(path);
+  Glib::ustring get_filename()const{return _filename;}
+  void set_filename(const Glib::ustring& fn){_filename = fn;}
 
-  if(!iter)
-    return;
+  sigc::signal<void>& signal_filename_changed(){return _signal_filename_changed;}
+};
 
-  Gtk::TreeModel::Row row = *iter;
-
-  ((Layer*)row[LayerModel::columns()._layer])->signal_activated().emit();
-}
+void register_base_texture_layer();

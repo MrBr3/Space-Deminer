@@ -17,30 +17,26 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <MainWindow.hpp>
+#include "Model.hpp"
+#include "SettingsWidget.hpp"
 
-LayerView::LayerView()
+BaseTextureLayer* BaseTextureLayer::singleton = nullptr;
+
+BaseTextureLayer::BaseTextureLayer() : Layer(_("Base Texture"), true)
 {
-  layer_model = LayerModel::create();
+  g_assert(!singleton);
+  singleton=this;
 
-  set_model(LayerModel::model());
-  set_headers_visible(false);
-  append_column(_("Visibility"), LayerModel::columns().visibility);
-  append_column(_("Name"), LayerModel::columns().name);
+  SettingsWidget* settings  = new SettingsWidget;
+  prepare_settings("base-texture", settings);
 }
 
-LayerView::~LayerView()throw()
+BaseTextureLayer::~BaseTextureLayer()throw()
 {
+  singleton=nullptr;
 }
 
-void LayerView::on_row_activated(const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn* column)
+void register_base_texture_layer()
 {
-  Gtk::TreeModel::iterator iter = get_model()->get_iter(path);
-
-  if(!iter)
-    return;
-
-  Gtk::TreeModel::Row row = *iter;
-
-  ((Layer*)row[LayerModel::columns()._layer])->signal_activated().emit();
+  LayerModel::add_layer(Glib::RefPtr<Layer>(new BaseTextureLayer));
 }

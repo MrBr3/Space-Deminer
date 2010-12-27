@@ -18,6 +18,7 @@
  */
 
 #include "Model.hpp"
+#include "SettingsWidget.hpp"
 
 LayerModel* LayerModel::_singleton = nullptr;
 
@@ -34,7 +35,7 @@ LayerModel::LayerModel()
 
   gtk_tree_model  = Gtk::ListStore::create(columns());
 
-  add_layer(Glib::RefPtr<Layer>(new BaseTextureLayer));
+  register_base_texture_layer();
 }
 
 LayerModel::~LayerModel()throw()
@@ -45,7 +46,7 @@ LayerModel::~LayerModel()throw()
 
 void LayerModel::add_layer(const Glib::RefPtr<Layer>& layer)
 {
-  layers.push_back(layer);
+  get_singletonA()->layers.push_back(layer);
 }
 
 //=====================================
@@ -53,10 +54,30 @@ void LayerModel::add_layer(const Glib::RefPtr<Layer>& layer)
 Layer::Layer(const Glib::ustring& name, bool visible)
 {
   row  = *LayerModel::model()->append();
+  row[LayerModel::columns()._layer]  = this;
   row[LayerModel::columns().name]  = name;
   row[LayerModel::columns().visibility]  = visible ? LayerModel::get_singletonA()->pb_visible : LayerModel::get_singletonA()->pb_invisible;
+
+  _signal_visibililty_changed.connect(sigc::mem_fun(_signal_something_changed, &sigc::signal<void>::emit));
 }
 
 Layer::~Layer()throw()
 {
+}
+
+void Layer::set_visible(bool v)
+{
+  if(v==get_visible())
+    return;
+
+  row[LayerModel::columns().visibility]  = v ? LayerModel::get_singletonA()->pb_visible : LayerModel::get_singletonA()->pb_invisible;
+
+  signal_visibililty_changed().emit();
+}
+
+void Layer::prepare_settings(const Glib::ustring& pre, SettingsWidget* sw)
+{
+  signal_activated().connect(sigc::mem_fun(*sw, &SettingsWidget::bring_to_front));
+  sw->set_main_caption(get_name());
+  sw->append_boolean_widget(pre+"-visible", _("Visible"), "Decides, whether this Layer will take any effect", sigc::mem_fun(*this, &Layer::get_visible), sigc::mem_fun(*this, &Layer::set_visible), _signal_visibililty_changed);
 }

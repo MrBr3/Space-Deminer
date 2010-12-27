@@ -191,3 +191,5 @@
 /obj/planet-generator/SphereTexture.o.d
 /obj/planet-generator/ViewSettings.o
 /obj/planet-generator/ViewSettings.o.d
+/obj-d/planet-generator/BaseTextureLayer.o
+/obj-d/planet-generator/BaseTextureLayer.o.d

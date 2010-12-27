@@ -23,9 +23,36 @@ ViewSettings* view_settings = nullptr;
 
 ViewSettings::ViewSettings()
 {
+  g_assert(!view_settings);
+  view_settings = this;
+
+  _back_color_red = 0.5f;
+  _back_color_green = 0.5f;
+  _back_color_blue = 0.5f;
+
   set_main_caption(_("View Settings"));
+
+  append_color_widget("view-back-color", _("Back Color"), "The Color of the background in the 3D view", sigc::mem_fun(*this, &ViewSettings::get_back_color), sigc::mem_fun(*this, &ViewSettings::set_back_color), signal_back_color_changed());
 }
 
 ViewSettings::~ViewSettings()throw()
 {
+  g_assert(view_settings);
+  view_settings = nullptr;
+}
+
+Gdk::Color ViewSettings::get_back_color()const
+{
+  Gdk::Color color;
+  color.set_rgb_p(_back_color_red, _back_color_green, _back_color_blue);
+  return color;
+}
+
+void ViewSettings::set_back_color(const Gdk::Color& color)
+{
+  _back_color_red = color.get_red_p();
+  _back_color_green = color.get_green_p();
+  _back_color_blue = color.get_blue_p();
+
+  _signal_back_color_changed.emit();
 }
