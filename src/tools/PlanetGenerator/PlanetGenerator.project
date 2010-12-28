@@ -33,6 +33,8 @@
       <File Name="Layer.cpp"/>
       <File Name="BaseTextureLayer.hpp"/>
       <File Name="BaseTextureLayer.cpp"/>
+      <File Name="CloudTextureLayer.hpp"/>
+      <File Name="CloudTextureLayer.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Both">
       <File Name="Options.cpp"/>

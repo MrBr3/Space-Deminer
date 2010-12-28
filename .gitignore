@@ -296,3 +296,7 @@
 /obj/space-deminer/widgets_viewport.o
 /obj/space-deminer/widgets_viewport.o.d
 /bin/space-deminer
+/obj-d/planet-generator/CloudTextureLayer.o
+/obj-d/planet-generator/CloudTextureLayer.o.d
+/obj/planet-generator/CloudTextureLayer.o
+/obj/planet-generator/CloudTextureLayer.o.d

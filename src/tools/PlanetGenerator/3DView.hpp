@@ -73,5 +73,5 @@ public:
 
   SphereMesh sphere_mesh;
   Glib::RefPtr<Texture> base_texture;
-  //Glib::RefPtr<Texture> night_texture;
+  Glib::RefPtr<Texture> cloud_texture;
 };

@@ -156,3 +156,4 @@ public:
 void register_base_texture_layer();
 
 #include "BaseTextureLayer.hpp"
+#include "CloudTextureLayer.hpp"
