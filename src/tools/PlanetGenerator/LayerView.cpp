@@ -33,16 +33,54 @@ LayerView::~LayerView()throw()
 {
 }
 
-void LayerView::on_row_activated(const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn* column)
+Layer* LayerView::get_layer_for_path(const Gtk::TreeModel::Path& path)
 {
   Gtk::TreeModel::iterator iter = get_model()->get_iter(path);
 
   if(!iter)
-    return;
+    return nullptr;
 
   Gtk::TreeModel::Row row = *iter;
 
-  Layer* layer  = row[LayerModel::columns()._layer];
+  return row[LayerModel::columns()._layer];
+}
+
+bool LayerView::on_button_press_event(GdkEventButton* e)
+{
+  g_assert(e);
+
+  bool b = ParentClass::on_button_press_event(e);
+
+  if(e->type==GDK_BUTTON_PRESS)
+  {
+    Gtk::TreeModel::Path path;
+    Gtk::TreeViewColumn* column;
+    int cell_x, cell_y;
+
+    get_path_at_pos(e->x, e->y, path, column, cell_x, cell_y);
+
+    if(get_column(0)==column)
+    {
+      Layer* layer  = get_layer_for_path(path);
+
+      if(layer)
+      {
+        layer->set_visible(!layer->get_visible());
+      }
+    }
+  }
+
+  return b;
+}
+
+void LayerView::on_cursor_changed()
+{
+  Gtk::TreeModel::Path path;
+  Gtk::TreeViewColumn* column;
+
+  get_cursor(path, column);
+
+  Layer* layer = get_layer_for_path(path);
 
   if(!layer)
     return;

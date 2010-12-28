@@ -19,7 +19,15 @@
 
 class LayerView : public Gtk::TreeView
 {
-  void on_row_activated(const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn* column);
+public:
+  typedef Gtk::TreeView ParentClass;
+
+private:
+  void on_cursor_changed();
+  bool on_button_press_event(GdkEventButton*);
+
+  Layer* get_layer_for_path(const Gtk::TreeModel::Path& path);
+
 public:
   Glib::RefPtr<LayerModel> layer_model;
 
