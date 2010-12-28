@@ -32,11 +32,11 @@ Base
 
 PlanetGenerator
   [ ] Sphere
-    [ ] UV-Fehler bei Caps beheben
+    [X] UV-Fehler bei Caps beheben
     [ ] decide whether only quads
-  [ ] LayerView
-    [ ] mit einfachen Klick entsprechende Settings anzeigen
-    [ ] mit Klick auf das Auge zwischen sichtbar/unsichtbar umschalten
+  [X] LayerView
+    [X] mit einfachen Klick entsprechende Settings anzeigen
+    [X] mit Klick auf das Auge zwischen sichtbar/unsichtbar umschalten
 
 [ ] Programm
   [ ] richtigen Pfade herausfinden (see apply_filename_macros)
