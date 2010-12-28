@@ -36,6 +36,8 @@ View3D::View3D() : Gtk::GL::DrawingArea(Gdk::GL::Config::create(Gdk::GL::MODE_RG
   show();
   _gl_initialized = false;
 
+  LayerModel::signal_something_changed().connect(sigc::mem_fun(*this, &View3D::invalidate));
+
   base_texture  = Texture::create(BaseTextureLayer::get_imagefile());
   cloud_texture  = Texture::create(CloudTextureLayer::get_imagefile());
 }
@@ -129,7 +131,17 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   glRotatef(sphere->get_z_rotation(), 0.f, 0.f, 1.f);
 
   glEnable(GL_TEXTURE_2D);
-  base_texture->bind();
+  Glib::RefPtr<Layer> only_visible_layer  = LayerModel::just_one_layer_visible(); // Gets the only visible Layer
+  if(only_visible_layer.operator->()==BaseTextureLayer::get_singleton())
+  {
+    base_texture->bind();
+  }else if(only_visible_layer.operator->()==CloudTextureLayer::get_singleton())
+  {
+    cloud_texture->bind();
+  }else
+  {
+    base_texture->bind();
+  }
 
   sphere_mesh.render(sphere->get_use_warped_uv());
 
@@ -184,7 +196,7 @@ bool View3D::on_motion_notify_event(GdkEventMotion* event)
 
   if(_rotating_with_mouse)
   {
-    gfloat r_frac = MIN(1.f, distance*distance);
+    gfloat r_frac = CLAMP(distance*distance*1.5f, 0.1f, 1.f);
 
     sphere->rotate_z(-(mouse_drag_start_x-event->x*1.f) * r_frac);
     sphere->rotate_x(-(mouse_drag_start_y-event->y*1.f) * r_frac);

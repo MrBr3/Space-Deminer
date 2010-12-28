@@ -48,6 +48,30 @@ LayerModel::~LayerModel()throw()
 void LayerModel::add_layer(const Glib::RefPtr<Layer>& layer)
 {
   get_singletonA()->layers.push_back(layer);
+
+  layer->signal_something_changed().connect(sigc::mem_fun(get_singletonA()->_signal_something_changed, &sigc::signal<void>::emit));
+}
+
+Glib::RefPtr<Layer> LayerModel::just_one_layer_visible()
+{
+  Glib::RefPtr<Layer> only_visible;
+
+  LayerList::iterator i_begin = get_singletonA()->layers.begin();
+  LayerList::iterator i_end = get_singletonA()->layers.end();
+
+  for(LayerList::iterator i=i_begin; i!=i_end; ++i)
+  {
+    Glib::RefPtr<Layer> curr_layer  = *i;
+
+    if(curr_layer->get_visible())
+    {
+      if(only_visible)
+        return Glib::RefPtr<Layer>();
+      only_visible  = curr_layer;
+    }
+  }
+
+  return only_visible;
 }
 
 //=====================================

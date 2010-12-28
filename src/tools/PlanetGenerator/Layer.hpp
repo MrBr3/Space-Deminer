@@ -24,7 +24,12 @@ class LayerModel : public Refable
   LayerModel(const LayerModel&);
 
   LayerModel();
+
+  sigc::signal<void> _signal_something_changed;
+
 public:
+  typedef std::list<Glib::RefPtr<Layer> > LayerList;
+
   class Columns : public Gtk::TreeModel::ColumnRecord
   {
   public:
@@ -50,7 +55,15 @@ public:
 
   static LayerModel* get_singletonA(){g_assert(_singleton);return _singleton;}
 
-  std::list<Glib::RefPtr<Layer> > layers;
+  static sigc::signal<void>& signal_something_changed(){return get_singletonA()->_signal_something_changed;}
+
+  LayerList layers;
+
+  /** \brief Gets the only visible Layer
+   *
+   * \return A valid Pointer if there's just ine visible, otherwise <tt>nullptr</tt>
+   * */
+  static Glib::RefPtr<Layer> just_one_layer_visible();
 
 public:
   static void add_layer(const Glib::RefPtr<Layer>& layer);
