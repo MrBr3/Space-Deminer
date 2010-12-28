@@ -31,12 +31,17 @@ namespace Private
     Glib::ustring path_exe_filename;
     Glib::ustring path_exe_path;
     Glib::ustring app_name;
+    Glib::ustring local_folder;
   }
 }
 
 void init_paths(const Glib::ustring& app_name)
 {
   Private::Base::app_name = app_name;
+
+  Private::Base::local_folder  = "$(appdata)/.space-deminer";
+  if(app_name!="space-deminer")
+    Private::Base::local_folder  += "/"+app_name;
 
   using namespace Private::Base;
 

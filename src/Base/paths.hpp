@@ -33,6 +33,7 @@ namespace Private
     extern Glib::ustring path_exe_prefix;
     extern Glib::ustring path_exe_filename;
     extern Glib::ustring app_name;
+    extern Glib::ustring local_folder;
   }
 }
 #endif
@@ -65,7 +66,7 @@ inline Glib::ustring apply_filename_macros(Glib::ustring filename)
   str_replace_all_with(filename, "$(exe-share)", "$(exe-prefix)/share/$(app-name)");
   str_replace_all_with(filename, "$(test-references)", "$(local-folder)/test-references");
   str_replace_all_with(filename, "$(tmp)", "$(local-folder)/temp");
-  str_replace_all_with(filename, "$(local-folder)", "$(appdata)/.SpaceDeminer");
+  str_replace_all_with(filename, "$(local-folder)", Private::Base::local_folder);
   str_replace_all_with(filename, "$(appdata)", Private::Base::path_appdata);
   str_replace_all_with(filename, "$(home)", Private::Base::path_home);
   str_replace_all_with(filename, "$(exe-prefix)", Private::Base::path_exe_prefix);
