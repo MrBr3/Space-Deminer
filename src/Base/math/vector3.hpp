@@ -69,6 +69,11 @@ public:
 
   Vector3 operator*(gfloat a)const throw(){return Vector3(x*a, y*a, z*a);}
 
+  Vector3 operator+(const Vector3& v)const throw()
+  {
+    return Vector3(x+v.x, y+v.y, z+v.z);
+  }
+
   /** \brief Gets the length of the vector squared.
    *
    * \return The length of the vector squared
@@ -93,13 +98,13 @@ public:
    *
    * \return A reference to the Vector
    * */
-   Vector3& operator*=(gfloat a) throw()
-   {
-     x  *= a;
-     y  *= a;
-     z  *= a;
-     return *this;
-   }
+  Vector3& operator*=(gfloat a) throw()
+  {
+   x  *= a;
+   y  *= a;
+   z  *= a;
+   return *this;
+  }
 
   /** \brief Sets the Length of the Vector to 1.
    *

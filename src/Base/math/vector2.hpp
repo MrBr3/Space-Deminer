@@ -77,6 +77,11 @@ public:
 
   Vector2 operator*(gfloat a)const throw(){return Vector2(x*a, y*a);}
 
+  Vector2 operator+(const Vector2& v)const throw()
+  {
+    return Vector2(x+v.x, y+v.y);
+  }
+
   /** \brief Gets the length of the vector squared.
    *
    * \return The length of the vector squared
