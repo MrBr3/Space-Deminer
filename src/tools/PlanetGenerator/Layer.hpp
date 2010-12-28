@@ -85,4 +85,74 @@ public:
   ~Layer()throw();
 };
 
+/**
+ * \note T_layer must be a child class of SingletonLayer<T_layer>
+ * */
+template<class T_layer>
+class SingletonLayer : public Layer
+{
+public:
+  typedef Layer ParentClass;
+
+private:
+  static T_layer* _singleton;
+
+public:
+  static T_layer* get_singleton(){return _singleton;}
+  static T_layer* get_singletonA(){g_assert(_singleton);return _singleton;}
+
+  SingletonLayer(const Glib::ustring& name, bool visible) : ParentClass(name, visible)
+  {
+    g_assert(!_singleton);
+    _singleton  = (T_layer*)this;
+  }
+
+  ~SingletonLayer()throw()
+  {
+    g_assert(_singleton);
+    _singleton  = nullptr;
+  }
+};
+
+template<class T_layer>
+T_layer* SingletonLayer<T_layer>::_singleton = nullptr;
+
+//====
+
+/**
+ * \note T_layer must be a child class of ImageLayer<T_layer>
+ * */
+template<class T_layer>
+class ImageLayer : public SingletonLayer<T_layer>
+{
+public:
+  typedef SingletonLayer<T_layer> ParentClass;
+
+private:
+
+  Glib::RefPtr<ImageFile> _imagefile;
+
+  sigc::signal<void> _signal_imagefile_changed;
+
+public:
+
+  static const Glib::RefPtr<ImageFile>& get_imagefile(){return ParentClass::get_singletonA()->_imagefile;}
+
+  sigc::signal<void>& signal_imagefile_changed(){return _signal_imagefile_changed;}
+
+  ImageLayer(const Glib::ustring& name, bool visible) : ParentClass(name, visible)
+  {
+    _imagefile  = ImageFile::create();
+
+    _imagefile->signal_something_changed().connect(sigc::mem_fun(signal_imagefile_changed(), &sigc::signal<void>::emit));
+    signal_imagefile_changed().connect(sigc::mem_fun(ParentClass::signal_something_changed(), &sigc::signal<void>::emit));
+  }
+
+  ~ImageLayer()throw()
+  {
+  }
+};
+
+void register_base_texture_layer();
+
 #include "BaseTextureLayer.hpp"

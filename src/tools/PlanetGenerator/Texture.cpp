@@ -19,18 +19,21 @@
 
  #include "MainWindow.hpp"
 
-SphereTexture::SphereTexture()
+Texture::Texture(const Glib::RefPtr<ImageFile>& file)
 {
   _texture  = 0;
   _initialized  = false;
+
+  imagefile = file;
+  imagefile->signal_imagefile_changed().connect(sigc::mem_fun(*this, &Texture::init));
 }
 
-SphereTexture::~SphereTexture()throw()
+Texture::~Texture()throw()
 {
   deinit();
 }
 
-void SphereTexture::bind()
+void Texture::bind()
 {
   if(!_initialized)
     return;
@@ -38,7 +41,7 @@ void SphereTexture::bind()
   glBindTexture(GL_TEXTURE_2D, _texture);
 }
 
-void SphereTexture::deinit()
+void Texture::deinit()
 {
   if(!_initialized)
     return;
@@ -48,15 +51,8 @@ void SphereTexture::deinit()
   _initialized  = false;
 }
 
-void SphereTexture::init()
+void Texture::init()
 {
-  if(!imagefile)
-  {
-    imagefile = ImageFile::create();
-    imagefile->signal_imagefile_changed().connect(sigc::mem_fun(*this, &SphereTexture::init));
-    imagefile->set_filename("/home/robert/Desktop/earth+clouds.jpg");
-  }
-
   deinit();
 
   Glib::RefPtr<Gdk::Pixbuf> pb  = imagefile->create_pixbuf();

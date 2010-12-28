@@ -23,12 +23,12 @@ MainWindow* main_window  = nullptr;
 
 MainWindow::MainWindow()
 {
-
   g_assert(!main_window);
   main_window = this;
 
-  view_settings = new ViewSettings;
   _layers = Gtk::manage(new LayerView);
+  view_3d = Gtk::manage(new View3D);
+  view_settings = new ViewSettings;
 
   view_settings->signal_something_changed().connect(sigc::mem_fun(view_3d, &View3D::invalidate));
   view_settings->bring_to_front();
@@ -42,7 +42,7 @@ MainWindow::MainWindow()
     _vbox.pack_start(_hpaned);
       _hpaned.show();
       _hpaned.set_border_width(LENGTH_BORDER_WIDTH);
-      _hpaned.pack1(view_3d);
+      _hpaned.pack1(*view_3d);
       _hpaned.pack2(_vpaned);
         _vpaned.show();
         _vpaned.pack1(_layers_scrollbars);
@@ -78,9 +78,9 @@ MainWindow::MainWindow()
         menu_view_wireframed.set_accel_key("w");
         menu_view_wireframed.set_label(_("_Wireframed"));
         menu_view_wireframed.set_use_underline();
-        menu_view_wireframed.set_active(view_3d.get_draw_wireframed());
+        menu_view_wireframed.set_active(view_3d->get_draw_wireframed());
         menu_view_wireframed.signal_toggled().connect(sigc::mem_fun(*this, &MainWindow::draw_wireframed_toggled));
-        view_3d.signal_wireframed_changed().connect(sigc::mem_fun(menu_view_wireframed, &MyCheckMenuItem::set_active));
+        view_3d->signal_wireframed_changed().connect(sigc::mem_fun(menu_view_wireframed, &MyCheckMenuItem::set_active));
       menu_view_menu.append(menu_view_settings);
         menu_view_settings.set_label(_("View _Settings"));
         menu_view_settings.set_use_underline();
@@ -95,7 +95,7 @@ MainWindow::MainWindow()
 
 MainWindow::~MainWindow()throw()
 {
-  view_3d.deinit();
+  view_3d->deinit();
 
   main_window = nullptr;
 }

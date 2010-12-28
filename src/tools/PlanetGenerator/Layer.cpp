@@ -58,6 +58,7 @@ Layer::Layer(const Glib::ustring& name, bool visible)
   row[LayerModel::columns().name]  = name;
   row[LayerModel::columns().visibility]  = visible ? LayerModel::get_singletonA()->pb_visible : LayerModel::get_singletonA()->pb_invisible;
 
+  _signal_activated.connect(sigc::mem_fun(_signal_something_changed, &sigc::signal<void>::emit));
   _signal_visibililty_changed.connect(sigc::mem_fun(_signal_something_changed, &sigc::signal<void>::emit));
 }
 

@@ -47,8 +47,8 @@ namespace Framework
     Button(Glib::ustring& label, bool use_memnotic=true);
     ~Button()throw();
 
-          sigc::signal<void> signal_clicked()      throw(){return _signal_clicked;}
-    const sigc::signal<void> signal_clicked()const throw(){return _signal_clicked;}
+          sigc::signal<void>& signal_clicked()      throw(){return _signal_clicked;}
+    const sigc::signal<void>& signal_clicked()const throw(){return _signal_clicked;}
 
     void on_size_request(int& w, int& h);
 

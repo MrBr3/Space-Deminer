@@ -17,21 +17,14 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-class BaseTextureLayer : public Layer
+class BaseTextureLayer : public ImageLayer<BaseTextureLayer>
 {
-  Glib::ustring _filename;
-
-  sigc::signal<void> _signal_filename_changed;
+public:
+  typedef ImageLayer<BaseTextureLayer> ParentClass;
 
 public:
-  static BaseTextureLayer* singleton;
   BaseTextureLayer();
   ~BaseTextureLayer()throw();
-
-  Glib::ustring get_filename()const{return _filename;}
-  void set_filename(const Glib::ustring& fn){_filename = fn;}
-
-  sigc::signal<void>& signal_filename_changed(){return _signal_filename_changed;}
 };
 
 void register_base_texture_layer();

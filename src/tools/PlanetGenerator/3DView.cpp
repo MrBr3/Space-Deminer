@@ -35,6 +35,8 @@ View3D::View3D() : Gtk::GL::DrawingArea(Gdk::GL::Config::create(Gdk::GL::MODE_RG
 
   show();
   _gl_initialized = false;
+
+  base_texture  = Texture::create(BaseTextureLayer::get_imagefile());
 }
 
 View3D::~View3D()throw()
@@ -74,7 +76,7 @@ void View3D::on_realize()
   gl_drawable->gl_begin(get_gl_context());
 
   sphere_mesh.init();
-  sphere_texture.init();
+  base_texture->init();
 
   _gl_initialized = true;
 }
@@ -125,7 +127,7 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   glRotatef(sphere->get_z_rotation(), 0.f, 0.f, 1.f);
 
   glEnable(GL_TEXTURE_2D);
-  sphere_texture.bind();
+  base_texture->bind();
 
   sphere_mesh.render(sphere->get_use_warped_uv());
 

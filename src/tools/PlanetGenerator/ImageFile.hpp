@@ -25,11 +25,15 @@ class ImageFile : public Refable
   ImageFile(const ImageFile&);
 
   Glib::ustring _filename;
+  //bool _needs_to_be_warped;
 
   sigc::signal<void> _signal_imagefile_changed;
 
+  sigc::signal<void> _signal_something_changed;
+
 public:
-  sigc::signal<void> signal_imagefile_changed(){return _signal_imagefile_changed;}
+  sigc::signal<void>& signal_imagefile_changed(){return _signal_imagefile_changed;}
+  sigc::signal<void>& signal_something_changed(){return _signal_something_changed;}
 
   ~ImageFile()throw();
 

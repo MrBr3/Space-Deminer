@@ -22,7 +22,7 @@
 #include "SettingsWidget.hpp"
 
 #include "SphereMesh.hpp"
-#include "SphereTexture.hpp"
+#include "Texture.hpp"
 #include "3DView.hpp"
 #include "FileSettings.hpp"
 #include "ViewSettings.hpp"
@@ -37,7 +37,7 @@ const gint LENGTH_SMALLSPACE = 3;
  * */
 class MainWindow : public Gtk::Window
 {
-  View3D view_3d;
+  View3D* view_3d;
   ViewSettings* view_settings;
 
   class MyMenuItem : public Gtk::MenuItem
@@ -77,7 +77,7 @@ class MainWindow : public Gtk::Window
 
   void draw_wireframed_toggled()
   {
-    view_3d.set_draw_wireframed(menu_view_wireframed.get_active());
+    view_3d->set_draw_wireframed(menu_view_wireframed.get_active());
   }
 
   void toggle_show_sidebar()

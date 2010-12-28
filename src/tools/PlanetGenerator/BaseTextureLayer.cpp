@@ -20,20 +20,16 @@
 #include "Model.hpp"
 #include "SettingsWidget.hpp"
 
-BaseTextureLayer* BaseTextureLayer::singleton = nullptr;
-
-BaseTextureLayer::BaseTextureLayer() : Layer(_("Base Texture"), true)
+BaseTextureLayer::BaseTextureLayer() : ParentClass(_("Base Texture"), true)
 {
-  g_assert(!singleton);
-  singleton=this;
-
   SettingsWidget* settings  = new SettingsWidget;
   prepare_settings("base-texture", settings);
+
+  get_imagefile()->set_filename(apply_filename_macros("$(local-folder)/start-up-planet-images/sup-day.jpg")); // TODO you shouldn't need to use full path here
 }
 
 BaseTextureLayer::~BaseTextureLayer()throw()
 {
-  singleton=nullptr;
 }
 
 void register_base_texture_layer()

@@ -17,22 +17,25 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-class SphereTexture : public Refable
+class Texture : public Refable
 {
 private:
   bool _initialized;
   GLuint _texture;
 
-  SphereTexture(const SphereTexture&);
+  Texture();
+  Texture(const Texture&);
+  Texture(const Glib::RefPtr<ImageFile>& file);
 
   Glib::RefPtr<ImageFile> imagefile;
 
 public:
-  SphereTexture();
-  ~SphereTexture()throw();
+  ~Texture()throw();
 
   void bind();
 
   void deinit();
   void init();
+
+  static Glib::RefPtr<Texture> create(const Glib::RefPtr<ImageFile>& imagefile){return Glib::RefPtr<Texture>(new Texture(imagefile));}
 };

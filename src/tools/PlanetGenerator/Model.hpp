@@ -22,5 +22,5 @@
 #include "opengl.hpp"
 
 #include "./Sphere.hpp"
-#include "./Layer.hpp"
 #include "./ImageFile.hpp"
+#include "./Layer.hpp"
