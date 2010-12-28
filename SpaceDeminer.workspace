@@ -4,12 +4,12 @@
   <Project Name="PlanetGenerator" Path="src/tools/PlanetGenerator/PlanetGenerator.project" Active="Yes"/>
   <Project Name="Base" Path="src/Base/Base.project"/>
   <BuildMatrix>
-    <WorkspaceConfiguration Name="Debug" Selected="yes">
+    <WorkspaceConfiguration Name="Debug" Selected="no">
       <Project Name="SpaceDeminer" ConfigName="Debug"/>
       <Project Name="PlanetGenerator" ConfigName="Debug"/>
       <Project Name="Base" ConfigName="Debug"/>
     </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="Release" Selected="no">
+    <WorkspaceConfiguration Name="Release" Selected="yes">
       <Project Name="SpaceDeminer" ConfigName="Release"/>
       <Project Name="PlanetGenerator" ConfigName="Release"/>
       <Project Name="Base" ConfigName="Release"/>

@@ -40,6 +40,7 @@ View3D::View3D() : Gtk::GL::DrawingArea(Gdk::GL::Config::create(Gdk::GL::MODE_RG
 
   base_texture  = Texture::create(BaseTextureLayer::get_imagefile());
   cloud_texture  = Texture::create(CloudTextureLayer::get_imagefile());
+  night_texture  = Texture::create(NightTextureLayer::get_imagefile());
 }
 
 View3D::~View3D()throw()
@@ -81,6 +82,7 @@ void View3D::on_realize()
   sphere_mesh.init();
   base_texture->init();
   cloud_texture->init();
+  night_texture->init();
 
   _gl_initialized = true;
 }
@@ -138,6 +140,9 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   }else if(only_visible_layer.operator->()==CloudTextureLayer::get_singleton())
   {
     cloud_texture->bind();
+  }else if(only_visible_layer.operator->()==NightTextureLayer::get_singleton())
+  {
+    night_texture->bind();
   }else
   {
     base_texture->bind();

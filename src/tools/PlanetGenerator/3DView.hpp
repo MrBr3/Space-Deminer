@@ -72,6 +72,5 @@ public:
   sigc::signal<void, bool> signal_wireframed_changed(){return _signal_wireframed_changed;}
 
   SphereMesh sphere_mesh;
-  Glib::RefPtr<Texture> base_texture;
-  Glib::RefPtr<Texture> cloud_texture;
+  Glib::RefPtr<Texture> base_texture, cloud_texture, night_texture;
 };
