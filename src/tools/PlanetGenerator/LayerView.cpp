@@ -35,6 +35,9 @@ LayerView::~LayerView()throw()
 
 Layer* LayerView::get_layer_for_path(const Gtk::TreeModel::Path& path)
 {
+  if(path.empty())
+    return nullptr;
+
   Gtk::TreeModel::iterator iter = get_model()->get_iter(path);
 
   if(!iter)

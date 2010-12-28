@@ -24,7 +24,7 @@
 #include "SphereMeshQuads.hpp"
 #include "SphereMeshTriangles.hpp"
 
-using QuadVersion::SphereMesh;
+using TriangleVersion::SphereMesh;
 
 #include "Texture.hpp"
 #include "3DView.hpp"
@@ -74,6 +74,7 @@ class MainWindow : public Gtk::Window
   Gtk::VPaned _vpaned;
   Gtk::VBox _vbox;
   Gtk::VBox _settings;
+  int last_settings_size_request;
   Gtk::ScrolledWindow _layers_scrollbars;
   LayerView* _layers;
   Gtk::MenuBar _menu_bar;
@@ -96,14 +97,13 @@ class MainWindow : public Gtk::Window
 
   void _adapt_show_sidebar();
 
+  void adapt_settings_size_request(Gtk::Requisition*);
+
 public:
   MainWindow();
   ~MainWindow()throw();
 
-  void append_settings_widget(Gtk::Widget& w)
-  {
-    _settings.pack_start(w);
-  }
+  void append_settings_widget(Gtk::Widget& w);
 };
 
 /** \brief As long as the MainWindow is created, this pointer will point towards it

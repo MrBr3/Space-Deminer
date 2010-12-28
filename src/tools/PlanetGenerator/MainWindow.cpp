@@ -26,6 +26,7 @@ MainWindow::MainWindow()
   g_assert(!main_window);
   main_window = this;
 
+
   _layers = Gtk::manage(new LayerView);
   view_3d = Gtk::manage(new View3D);
   view_settings = new ViewSettings;
@@ -52,6 +53,8 @@ MainWindow::MainWindow()
           _layers_scrollbars.set_shadow_type(Gtk::SHADOW_IN);
             _layers->show();
         _vpaned.pack2(_settings);
+          last_settings_size_request  = 0;
+          _settings.signal_size_request().connect(sigc::mem_fun(*this, &MainWindow::adapt_settings_size_request));
           _settings.show();
         _vpaned.set_position(96);
 
@@ -87,7 +90,6 @@ MainWindow::MainWindow()
         menu_view_settings.signal_activate().connect(sigc::mem_fun(*view_settings, &SettingsWidget::bring_to_front));
   _menu_bar.show_all_children();
 
-  set_default_size(480, 360);
   set_title(_("Planet Generator"));
 
   show();
@@ -98,6 +100,16 @@ MainWindow::~MainWindow()throw()
   view_3d->deinit();
 
   main_window = nullptr;
+}
+
+void MainWindow::adapt_settings_size_request(Gtk::Requisition* r)
+{
+  r->width  = last_settings_size_request = MAX(r->width, last_settings_size_request);
+}
+
+void MainWindow::append_settings_widget(Gtk::Widget& w)
+{
+  _settings.pack_start(w);
 }
 
 void MainWindow::_adapt_show_sidebar()

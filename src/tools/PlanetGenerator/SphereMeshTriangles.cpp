@@ -155,7 +155,7 @@ namespace TriangleVersion
     n_segments  = MAX(12, n_segments);
 
     gsize n_latitude_segments = n_segments;
-    gsize n_longitude_segments = (n_segments<<1);
+    gsize n_longitude_segments = n_segments;
 
     _n_triangles  = n_longitude_segments +
                     n_longitude_segments*2*n_latitude_segments +
