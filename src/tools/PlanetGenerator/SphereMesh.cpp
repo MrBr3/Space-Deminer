@@ -290,11 +290,11 @@ namespace Private_SphereMesh_
         curr_triangle().b.set(lower_circle_a);
         curr_triangle().a.set(0.f, 0.f, 1.f);
 
-        curr_rect_uv().c.set(uv_x+0.5f*i_uv_x,
+        curr_rect_uv().a.set(uv_x+0.5f*i_uv_x,
                              0.f);
-        curr_rect_uv().b.set(uv_x+i_uv_x,
+        curr_rect_uv().b.set(uv_x,
                              lower_uv_y);
-        curr_rect_uv().a.set(uv_x,
+        curr_rect_uv().c.set(uv_x+i_uv_x,
                              lower_uv_y);
 
         uv_x  += i_uv_x;
