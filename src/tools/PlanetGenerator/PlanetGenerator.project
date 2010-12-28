@@ -14,14 +14,16 @@
       <File Name="FileSettings.hpp"/>
       <File Name="ViewSettings.hpp"/>
       <File Name="ViewSettings.cpp"/>
-      <File Name="SphereMesh.cpp"/>
-      <File Name="SphereMesh.hpp"/>
       <File Name="SettingsWidget.hpp"/>
       <File Name="SettingsWidget.cpp"/>
       <File Name="LayerView.hpp"/>
       <File Name="LayerView.cpp"/>
       <File Name="Texture.cpp"/>
       <File Name="Texture.hpp"/>
+      <File Name="SphereMeshQuads.cpp"/>
+      <File Name="SphereMeshQuads.hpp"/>
+      <File Name="SphereMeshTriangles.cpp"/>
+      <File Name="SphereMeshTriangles.hpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Model">
       <File Name="Sphere.hpp"/>

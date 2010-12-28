@@ -21,7 +21,11 @@
 
 #include "SettingsWidget.hpp"
 
-#include "SphereMesh.hpp"
+#include "SphereMeshQuads.hpp"
+#include "SphereMeshTriangles.hpp"
+
+using QuadVersion::SphereMesh;
+
 #include "Texture.hpp"
 #include "3DView.hpp"
 #include "FileSettings.hpp"
