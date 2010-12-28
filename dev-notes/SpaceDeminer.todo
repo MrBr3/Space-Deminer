@@ -37,6 +37,8 @@ PlanetGenerator
   [X] LayerView
     [X] mit einfachen Klick entsprechende Settings anzeigen
     [X] mit Klick auf das Auge zwischen sichtbar/unsichtbar umschalten
+  [ ] Shader
+    [ ] überlegen, ob Eis und wasser zusamenfassen
 
 [ ] Programm
   [ ] richtigen Pfade herausfinden (see apply_filename_macros)
