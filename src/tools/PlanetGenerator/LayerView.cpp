@@ -42,5 +42,10 @@ void LayerView::on_row_activated(const Gtk::TreeModel::Path& path, Gtk::TreeView
 
   Gtk::TreeModel::Row row = *iter;
 
-  ((Layer*)row[LayerModel::columns()._layer])->signal_activated().emit();
+  Layer* layer  = row[LayerModel::columns()._layer];
+
+  if(!layer)
+    return;
+
+  layer->signal_activated().emit();
 }

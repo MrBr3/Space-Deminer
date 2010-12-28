@@ -16,12 +16,12 @@
       <File Name="ViewSettings.cpp"/>
       <File Name="SphereMesh.cpp"/>
       <File Name="SphereMesh.hpp"/>
-      <File Name="SphereTexture.hpp"/>
-      <File Name="SphereTexture.cpp"/>
       <File Name="SettingsWidget.hpp"/>
       <File Name="SettingsWidget.cpp"/>
       <File Name="LayerView.hpp"/>
       <File Name="LayerView.cpp"/>
+      <File Name="Texture.cpp"/>
+      <File Name="Texture.hpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Model">
       <File Name="Sphere.hpp"/>
