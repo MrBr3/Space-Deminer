@@ -19,22 +19,13 @@
 
 #include "./Model.hpp"
 
-ImageFile* ImageFile::_imagefile  = nullptr;
-
 ImageFile::ImageFile()
 {
-  g_assert(!_imagefile);
-
-  _imagefile  = this;
-
   signal_imagefile_changed().connect(sigc::mem_fun(_signal_something_changed, &sigc::signal<void>::emit));
 }
 
 ImageFile::~ImageFile()throw()
 {
-  g_assert(_imagefile);
-
-  _imagefile  = nullptr;
 }
 
 Glib::RefPtr<Gdk::Pixbuf> ImageFile::create_pixbuf()

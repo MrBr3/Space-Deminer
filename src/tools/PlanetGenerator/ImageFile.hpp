@@ -19,8 +19,6 @@
 
 class ImageFile : public Refable
 {
-  static ImageFile* _imagefile;
-
   ImageFile();
   ImageFile(const ImageFile&);
 
@@ -48,10 +46,6 @@ public:
 
   static Glib::RefPtr<ImageFile> create()
   {
-    if(!_imagefile)
-      return Glib::RefPtr<ImageFile>(new ImageFile);
-
-    _imagefile->reference();
-    return Glib::RefPtr<ImageFile>(_imagefile);
+    return Glib::RefPtr<ImageFile>(new ImageFile);
   }
 };
