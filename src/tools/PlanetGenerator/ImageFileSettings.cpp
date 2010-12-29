@@ -42,7 +42,7 @@ ImageFileSettings::ImageFileSettings(const Glib::RefPtr<ImageFile>& imagefile, c
                                          sigc::mem_fun(*image_file.operator->(), &ImageFile::get_filename),
                                          sigc::mem_fun(*image_file.operator->(), &ImageFile::set_filename),
                                          image_file->signal_imagefile_changed());
-  SettingsWidget::append_boolean_widget(table, _n_entries, name+"-needs-to-be-warped", "Warp?", "Decides, whether the Image needs to be warped bofure beeing used",
+  SettingsWidget::append_boolean_widget(table, _n_entries, name+"-needs-to-be-warped", "Warp?", "Decides, whether the Image needs to be warped before beeing used",
                                        sigc::mem_fun(*image_file.operator->(), &ImageFile::get_needs_to_be_warped),
                                        sigc::mem_fun(*image_file.operator->(), &ImageFile::set_needs_to_be_warped),
                                        image_file->signal_needs_to_be_warped_changed());
