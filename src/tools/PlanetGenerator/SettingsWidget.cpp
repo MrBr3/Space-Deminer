@@ -205,7 +205,7 @@ void SettingsWidget::append_imagefile_widget(Gtk::Table& table, guint& n_entries
   ++n_entries;
 }
 
-void SettingsWidget::append_filename_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<Glib::ustring>& getter, const sigc::slot<void, const Glib::ustring&>& setter, sigc::signal<void>& signal_changed)
+void SettingsWidget::append_filename_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const Gtk::FileFilter& filter, const sigc::slot<Glib::ustring>& getter, const sigc::slot<void, const Glib::ustring&>& setter, sigc::signal<void>& signal_changed)
 {
   Gtk::FileChooserButton* filechooser = Gtk::manage(new Gtk::FileChooserButton);
 
@@ -215,6 +215,7 @@ void SettingsWidget::append_filename_widget(Gtk::Table& table, guint& n_entries,
   w_setter(getter());
 
   filechooser->show();
+  filechooser->add_filter(filter);
   filechooser->set_tooltip_text(tooltip);
   filechooser->set_width_chars(12);
   filechooser->set_action(Gtk::FILE_CHOOSER_ACTION_OPEN);
