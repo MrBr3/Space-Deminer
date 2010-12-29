@@ -227,6 +227,8 @@ namespace QuadVersion
       }
     }
 
+#define SPHERE_WARP_U(a, r) 0.5f + (uv_warped[i_quad].a.x-0.5f)*r
+
     void Circle::quad_pushed(gfloat upper_radius, gfloat lower_radius, bool a_upper, bool b_upper, bool c_upper, bool d_upper)
     {
       g_assert(i_quad<n_quads);
@@ -245,24 +247,24 @@ namespace QuadVersion
       uv_warped[i_quad].c = uv_rectangle[i_quad].c;
       uv_warped[i_quad].d = uv_rectangle[i_quad].d;
       if(a_upper)
-        uv_warped[i_quad].a.x = 0.5f - uv_warped[i_quad].a.x*upper_radius * 0.5f;
+        uv_warped[i_quad].a.x = SPHERE_WARP_U(a, upper_radius);
       else
-        uv_warped[i_quad].a.x = 0.5f - uv_warped[i_quad].a.x*lower_radius * 0.5f;
+        uv_warped[i_quad].a.x = SPHERE_WARP_U(a, lower_radius);
 
       if(b_upper)
-        uv_warped[i_quad].b.x = 0.5f - uv_warped[i_quad].b.x*upper_radius * 0.5f;
+        uv_warped[i_quad].b.x = SPHERE_WARP_U(b, upper_radius);
       else
-        uv_warped[i_quad].b.x = 0.5f - uv_warped[i_quad].b.x*lower_radius * 0.5f;
+        uv_warped[i_quad].b.x = SPHERE_WARP_U(b, lower_radius);
 
       if(c_upper)
-        uv_warped[i_quad].c.x = 0.5f - uv_warped[i_quad].c.x*upper_radius * 0.5f;
+        uv_warped[i_quad].c.x = SPHERE_WARP_U(c, upper_radius);
       else
-        uv_warped[i_quad].c.x = 0.5f - uv_warped[i_quad].c.x*lower_radius * 0.5f;
+        uv_warped[i_quad].c.x = SPHERE_WARP_U(c, lower_radius);
 
       if(d_upper)
-        uv_warped[i_quad].d.x = 0.5f - uv_warped[i_quad].d.x*upper_radius * 0.5f;
+        uv_warped[i_quad].d.x = SPHERE_WARP_U(d, upper_radius);
       else
-        uv_warped[i_quad].d.x = 0.5f - uv_warped[i_quad].d.x*lower_radius * 0.5f;
+        uv_warped[i_quad].d.x = SPHERE_WARP_U(d, lower_radius);
 
       ++i_quad;
     }

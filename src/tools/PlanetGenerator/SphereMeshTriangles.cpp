@@ -233,6 +233,8 @@ namespace TriangleVersion
       }
     }
 
+#define SPHERE_WARP_U(a, r) 0.5f + (uv_warped[i_triangle].a.x-0.5f)*r
+
     void Circle::triangle_pushed(gfloat upper_radius, gfloat lower_radius, bool a_upper, bool b_upper, bool c_upper)
     {
       g_assert(i_triangle<n_triangles);
@@ -248,19 +250,19 @@ namespace TriangleVersion
       uv_warped[i_triangle].b = uv_rectangle[i_triangle].b;
       uv_warped[i_triangle].c = uv_rectangle[i_triangle].c;
       if(a_upper)
-        uv_warped[i_triangle].a.x = 0.5f - uv_warped[i_triangle].a.x*upper_radius * 0.5f;
+        uv_warped[i_triangle].a.x = SPHERE_WARP_U(a, upper_radius);
       else
-        uv_warped[i_triangle].a.x = 0.5f - uv_warped[i_triangle].a.x*lower_radius * 0.5f;
+        uv_warped[i_triangle].a.x = SPHERE_WARP_U(a, lower_radius);
 
       if(b_upper)
-        uv_warped[i_triangle].b.x = 0.5f - uv_warped[i_triangle].b.x*upper_radius * 0.5f;
+        uv_warped[i_triangle].b.x = SPHERE_WARP_U(b, upper_radius);
       else
-        uv_warped[i_triangle].b.x = 0.5f - uv_warped[i_triangle].b.x*lower_radius * 0.5f;
+        uv_warped[i_triangle].b.x = SPHERE_WARP_U(b, lower_radius);
 
       if(c_upper)
-        uv_warped[i_triangle].c.x = 0.5f - uv_warped[i_triangle].c.x*upper_radius * 0.5f;
+        uv_warped[i_triangle].c.x = SPHERE_WARP_U(c, upper_radius);
       else
-        uv_warped[i_triangle].c.x = 0.5f - uv_warped[i_triangle].c.x*lower_radius * 0.5f;
+        uv_warped[i_triangle].c.x = SPHERE_WARP_U(c, lower_radius);
 
       ++i_triangle;
     }
@@ -280,17 +282,17 @@ namespace TriangleVersion
 
         for(gsize i=0; i<_n_circle_vertices; ++i)
         {
-          Vector3 lower_circle_a = point(i);
-          Vector3 lower_circle_b = point(i+1);
+          Vector3 lower_circle_b = point(i);
+          Vector3 lower_circle_c = point(i+1);
 
-          lower_circle_a  *= lower_radius;
           lower_circle_b  *= lower_radius;
-          lower_circle_a.z = lower_z;
+          lower_circle_c  *= lower_radius;
           lower_circle_b.z = lower_z;
+          lower_circle_c.z = lower_z;
 
-          curr_triangle().c.set(lower_circle_b);
-          curr_triangle().b.set(lower_circle_a);
           curr_triangle().a.set(0.f, 0.f, 1.f);
+          curr_triangle().b.set(lower_circle_b);
+          curr_triangle().c.set(lower_circle_c);
 
           curr_rect_uv().a.set(uv_x+0.5f*i_uv_x,
                                0.f);
@@ -315,24 +317,24 @@ namespace TriangleVersion
 
         for(gsize i=0; i<_n_circle_vertices; ++i)
         {
-          Vector3 higher_circle_a = point(i);
+          Vector3 higher_circle_c = point(i);
           Vector3 higher_circle_b = point(i+1);
 
-          higher_circle_a  *= higher_radius;
+          higher_circle_c  *= higher_radius;
           higher_circle_b  *= higher_radius;
-          higher_circle_a.z = higher_z;
+          higher_circle_c.z = higher_z;
           higher_circle_b.z = higher_z;
 
-          curr_triangle().c.set(higher_circle_a);
-          curr_triangle().b.set(higher_circle_b);
           curr_triangle().a.set(0.f, 0.f, -1.f);
+          curr_triangle().b.set(higher_circle_b);
+          curr_triangle().c.set(higher_circle_c);
 
-          curr_rect_uv().c.set(uv_x,
-                               higher_uv_y);
-          curr_rect_uv().b.set(uv_x+i_uv_x,
-                               higher_uv_y);
           curr_rect_uv().a.set(uv_x+0.5f*i_uv_x,
                                1.f);
+          curr_rect_uv().b.set(uv_x+i_uv_x,
+                               higher_uv_y);
+          curr_rect_uv().c.set(uv_x,
+                               higher_uv_y);
 
           uv_x  += i_uv_x;
           triangle_pushed(higher_radius, 0.f, false, true, true);
@@ -382,7 +384,7 @@ namespace TriangleVersion
         curr_rect_uv().c.set(uv_x+i_uv_x,
                              higher_uv_y);
 
-        triangle_pushed(higher_radius, lower_radius, true, true, false);
+        triangle_pushed(higher_radius, lower_radius, false, false, true);
 
         curr_triangle().a.set(higher_circle_c);
         curr_triangle().b.set(higher_circle_d);
@@ -395,7 +397,7 @@ namespace TriangleVersion
         curr_rect_uv().c.set(uv_x,
                              lower_uv_y);
 
-        triangle_pushed(higher_radius, lower_radius, false, false, true);
+        triangle_pushed(higher_radius, lower_radius, true, true, false);
 
         uv_x  += i_uv_x;
       }
