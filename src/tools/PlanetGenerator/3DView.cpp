@@ -79,12 +79,22 @@ void View3D::on_realize()
 
   gl_drawable->gl_begin(get_gl_context());
 
-  sphere_mesh.init();
+  sphere_mesh.init(view_settings->get_n_sphere_segments());
   base_texture->init();
   cloud_texture->init();
   night_texture->init();
 
   _gl_initialized = true;
+
+  view_settings->signal_n_sphere_segments_changed().connect(sigc::mem_fun(*this, &View3D::reinit_sphere_mesh));
+
+  signal_wireframed_changed().connect(sigc::hide(sigc::mem_fun(sig_wireframed_changed_noparam(), &sigc::signal<void>::emit)));
+}
+
+void View3D::reinit_sphere_mesh()
+{
+  sphere_mesh.set_segment_division(view_settings->get_n_sphere_segments());
+  invalidate();
 }
 
 void View3D::on_size_allocate(Gtk::Allocation& allocation)

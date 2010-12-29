@@ -66,6 +66,7 @@ public:
 public:
   void append_color_widget(const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<Gdk::Color>& getter, const sigc::slot<void, const Gdk::Color&>& setter, sigc::signal<void>& signal_changed);
   void append_boolean_widget(const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<bool>& getter, const sigc::slot<void, bool>& setter, sigc::signal<void>& signal_changed);
+  void append_int_widget(const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<int>& getter, const sigc::slot<void, int>& setter, sigc::signal<void>& signal_changed);
 
 public:
   SettingsWidget();

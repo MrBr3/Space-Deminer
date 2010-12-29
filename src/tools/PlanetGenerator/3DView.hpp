@@ -32,6 +32,10 @@ class View3D : public Gtk::GL::DrawingArea
   gfloat distance;
 
   sigc::signal<void, bool> _signal_wireframed_changed;
+  sigc::signal<void> _sig_wireframed_changed_noparam;
+
+  void reinit_sphere_mesh();
+
 public:
 
   View3D();
@@ -69,7 +73,8 @@ public:
     invalidate();
   }
 
-  sigc::signal<void, bool> signal_wireframed_changed(){return _signal_wireframed_changed;}
+  sigc::signal<void, bool>& signal_wireframed_changed(){return _signal_wireframed_changed;}
+  sigc::signal<void>& sig_wireframed_changed_noparam(){return _sig_wireframed_changed_noparam;}
 
   SphereMesh sphere_mesh;
   Glib::RefPtr<Texture> base_texture, cloud_texture, night_texture;

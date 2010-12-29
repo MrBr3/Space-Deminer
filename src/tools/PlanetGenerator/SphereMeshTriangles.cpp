@@ -206,7 +206,7 @@ namespace TriangleVersion
     Circle::Circle(gsize n_circle_vertices, gsize n_triangles)
     {
       g_assert(abs(PI2-6.2831) < 0.001);
-      g_assert(n_circle_vertices>=24);
+      g_assert(n_circle_vertices>=12);
 
       //-- Allocate enough memory for the meshdata
       i_triangle = 0;

@@ -103,6 +103,8 @@ public:
   MainWindow();
   ~MainWindow()throw();
 
+  View3D* get_view_3d(){g_assert(this);return view_3d;}
+
   void append_settings_widget(Gtk::Widget& w);
 };
 
