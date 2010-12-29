@@ -10,11 +10,8 @@
       <File Name="3DView.hpp"/>
       <File Name="MainWindow.cpp"/>
       <File Name="MainWindow.hpp"/>
-      <File Name="FileSettings.cpp"/>
-      <File Name="FileSettings.hpp"/>
       <File Name="ViewSettings.hpp"/>
       <File Name="ViewSettings.cpp"/>
-      <File Name="SettingsWidget.hpp"/>
       <File Name="SettingsWidget.cpp"/>
       <File Name="LayerView.hpp"/>
       <File Name="LayerView.cpp"/>
@@ -24,6 +21,9 @@
       <File Name="SphereMeshQuads.hpp"/>
       <File Name="SphereMeshTriangles.cpp"/>
       <File Name="SphereMeshTriangles.hpp"/>
+      <File Name="SettingsWidget.hpp"/>
+      <File Name="ImageFileSettings.hpp"/>
+      <File Name="ImageFileSettings.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Model">
       <File Name="Sphere.hpp"/>

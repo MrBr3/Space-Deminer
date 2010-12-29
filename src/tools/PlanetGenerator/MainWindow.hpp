@@ -28,7 +28,7 @@ using TriangleVersion::SphereMesh;
 
 #include "Texture.hpp"
 #include "3DView.hpp"
-#include "FileSettings.hpp"
+#include "ImageFileSettings.hpp"
 #include "ViewSettings.hpp"
 #include "LayerView.hpp"
 
