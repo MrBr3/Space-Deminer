@@ -52,8 +52,6 @@ bool LayerView::on_button_press_event(GdkEventButton* e)
 {
   g_assert(e);
 
-  bool b = ParentClass::on_button_press_event(e);
-
   if(e->type==GDK_BUTTON_PRESS)
   {
     Gtk::TreeModel::Path path;
@@ -69,11 +67,12 @@ bool LayerView::on_button_press_event(GdkEventButton* e)
       if(layer)
       {
         layer->set_visible(!layer->get_visible());
+        return true;
       }
     }
   }
 
-  return b;
+  return ParentClass::on_button_press_event(e);
 }
 
 void LayerView::on_cursor_changed()
