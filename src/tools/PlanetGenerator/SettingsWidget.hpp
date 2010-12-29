@@ -78,13 +78,18 @@ public:
   }
   void append_imagefile_widget(const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const Glib::RefPtr<ImageFile>& imagefile)
   {
-    append_imagefile_widget(table, n_entries, name, label, tooltip, getter, setter, signal_changed);
+    append_imagefile_widget(table, n_entries, name, label, tooltip, imagefile);
+  }
+  void append_filename_widget(const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<Glib::ustring>& getter, const sigc::slot<void, const Glib::ustring&>& setter, sigc::signal<void>& signal_changed)
+  {
+    append_filename_widget(table, n_entries, name, label, tooltip, getter, setter, signal_changed);
   }
 
   static void append_color_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<Gdk::Color>& getter, const sigc::slot<void, const Gdk::Color&>& setter, sigc::signal<void>& signal_changed);
   static void append_boolean_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<bool>& getter, const sigc::slot<void, bool>& setter, sigc::signal<void>& signal_changed);
   static void append_int_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<int>& getter, const sigc::slot<void, int>& setter, sigc::signal<void>& signal_changed);
   static void append_imagefile_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const Glib::RefPtr<ImageFile>& imagefile);
+  static void append_filename_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<Glib::ustring>& getter, const sigc::slot<void, const Glib::ustring&>& setter, sigc::signal<void>& signal_changed);
 public:
   SettingsWidget();
   ~SettingsWidget()throw();

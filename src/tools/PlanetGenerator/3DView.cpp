@@ -142,23 +142,29 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   glRotatef(sphere->get_x_rotation(), 1.f, 0.f, 0.f);
   glRotatef(sphere->get_z_rotation(), 0.f, 0.f, 1.f);
 
+  bool warped_uv = false; // TODO delete if there's abetter solution
+
   glEnable(GL_TEXTURE_2D);
   Glib::RefPtr<Layer> only_visible_layer  = LayerModel::just_one_layer_visible(); // Gets the only visible Layer
   if(only_visible_layer.operator->()==BaseTextureLayer::get_singleton())
   {
     base_texture->bind();
+    warped_uv = BaseTextureLayer::get_imagefile()->get_needs_to_be_warped();
   }else if(only_visible_layer.operator->()==CloudTextureLayer::get_singleton())
   {
     cloud_texture->bind();
+    warped_uv = CloudTextureLayer::get_imagefile()->get_needs_to_be_warped();
   }else if(only_visible_layer.operator->()==NightTextureLayer::get_singleton())
   {
     night_texture->bind();
+    warped_uv = NightTextureLayer::get_imagefile()->get_needs_to_be_warped();
   }else
   {
     base_texture->bind();
+    warped_uv = BaseTextureLayer::get_imagefile()->get_needs_to_be_warped();
   }
 
-  sphere_mesh.render(sphere->get_use_warped_uv());
+  sphere_mesh.render(warped_uv);
 
   gl_drawable->swap_buffers();
   return true;

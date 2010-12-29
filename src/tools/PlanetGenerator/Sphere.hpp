@@ -22,7 +22,6 @@ class Sphere : public Refable
   gfloat _rotation_x, _rotation_y, _rotation_z;
   gfloat _x_speed, _y_speed, _z_speed;
   bool _rotating;
-  bool _use_warped_uv;
 
   sigc::signal<void> _signal_invalidated;
 
@@ -37,19 +36,6 @@ class Sphere : public Refable
 
 public:
   sigc::signal<void> signal_invalidated(){return _signal_invalidated;}
-
-  /** \brief Gets, whether the UV-Mesh ist warped.
-   * */
-  bool get_use_warped_uv()const{return _use_warped_uv;}
-
-  /** \brief Sets, whether the UV-Mesh should be warped.
-   *
-   * */
-  void set_use_warped_uv(bool warped=true)
-  {
-    _use_warped_uv  = warped;
-    _invalidate();
-  }
 
   gfloat get_x_rotation()const throw(){return _rotation_x;}
   gfloat get_y_rotation()const throw(){return _rotation_y;}

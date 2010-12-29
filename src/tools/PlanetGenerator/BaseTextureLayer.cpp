@@ -24,6 +24,7 @@ BaseTextureLayer::BaseTextureLayer() : ParentClass(_("Base Texture"), true)
 {
   SettingsWidget* settings  = new SettingsWidget;
   prepare_settings("base-texture", settings);
+  settings->append_imagefile_widget("base-texture-file", "File", "The File the Texture is created from", get_imagefile());
 
   get_imagefile()->set_filename(apply_filename_macros("$(local-folder)/start-up-planet-images/sup-day.jpg")); // TODO you shouldn't need to use full path here
 }

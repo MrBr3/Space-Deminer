@@ -37,8 +37,15 @@ PlanetGenerator
   [X] LayerView
     [X] mit einfachen Klick entsprechende Settings anzeigen
     [X] mit Klick auf das Auge zwischen sichtbar/unsichtbar umschalten
+  [ ] ImageLayerSettings
+    [ ] Bilder automatisch "warped" zeichnen können
+    [ ] warped version berechnen und als Bild speichern können
+    [ ] riesige Bilder (für offline rendering) verwenden können
+  [ ] offline rendering
   [ ] Shader
     [ ] überlegen, ob Eis und wasser zusamenfassen
+  [ ] zusätzliche Features
+    [ ] SVG autom erstellen, die zeigt, welcher Bereich beim "warpen" verwendet wird
 
 [ ] Programm
   [ ] richtigen Pfade herausfinden (see apply_filename_macros)

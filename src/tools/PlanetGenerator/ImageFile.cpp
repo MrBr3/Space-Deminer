@@ -22,6 +22,7 @@
 ImageFile::ImageFile()
 {
   signal_imagefile_changed().connect(sigc::mem_fun(_signal_something_changed, &sigc::signal<void>::emit));
+  signal_needs_to_be_warped_changed().connect(sigc::mem_fun(_signal_something_changed, &sigc::signal<void>::emit));
 }
 
 ImageFile::~ImageFile()throw()
@@ -46,4 +47,11 @@ void ImageFile::set_filename(const Glib::ustring& filename)
   _filename = filename;
 
   _signal_imagefile_changed.emit();
+}
+
+void ImageFile::set_needs_to_be_warped(bool w)
+{
+  _needs_to_be_warped = w;
+
+  signal_needs_to_be_warped_changed().emit();
 }

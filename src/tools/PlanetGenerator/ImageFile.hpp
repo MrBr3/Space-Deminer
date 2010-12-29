@@ -23,13 +23,16 @@ class ImageFile : public Refable
   ImageFile(const ImageFile&);
 
   Glib::ustring _filename;
-  //bool _needs_to_be_warped;
+  bool _needs_to_be_warped;
+  // resize_to_preview_size
 
   sigc::signal<void> _signal_imagefile_changed;
+  sigc::signal<void> _signal_needs_to_be_warped_chenged;
 
   sigc::signal<void> _signal_something_changed;
 
 public:
+  sigc::signal<void>& signal_needs_to_be_warped_changed(){return _signal_needs_to_be_warped_chenged;}
   sigc::signal<void>& signal_imagefile_changed(){return _signal_imagefile_changed;}
   sigc::signal<void>& signal_something_changed(){return _signal_something_changed;}
 
@@ -37,6 +40,9 @@ public:
 
   const Glib::ustring get_filename()const{return _filename;}
   void set_filename(const Glib::ustring& filename);
+
+  bool get_needs_to_be_warped()const{return _needs_to_be_warped;}
+  void set_needs_to_be_warped(bool b);
 
   /** \brief Creates a RefPtr ift there's a valif Imagefile other wise a null pointer.
    *

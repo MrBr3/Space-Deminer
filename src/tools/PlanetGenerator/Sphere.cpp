@@ -34,7 +34,6 @@ Sphere::Sphere()
   _y_speed  = 0.f;
   _z_speed  = 0.f;
   _rotating = false;
-  _use_warped_uv  = false;
 
   _sphere  = this;
 }

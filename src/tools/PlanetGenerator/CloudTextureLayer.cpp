@@ -24,6 +24,7 @@ CloudTextureLayer::CloudTextureLayer() : ParentClass(_("Cloud Texture"), true)
 {
   SettingsWidget* settings  = new SettingsWidget;
   prepare_settings("cloud-texture", settings);
+  settings->append_imagefile_widget("cloud-texture-file", "File", "The File the Texture is created from", get_imagefile());
 
   get_imagefile()->set_filename(apply_filename_macros("$(local-folder)/start-up-planet-images/sup-clouds.jpg")); // TODO you shouldn't need to use full path here
 }

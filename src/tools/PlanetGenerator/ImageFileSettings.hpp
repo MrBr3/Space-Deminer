@@ -17,3 +17,20 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
+class ImageFileSettings : public Gtk::Expander
+{
+  typedef Gtk::Expander ParentClass;
+
+private:
+  Glib::RefPtr<ImageFile> image_file;
+
+  Gtk::Label _label;
+  Gtk::HBox _hbox;
+  Gtk::Table table;
+
+  guint _n_entries;
+
+public:
+  ImageFileSettings(const Glib::RefPtr<ImageFile>& imagefile, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip);
+  ~ImageFileSettings()throw();
+};
