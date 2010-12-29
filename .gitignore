@@ -312,3 +312,7 @@
 /obj/planet-generator/SphereMeshQuads.o.d
 /obj/planet-generator/SphereMeshTriangles.o
 /obj/planet-generator/SphereMeshTriangles.o.d
+/obj-d/planet-generator/ImageFileSettings.o.d
+/obj/planet-generator/ImageFileSettings.o.d
+/obj-d/planet-generator/ImageFileSettings.o
+/src/tools/PlanetGenerator/ui-scribble.glade
