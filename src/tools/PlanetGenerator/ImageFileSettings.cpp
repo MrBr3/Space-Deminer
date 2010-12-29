@@ -38,7 +38,11 @@ ImageFileSettings::ImageFileSettings(const Glib::RefPtr<ImageFile>& imagefile, c
 
   add(table);
 
-  SettingsWidget::append_filename_widget(table, _n_entries, name, label, tooltip,
+  Gtk::FileFilter img_filter;
+  img_filter.set_name(_("Image Files"));
+  img_filter.add_pixbuf_formats();
+
+  SettingsWidget::append_filename_widget(table, _n_entries, name, label, tooltip, img_filter,
                                          sigc::mem_fun(*image_file.operator->(), &ImageFile::get_filename),
                                          sigc::mem_fun(*image_file.operator->(), &ImageFile::set_filename),
                                          image_file->signal_imagefile_changed());
