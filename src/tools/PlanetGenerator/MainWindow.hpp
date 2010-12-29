@@ -19,6 +19,8 @@
 
 #include "./Model.hpp"
 
+#include <cairomm/cairomm.h>
+
 #include "SettingsWidget.hpp"
 
 #include "SphereMeshQuads.hpp"
@@ -31,6 +33,7 @@ using TriangleVersion::SphereMesh;
 #include "ImageFileSettings.hpp"
 #include "ViewSettings.hpp"
 #include "LayerView.hpp"
+#include "UVMeshExporter.hpp"
 
 const gint LENGTH_BORDER_WIDTH = 4;
 const gint LENGTH_SMALLSPACE = 3;
@@ -63,6 +66,12 @@ class MainWindow : public Gtk::Window
 
   MyMenuItem menu_file;
   Gtk::Menu  menu_file_menu;
+    MyMenuItem menu_file_export;
+    Gtk::Menu  menu_file_export_menu;
+      Gtk::SeparatorMenuItem menu_file_export_sep1;
+      MyMenuItem menu_file_export_uv_not_warped;
+      MyMenuItem menu_file_export_uv_warped;
+    Gtk::SeparatorMenuItem menu_file_sep1;
     MyMenuItem menu_file_quit;
   MyMenuItem menu_view;
   Gtk::Menu  menu_view_menu;
@@ -103,7 +112,8 @@ public:
   MainWindow();
   ~MainWindow()throw();
 
-  View3D* get_view_3d(){g_assert(this);return view_3d;}
+  View3D& get_view_3d(){g_assert(this);g_assert(view_3d);return *view_3d;}
+  ViewSettings& get_view_settings(){g_assert(this);g_assert(view_settings);return *view_settings;}
 
   void append_settings_widget(Gtk::Widget& w);
 };

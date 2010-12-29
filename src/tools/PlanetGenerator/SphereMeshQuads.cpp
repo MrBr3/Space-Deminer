@@ -80,6 +80,7 @@ namespace QuadVersion
     _n_quads  = 0;
 
     _initialized  = false;
+    _use_gl_buffers = !UVMeshExporter::initialized();
   }
 
   void SphereMesh::init(gsize latitude_segments)
@@ -88,7 +89,7 @@ namespace QuadVersion
 
     set_segment_division(latitude_segments);
 
-    _initialized  = true;
+    _initialized  = _use_gl_buffers;
   }
 
   SphereMesh::~SphereMesh()throw()
@@ -178,21 +179,24 @@ namespace QuadVersion
 
     g_assert(&_vertex_buffer_quads!=nullptr);
 
-    glGenBuffersARB(1,&_vertex_buffer_quads);
-    glBindBufferARB(GL_ARRAY_BUFFER_ARB,_vertex_buffer_quads);
-    glBufferDataARB(GL_ARRAY_BUFFER_ARB,_n_quads * sizeof(Polygon), circle.quads, GL_STATIC_DRAW_ARB);
+    if(_use_gl_buffers)
+    {
+      glGenBuffersARB(1,&_vertex_buffer_quads);
+      glBindBufferARB(GL_ARRAY_BUFFER_ARB,_vertex_buffer_quads);
+      glBufferDataARB(GL_ARRAY_BUFFER_ARB,_n_quads * sizeof(Polygon), circle.quads, GL_STATIC_DRAW_ARB);
 
-    glGenBuffersARB(1,&_vertex_buffer_normals);
-    glBindBufferARB(GL_ARRAY_BUFFER_ARB,_vertex_buffer_normals);
-    glBufferDataARB(GL_ARRAY_BUFFER_ARB,_n_quads * 4 * sizeof(Vector3), circle.normals, GL_STATIC_DRAW_ARB);
+      glGenBuffersARB(1,&_vertex_buffer_normals);
+      glBindBufferARB(GL_ARRAY_BUFFER_ARB,_vertex_buffer_normals);
+      glBufferDataARB(GL_ARRAY_BUFFER_ARB,_n_quads * 4 * sizeof(Vector3), circle.normals, GL_STATIC_DRAW_ARB);
 
-    glGenBuffersARB(1,&_vertex_buffer_uv_rectangular);
-    glBindBufferARB(GL_ARRAY_BUFFER_ARB,_vertex_buffer_uv_rectangular);
-    glBufferDataARB(GL_ARRAY_BUFFER_ARB,_n_quads * sizeof(UV), circle.uv_rectangle, GL_STATIC_DRAW_ARB);
+      glGenBuffersARB(1,&_vertex_buffer_uv_rectangular);
+      glBindBufferARB(GL_ARRAY_BUFFER_ARB,_vertex_buffer_uv_rectangular);
+      glBufferDataARB(GL_ARRAY_BUFFER_ARB,_n_quads * sizeof(UV), circle.uv_rectangle, GL_STATIC_DRAW_ARB);
 
-    glGenBuffersARB(1,&_vertex_buffer_uv_warped);
-    glBindBufferARB(GL_ARRAY_BUFFER_ARB,_vertex_buffer_uv_warped);
-    glBufferDataARB(GL_ARRAY_BUFFER_ARB,_n_quads * sizeof(UV), circle.uv_warped, GL_STATIC_DRAW_ARB);
+      glGenBuffersARB(1,&_vertex_buffer_uv_warped);
+      glBindBufferARB(GL_ARRAY_BUFFER_ARB,_vertex_buffer_uv_warped);
+      glBufferDataARB(GL_ARRAY_BUFFER_ARB,_n_quads * sizeof(UV), circle.uv_warped, GL_STATIC_DRAW_ARB);
+    }
   }
 
   namespace Private_SphereMesh_
@@ -265,6 +269,9 @@ namespace QuadVersion
         uv_warped[i_quad].d.x = SPHERE_WARP_U(d, upper_radius);
       else
         uv_warped[i_quad].d.x = SPHERE_WARP_U(d, lower_radius);
+
+      UVMeshExporter::add_quad(uv_rectangle[i_quad].a, uv_rectangle[i_quad].b, uv_rectangle[i_quad].c, uv_rectangle[i_quad].d, false);
+      UVMeshExporter::add_quad(uv_warped[i_quad].a, uv_warped[i_quad].b, uv_warped[i_quad].c, uv_warped[i_quad].d, true);
 
       ++i_quad;
     }

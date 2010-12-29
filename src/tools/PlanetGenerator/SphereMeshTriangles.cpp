@@ -79,6 +79,7 @@ namespace TriangleVersion
     _vertex_buffer_uv_rectangular  = 0;
 
     _n_triangles  = 0;
+    _use_gl_buffers = !UVMeshExporter::initialized();
 
     _initialized  = false;
   }
@@ -89,7 +90,7 @@ namespace TriangleVersion
 
     set_segment_division(latitude_segments);
 
-    _initialized  = true;
+    _initialized  = _use_gl_buffers;
   }
 
   SphereMesh::~SphereMesh()throw()
@@ -182,23 +183,26 @@ namespace TriangleVersion
       circle.create_polgons_between(curr_a, next_a);
     }
 
-    g_assert(&_vertex_buffer_triangles!=nullptr);
+    if(_use_gl_buffers)
+    {
+      g_assert(&_vertex_buffer_triangles!=nullptr);
 
-    glGenBuffersARB(1,&_vertex_buffer_triangles);
-    glBindBufferARB(GL_ARRAY_BUFFER_ARB,_vertex_buffer_triangles);
-    glBufferDataARB(GL_ARRAY_BUFFER_ARB,_n_triangles * sizeof(Polygon), circle.triangles, GL_STATIC_DRAW_ARB);
+      glGenBuffersARB(1,&_vertex_buffer_triangles);
+      glBindBufferARB(GL_ARRAY_BUFFER_ARB,_vertex_buffer_triangles);
+      glBufferDataARB(GL_ARRAY_BUFFER_ARB,_n_triangles * sizeof(Polygon), circle.triangles, GL_STATIC_DRAW_ARB);
 
-    glGenBuffersARB(1,&_vertex_buffer_normals);
-    glBindBufferARB(GL_ARRAY_BUFFER_ARB,_vertex_buffer_normals);
-    glBufferDataARB(GL_ARRAY_BUFFER_ARB,_n_triangles * 3 * sizeof(Vector3), circle.normals, GL_STATIC_DRAW_ARB);
+      glGenBuffersARB(1,&_vertex_buffer_normals);
+      glBindBufferARB(GL_ARRAY_BUFFER_ARB,_vertex_buffer_normals);
+      glBufferDataARB(GL_ARRAY_BUFFER_ARB,_n_triangles * 3 * sizeof(Vector3), circle.normals, GL_STATIC_DRAW_ARB);
 
-    glGenBuffersARB(1,&_vertex_buffer_uv_rectangular);
-    glBindBufferARB(GL_ARRAY_BUFFER_ARB,_vertex_buffer_uv_rectangular);
-    glBufferDataARB(GL_ARRAY_BUFFER_ARB,_n_triangles * sizeof(UV), circle.uv_rectangle, GL_STATIC_DRAW_ARB);
+      glGenBuffersARB(1,&_vertex_buffer_uv_rectangular);
+      glBindBufferARB(GL_ARRAY_BUFFER_ARB,_vertex_buffer_uv_rectangular);
+      glBufferDataARB(GL_ARRAY_BUFFER_ARB,_n_triangles * sizeof(UV), circle.uv_rectangle, GL_STATIC_DRAW_ARB);
 
-    glGenBuffersARB(1,&_vertex_buffer_uv_warped);
-    glBindBufferARB(GL_ARRAY_BUFFER_ARB,_vertex_buffer_uv_warped);
-    glBufferDataARB(GL_ARRAY_BUFFER_ARB,_n_triangles * sizeof(UV), circle.uv_warped, GL_STATIC_DRAW_ARB);
+      glGenBuffersARB(1,&_vertex_buffer_uv_warped);
+      glBindBufferARB(GL_ARRAY_BUFFER_ARB,_vertex_buffer_uv_warped);
+      glBufferDataARB(GL_ARRAY_BUFFER_ARB,_n_triangles * sizeof(UV), circle.uv_warped, GL_STATIC_DRAW_ARB);
+    }
   }
 
   namespace Private_SphereMesh_
@@ -263,6 +267,9 @@ namespace TriangleVersion
         uv_warped[i_triangle].c.x = SPHERE_WARP_U(c, upper_radius);
       else
         uv_warped[i_triangle].c.x = SPHERE_WARP_U(c, lower_radius);
+
+      UVMeshExporter::add_triangle(uv_rectangle[i_triangle].a, uv_rectangle[i_triangle].b, uv_rectangle[i_triangle].c, false);
+      UVMeshExporter::add_triangle(uv_warped[i_triangle].a, uv_warped[i_triangle].b, uv_warped[i_triangle].c, true);
 
       ++i_triangle;
     }

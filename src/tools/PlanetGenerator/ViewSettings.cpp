@@ -35,12 +35,11 @@ ViewSettings::ViewSettings()
   set_main_caption(_("View Settings"));
 
   g_assert(main_window);
-  View3D* view3d  = main_window->get_view_3d();
-  g_assert(view3d);
+  View3D& view3d  = main_window->get_view_3d();
 
   append_color_widget("view-back-color", _("Back Color"), _("The Color of the background in the 3D view"), sigc::mem_fun(*this, &ViewSettings::get_back_color), sigc::mem_fun(*this, &ViewSettings::set_back_color), signal_back_color_changed());
   append_int_widget("view-n-sphere-segments", _("Lat.Segments"), _("The Number of latitudessegments of the sphere mesh"), sigc::mem_fun(*this, &ViewSettings::get_n_sphere_segments), sigc::mem_fun(*this, &ViewSettings::set_n_sphere_segments), signal_n_sphere_segments_changed());
-  append_boolean_widget("view-wireframed", _("Wireframed"), _("If set, the Spheres Mesh will be drawn a s Wireframe"), sigc::mem_fun(*view3d, &View3D::get_draw_wireframed), sigc::mem_fun(*view3d, &View3D::set_draw_wireframed), view3d->sig_wireframed_changed_noparam());
+  append_boolean_widget("view-wireframed", _("Wireframed"), _("If set, the Spheres Mesh will be drawn a s Wireframe"), sigc::mem_fun(view3d, &View3D::get_draw_wireframed), sigc::mem_fun(view3d, &View3D::set_draw_wireframed), view3d.sig_wireframed_changed_noparam());
 
   signal_back_color_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
   signal_n_sphere_segments_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));

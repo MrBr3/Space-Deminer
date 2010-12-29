@@ -25,6 +25,7 @@
       <File Name="ImageFileSettings.hpp"/>
       <File Name="ImageFileSettings.cpp"/>
       <File Name="UVMeshExporter.hpp"/>
+      <File Name="UVMeshExporter.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Model">
       <File Name="Sphere.hpp"/>

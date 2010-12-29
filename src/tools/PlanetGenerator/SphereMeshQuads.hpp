@@ -43,6 +43,7 @@ namespace QuadVersion
 
   private:
     bool _initialized;
+    bool _use_gl_buffers;
 
     gsize _n_quads;
 
