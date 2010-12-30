@@ -23,3 +23,8 @@ gtkmm
 gtkglextmm
 glew
 
+Disclaimer
+
+At some points in the source, We've written Links to websites (outside github.com/Robert42), which inspired us. We always tell te date, we've visited the site last time. At at this date there were no dangerous or illegal content an that sites, but that sites are not created by us, so we can't garantee, this to be forever
+
+Manchmal (zum Beispiel an einigen Stellen im Quelltext) verwenden nennen wir Link's zu -- aus unserer Sicht -- interessanten Seiten, die uns teilweise inspiriert haben. Wir nennen dann das Datum, an dem wir diese Seite zum letzen mal besucht haben. Wir können nur sagen, dass zu jenem Zeitpunkt keine Gefährlichen oder illegalen Inhalte auf den Seiten gewesen ist, können und wollen aber nicht garantieren, dass sich das in der zwischenzeit geändert haben könnte

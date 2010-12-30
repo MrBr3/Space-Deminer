@@ -35,6 +35,14 @@ namespace Private
   }
 }
 
+Glib::ustring get_filename_macros_description()
+{
+  return "Instead of a absolute path. Use the following macros to make your paths shorter:\n"
+         "$(tmp) := " + apply_filename_macros("$(tmp)") + "\n"
+         "~ := $(home)\n"
+         "$(home) := " + apply_filename_macros("$(home)") + "\n";
+}
+
 void init_paths(const Glib::ustring& app_name)
 {
   Private::Base::app_name = app_name;

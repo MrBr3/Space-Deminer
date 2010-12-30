@@ -17,11 +17,9 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "./Raytracer/Raxtracer.hpp"
+#include "./Raytracer/Raytracer.hpp"
 
 #include <cairomm/cairomm.h>
-
-#include "SettingsWidget.hpp"
 
 #include "SphereMeshQuads.hpp"
 #include "SphereMeshTriangles.hpp"
@@ -46,6 +44,7 @@ class MainWindow : public Gtk::Window
 {
   View3D* view_3d;
   ViewSettings* view_settings;
+  Glib::RefPtr<Raytracer::Manager> raytracer;
 
   class MyMenuItem : public Gtk::MenuItem
   {
@@ -73,6 +72,10 @@ class MainWindow : public Gtk::Window
       MyMenuItem menu_file_export_uv_warped;
     Gtk::SeparatorMenuItem menu_file_sep1;
     MyMenuItem menu_file_quit;
+  MyMenuItem menu_render;
+  Gtk::Menu  menu_render_menu;
+    Gtk::SeparatorMenuItem menu_render_sep1;
+    MyMenuItem menu_render_settings;
   MyMenuItem menu_view;
   Gtk::Menu  menu_view_menu;
     MyCheckMenuItem menu_view_show_sidebar;

@@ -126,7 +126,7 @@ void SettingsWidget::bring_to_front()
   visible_settings  = this;
 }
 
-void SettingsWidget::append_color_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<Gdk::Color>& getter, const sigc::slot<void, const Gdk::Color&>& setter, sigc::signal<void>& signal_changed)
+Gtk::Widget& SettingsWidget::append_color_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<Gdk::Color>& getter, const sigc::slot<void, const Gdk::Color&>& setter, sigc::signal<void>& signal_changed)
 {
   Gtk::Label* wlabel  = Gtk::manage(new Gtk::Label(label));
   Gtk::ColorButton* color_button  = Gtk::manage(new Gtk::ColorButton);
@@ -148,9 +148,11 @@ void SettingsWidget::append_color_widget(Gtk::Table& table, guint& n_entries, co
   table.attach(*wlabel, 0, 1, n_entries, n_entries+1, Gtk::FILL, Gtk::FILL);
   table.attach(*color_button, 1, 2, n_entries, n_entries+1, Gtk::EXPAND|Gtk::FILL, Gtk::FILL);
   ++n_entries;
+
+  return *color_button;
 }
 
-void SettingsWidget::append_boolean_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<bool>& getter, const sigc::slot<void, bool>& setter, sigc::signal<void>& signal_changed)
+Gtk::Widget& SettingsWidget::append_boolean_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<bool>& getter, const sigc::slot<void, bool>& setter, sigc::signal<void>& signal_changed)
 {
   Gtk::CheckButton* check_button  = Gtk::manage(new Gtk::CheckButton);
 
@@ -167,9 +169,11 @@ void SettingsWidget::append_boolean_widget(Gtk::Table& table, guint& n_entries, 
 
   table.attach(*check_button, 0, 2, n_entries, n_entries+1, Gtk::EXPAND|Gtk::FILL, Gtk::FILL);
   ++n_entries;
+
+  return *check_button;
 }
 
-void SettingsWidget::append_int_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<int>& getter, const sigc::slot<void, int>& setter, sigc::signal<void>& signal_changed)
+Gtk::Widget& SettingsWidget::append_int_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<int>& getter, const sigc::slot<void, int>& setter, sigc::signal<void>& signal_changed)
 {
   Gtk::Label* wlabel  = Gtk::manage(new Gtk::Label(label));
   Gtk::SpinButton* spin_button  = Gtk::manage(new Gtk::SpinButton);
@@ -193,9 +197,11 @@ void SettingsWidget::append_int_widget(Gtk::Table& table, guint& n_entries, cons
   table.attach(*wlabel, 0, 1, n_entries, n_entries+1, Gtk::FILL, Gtk::FILL);
   table.attach(*spin_button, 1, 2, n_entries, n_entries+1, Gtk::EXPAND|Gtk::FILL, Gtk::FILL);
   ++n_entries;
+
+  return *spin_button;
 }
 
-void SettingsWidget::append_imagefile_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const Glib::RefPtr<ImageFile>& imagefile)
+Gtk::Widget& SettingsWidget::append_imagefile_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const Glib::RefPtr<ImageFile>& imagefile)
 {
   ImageFileSettings* image_file_widget  = Gtk::manage(new ImageFileSettings(imagefile, name, label, tooltip));
 
@@ -203,9 +209,11 @@ void SettingsWidget::append_imagefile_widget(Gtk::Table& table, guint& n_entries
 
   table.attach(*image_file_widget, 0, 2, n_entries, n_entries+1, Gtk::EXPAND|Gtk::FILL, Gtk::FILL);
   ++n_entries;
+
+  return *image_file_widget;
 }
 
-void SettingsWidget::append_filename_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const Gtk::FileFilter& filter, const sigc::slot<Glib::ustring>& getter, const sigc::slot<void, const Glib::ustring&>& setter, sigc::signal<void>& signal_changed)
+Gtk::Widget& SettingsWidget::append_filename_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const Gtk::FileFilter& filter, const sigc::slot<Glib::ustring>& getter, const sigc::slot<void, const Glib::ustring&>& setter, sigc::signal<void>& signal_changed)
 {
   Gtk::FileChooserButton* filechooser = Gtk::manage(new Gtk::FileChooserButton);
 
@@ -224,4 +232,31 @@ void SettingsWidget::append_filename_widget(Gtk::Table& table, guint& n_entries,
 
   table.attach(*filechooser, 0, 2, n_entries, n_entries+1, Gtk::EXPAND|Gtk::FILL, Gtk::FILL);
   ++n_entries;
+
+  return *filechooser;
+}
+
+Gtk::Widget& SettingsWidget::append_string_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<Glib::ustring>& getter, const sigc::slot<void, const Glib::ustring&>& setter, sigc::signal<void>& signal_changed)
+{
+  Gtk::Label* wlabel  = Gtk::manage(new Gtk::Label(label));
+  Gtk::Entry* entry  = Gtk::manage(new Gtk::Entry);
+
+  wlabel->set_alignment(0., 0.5);
+  wlabel->show();
+
+  sigc::slot<Glib::ustring> w_getter = sigc::mem_fun(*entry, &Gtk::Entry::get_text);
+  sigc::slot<void, const Glib::ustring&> w_setter = sigc::mem_fun(*entry, &Gtk::Entry::set_text);
+
+  w_setter(getter());
+
+  entry->show();
+  entry->set_tooltip_text(tooltip);
+  entry->signal_changed().connect(create_updater(w_getter, setter));
+  signal_changed.connect(create_updater(getter, w_setter));
+
+  table.attach(*wlabel, 0, 1, n_entries, n_entries+1, Gtk::FILL, Gtk::FILL);
+  table.attach(*entry, 1, 2, n_entries, n_entries+1, Gtk::EXPAND|Gtk::FILL, Gtk::FILL);
+  ++n_entries;
+
+  return *entry;
 }

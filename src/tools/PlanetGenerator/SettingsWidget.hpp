@@ -64,37 +64,48 @@ public:
   void bring_to_front();
 
 public:
-  void append_color_widget(const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<Gdk::Color>& getter, const sigc::slot<void, const Gdk::Color&>& setter, sigc::signal<void>& signal_changed)
+  Gtk::Widget& append_color_widget(const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<Gdk::Color>& getter, const sigc::slot<void, const Gdk::Color&>& setter, sigc::signal<void>& signal_changed)
   {
-    append_color_widget(table, n_entries, name, label, tooltip, getter, setter, signal_changed);
+    return append_color_widget(table, n_entries, name, label, tooltip, getter, setter, signal_changed);
   }
-  void append_boolean_widget(const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<bool>& getter, const sigc::slot<void, bool>& setter, sigc::signal<void>& signal_changed)
+  Gtk::Widget& append_boolean_widget(const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<bool>& getter, const sigc::slot<void, bool>& setter, sigc::signal<void>& signal_changed)
   {
-    append_boolean_widget(table, n_entries, name, label, tooltip, getter, setter, signal_changed);
+    return append_boolean_widget(table, n_entries, name, label, tooltip, getter, setter, signal_changed);
   }
-  void append_int_widget(const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<int>& getter, const sigc::slot<void, int>& setter, sigc::signal<void>& signal_changed)
+  Gtk::Widget& append_int_widget(const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<int>& getter, const sigc::slot<void, int>& setter, sigc::signal<void>& signal_changed)
   {
-    append_int_widget(table, n_entries, name, label, tooltip, getter, setter, signal_changed);
+    return append_int_widget(table, n_entries, name, label, tooltip, getter, setter, signal_changed);
   }
-  void append_imagefile_widget(const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const Glib::RefPtr<ImageFile>& imagefile)
+  Gtk::Widget& append_imagefile_widget(const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const Glib::RefPtr<ImageFile>& imagefile)
   {
-    append_imagefile_widget(table, n_entries, name, label, tooltip, imagefile);
+    return append_imagefile_widget(table, n_entries, name, label, tooltip, imagefile);
   }
-  void append_filename_widget(const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const Gtk::FileFilter& filter, const sigc::slot<Glib::ustring>& getter, const sigc::slot<void, const Glib::ustring&>& setter, sigc::signal<void>& signal_changed)
+  Gtk::Widget& append_filename_widget(const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const Gtk::FileFilter& filter, const sigc::slot<Glib::ustring>& getter, const sigc::slot<void, const Glib::ustring&>& setter, sigc::signal<void>& signal_changed)
   {
-    append_filename_widget(table, n_entries, name, label, tooltip, filter, getter, setter, signal_changed);
+    return append_filename_widget(table, n_entries, name, label, tooltip, filter, getter, setter, signal_changed);
+  }
+  Gtk::Widget& append_string_widget(const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<Glib::ustring>& getter, const sigc::slot<void, const Glib::ustring&>& setter, sigc::signal<void>& signal_changed)
+  {
+    return append_string_widget(table, n_entries, name, label, tooltip,  getter, setter, signal_changed);
   }
 
-  static void append_color_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<Gdk::Color>& getter, const sigc::slot<void, const Gdk::Color&>& setter, sigc::signal<void>& signal_changed);
-  static void append_boolean_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<bool>& getter, const sigc::slot<void, bool>& setter, sigc::signal<void>& signal_changed);
-  static void append_int_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<int>& getter, const sigc::slot<void, int>& setter, sigc::signal<void>& signal_changed);
-  static void append_imagefile_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const Glib::RefPtr<ImageFile>& imagefile);
-  static void append_filename_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const Gtk::FileFilter& filter, const sigc::slot<Glib::ustring>& getter, const sigc::slot<void, const Glib::ustring&>& setter, sigc::signal<void>& signal_changed);
+  static Gtk::Widget& append_color_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<Gdk::Color>& getter, const sigc::slot<void, const Gdk::Color&>& setter, sigc::signal<void>& signal_changed);
+  static Gtk::Widget& append_boolean_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<bool>& getter, const sigc::slot<void, bool>& setter, sigc::signal<void>& signal_changed);
+  static Gtk::Widget& append_int_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<int>& getter, const sigc::slot<void, int>& setter, sigc::signal<void>& signal_changed);
+  static Gtk::Widget& append_imagefile_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const Glib::RefPtr<ImageFile>& imagefile);
+  static Gtk::Widget& append_filename_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const Gtk::FileFilter& filter, const sigc::slot<Glib::ustring>& getter, const sigc::slot<void, const Glib::ustring&>& setter, sigc::signal<void>& signal_changed);
+  static Gtk::Widget& append_string_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<Glib::ustring>& getter, const sigc::slot<void, const Glib::ustring&>& setter, sigc::signal<void>& signal_changed);
 public:
+  void attach_full_line(Gtk::Widget& w)
+  {
+    table.attach(w, 0, 2, n_entries, n_entries+1, Gtk::EXPAND|Gtk::FILL, Gtk::SHRINK);
+    n_entries++;
+  }
+
   SettingsWidget();
   ~SettingsWidget()throw();
 
-private:
+public:
   static guint n_sw;
   static std::list<Glib::RefPtr<Refable> > delete_with_last;
 
@@ -130,3 +141,20 @@ private:
     return updater->update_slot();
   }
 };
+
+#define X_SETTING(get_x, set_x, sn)\
+private:\
+get_x sn;\
+sigc::signal<void> _signal_##sn##_changed;\
+\
+public:\
+get_x get_##sn()const{return sn;}\
+void set_##sn(set_x new_value);\
+sigc::signal<void>& signal_##sn##_changed(){return _signal_##sn##_changed;}
+
+#define INTEGER_SETTING(sn) X_SETTING(int, int, sn)
+#define BOOLEAN_SETTING(sn) X_SETTING(bool, bool, sn)
+#define STRING_SETTING(sn) X_SETTING(Glib::ustring, const Glib::ustring&, sn)
+
+#define X_GETTER_SETTER_SIGNAL(c, sn)\
+sigc::mem_fun(*this, &c::get_##sn), sigc::mem_fun(*this, &c::set_##sn), signal_##sn##_changed()

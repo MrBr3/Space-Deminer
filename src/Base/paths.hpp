@@ -68,6 +68,8 @@ inline Glib::ustring apply_filename_macros(Glib::ustring filename)
   str_replace_all_with(filename, "$(tmp)", "$(local-folder)/temp");
   str_replace_all_with(filename, "$(local-folder)", Private::Base::local_folder);
   str_replace_all_with(filename, "$(appdata)", Private::Base::path_appdata);
+  if(filename[0]=='~')
+    filename  = "$(home)"+filename.substr(1, filename.length()-1);
   str_replace_all_with(filename, "$(home)", Private::Base::path_home);
   str_replace_all_with(filename, "$(exe-prefix)", Private::Base::path_exe_prefix);
   str_replace_all_with(filename, "$(exe-filename)", Private::Base::path_exe_filename);
@@ -75,6 +77,8 @@ inline Glib::ustring apply_filename_macros(Glib::ustring filename)
 
   return filename;
 }
+
+Glib::ustring get_filename_macros_description();
 
 void init_paths(const Glib::ustring& app_name);
 

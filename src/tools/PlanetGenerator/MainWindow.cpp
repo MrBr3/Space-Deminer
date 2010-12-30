@@ -34,6 +34,8 @@ MainWindow::MainWindow()
   view_settings->signal_something_changed().connect(sigc::mem_fun(view_3d, &View3D::invalidate));
   view_settings->bring_to_front();
 
+  raytracer = Raytracer::Manager::create();
+
   add(_vbox);
     _vbox.show();
     _vbox.pack_start(_menu_bar, false, false);
@@ -83,6 +85,15 @@ MainWindow::MainWindow()
         menu_file_quit.set_label(_("_Quit"));
         menu_file_quit.set_use_underline();
         menu_file_quit.signal_activate().connect(sigc::ptr_fun(&Gtk::Main::quit));
+  _menu_bar.append(menu_render);
+    menu_render.set_label(_("_Render"));
+    menu_render.set_submenu(menu_render_menu);
+    menu_render.set_use_underline();
+      menu_render_menu.append(menu_render_sep1);
+      menu_render_menu.append(menu_render_settings);
+        menu_render_settings.set_label(_("Render _Settings"));
+        menu_render_settings.set_use_underline();
+        menu_render_settings.signal_activate().connect(sigc::ptr_fun(&Raytracer::Manager::open_settings));
   _menu_bar.append(menu_view);
     menu_view.set_label(_("_View"));
     menu_view.set_use_underline();

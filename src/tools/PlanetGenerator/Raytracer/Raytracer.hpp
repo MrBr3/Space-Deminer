@@ -17,8 +17,32 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
+// see http://wiki.delphigl.com/index.php/Tutorial_Raytracing_-_Grundlagen_I (last time visited at 2010-12-30 (see README in Root Project Folder))
+
 #include "./../Model.hpp"
+
+#include "./RaytracerSettings.hpp"
 
 namespace Raytracer
 {
+  const int max_image_size  = 4096;
+
+  class Manager : public Refable
+  {
+    static Manager* _singleton;
+
+    ObsLink<Settings> _settings;
+
+    Manager();
+  public:
+    static Manager* get_singletonA(){g_assert(_singleton);return _singleton;}
+
+    static Settings& get_settings(){g_assert(get_singletonA()->_settings);*get_singletonA()->_settings;}
+
+    static void open_settings();
+
+    static Glib::RefPtr<Manager> create(){return Glib::RefPtr<Manager>(new Manager);}
+
+    ~Manager()throw();
+  };
 }

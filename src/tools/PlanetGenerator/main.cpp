@@ -37,4 +37,4 @@ int main(int argc, char **argv)
 
 	return 0;
 }
-// inspired by http://www.richardrosenman.com/software/downloads/
+// inspired by http://www.richardrosenman.com/software/downloads/ (last time visited at 2010-12-30 (see README in Root Project Folder))

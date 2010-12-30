@@ -17,6 +17,28 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "./Raytracer.hpp"
+
 namespace Raytracer
 {
+  Manager* Manager::_singleton = nullptr;
+
+  Manager::Manager()
+  {
+    g_assert(!_singleton);
+    _singleton  = this;
+
+    _settings = new Settings;
+  }
+
+  Manager::~Manager()throw()
+  {
+    g_assert(_singleton);
+    _singleton  = nullptr;
+  }
+
+  void Manager::open_settings()
+  {
+    get_settings().bring_to_front();
+  }
 }

@@ -320,3 +320,17 @@
 /obj-d/planet-generator/UVMeshExporter.o.d
 /obj-d/planet-generator/Planet.o
 /obj-d/planet-generator/Planet.o.d
+/obj-d/planet-generator/Raytracer_Plane.o
+/obj-d/planet-generator/Raytracer_Plane.o.d
+/obj-d/planet-generator/Raytracer_Ray.o
+/obj-d/planet-generator/Raytracer_Ray.o.d
+/obj-d/planet-generator/Raytracer_Raytracer.o
+/obj-d/planet-generator/Raytracer_Raytracer.o.d
+/obj-d/planet-generator/Raytracer_RaytracerSettings.o
+/obj-d/planet-generator/Raytracer_RaytracerSettings.o.d
+/obj-d/planet-generator/Raytracer_Shader.o
+/obj-d/planet-generator/Raytracer_Shader.o.d
+/obj-d/planet-generator/Raytracer_Sphere.o
+/obj-d/planet-generator/Raytracer_Sphere.o.d
+/obj-d/planet-generator/Raytracer_Texture.o
+/obj-d/planet-generator/Raytracer_Texture.o.d
