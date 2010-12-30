@@ -28,8 +28,6 @@
       <File Name="UVMeshExporter.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Model">
-      <File Name="Sphere.hpp"/>
-      <File Name="Sphere.cpp"/>
       <File Name="Model.hpp"/>
       <File Name="ImageFile.hpp"/>
       <File Name="ImageFile.cpp"/>
@@ -41,6 +39,8 @@
       <File Name="CloudTextureLayer.cpp"/>
       <File Name="NightTextureLayer.hpp"/>
       <File Name="NightTextureLayer.cpp"/>
+      <File Name="Planet.hpp"/>
+      <File Name="Planet.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Both">
       <File Name="Options.cpp"/>
@@ -48,6 +48,22 @@
     </VirtualDirectory>
     <File Name="opengl.hpp"/>
     <File Name="opengl.cpp"/>
+    <VirtualDirectory Name="Raytracer">
+      <File Name="Raytracer/Raytracer.hpp"/>
+      <File Name="Raytracer/Plane.cpp"/>
+      <File Name="Raytracer/Plane.hpp"/>
+      <File Name="Raytracer/Ray.cpp"/>
+      <File Name="Raytracer/Ray.hpp"/>
+      <File Name="Raytracer/Raytracer.cpp"/>
+      <File Name="Raytracer/RaytracerSettings.cpp"/>
+      <File Name="Raytracer/RaytracerSettings.hpp"/>
+      <File Name="Raytracer/Shader.cpp"/>
+      <File Name="Raytracer/Shader.hpp"/>
+      <File Name="Raytracer/Sphere.cpp"/>
+      <File Name="Raytracer/Sphere.hpp"/>
+      <File Name="Raytracer/Texture.cpp"/>
+      <File Name="Raytracer/Texture.hpp"/>
+    </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug">
     <Project Name="Base"/>

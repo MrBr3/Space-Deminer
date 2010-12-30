@@ -17,10 +17,8 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <base.hpp>
-#include <gtkmm.h>
-#include "opengl.hpp"
+#include "./../Model.hpp"
 
-#include "./Planet.hpp"
-#include "./ImageFile.hpp"
-#include "./Layer.hpp"
+namespace Raytracer
+{
+}

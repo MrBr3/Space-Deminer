@@ -318,3 +318,5 @@
 /src/tools/PlanetGenerator/ui-scribble.glade
 /obj-d/planet-generator/UVMeshExporter.o
 /obj-d/planet-generator/UVMeshExporter.o.d
+/obj-d/planet-generator/Planet.o
+/obj-d/planet-generator/Planet.o.d

@@ -33,7 +33,9 @@ Base
 PlanetGenerator
   [ ] Sphere
     [X] UV-Fehler bei Caps beheben
-    [ ] decide whether only quads
+    [X] decide whether only quads
+    [ ] decide whether mix of quads and triangles
+    [ ] anisotropes filtering
   [X] LayerView
     [X] mit einfachen Klick entsprechende Settings anzeigen
     [X] mit Klick auf das Auge zwischen sichtbar/unsichtbar umschalten
@@ -42,10 +44,16 @@ PlanetGenerator
     [ ] warped version berechnen und als Bild speichern können
     [ ] riesige Bilder (für offline rendering) verwenden können
   [ ] offline rendering
+    [ ] extra Texturangabe für offline rendering
+    [ ] Sphere aufteilen, um große Texturen zu erlauben?
+      (geht wohl nur perfect ohne antialiasing?)
+    [ ] Bildschirm aufteilen, um große ergebnisse zu erlauben?
   [ ] Shader
-    [ ] überlegen, ob Eis und wasser zusamenfassen
+    [ ] Textur mit vier Kanälen (alpha invertiert?), wobie jede der vier Texturen für ein eigenes Material steht
+      z.B Rot: Wüsten, Grün: kein Glanzlicht, Blau: Eis, Alpha-Invertiert: Wasser
   [ ] zusätzliche Features
-    [ ] SVG autom erstellen, die zeigt, welcher Bereich beim "warpen" verwendet wird
+    [X] SVG autom erstellen, die zeigt, welcher Bereich beim "warpen" verwendet wird
+      [ ] message box die fragt, ob man überschreiben will
 
 [ ] Programm
   [ ] richtigen Pfade herausfinden (see apply_filename_macros)
