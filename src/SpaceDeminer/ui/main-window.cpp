@@ -20,10 +20,15 @@
 #include "./ui/main-window.hpp"
 #include <gdk/gdkkeysyms.h>
 
+MainWindow* main_window  = nullptr;
+
 void start_gui_test();
 
 MainWindow::MainWindow()
 {
+  g_assert(!main_window);
+  main_window = this;
+
   set_default_size(640, 480);
 
   add(gl_drawing_area);
@@ -39,6 +44,9 @@ MainWindow::~MainWindow()throw()
   gl_drawing_area.deinit();
 
   _engine.reset();
+
+  g_assert(main_window==this);
+  main_window = nullptr;
 }
 
 bool MainWindow::on_key_release_event(GdkEventKey* e)

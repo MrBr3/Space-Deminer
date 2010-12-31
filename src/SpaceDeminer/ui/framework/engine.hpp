@@ -133,7 +133,7 @@ namespace Framework
 
 
   public:
-    const Glib::RefPtr<const Theme>& get_theme()throw(){return _theme;}
+    const Glib::RefPtr<const Theme>& get_theme()const throw(){return _theme;}
 
     const Gdk::Region& get_invalid_region()const throw(){return _invalid_region;}
 
@@ -186,7 +186,15 @@ namespace Framework
     Gdk::Region& get_invalid_region()throw(){return _invalid_region;}
 
   private:
-    const Glib::RefPtr<const Theme> _theme;
+    friend class Container;
+
+    void set_theme(const Glib::RefPtr<const Theme>& new_theme)const
+    {
+      if(new_theme != _theme)
+        _theme = new_theme;
+    }
+
+    mutable Glib::RefPtr<const Theme> _theme;
 
     Gdk::Region _invalid_region;
     Gdk::Rectangle _invalid_area;

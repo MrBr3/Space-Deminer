@@ -156,6 +156,8 @@ namespace Framework
   {
     //paint_tool.push_scissor(get_allocation()); // uncomment if you want to allo draw outside the widgets area
 
+    Glib::RefPtr<const Theme> curr_theme = paint_tool.get_theme();
+
     for(std::list<Widget*>::iterator iter = _children.begin(); iter!=_children.end(); ++iter)
     {
       Widget& child = **iter;
@@ -167,9 +169,12 @@ namespace Framework
       {
         paint_tool.push_scissor(child.get_allocation());
         paint_tool.push_offset(child.get_allocation().get_x(), child.get_allocation().get_y());
+        g_assert(child.get_theme());
+        paint_tool.set_theme(child.get_theme());
 
         child.on_expose(paint_tool);
 
+        paint_tool.set_theme(curr_theme);
         paint_tool.pop_offset();
         paint_tool.pop_scissor();
       }

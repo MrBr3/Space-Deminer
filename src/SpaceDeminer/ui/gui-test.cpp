@@ -108,7 +108,9 @@ void start_gui_test()
       }
     }
 
+    g_assert(main_window);
     GUITest gui_test;
+    gui_test.set_theme(main_window->gl_drawing_area.get_dummy_theme());
     gui_test.set_size(800, 600);
     MainWindow::get_window_manager()->register_window(0xffff, gui_test);
     gui_test.show();
@@ -126,6 +128,24 @@ void start_gui_test()
       check_expect<Glib::ustring>(clip_last_slash("\\//\\//\\/\\"), "\\");
       check_expect<Glib::ustring>(clip_last_slash("/"), "/");
       check_expect<Glib::ustring>(clip_last_slash(""), "");
+    }
+    {
+      check_expect<Glib::ustring>(str_copy_replace_all_with("", "a", "b"), "");
+      check_expect<Glib::ustring>(str_copy_replace_all_with("~/Desktop/Foo.svg", "a", "b"), "~/Desktop/Foo.svg");
+      check_expect<Glib::ustring>(str_copy_replace_all_with("~/Desktop/Foo.svg", "e", "x"), "~/Dxsktop/Foo.svg");
+      check_expect<Glib::ustring>(str_copy_replace_all_with("~/Desktop/Foo.svg", "o", "i"), "~/Desktip/Fii.svg");
+      check_expect<Glib::ustring>(str_copy_replace_all_with("~/Desktop/Foo.svg", "esk", "isk"), "~/Disktop/Foo.svg");
+
+      try
+      {
+        str_copy_replace_all_with("abc", "", "b");
+        check_expect<Glib::ustring>("shouldn't be", " reached");
+      }catch(std::invalid_argument)
+      {
+      }catch(...)
+      {
+        check_expect<Glib::ustring>("shouldn't be", " reached");
+      }
     }
     {
       Framework::Layout layout, layout2;
