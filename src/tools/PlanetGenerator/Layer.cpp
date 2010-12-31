@@ -37,6 +37,7 @@ LayerModel::LayerModel()
 
   register_base_texture_layer();
   register_night_texture_layer();
+  register_weight_texture_layer();
   register_cloud_texture_layer();
 }
 

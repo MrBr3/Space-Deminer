@@ -77,5 +77,5 @@ public:
   sigc::signal<void>& sig_wireframed_changed_noparam(){return _sig_wireframed_changed_noparam;}
 
   SphereMesh sphere_mesh;
-  Glib::RefPtr<Texture> base_texture, cloud_texture, night_texture;
+  Glib::RefPtr<Texture> base_texture, cloud_texture, night_texture, weight_texture;
 };

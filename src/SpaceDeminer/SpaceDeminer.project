@@ -94,10 +94,10 @@
         <File Name="ui/framework/segmentedimage.cpp"/>
       </VirtualDirectory>
       <File Name="ui/opengl-area.cpp"/>
-      <File Name="ui/gui-test.cpp"/>
       <File Name="ui/dark-theme.hpp"/>
       <File Name="ui/dark-theme.cpp"/>
       <File Name="main.cpp"/>
+      <File Name="ui/gui-test.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="game">
       <File Name="game/difficulty.hpp"/>
