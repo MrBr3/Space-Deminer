@@ -40,7 +40,7 @@ void str_replace_all_with(Glib::ustring& str, const Glib::ustring& replace, cons
 * \param replace - the string to replace (if zero the resulting string with be equal to <tt>str+with</tt>)
 * \param with - the string which will replace the character given by <tt>replace</tt>
 */
-inline Glib::ustring str_copy_replace_all_with(Glib::ustring& str, const Glib::ustring& replace, const Glib::ustring& with)
+inline Glib::ustring str_copy_replace_all_with(Glib::ustring str, const Glib::ustring& replace, const Glib::ustring& with)
 {
   str_replace_all_with(str, replace, with);
   return str;
