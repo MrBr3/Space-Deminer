@@ -19,10 +19,29 @@
 
 #include "./base.hpp"
 
+void str_replace_last_with(Glib::ustring& str, Glib::ustring::value_type replace, const Glib::ustring& with)
+{
+  if(!replace)
+  {
+    str += with;
+    return;
+  }
+
+  Glib::ustring::size_type i  = str.find_last_of(replace);
+
+  if(i!=Glib::ustring::npos)
+  {
+    str.replace(i, 1, with);
+  }
+}
+
 void str_replace_all_with(Glib::ustring& str, const Glib::ustring& replace, const Glib::ustring& with)
 {
   if(replace.empty())
-    throw std::invalid_argument("**str_replace_all_with** cannot search for an empty string");
+  {
+    str += with;
+    return;
+  }
 
   Glib::ustring::size_type old_i=0;
   bool first_loop=true;

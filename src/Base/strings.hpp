@@ -22,12 +22,34 @@
 
 #include <glibmm.h>
 
+/** \brief Replaces the only last appereance of the character <tt>replace</tt> with the string <tt>width</tt>.
+*
+* \param str - the string where to replace (as this is a reference, this string string itself will store the result afterwards)
+* \param replace - the character to replace (if zero the resulting string with be equal to <tt>str+with</tt>)
+* \param with - the string which will replace the character given by <tt>replace</tt>
+ * */
+void str_replace_last_with(Glib::ustring& str, Glib::ustring::value_type replace, const Glib::ustring& with);
+
+/** \brief Replaces the only last appereance of the character <tt>replace</tt> with the string <tt>width</tt>.
+*
+* \param str - the string where to replace
+* \param replace - the character to replace (if zero the resulting string with be equal to <tt>str+with</tt>)
+* \param with - the string which will replace the character given by <tt>replace</tt>
+*
+* \return A string which each appereance of <tt>replace</tt> has been replaced.
+* */
+inline Glib::ustring str_copy_replace_last_with(Glib::ustring str, Glib::ustring::value_type replace, const Glib::ustring& with)
+{
+  str_replace_last_with(str, replace, with);
+  return str;
+}
+
 /** \brief Replaces every appereance of the string <tt>replace</tt> within the string <tt>str</tt> with the string <tt>with</tt>.
 *
 * Uses internal a repeated call of Glib::ustring::replace.
 *
 * \param str - the string where to replace (as this is a reference, this string string itself will store the result afterwards)
-* \param replace - the string to replace (if zero the resulting string with be equal to <tt>str+with</tt>)
+* \param replace - the string to replace (if empty, the resulting string with be equal to <tt>str+with</tt>)
 * \param with - the string which will replace the character given by <tt>replace</tt>
 */
 void str_replace_all_with(Glib::ustring& str, const Glib::ustring& replace, const Glib::ustring& with);
@@ -36,10 +58,12 @@ void str_replace_all_with(Glib::ustring& str, const Glib::ustring& replace, cons
 *
 * Uses internal a repeated call of Glib::ustring::replace.
 *
-* \param str - the string where to replace (as this is a reference, this string string itself will store the result afterwards)
-* \param replace - the string to replace (if zero the resulting string with be equal to <tt>str+with</tt>)
+* \param str - the string where to replace
+* \param replace - the string to replace (if empty, the resulting string with be equal to <tt>str+with</tt>)
 * \param with - the string which will replace the character given by <tt>replace</tt>
-*/
+*
+* \return A string which each appereance of <tt>replace</tt> has been replaced.
+* */
 inline Glib::ustring str_copy_replace_all_with(Glib::ustring str, const Glib::ustring& replace, const Glib::ustring& with)
 {
   str_replace_all_with(str, replace, with);

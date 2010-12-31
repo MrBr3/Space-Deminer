@@ -135,17 +135,13 @@ void start_gui_test()
       check_expect<Glib::ustring>(str_copy_replace_all_with("~/Desktop/Foo.svg", "e", "x"), "~/Dxsktop/Foo.svg");
       check_expect<Glib::ustring>(str_copy_replace_all_with("~/Desktop/Foo.svg", "o", "i"), "~/Desktip/Fii.svg");
       check_expect<Glib::ustring>(str_copy_replace_all_with("~/Desktop/Foo.svg", "esk", "isk"), "~/Disktop/Foo.svg");
-
-      try
-      {
-        str_copy_replace_all_with("abc", "", "b");
-        check_expect<Glib::ustring>("shouldn't be", " reached");
-      }catch(std::invalid_argument)
-      {
-      }catch(...)
-      {
-        check_expect<Glib::ustring>("shouldn't be", " reached");
-      }
+      check_expect<Glib::ustring>(str_copy_replace_all_with("~/Desktop/Foo.svg", "", "isk"), "~/Desktop/Foo.svgisk");
+      check_expect<Glib::ustring>(str_copy_replace_all_with("", "", "isk"), "isk");
+      check_expect<Glib::ustring>(str_copy_replace_all_with("abc", "b", ""), "ac");
+      check_expect<Glib::ustring>(str_copy_replace_last_with("~/Desktop/Foo.svg", '.', "-large."), "~/Desktop/Foo-large.svg");
+      check_expect<Glib::ustring>(str_copy_replace_last_with("~/Desktop/earth.day.svg", '.', ".large."), "~/Desktop/earth.day.large.svg");
+      check_expect<Glib::ustring>(str_copy_replace_last_with("~/Desktop/earth.day.svg", 0, ".png"), "~/Desktop/earth.day.svg.png");
+      check_expect<Glib::ustring>(str_copy_replace_last_with("~/Desktop/Foo.svg", 'x', "-large."), "~/Desktop/Foo.svg");
     }
     {
       Framework::Layout layout, layout2;
