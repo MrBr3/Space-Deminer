@@ -22,6 +22,7 @@
 #include "./../Model.hpp"
 
 #include "./RaytracerSettings.hpp"
+#include "./Texture.hpp"
 
 namespace Raytracer
 {
@@ -34,6 +35,15 @@ namespace Raytracer
     ObsLink<Settings> _settings;
 
     Manager();
+  private:
+    friend class Texture;
+    Texture base_texture;
+    Texture night_texture;
+    Texture weight_map;
+    Texture cloud_layer;
+
+    bool prepare_textures();
+
   public:
     static Manager* get_singletonA(){g_assert(_singleton);return _singleton;}
 
@@ -42,6 +52,7 @@ namespace Raytracer
     static void open_settings();
 
     static Glib::RefPtr<Manager> create(){return Glib::RefPtr<Manager>(new Manager);}
+    static void render();
 
     ~Manager()throw();
   };

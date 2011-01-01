@@ -19,4 +19,39 @@
 
 namespace Raytracer
 {
+  class Texture : public sigc::trackable
+  {
+  private:
+    friend class Manager;
+    Texture();
+    ~Texture()throw();
+
+  private:
+    Glib::RefPtr<Gdk::Pixbuf> pixbuf;
+    Glib::ustring filename;
+
+  public:
+    Glib::TimeVal last_modification_time;
+    bool should_reload;
+    bool load_small_version; // if load_small_version==true should_reload will be ignored
+
+  public:
+      const Glib::ustring& get_filename()const{return filename;}
+
+  private:
+    void init();
+    sigc::slot<void> reset_filename;
+
+    void reset_any_filename(Glib::ustring fn);
+    void reset_base_filename();
+    void reset_night_filename();
+    void reset_weight_filename();
+    void reset_cloud_filename();
+
+  public:
+    static Texture* base_texture;
+    static Texture* night_texture;
+    static Texture* weight_map;
+    static Texture* cloud_layer;
+  };
 }

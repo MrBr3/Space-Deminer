@@ -61,6 +61,7 @@ inline Glib::ustring clip_last_slash(const Glib::ustring& str)
 
 inline Glib::ustring apply_filename_macros(Glib::ustring filename)
 {
+   //TODO: allow the  following two macros only in the game itself:
   str_replace_all_with(filename, "$(ui-menu-icon-path)", "$(exe-share)/ui/icons/48");
   str_replace_all_with(filename, "$(ui-icon-path)", "$(exe-share)/ui/icons");
   str_replace_all_with(filename, "$(exe-share)", "$(exe-prefix)/share/$(app-name)");

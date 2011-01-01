@@ -27,6 +27,7 @@
 using TriangleVersion::SphereMesh;
 
 #include "Texture.hpp"
+#include "WarningListDialog.hpp"
 #include "3DView.hpp"
 #include "ImageFileSettings.hpp"
 #include "ViewSettings.hpp"
@@ -45,6 +46,9 @@ class MainWindow : public Gtk::Window
   View3D* view_3d;
   ViewSettings* view_settings;
   Glib::RefPtr<Raytracer::Manager> raytracer;
+
+  bool _sensitive_for_changes;
+  sigc::signal<void> _signal_sensitive_for_changes_changed;
 
   class MyMenuItem : public Gtk::MenuItem
   {
@@ -74,6 +78,7 @@ class MainWindow : public Gtk::Window
     MyMenuItem menu_file_quit;
   MyMenuItem menu_render;
   Gtk::Menu  menu_render_menu;
+    MyMenuItem menu_render_render;
     Gtk::SeparatorMenuItem menu_render_sep1;
     MyMenuItem menu_render_settings;
   MyMenuItem menu_view;
@@ -114,6 +119,24 @@ class MainWindow : public Gtk::Window
 public:
   MainWindow();
   ~MainWindow()throw();
+
+
+  bool get_sensitive_for_changes()const
+  {
+    g_assert(this);
+    return _sensitive_for_changes;
+  }
+  void set_sensitive_for_changes(bool sc)
+  {
+    g_assert(this);
+    _sensitive_for_changes = sc;
+    signal_sensitive_for_changes_changed().emit();
+  }
+  sigc::signal<void>& signal_sensitive_for_changes_changed()
+  {
+    g_assert(this);
+    return _signal_sensitive_for_changes_changed;
+  }
 
   View3D& get_view_3d(){g_assert(this);g_assert(view_3d);return *view_3d;}
   ViewSettings& get_view_settings(){g_assert(this);g_assert(view_settings);return *view_settings;}

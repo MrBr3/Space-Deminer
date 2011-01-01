@@ -26,6 +26,7 @@ MainWindow::MainWindow()
   g_assert(!main_window);
   main_window = this;
 
+  _sensitive_for_changes = true;
 
   _layers = Gtk::manage(new LayerView);
   view_3d = Gtk::manage(new View3D);
@@ -47,6 +48,7 @@ MainWindow::MainWindow()
       _hpaned.set_border_width(LENGTH_BORDER_WIDTH);
       _hpaned.pack1(*view_3d);
       _hpaned.pack2(_vpaned);
+        signal_sensitive_for_changes_changed().connect(SettingsWidget::create_updater<bool, bool>(sigc::mem_fun(*this, &MainWindow::get_sensitive_for_changes), sigc::mem_fun(_vpaned, &Gtk::VPaned::set_sensitive)));
         _vpaned.show();
         _vpaned.pack1(_layers_scrollbars);
           _layers_scrollbars.show();
@@ -89,6 +91,11 @@ MainWindow::MainWindow()
     menu_render.set_label(_("_Render"));
     menu_render.set_submenu(menu_render_menu);
     menu_render.set_use_underline();
+      menu_render_menu.append(menu_render_render);
+        menu_render_render.set_label(_("Render"));
+        menu_render_render.set_accel_key("F5");
+        menu_render_render.set_use_underline();
+        menu_render_render.signal_activate().connect(sigc::ptr_fun(&Raytracer::Manager::render));
       menu_render_menu.append(menu_render_sep1);
       menu_render_menu.append(menu_render_settings);
         menu_render_settings.set_label(_("Render _Settings"));

@@ -94,13 +94,13 @@ namespace Raytracer
     //================
     n=0;
 
-    {use_large_texture = false;
+    {use_large_texture = true;
     signal_use_large_texture_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
     Gtk::Widget& label = append_boolean_widget(table_textures, n, "raytrace-use-large-texture", _("Use large Textures"), _("If set, PlanetGenerator will search for larger Textures using the hints below"), X_GETTER_SETTER_SIGNAL(Settings, use_large_texture));
     table_textures.remove(label);
     frame_textures.set_label_widget(label);}
 
-    table_textures.set_sensitive(false);
+    table_textures.set_sensitive(use_large_texture);
     signal_use_large_texture_changed().connect(create_updater<bool, bool>(sigc::mem_fun(*this, &Settings::get_use_large_texture), sigc::mem_fun(table_textures, &Gtk::Widget::set_sensitive)));
 
     n=0;
@@ -108,6 +108,10 @@ namespace Raytracer
     replace_lt_last_slash_with = "/";
     signal_replace_lt_last_slash_with_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
     append_string_widget(table_textures, n, "raytrace-replace-last-slash-with", _("ReplLastSlashWith"), _("The last slash of the Texture source filename will be replaced by this value"), X_GETTER_SETTER_SIGNAL(Settings, replace_lt_last_slash_with));
+
+    replace_lt_last_dot_with = "-large.";
+    signal_replace_lt_last_dot_with_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
+    append_string_widget(table_textures, n, "raytrace-replace-last-dot-with", _("ReplLastDotWith"), _("The last dot of the Texture source filename will be replaced by this value"), X_GETTER_SETTER_SIGNAL(Settings, replace_lt_last_dot_with));
 
     replace_lt_every_what = "";
     signal_replace_lt_every_what_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
@@ -203,6 +207,16 @@ namespace Raytracer
       replace_lt_last_slash_with = ls;
 
     signal_replace_lt_last_slash_with_changed().emit();
+  }
+
+  void Settings::set_replace_lt_last_dot_with(const Glib::ustring& ls)
+  {
+    if(ls.empty())
+      replace_lt_last_slash_with  = ".";
+    else
+      replace_lt_last_slash_with = ls;
+
+    signal_replace_lt_last_dot_with_changed().emit();
   }
 
   void Settings::set_replace_lt_every_what(const Glib::ustring& w)

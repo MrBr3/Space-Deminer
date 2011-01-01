@@ -41,6 +41,7 @@ namespace Raytracer
 
     BOOLEAN_SETTING(use_large_texture)
     STRING_SETTING(replace_lt_last_slash_with)
+    STRING_SETTING(replace_lt_last_dot_with)
     STRING_SETTING(replace_lt_every_what)
     STRING_SETTING(replace_lt_with)
 

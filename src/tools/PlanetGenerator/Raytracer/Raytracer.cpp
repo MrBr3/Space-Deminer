@@ -17,10 +17,70 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "./Raytracer.hpp"
+#include "./../MainWindow.hpp"
 
 namespace Raytracer
 {
+  namespace Private
+  {
+    const int BIG_SIZE = 10;
+    const int MAX_SIZE = 20;
+
+    class TextureFileChecker : public Refable
+    {
+      TextureFileChecker(Texture& tex, std::list<Glib::ustring>& warnings) : texture(tex)
+      {
+        Glib::ustring full_filename = get_full_filename();
+
+        Glib::RefPtr<Gio::File> file = Gio::File::create_for_path(full_filename);
+        bool exist  = file->query_exists();
+
+        g_assert(!texture.load_small_version);
+
+        if(!exist)
+        {
+          texture.load_small_version = true;
+          warnings.push_back(Glib::ustring::compose(_("File &lt;%1&gt; <b>not found</b>"), full_filename));
+        }else
+        {
+          Glib::RefPtr<Gio::FileInfo> info  = file->query_info(Glib::ustring::compose("%1,%2,%3", G_FILE_ATTRIBUTE_STANDARD_SIZE, G_FILE_ATTRIBUTE_ACCESS_CAN_READ, G_FILE_ATTRIBUTE_TIME_MODIFIED));
+
+          bool can_read  = info->get_attribute_boolean(G_FILE_ATTRIBUTE_ACCESS_CAN_READ);
+
+          if(!can_read)
+          {
+            texture.load_small_version = true;
+          }else
+          {
+            Glib::TimeVal last_modification  = info->modification_time();
+
+            texture.should_reload |= (last_modification>texture.last_modification_time);
+
+            if(texture.should_reload)
+            {
+              size  = info->get_size();
+              if(size > MAX_SIZE*(1<<20))
+              {
+                warnings.push_back(Glib::ustring::compose(_("File &lt;%1&gt; with %2 &gt; %3MB<b>too large</b>"), full_filename, size, MAX_SIZE));
+                texture.load_small_version  = true;
+              }else if(size > BIG_SIZE*(1<<20))
+                warnings.push_back(Glib::ustring::compose(_("File &lt;%1&gt; <b>&gt; %2MB</b>"), full_filename, BIG_SIZE));
+            }
+          }
+        }
+      }
+
+      goffset size;
+    public:
+      Texture& texture;
+
+      const Glib::ustring& get_filename()const{return texture.get_filename();}
+      Glib::ustring get_full_filename()const{return apply_filename_macros(texture.get_filename());}
+
+      static Glib::RefPtr<TextureFileChecker> create(Texture& tex, std::list<Glib::ustring>& warnings){return Glib::RefPtr<TextureFileChecker>(new TextureFileChecker(tex, warnings));}
+    };
+  }
+
   Manager* Manager::_singleton = nullptr;
 
   Manager::Manager()
@@ -29,6 +89,11 @@ namespace Raytracer
     _singleton  = this;
 
     _settings = new Settings;
+
+    base_texture.init();
+    night_texture.init();
+    weight_map.init();
+    cloud_layer.init();
   }
 
   Manager::~Manager()throw()
@@ -40,5 +105,49 @@ namespace Raytracer
   void Manager::open_settings()
   {
     get_settings().bring_to_front();
+  }
+
+  bool Manager::prepare_textures()
+  {
+    using Private::TextureFileChecker;
+
+    std::list<Glib::RefPtr<TextureFileChecker> > files;
+    std::list<Glib::ustring> warnings;
+
+  //---- resetting Filenames ----------------
+    get_singletonA()->base_texture.reset_filename();
+    get_singletonA()->night_texture.reset_filename();
+    get_singletonA()->weight_map.reset_filename();
+    get_singletonA()->cloud_layer.reset_filename();
+
+    files.push_back(TextureFileChecker::create(get_singletonA()->base_texture, warnings));
+    files.push_back(TextureFileChecker::create(get_singletonA()->night_texture, warnings));
+    files.push_back(TextureFileChecker::create(get_singletonA()->weight_map, warnings));
+    files.push_back(TextureFileChecker::create(get_singletonA()->cloud_layer, warnings));
+
+    switch(WarningListDialog::go(warnings, get_settings().get_use_large_texture() ? _("Use Preview Textures") : Glib::ustring()))
+    {
+    case WarningListDialog::OK:
+    case WarningListDialog::USER:
+      break;
+    case WarningListDialog::CANCEL:
+    default:
+      return false;
+    }
+
+    return true;
+  }
+
+  void Manager::render()
+  {
+    g_assert(main_window->get_sensitive_for_changes());
+    main_window->set_sensitive_for_changes(false);
+
+    if(get_singletonA()->prepare_textures())
+    {
+      Gtk::MessageDialog("Now it would render").run();
+    }
+
+    main_window->set_sensitive_for_changes(true);
   }
 }
