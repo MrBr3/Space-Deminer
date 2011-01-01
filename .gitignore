@@ -334,3 +334,10 @@
 /obj-d/planet-generator/Raytracer_Sphere.o.d
 /obj-d/planet-generator/Raytracer_Texture.o
 /obj-d/planet-generator/Raytracer_Texture.o.d
+/obj-d/space-deminer/core
+/obj-d/base/ui_gui-test.o
+/obj-d/base/ui_gui-test.o.d
+/obj-d/planet-generator/WeightTextureLayer.o
+/obj-d/planet-generator/WeightTextureLayer.o.d
+/obj-d/planet-generator/WarningListDialog.o
+/obj-d/planet-generator/WarningListDialog.o.d

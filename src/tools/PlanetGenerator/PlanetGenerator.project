@@ -26,6 +26,8 @@
       <File Name="ImageFileSettings.cpp"/>
       <File Name="UVMeshExporter.hpp"/>
       <File Name="UVMeshExporter.cpp"/>
+      <File Name="WarningListDialog.hpp"/>
+      <File Name="WarningListDialog.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Model">
       <File Name="Model.hpp"/>
@@ -41,6 +43,8 @@
       <File Name="NightTextureLayer.cpp"/>
       <File Name="Planet.hpp"/>
       <File Name="Planet.cpp"/>
+      <File Name="WeightTextureLayer.hpp"/>
+      <File Name="WeightTextureLayer.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Both">
       <File Name="Options.cpp"/>
