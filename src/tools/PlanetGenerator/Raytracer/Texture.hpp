@@ -29,6 +29,7 @@ namespace Raytracer
   private:
     Glib::RefPtr<Gdk::Pixbuf> pixbuf;
     Glib::ustring filename;
+    Glib::ustring filename_small;
 
   public:
     Glib::TimeVal last_modification_time;
@@ -47,6 +48,8 @@ namespace Raytracer
     void reset_night_filename();
     void reset_weight_filename();
     void reset_cloud_filename();
+
+    void reload_file();
 
   public:
     static Texture* base_texture;

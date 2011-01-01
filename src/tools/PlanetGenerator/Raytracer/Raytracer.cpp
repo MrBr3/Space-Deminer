@@ -25,6 +25,7 @@ namespace Raytracer
   {
     const int BIG_SIZE = 10;
     const int MAX_SIZE = 20;
+    const int MEGA = (1<<20);
 
     class TextureFileChecker : public Refable
     {
@@ -40,7 +41,7 @@ namespace Raytracer
         if(!exist)
         {
           texture.load_small_version = true;
-          warnings.push_back(Glib::ustring::compose(_("File &lt;%1&gt; <b>not found</b>"), full_filename));
+          warnings.push_back(Glib::ustring::compose(_("File &lt;%1&gt;  <b>not found</b>"), full_filename));
         }else
         {
           Glib::RefPtr<Gio::FileInfo> info  = file->query_info(Glib::ustring::compose("%1,%2,%3", G_FILE_ATTRIBUTE_STANDARD_SIZE, G_FILE_ATTRIBUTE_ACCESS_CAN_READ, G_FILE_ATTRIBUTE_TIME_MODIFIED));
@@ -54,17 +55,19 @@ namespace Raytracer
           {
             Glib::TimeVal last_modification  = info->modification_time();
 
-            texture.should_reload |= (last_modification>texture.last_modification_time);
+            texture.should_reload |= (last_modification != texture.last_modification_time);
+            texture.last_modification_time  = last_modification;
 
             if(texture.should_reload)
             {
               size  = info->get_size();
-              if(size > MAX_SIZE*(1<<20))
+              gfloat file_size_rounded  = 0.1f*round(int((100*size)/MEGA)*0.1f);
+              if(size > MAX_SIZE*MEGA)
               {
-                warnings.push_back(Glib::ustring::compose(_("File &lt;%1&gt; with %2 &gt; %3MB<b>too large</b>"), full_filename, size, MAX_SIZE));
+                warnings.push_back(Glib::ustring::compose(_("<b>Can't load</b> File &lt;%1&gt;  with %2MB &gt; %3MB<b> too large</b>"), full_filename, file_size_rounded, MAX_SIZE));
                 texture.load_small_version  = true;
-              }else if(size > BIG_SIZE*(1<<20))
-                warnings.push_back(Glib::ustring::compose(_("File &lt;%1&gt; <b>&gt; %2MB</b>"), full_filename, BIG_SIZE));
+              }else if(size > BIG_SIZE*MEGA)
+                warnings.push_back(Glib::ustring::compose(_("<b>Warning:</b> File &lt;%1&gt;  %2MB <b>&gt; %3MB</b>"), full_filename, file_size_rounded, BIG_SIZE));
             }
           }
         }
@@ -72,6 +75,13 @@ namespace Raytracer
 
       goffset size;
     public:
+      static bool cmp(const Glib::RefPtr<TextureFileChecker>& a, const Glib::RefPtr<TextureFileChecker>& b)
+      {
+        return a->size > b->size;
+      }
+
+      goffset get_size()const{return size;}
+
       Texture& texture;
 
       const Glib::ustring& get_filename()const{return texture.get_filename();}
@@ -111,10 +121,12 @@ namespace Raytracer
   {
     using Private::TextureFileChecker;
 
-    std::list<Glib::RefPtr<TextureFileChecker> > files;
+    typedef std::vector<Glib::RefPtr<TextureFileChecker> > FileList;
+
+    FileList files;
     std::list<Glib::ustring> warnings;
 
-  //---- resetting Filenames ----------------
+    // ---- resetting Filenames ----------------
     get_singletonA()->base_texture.reset_filename();
     get_singletonA()->night_texture.reset_filename();
     get_singletonA()->weight_map.reset_filename();
@@ -133,6 +145,16 @@ namespace Raytracer
     case WarningListDialog::CANCEL:
     default:
       return false;
+    }
+
+    // ---- sort by size ---------------- (so if a Image is too big, you don't have to load all images until you find out, the image is too big)
+
+    std::sort(files.begin(), files.end(), TextureFileChecker::cmp);
+
+    for(FileList::iterator i = files.begin(); i!=files.end(); ++i)
+    {
+      //std::cout<<(*i)->get_size()<<"\n";
+      (*i)->texture.reload_file();
     }
 
     return true;

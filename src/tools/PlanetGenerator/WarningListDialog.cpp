@@ -31,6 +31,8 @@ WarningListDialog::WarningListDialog()
   scrolled.add(warnings);
   scrolled.set_policy(Gtk::POLICY_NEVER, Gtk::POLICY_ALWAYS);
 
+  warnings.set_border_width(LENGTH_SMALLSPACE);
+
   try
   {
     warning_icon  = Gdk::Pixbuf::create_from_file(apply_filename_macros("$(exe-share)/icons/scalable/dialog-warning.svg"), 22, 22);

@@ -45,8 +45,40 @@ namespace Raytracer
     else g_assert_not_reached();
   }
 
+
+  void Texture::reload_file()
+  {
+    Settings& settings  = Manager::get_settings();
+
+    try
+    {
+      if(load_small_version && !settings.get_use_large_texture())
+      {
+        pixbuf.reset();
+      }else if(load_small_version)
+      {
+        pixbuf.reset();
+        std::cout<<"loading small image <"<<filename_small<<">\n";
+        pixbuf  = Gdk::Pixbuf::create_from_file(filename_small);
+      }else if(should_reload)
+      {
+        pixbuf.reset();
+
+        std::cout<<"loading large image <"<<filename<<">\n";
+        pixbuf  = Gdk::Pixbuf::create_from_file(apply_filename_macros(filename));
+      }
+    }CATCH_ALL("**Raytracer::Texture::reload_file** ", NOTHING_MACRO)
+
+    //if(!pixbuf)  // TODO dummy texture
+
+    load_small_version  = false;
+    should_reload  = false;
+  }
+
   void Texture::reset_any_filename(Glib::ustring fn)
   {
+    filename_small  = fn;
+
     load_small_version  = false;
     Settings& settings  = Manager::get_settings();
 
@@ -56,8 +88,6 @@ namespace Raytracer
       str_replace_last_with(fn, '.', settings.get_replace_lt_last_dot_with());
       str_replace_all_with(fn, settings.get_replace_lt_every_what(), settings.get_replace_lt_with());
     }
-
-    std::cout<<"loading image <"<<fn<<">\n";
 
     if(fn!=filename)
     {

@@ -26,6 +26,7 @@
 #include <sigc++/trackable.h>
 #include <glibmm.h>
 #include <iostream>
+#include <algorithm>
 #include <gdkmm/rectangle.h>
 
 
