@@ -169,13 +169,13 @@ namespace Raytracer
     // ---- sort by size ---------------- (so if a Image is too big, you don't have to load all images until you find out, the image is too big)
     std::sort(files.begin(), files.end(), TextureFileChecker::cmp);
 
-    for(FileList::iterator i = files.begin(); i!=files.end(); ++i)
+    for(FileList::iterator i = files.begin(); i!=files.end() && !Process::is_curr_process_aborted(); ++i)
     {
       //std::cout<<(*i)->get_size()<<"\n";
       (*i)->texture.reload_file();
     }
 
-    return true;
+    return !Process::is_curr_process_aborted();
   }
 
   void Manager::render()

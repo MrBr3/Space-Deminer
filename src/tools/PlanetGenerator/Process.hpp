@@ -52,6 +52,8 @@ private:
     const gsize _n_total_steps;
     const bool _block_changes;
 
+    bool _is_aborted;
+
     void inc_step(){_n_done_steps++;}
     gsize curr_step()const{return _n_done_steps;}
 
@@ -60,6 +62,7 @@ private:
     ProcessStackEntry(const Glib::ustring& what_doing, bool abortable, ID id, gsize n_total_steps, bool block_changes) : _what_doing(what_doing), _abortable(abortable), _id(id), _n_total_steps(n_total_steps), _block_changes(block_changes)
     {
       _n_done_steps = 0;
+      _is_aborted = false;
     }
     ~ProcessStackEntry()throw()
     {
@@ -87,6 +90,7 @@ public:
     bool abortable;
     bool has_progress;
     gdouble p;
+    bool is_aborted;
 
     void reset()
     {
@@ -94,6 +98,7 @@ public:
       p = 0.;
       has_progress  = false;
       abortable = false;
+      is_aborted  = false;
     }
 
     State()
@@ -182,6 +187,8 @@ public:
         state.state = Glib::ustring::compose("%1  [%2]", top->_what_doing, get_singletonA()->what_doing);
       }
 
+      state.is_aborted  = top->_is_aborted;
+
       if(top->_n_total_steps)
       {
         state.has_progress  = true;
@@ -198,9 +205,29 @@ public:
     }
   }
 
+  static bool is_curr_process_aborted()
+  {
+    ProcessStack& process_stack = get_singletonA()->process_stack;
+
+    if(process_stack.size())
+    {
+      Glib::RefPtr<ProcessStackEntry> top = *process_stack.rbegin();
+
+      return top->_is_aborted;
+    }
+    return false;
+  }
+
   static void abort_process()
   {
-    std::cout<<"TODO: Abort\n";
+    ProcessStack& process_stack = get_singletonA()->process_stack;
+
+    if(process_stack.size())
+    {
+      Glib::RefPtr<ProcessStackEntry> top = *process_stack.rbegin();
+
+      top->_is_aborted = true;
+    }
   }
 
   static Glib::RefPtr<Process> create(){return Glib::RefPtr<Process>(new Process);}

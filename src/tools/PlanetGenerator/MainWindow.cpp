@@ -46,11 +46,11 @@ MainWindow::MainWindow()
     //_vbox.pack_start(_tool_bar, false, false);
     //  _tool_bar.show();
     _vbox.pack_start(_hpaned);
+      signal_sensitive_for_changes_changed().connect(SettingsWidget::create_updater<bool, bool>(sigc::mem_fun(*this, &MainWindow::get_sensitive_for_changes), sigc::mem_fun(_hpaned, &Gtk::HPaned::set_sensitive)));
       _hpaned.show();
       _hpaned.set_border_width(LENGTH_BORDER_WIDTH);
       _hpaned.pack1(*view_3d);
       _hpaned.pack2(_vpaned);
-        signal_sensitive_for_changes_changed().connect(SettingsWidget::create_updater<bool, bool>(sigc::mem_fun(*this, &MainWindow::get_sensitive_for_changes), sigc::mem_fun(_vpaned, &Gtk::VPaned::set_sensitive)));
         _vpaned.show();
         _vpaned.pack1(_layers_scrollbars);
           _layers_scrollbars.show();
@@ -171,6 +171,8 @@ void MainWindow::update_statusbar()
   else
     _status_abortbutton.hide();
 
+  _status_abortbutton.set_sensitive(!state.is_aborted);
+
   if(state.has_progress)
   {
     _status_label.hide();
@@ -185,13 +187,9 @@ void MainWindow::update_statusbar()
   }
 
   while(Gtk::Main::events_pending())
+  {
     Gtk::Main::iteration();
-
-  /*{
-    int w, h;
-    _statusbar.get_size_request(w, h);
-    _statusbar.set_size_request(-1, MAX(_statusbar.get_height(), h));
-  }*/
+  }
 }
 
 void MainWindow::adapt_settings_size_request(Gtk::Requisition* r)
