@@ -75,6 +75,7 @@ MainWindow::MainWindow()
         _render_preview_scrollbars.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
         _render_preview_scrollbars.add(_render_preview);
           _render_preview.show();
+          Raytracer::Manager::get_resulting_image().signal_new_pixbuf_created().connect(sigc::mem_fun(*this, &MainWindow::update_render_preview));
       _vbox.pack_end(_statusbar, false, false);
       _vbox.pack_end(_statusbar_sep, false, false, LENGTH_SMALLSPACE);
         _statusbar_sep.show();
@@ -128,6 +129,18 @@ MainWindow::MainWindow()
         menu_render_render.set_use_underline();
         menu_render_render.signal_activate().connect(sigc::bind(sigc::ptr_fun(&Raytracer::Manager::render), false));
       menu_render_menu.append(menu_render_sep1);
+      menu_render_menu.append(menu_render_close_preview);
+        menu_render_close_preview.set_sensitive(false);
+        menu_render_close_preview.set_label(_("_Close View"));
+        menu_render_close_preview.set_accel_key("Escape");
+        menu_render_close_preview.set_use_underline();
+        menu_render_close_preview.signal_activate().connect(sigc::bind(sigc::ptr_fun(&Raytracer::Manager::set_doing_preview), false));
+        Raytracer::Manager::signal_doing_preview().connect(SettingsWidget::create_updater<bool, bool>(sigc::ptr_fun(&Raytracer::Manager::get_doing_preview), sigc::mem_fun(menu_render_close_preview, &MyMenuItem::set_sensitive)));
+      menu_render_menu.append(menu_render_save_result);
+        menu_render_save_result.set_sensitive(false);
+        menu_render_save_result.set_label(_("_SaveResult"));
+        menu_render_save_result.set_use_underline();
+      menu_render_menu.append(menu_render_sep2);
       menu_render_menu.append(menu_render_settings);
         menu_render_settings.set_label(_("Render _Settings"));
         menu_render_settings.set_use_underline();
@@ -208,6 +221,11 @@ void MainWindow::update_statusbar()
   {
     Gtk::Main::iteration();
   }
+}
+
+void MainWindow::update_render_preview()
+{
+  _render_preview.set(Raytracer::Manager::get_resulting_image().get_pixbuf());
 }
 
 void MainWindow::adapt_settings_size_request(Gtk::Requisition* r)

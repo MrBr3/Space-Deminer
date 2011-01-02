@@ -24,7 +24,14 @@ namespace Raytracer
   private:
     guint _width, _height;
 
+    Glib::RefPtr<Gdk::Pixbuf> _pixbuf;
+
+    sigc::signal<void> _signal_new_pixbuf_created;
+
   public:
+    const Glib::RefPtr<Gdk::Pixbuf>& get_pixbuf(){return _pixbuf;}
+    sigc::signal<void>& signal_new_pixbuf_created(){return _signal_new_pixbuf_created;}
+
     guint get_width()const{return _width;}
     guint get_height()const{return _height;}
 

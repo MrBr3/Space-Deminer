@@ -107,6 +107,8 @@ namespace Raytracer
 
     _settings = new Settings;
 
+    _doing_preview  = true;
+
     base_texture.init();
     night_texture.init();
     weight_map.init();
@@ -153,7 +155,6 @@ namespace Raytracer
         i = files.erase(i);
     }
 
-    std::cout<<"files.size() "<<files.size()<<"\n";
     Process::PushProcess pp("Preparing renderer", true, Process::PROCESS_RENDER, files.size(), true);
 
     switch(WarningListDialog::go(warnings, get_settings().get_use_large_texture() ? _("Use Preview Textures") : Glib::ustring()))
@@ -171,7 +172,6 @@ namespace Raytracer
 
     for(FileList::iterator i = files.begin(); i!=files.end() && !Process::is_curr_process_aborted(); ++i)
     {
-      //std::cout<<(*i)->get_size()<<"\n";
       (*i)->texture.reload_file();
     }
 
@@ -184,9 +184,22 @@ namespace Raytracer
 
     if(get_singletonA()->prepare_textures())
     {
-      Gtk::MessageDialog("Now it would render").run();
-    }
+      get_singletonA()->resulting_image.prepare(preview);
 
-    get_singletonA()->resulting_image.prepare(preview);
+      Gtk::MessageDialog("Now it would render").run();
+
+      Process::PushProcess pp("View Render Result", false, Process::PROCESS_RENDER, 0, true);
+
+      // Let the user decide, how long the results are aviable to see
+      set_doing_preview(true);
+
+      while(get_doing_preview())
+      {
+        while(get_doing_preview() && Gtk::Main::events_pending())
+        {
+          Gtk::Main::iteration();
+        }
+      }
+    }
   }
 }

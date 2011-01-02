@@ -83,13 +83,15 @@ class MainWindow : public Gtk::Window
     MyMenuItem menu_render_render;
     MyMenuItem menu_render_render_view;
     Gtk::SeparatorMenuItem menu_render_sep1;
+    MyMenuItem menu_render_close_preview;
+    MyMenuItem menu_render_save_result;
+    Gtk::SeparatorMenuItem menu_render_sep2;
     MyMenuItem menu_render_settings;
   MyMenuItem menu_view;
   Gtk::Menu  menu_view_menu;
     MyCheckMenuItem menu_view_show_sidebar;
     MyCheckMenuItem menu_view_wireframed;
     MyMenuItem menu_view_settings;
-
   Gtk::VBox _vbox;
     Gtk::MenuBar _menu_bar;
     Gtk::HPaned _hpaned;
@@ -128,6 +130,8 @@ class MainWindow : public Gtk::Window
   void on_realize();
   void on_show();
   void update_statusbar();
+
+  void update_render_preview();
 
 public:
   MainWindow();

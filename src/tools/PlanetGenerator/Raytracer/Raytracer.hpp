@@ -45,15 +45,23 @@ namespace Raytracer
 
     bool prepare_textures();
 
+    bool _doing_preview;
+    sigc::signal<void> _signal_doing_preview;
+
   public:
     static Manager* get_singletonA(){g_assert(_singleton);return _singleton;}
 
     static Settings& get_settings(){g_assert(get_singletonA()->_settings);*get_singletonA()->_settings;}
+    static ResultingImage& get_resulting_image(){return get_singletonA()->resulting_image;}
 
     static void open_settings();
 
     static Glib::RefPtr<Manager> create(){return Glib::RefPtr<Manager>(new Manager);}
     static void render(bool preview);
+
+    static bool get_doing_preview(){return get_singletonA()->_doing_preview;}
+    static void set_doing_preview(bool b){get_singletonA()->_doing_preview=b;signal_doing_preview().emit();}
+    static sigc::signal<void>& signal_doing_preview(){return get_singletonA()->_signal_doing_preview;}
 
     ~Manager()throw();
   };

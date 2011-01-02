@@ -33,6 +33,8 @@ namespace Raytracer
 
   void ResultingImage::prepare(bool preview)
   {
+    Process::PushProcess pp("Preparing pixelbuffer", true, Process::PROCESS_RENDER, 0, true);
+
     if(preview)
     {
       main_window->get_render_view_size(_width, _height);
@@ -44,5 +46,14 @@ namespace Raytracer
 
     _width  = Settings::correct_image_size(_width);
     _height  = Settings::correct_image_size(_height);
+
+    if(!_pixbuf || _pixbuf->get_width()!=get_width() || _pixbuf->get_height()!=get_height())
+    {
+      _pixbuf.reset();
+      _pixbuf = Gdk::Pixbuf::create(Gdk::COLORSPACE_RGB, true, 8, get_width(), get_height());
+      _pixbuf->fill(0x000000ff);
+
+      signal_new_pixbuf_created().emit();
+    }
   }
 }

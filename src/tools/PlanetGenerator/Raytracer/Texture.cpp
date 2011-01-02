@@ -63,13 +63,11 @@ namespace Raytracer
         }else if(load_small_version)
         {
           pixbuf.reset();
-          std::cout<<"loading small image <"<<filename_small<<">\n";
           pixbuf  = Gdk::Pixbuf::create_from_file(filename_small);
         }else if(should_reload)
         {
           pixbuf.reset();
 
-          std::cout<<"loading large image <"<<filename<<">\n";
           pixbuf  = Gdk::Pixbuf::create_from_file(apply_filename_macros(filename));
         }
       }CATCH_ALL("**Raytracer::Texture::reload_file** ", NOTHING_MACRO)
