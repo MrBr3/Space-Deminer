@@ -23,14 +23,21 @@ namespace Raytracer
 {
   namespace Private
   {
-    const int BIG_SIZE = 10;
-    const int MAX_SIZE = 20;
+    const int BIG_SIZE = 16;
+    const int MAX_SIZE = 32;
     const int MEGA = (1<<20);
 
     class TextureFileChecker : public Refable
     {
       TextureFileChecker(Texture& tex, std::list<Glib::ustring>& warnings) : texture(tex)
       {
+        size  = 0;
+
+        if(!tex.visible)
+        {
+          return;
+        }
+
         Glib::ustring full_filename = get_full_filename();
 
         Glib::RefPtr<Gio::File> file = Gio::File::create_for_path(full_filename);
@@ -119,6 +126,7 @@ namespace Raytracer
 
   bool Manager::prepare_textures()
   {
+
     using Private::TextureFileChecker;
 
     typedef std::vector<Glib::RefPtr<TextureFileChecker> > FileList;
@@ -137,6 +145,17 @@ namespace Raytracer
     files.push_back(TextureFileChecker::create(get_singletonA()->weight_map, warnings));
     files.push_back(TextureFileChecker::create(get_singletonA()->cloud_layer, warnings));
 
+    for(FileList::iterator i = files.begin(); i!=files.end();)
+    {
+      if((*i)->texture.visible)
+        ++i;
+      else
+        i = files.erase(i);
+    }
+
+    std::cout<<"files.size() "<<files.size()<<"\n";
+    Process::PushProcess pp("Preparing renderer", true, Process::PROCESS_RENDER, files.size(), true);
+
     switch(WarningListDialog::go(warnings, get_settings().get_use_large_texture() ? _("Use Preview Textures") : Glib::ustring()))
     {
     case WarningListDialog::OK:
@@ -148,7 +167,6 @@ namespace Raytracer
     }
 
     // ---- sort by size ---------------- (so if a Image is too big, you don't have to load all images until you find out, the image is too big)
-
     std::sort(files.begin(), files.end(), TextureFileChecker::cmp);
 
     for(FileList::iterator i = files.begin(); i!=files.end(); ++i)
@@ -162,14 +180,12 @@ namespace Raytracer
 
   void Manager::render()
   {
-    g_assert(main_window->get_sensitive_for_changes());
-    main_window->set_sensitive_for_changes(false);
+    Process::PushProcess pp("Rendering", true, Process::PROCESS_RENDER, 0*0, true);
 
     if(get_singletonA()->prepare_textures())
     {
       Gtk::MessageDialog("Now it would render").run();
     }
 
-    main_window->set_sensitive_for_changes(true);
   }
 }

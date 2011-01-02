@@ -19,6 +19,8 @@
 
 namespace Raytracer
 {
+  //const guint MAX_TEXTURE_SIZE = 8192;
+
   class Texture : public sigc::trackable
   {
   private:
@@ -30,11 +32,13 @@ namespace Raytracer
     Glib::RefPtr<Gdk::Pixbuf> pixbuf;
     Glib::ustring filename;
     Glib::ustring filename_small;
+    Glib::ustring texture_name;
 
   public:
     Glib::TimeVal last_modification_time;
     bool should_reload;
     bool load_small_version; // if load_small_version==true should_reload will be ignored
+    bool visible;
 
   public:
       const Glib::ustring& get_filename()const{return filename;}

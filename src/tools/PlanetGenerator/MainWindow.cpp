@@ -26,6 +26,8 @@ MainWindow::MainWindow()
   g_assert(!main_window);
   main_window = this;
 
+  _process  = Process::create();
+
   _sensitive_for_changes = true;
 
   _layers = Gtk::manage(new LayerView);
@@ -61,6 +63,18 @@ MainWindow::MainWindow()
           _settings.signal_size_request().connect(sigc::mem_fun(*this, &MainWindow::adapt_settings_size_request));
           _settings.show();
         _vpaned.set_position(96);
+      _vbox.pack_end(_statusbar, false, false);
+      _vbox.pack_end(_statusbar_sep, false, false, LENGTH_SMALLSPACE);
+        _statusbar_sep.show();
+        _statusbar.show();
+          _statusbar.set_spacing(LENGTH_BORDER_WIDTH);
+          _statusbar.pack_start(_status_label, false, false);
+          _statusbar.pack_start(_status_progressbar);
+          _statusbar.pack_start(_status_abortbutton, false, false);
+            _status_abortbutton.set_label(_("Abort"));
+            _status_abortbutton.signal_clicked().connect(sigc::ptr_fun(&Process::abort_process));
+        update_statusbar();
+        Process::signal_something_changed().connect(sigc::mem_fun(*this, &MainWindow::update_statusbar));
 
   _menu_bar.append(menu_file);
     menu_file.set_label(_("_File"));
@@ -136,6 +150,50 @@ MainWindow::~MainWindow()throw()
   main_window = nullptr;
 }
 
+void MainWindow::on_realize()
+{
+  Gtk::Window::on_realize();
+}
+
+void MainWindow::on_show()
+{
+  Gtk::Window::on_show();
+}
+
+void MainWindow::update_statusbar()
+{
+  Process::State state;
+
+  Process::fill_state(state);
+
+  if(state.abortable)
+    _status_abortbutton.show();
+  else
+    _status_abortbutton.hide();
+
+  if(state.has_progress)
+  {
+    _status_label.hide();
+    _status_progressbar.set_text(state.state);
+    _status_progressbar.show();
+    _status_progressbar.set_fraction(state.p);
+  }else
+  {
+    _status_label.set_label(state.state);
+    _status_progressbar.hide();
+    _status_label.show();
+  }
+
+  while(Gtk::Main::events_pending())
+    Gtk::Main::iteration();
+
+  /*{
+    int w, h;
+    _statusbar.get_size_request(w, h);
+    _statusbar.set_size_request(-1, MAX(_statusbar.get_height(), h));
+  }*/
+}
+
 void MainWindow::adapt_settings_size_request(Gtk::Requisition* r)
 {
   r->width  = last_settings_size_request = MAX(r->width, last_settings_size_request);
@@ -173,4 +231,13 @@ void MainWindow::_adapt_show_sidebar()
     if(!maximized)
       resize(get_width()+side_width, get_height());
   }
+}
+
+// ---- ---- ---- ----
+
+Process* Process::_singleton  = nullptr;
+
+void Process::_block_changes(bool unblock)
+{
+  main_window->set_sensitive_for_changes(unblock);
 }

@@ -26,6 +26,7 @@
 
 using TriangleVersion::SphereMesh;
 
+#include "Process.hpp"
 #include "Texture.hpp"
 #include "WarningListDialog.hpp"
 #include "3DView.hpp"
@@ -46,6 +47,7 @@ class MainWindow : public Gtk::Window
   View3D* view_3d;
   ViewSettings* view_settings;
   Glib::RefPtr<Raytracer::Manager> raytracer;
+  Glib::RefPtr<Process> _process;
 
   bool _sensitive_for_changes;
   sigc::signal<void> _signal_sensitive_for_changes_changed;
@@ -87,15 +89,19 @@ class MainWindow : public Gtk::Window
     MyCheckMenuItem menu_view_wireframed;
     MyMenuItem menu_view_settings;
 
-  Gtk::HPaned _hpaned;
-  Gtk::VPaned _vpaned;
   Gtk::VBox _vbox;
-  Gtk::VBox _settings;
-  int last_settings_size_request;
-  Gtk::ScrolledWindow _layers_scrollbars;
-  LayerView* _layers;
-  Gtk::MenuBar _menu_bar;
-  //Gtk::Toolbar _tool_bar;
+    Gtk::MenuBar _menu_bar;
+    Gtk::HPaned _hpaned;
+      Gtk::VPaned _vpaned;
+        Gtk::ScrolledWindow _layers_scrollbars;
+          LayerView* _layers;
+        Gtk::VBox _settings;
+          int last_settings_size_request;
+    Gtk::HSeparator _statusbar_sep;
+    Gtk::HBox _statusbar;
+      Gtk::Label _status_label;
+      Gtk::ProgressBar _status_progressbar;
+      Gtk::Button _status_abortbutton;
 
   void draw_wireframed_toggled()
   {
@@ -115,6 +121,10 @@ class MainWindow : public Gtk::Window
   void _adapt_show_sidebar();
 
   void adapt_settings_size_request(Gtk::Requisition*);
+
+  void on_realize();
+  void on_show();
+  void update_statusbar();
 
 public:
   MainWindow();

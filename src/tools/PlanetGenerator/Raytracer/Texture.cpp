@@ -17,7 +17,7 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
- #include "Raytracer.hpp"
+ #include "./../MainWindow.hpp"
 
 namespace Raytracer
 {
@@ -30,6 +30,7 @@ namespace Raytracer
   {
     should_reload = true;
     load_small_version  = false;
+    visible = true;
   }
 
   Texture::~Texture()throw()
@@ -48,28 +49,33 @@ namespace Raytracer
 
   void Texture::reload_file()
   {
-    Settings& settings  = Manager::get_settings();
-
-    try
+    if(visible)
     {
-      if(load_small_version && !settings.get_use_large_texture())
-      {
-        pixbuf.reset();
-      }else if(load_small_version)
-      {
-        pixbuf.reset();
-        std::cout<<"loading small image <"<<filename_small<<">\n";
-        pixbuf  = Gdk::Pixbuf::create_from_file(filename_small);
-      }else if(should_reload)
-      {
-        pixbuf.reset();
+      Process::DoingProcessStep _dps("Loading "+texture_name, Process::PROCESS_RENDER);
 
-        std::cout<<"loading large image <"<<filename<<">\n";
-        pixbuf  = Gdk::Pixbuf::create_from_file(apply_filename_macros(filename));
-      }
-    }CATCH_ALL("**Raytracer::Texture::reload_file** ", NOTHING_MACRO)
+      Settings& settings  = Manager::get_settings();
 
-    //if(!pixbuf)  // TODO dummy texture
+      try
+      {
+        if(load_small_version && !settings.get_use_large_texture())
+        {
+          pixbuf.reset();
+        }else if(load_small_version)
+        {
+          pixbuf.reset();
+          std::cout<<"loading small image <"<<filename_small<<">\n";
+          pixbuf  = Gdk::Pixbuf::create_from_file(filename_small);
+        }else if(should_reload)
+        {
+          pixbuf.reset();
+
+          std::cout<<"loading large image <"<<filename<<">\n";
+          pixbuf  = Gdk::Pixbuf::create_from_file(apply_filename_macros(filename));
+        }
+      }CATCH_ALL("**Raytracer::Texture::reload_file** ", NOTHING_MACRO)
+
+      //if(!pixbuf)  // TODO dummy texture
+    }
 
     load_small_version  = false;
     should_reload  = false;
@@ -94,25 +100,32 @@ namespace Raytracer
       filename  = fn;
       should_reload = true;
     }
+
+    if(!pixbuf)
+      should_reload  =true;
   }
 
   void Texture::reset_base_filename()
   {
+    visible = BaseTextureLayer::get_singleton()->get_visible();
     reset_any_filename(BaseTextureLayer::get_imagefile()->get_filename());
   }
 
   void Texture::reset_night_filename()
   {
+    visible = NightTextureLayer::get_singleton()->get_visible();
     reset_any_filename(NightTextureLayer::get_imagefile()->get_filename());
   }
 
   void Texture::reset_weight_filename()
   {
+    visible = WeightTextureLayer::get_singleton()->get_visible();
     reset_any_filename(WeightTextureLayer::get_imagefile()->get_filename());
   }
 
   void Texture::reset_cloud_filename()
   {
+    visible = CloudTextureLayer::get_singleton()->get_visible();
     reset_any_filename(CloudTextureLayer::get_imagefile()->get_filename());
   }
 
@@ -122,18 +135,22 @@ namespace Raytracer
     {
       base_texture  = this;
       reset_filename  = sigc::mem_fun(*this, &Texture::reset_base_filename);
+      texture_name  = _("Base Texture");
     }else if(&Manager::get_singletonA()->night_texture == this)
     {
       night_texture  = this;
       reset_filename  = sigc::mem_fun(*this, &Texture::reset_night_filename);
+      texture_name  = _("Night Texture");
     }else if(&Manager::get_singletonA()->weight_map == this)
     {
       weight_map  = this;
       reset_filename  = sigc::mem_fun(*this, &Texture::reset_weight_filename);
+      texture_name  = _("Weight Map");
     }else if(&Manager::get_singletonA()->cloud_layer == this)
     {
       cloud_layer  = this;
       reset_filename  = sigc::mem_fun(*this, &Texture::reset_cloud_filename);
+      texture_name  = _("Cloud Layer");
     }
   }
 }
