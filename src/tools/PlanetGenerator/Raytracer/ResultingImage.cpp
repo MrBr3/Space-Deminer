@@ -21,6 +21,25 @@
 
 namespace Raytracer
 {
+  bool ResultingImage::Tile::operator<(const Tile& t)const
+  {
+    g_assert(Manager::get_resulting_image().get_pixbuf());
+
+    guint half_width = Manager::get_resulting_image().get_pixbuf()->get_height()>>1;
+    guint half_height = Manager::get_resulting_image().get_pixbuf()->get_height()>>1;
+
+    guint this_d  = abs(x-half_width)*abs(x-half_width) + abs(y-half_height)*abs(y-half_height);
+    guint that_d  = abs(t.x-half_width)*abs(t.x-half_width) + abs(t.y-half_height)*abs(t.y-half_height);
+
+    if(this_d!=that_d)
+      return this_d<that_d;
+
+    if(x==t.x)
+      return x<t.x;
+
+    return y<t.y;
+  }
+
   ResultingImage::ResultingImage()
   {
     _width  = 64;
@@ -55,5 +74,37 @@ namespace Raytracer
 
       signal_new_pixbuf_created().emit();
     }
+
+    tiles.clear();
+
+    const gint n_tiles_axis = Manager::get_settings().get_n_render_tiles();
+
+    guint curr_x = 0;
+    guint curr_y = 0;
+    for(gint w = _width, nx=n_tiles_axis; w>0; --nx)
+    {
+      guint curr_width  = ceil(w/gfloat(nx));
+
+      for(gint h = _height, ny=n_tiles_axis; h>0; --ny)
+      {
+        g_assert(nx>=0);
+        g_assert(ny>=0);
+
+        guint curr_height  = ceil(h/gfloat(ny));
+
+        tiles.push_back(Tile(curr_x, curr_y, curr_width, curr_height));
+
+        std::cout<<curr_x<<"  "<<curr_y<<"  "<<curr_width<<"  "<<curr_height<<"\n";
+
+        curr_y  += curr_width;
+        h -= curr_height;
+      }
+      curr_x  += curr_width;
+      w -= curr_width;
+    }
+
+    g_assert(tiles.size()==n_tiles_axis*n_tiles_axis);
+
+    tiles.sort();
   }
 }

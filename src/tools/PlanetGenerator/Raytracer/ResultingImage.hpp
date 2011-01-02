@@ -37,6 +37,19 @@ namespace Raytracer
 
     void prepare(bool preview);
 
+    class Tile
+    {
+    public:
+      const guint x, y, w, h;
+      bool operator<(const Tile& t)const;
+
+      Tile(guint _x, guint _y, guint _w, guint _h) : x(_x), y(_y), w(_w), h(_h)
+      {
+      }
+    };
+
+    std::list<Tile> tiles;
+
     ResultingImage();
     ~ResultingImage()throw();
   };

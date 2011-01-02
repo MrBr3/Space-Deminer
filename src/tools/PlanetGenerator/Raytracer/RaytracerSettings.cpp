@@ -67,7 +67,7 @@ namespace Raytracer
     //================
     n=0;
 
-    n_render_tiles  = 4;
+    n_render_tiles  = 8;
     signal_n_render_tiles_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
     append_int_widget(table_performance, n, "raytrace-render-tiles", _("RenderTiles"), _("The number of render-tiles along one axis used in order to use mutltithreading to fasten redering"), X_GETTER_SETTER_SIGNAL(Settings, n_render_tiles));
 
