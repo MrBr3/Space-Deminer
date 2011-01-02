@@ -68,6 +68,8 @@
       <File Name="Raytracer/Sphere.hpp"/>
       <File Name="Raytracer/Texture.cpp"/>
       <File Name="Raytracer/Texture.hpp"/>
+      <File Name="Raytracer/ResultingImage.cpp"/>
+      <File Name="Raytracer/ResultingImage.hpp"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug">

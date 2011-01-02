@@ -178,7 +178,7 @@ namespace Raytracer
     return !Process::is_curr_process_aborted();
   }
 
-  void Manager::render()
+  void Manager::render(bool preview)
   {
     Process::PushProcess pp("Rendering", true, Process::PROCESS_RENDER, 0*0, true);
 
@@ -187,5 +187,6 @@ namespace Raytracer
       Gtk::MessageDialog("Now it would render").run();
     }
 
+    get_singletonA()->resulting_image.prepare(preview);
   }
 }

@@ -81,6 +81,7 @@ class MainWindow : public Gtk::Window
   MyMenuItem menu_render;
   Gtk::Menu  menu_render_menu;
     MyMenuItem menu_render_render;
+    MyMenuItem menu_render_render_view;
     Gtk::SeparatorMenuItem menu_render_sep1;
     MyMenuItem menu_render_settings;
   MyMenuItem menu_view;
@@ -97,6 +98,8 @@ class MainWindow : public Gtk::Window
           LayerView* _layers;
         Gtk::VBox _settings;
           int last_settings_size_request;
+    Gtk::ScrolledWindow _render_preview_scrollbars;
+      Gtk::Image _render_preview;
     Gtk::HSeparator _statusbar_sep;
     Gtk::HBox _statusbar;
       Gtk::Label _status_label;
@@ -130,6 +133,12 @@ public:
   MainWindow();
   ~MainWindow()throw();
 
+  void get_render_view_size(guint& width, guint& height)
+  {
+    g_assert(this);
+    width = _render_preview.get_width();
+    height = _render_preview.get_height();
+  }
 
   bool get_sensitive_for_changes()const
   {

@@ -130,14 +130,14 @@ namespace Raytracer
 
   void Settings::set_width(int w)
   {
-    width = CLAMP(w, 32, max_image_size);
+    width = correct_image_size(w);
 
     signal_width_changed().emit();
   }
 
   void Settings::set_height(int h)
   {
-    height = CLAMP(h, 32, max_image_size);
+    height = correct_image_size(h);
 
     signal_height_changed().emit();
   }

@@ -136,13 +136,25 @@ public:
     g_assert(process_stack.size());
 
     Glib::RefPtr<ProcessStackEntry> top = *process_stack.rbegin();
+    g_assert(top);
 
     get_singletonA()->what_doing.clear();
+
+    process_stack.pop_back();
+
+
     if(top->_block_changes)
     {
-      get_singletonA()->_block_changes(true);
+      if(process_stack.size())
+      {
+        Glib::RefPtr<ProcessStackEntry> newtop = *process_stack.rbegin();
+        g_assert(newtop);
+        if(!newtop->_block_changes)
+          get_singletonA()->_block_changes(true);
+      }else
+        get_singletonA()->_block_changes(true);
+
     }
-    process_stack.pop_back();
 
     signal_something_changed().emit();
   }

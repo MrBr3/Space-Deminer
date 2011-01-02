@@ -21,6 +21,8 @@
 
 namespace Raytracer
 {
+  const int max_image_size  = 4096;
+
   class Settings : public SettingsWidget
   {
   public:
@@ -61,6 +63,11 @@ namespace Raytracer
 
   public:
     sigc::signal<void>& signal_something_changed(){return _signal_something_changed;}
+
+    static guint correct_image_size(guint s)
+    {
+      return CLAMP(s, 32, max_image_size);
+    }
 
   public:
     Settings();

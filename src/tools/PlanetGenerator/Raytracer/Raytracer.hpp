@@ -23,11 +23,10 @@
 
 #include "./RaytracerSettings.hpp"
 #include "./Texture.hpp"
+#include "./ResultingImage.hpp"
 
 namespace Raytracer
 {
-  const int max_image_size  = 4096;
-
   class Manager : public Refable
   {
     static Manager* _singleton;
@@ -42,6 +41,8 @@ namespace Raytracer
     Texture weight_map;
     Texture cloud_layer;
 
+    ResultingImage resulting_image;
+
     bool prepare_textures();
 
   public:
@@ -52,7 +53,7 @@ namespace Raytracer
     static void open_settings();
 
     static Glib::RefPtr<Manager> create(){return Glib::RefPtr<Manager>(new Manager);}
-    static void render();
+    static void render(bool preview);
 
     ~Manager()throw();
   };
