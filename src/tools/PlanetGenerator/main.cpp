@@ -18,8 +18,21 @@
  */
 
 #include <stdio.h>
+#include <boost/thread/thread.hpp>
 
 #include "./MainWindow.hpp"
+
+guint get_n_cores()
+{
+  static guint n_cores=0;
+
+  if(!n_cores)
+  {
+    n_cores = MAX(boost::thread::hardware_concurrency(), 1);
+  }
+
+  return  n_cores;
+}
 
 int main(int argc, char **argv)
 {

@@ -69,6 +69,9 @@ namespace Raytracer
       return CLAMP(s, 32, max_image_size);
     }
 
+    Glib::Mutex render_mutex;
+    guint rendering_threads;
+
   public:
     Settings();
     ~Settings()throw();

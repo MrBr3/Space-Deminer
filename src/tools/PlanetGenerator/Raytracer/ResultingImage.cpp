@@ -44,6 +44,12 @@ namespace Raytracer
   {
     _width  = 64;
     _height  = 64;
+
+    max_tile_width  = 0;
+    max_tile_height  = 0;
+
+    _rendering_threads = 0;
+    _invalidate = false;
   }
 
   ResultingImage::~ResultingImage()throw()
@@ -79,11 +85,14 @@ namespace Raytracer
 
     const gint n_tiles_axis = Manager::get_settings().get_n_render_tiles();
 
+    max_tile_width  = 0;
+    max_tile_height  = 0;
+
     guint curr_x = 0;
-    guint curr_y = 0;
     for(gint w = _width, nx=n_tiles_axis; w>0; --nx)
     {
       guint curr_width  = ceil(w/gfloat(nx));
+      guint curr_y = 0;
 
       for(gint h = _height, ny=n_tiles_axis; h>0; --ny)
       {
@@ -94,9 +103,15 @@ namespace Raytracer
 
         tiles.push_back(Tile(curr_x, curr_y, curr_width, curr_height));
 
-        std::cout<<curr_x<<"  "<<curr_y<<"  "<<curr_width<<"  "<<curr_height<<"\n";
+        //std::cout<<curr_x<<"  "<<curr_y<<"  "<<curr_width<<"  "<<curr_height<<"\n";
 
-        curr_y  += curr_width;
+        max_tile_width  = MAX(curr_width, max_tile_width);
+        max_tile_height  = MAX(curr_height, max_tile_height);
+
+        g_assert(curr_x+curr_width<=_width);
+        g_assert(curr_y+curr_height<=_height);
+
+        curr_y  += curr_height;
         h -= curr_height;
       }
       curr_x  += curr_width;
@@ -106,5 +121,107 @@ namespace Raytracer
     g_assert(tiles.size()==n_tiles_axis*n_tiles_axis);
 
     tiles.sort();
+  }
+
+  void ResultingImage::render_thread(ResultingImage* ri)
+  {
+    g_assert(ri);
+    g_assert(ri->get_pixbuf());
+    g_assert(ri->get_pixbuf()->get_n_channels()==4);
+
+    ri->_render_mutex.lock();
+
+      ri->_rendering_threads++;
+
+      if(ri->_rendering_threads==1)
+        ri->_waiting_for_start_mutex.unlock();
+
+      const gsize rowstride = ri->get_pixbuf()->get_rowstride();
+      guint8* const all_pixels  = ri->get_pixbuf()->get_pixels();
+
+    ri->_render_mutex.unlock();
+
+    while(!ri->_aborted)
+    {
+      ri->_render_mutex.lock();
+        if(ri->tiles.size()==0)
+        {
+          ri->_render_mutex.unlock();
+          break;
+        }
+
+        Tile tile = *ri->tiles.begin();
+        ri->tiles.pop_front();
+
+        guint8* px  = all_pixels + tile.x*4 + rowstride*tile.y;
+
+      ri->_render_mutex.unlock();
+
+      for(guint y=0; y<tile.h; ++y)
+      {
+        if(y%16==0)
+        {
+          ri->_invalidate_mutex.lock();
+          ri->_invalidate = true;
+          ri->_invalidate_mutex.unlock();
+        }
+
+        px  = all_pixels + tile.x*4 + rowstride*(tile.y+y);
+
+        for(guint x=0; x<tile.w; ++x, px+=4)
+        {
+
+          px[0] = 255;
+          px[1] = 64;
+          px[2] = 16;
+          px[3] = 0;
+
+          Glib::usleep(50);
+        }
+      }
+    }
+
+    ri->_render_mutex.lock();
+    ri->_rendering_threads--;
+    ri->_render_mutex.unlock();
+  }
+
+  void ResultingImage::render()
+  {
+    _render_mutex.lock();
+
+    _rendering_threads = 0;
+    _aborted = false;
+
+    _render_mutex.unlock();
+
+    _waiting_for_start_mutex.lock();
+
+    for(guint i=0; i<get_n_cores(); ++i)
+      Glib::Thread::create(sigc::bind(sigc::ptr_fun(ResultingImage::render_thread), this), false);
+
+    _waiting_for_start_mutex.lock();
+    _waiting_for_start_mutex.unlock();
+
+    while(!_aborted && _rendering_threads!=0)
+    {
+      while(Gtk::Main::events_pending())
+      {
+        Gtk::Main::iteration();
+        _aborted |= Process::is_curr_process_aborted();
+
+        if(_invalidate)
+        {
+          _invalidate_mutex.lock();
+          _invalidate = false;
+          _invalidate_mutex.unlock();
+          signal_invalidated();
+        }
+      }
+    }
+
+    signal_invalidated();
+
+    g_assert(_aborted || _rendering_threads==0);
   }
 }

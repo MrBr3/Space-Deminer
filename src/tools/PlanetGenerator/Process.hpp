@@ -32,6 +32,7 @@ private:
   {
     g_assert(!_singleton);
     _singleton  = this;
+    _abort_all  = false;
   }
   ~Process()throw()
   {
@@ -77,6 +78,7 @@ private:
   ProcessStack process_stack;
 
   Glib::ustring what_doing;
+  bool _abort_all;
 
   sigc::signal<void> _signal_something_changed;
 
@@ -196,7 +198,10 @@ public:
         state.state = top->_what_doing;
       }else
       {
-        state.state = Glib::ustring::compose("%1  [%2]", top->_what_doing, get_singletonA()->what_doing);
+        if(get_singletonA()->what_doing.empty())
+          state.state = top->_what_doing;
+        else
+          state.state = Glib::ustring::compose("%1  [%2]", top->_what_doing, get_singletonA()->what_doing);
       }
 
       state.is_aborted  = top->_is_aborted;
@@ -219,6 +224,9 @@ public:
 
   static bool is_curr_process_aborted()
   {
+    if(get_singletonA()->_abort_all)
+      return true;
+
     ProcessStack& process_stack = get_singletonA()->process_stack;
 
     if(process_stack.size())
@@ -228,6 +236,11 @@ public:
       return top->_is_aborted;
     }
     return false;
+  }
+
+  static void abort_all()
+  {
+    get_singletonA()->_abort_all  = true;
   }
 
   static void abort_process()

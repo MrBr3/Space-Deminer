@@ -94,7 +94,7 @@ namespace Raytracer
     //================
     n=0;
 
-    {use_large_texture = true;
+    {use_large_texture = false;
     signal_use_large_texture_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
     Gtk::Widget& label = append_boolean_widget(table_textures, n, "raytrace-use-large-texture", _("Use large Textures"), _("If set, PlanetGenerator will search for larger Textures using the hints below"), X_GETTER_SETTER_SIGNAL(Settings, use_large_texture));
     table_textures.remove(label);

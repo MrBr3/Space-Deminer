@@ -186,14 +186,30 @@ namespace Raytracer
     {
       get_singletonA()->resulting_image.prepare(preview);
 
-      Gtk::MessageDialog("Now it would render").run();
+      // ==== Render ====
 
+      get_singletonA()->resulting_image.render();
+
+      if(Process::is_curr_process_aborted())
+      {
+        Gtk::MessageDialog("Rendering aborted by user. No image is saved").run();
+      }else
+      {
+        Glib::RefPtr<Gdk::Pixbuf> result = get_resulting_image().get_pixbuf();
+
+        if(result)
+        {
+          Process::PushProcess pp("Saving Result", false, Process::PROCESS_RENDER, 0, true);
+          //TODO make parent dir if not existing
+          result->save(apply_filename_macros(get_settings().get_dest_file()), "png");
+        }
+      }
+
+      // ==== Let the user decide, how long the results are aviable to see
       Process::PushProcess pp("View Render Result", false, Process::PROCESS_RENDER, 0, true);
-
-      // Let the user decide, how long the results are aviable to see
       set_doing_preview(true);
 
-      while(get_doing_preview())
+      while(get_doing_preview() && main_window->get_visible())
       {
         while(get_doing_preview() && Gtk::Main::events_pending())
         {

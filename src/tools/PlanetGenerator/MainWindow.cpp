@@ -44,6 +44,8 @@ MainWindow::MainWindow()
 
   raytracer = Raytracer::Manager::create();
 
+  signal_hide().connect(sigc::ptr_fun(&Process::abort_all));
+
   add(_vbox);
     _vbox.show();
     _vbox.pack_start(_menu_bar, false, false);
@@ -75,6 +77,7 @@ MainWindow::MainWindow()
         _render_preview_scrollbars.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
         _render_preview_scrollbars.add(_render_preview);
           _render_preview.show();
+          Raytracer::Manager::get_resulting_image().signal_invalidated().connect(sigc::mem_fun(*this, &MainWindow::invalidate_render_preview));
           Raytracer::Manager::get_resulting_image().signal_new_pixbuf_created().connect(sigc::mem_fun(*this, &MainWindow::update_render_preview));
       _vbox.pack_end(_statusbar, false, false);
       _vbox.pack_end(_statusbar_sep, false, false, LENGTH_SMALLSPACE);
@@ -113,7 +116,7 @@ MainWindow::MainWindow()
         menu_file_quit.set_accel_key("<control>q");
         menu_file_quit.set_label(_("_Quit"));
         menu_file_quit.set_use_underline();
-        menu_file_quit.signal_activate().connect(sigc::ptr_fun(&Gtk::Main::quit));
+        menu_file_quit.signal_activate().connect(sigc::mem_fun(*this, &Gtk::Window::hide));
   _menu_bar.append(menu_render);
     menu_render.set_label(_("_Render"));
     menu_render.set_submenu(menu_render_menu);
@@ -221,6 +224,14 @@ void MainWindow::update_statusbar()
   {
     Gtk::Main::iteration();
   }
+}
+
+void MainWindow::invalidate_render_preview()
+{
+  Glib::RefPtr<Gdk::Window> w = _render_preview.get_window();
+
+  if(w)
+    w->invalidate(false);
 }
 
 void MainWindow::update_render_preview()

@@ -24,6 +24,9 @@ namespace Raytracer
   private:
     guint _width, _height;
 
+    guint max_tile_width;
+    guint max_tile_height;
+
     Glib::RefPtr<Gdk::Pixbuf> _pixbuf;
 
     sigc::signal<void> _signal_new_pixbuf_created;
@@ -50,7 +53,27 @@ namespace Raytracer
 
     std::list<Tile> tiles;
 
+  private:
+    guint _rendering_threads;
+    Glib::Mutex _render_mutex;
+    Glib::Mutex _invalidate_mutex;
+    Glib::Mutex _waiting_for_start_mutex;
+    bool _aborted;
+    bool _invalidate;
+
+    sigc::signal<void> _signal_invalidated;
+
+    static void render_thread(ResultingImage* ri);
+  public:
+
+    void render();
+
+    sigc::signal<void>& signal_invalidated(){return _signal_invalidated;}
+
+  public:
     ResultingImage();
     ~ResultingImage()throw();
   };
 }
+
+guint get_n_cores();

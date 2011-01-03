@@ -17,11 +17,12 @@ Inkscape
 CodeLite
 Gitg
 
-SDKs we use:
+Libraries we use:
 
 gtkmm
 gtkglextmm
 glew
+boost-thread
 
 Disclaimer
 

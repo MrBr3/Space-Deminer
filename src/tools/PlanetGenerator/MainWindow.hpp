@@ -132,6 +132,7 @@ class MainWindow : public Gtk::Window
   void update_statusbar();
 
   void update_render_preview();
+  void invalidate_render_preview();
 
 public:
   MainWindow();
