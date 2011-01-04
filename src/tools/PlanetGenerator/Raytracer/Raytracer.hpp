@@ -21,6 +21,9 @@
 
 #include "./../Model.hpp"
 
+#include <boost/thread/thread.hpp>
+#include <boost/thread/barrier.hpp>
+
 #include "./RaytracerSettings.hpp"
 #include "./Texture.hpp"
 #include "./ResultingImage.hpp"

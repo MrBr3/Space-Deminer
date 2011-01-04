@@ -40,7 +40,7 @@ namespace Raytracer
     return y<t.y;
   }
 
-  ResultingImage::ResultingImage()
+  ResultingImage::ResultingImage() : _waiting_for_start(get_n_cores()+1), _waiting_for_finish(get_n_cores()+1)
   {
     _width  = 64;
     _height  = 64;
@@ -50,6 +50,7 @@ namespace Raytracer
 
     _rendering_threads = 0;
     _invalidate = false;
+    _ui_timer_ready = false;
   }
 
   ResultingImage::~ResultingImage()throw()
@@ -133,13 +134,12 @@ namespace Raytracer
 
       ri->_rendering_threads++;
 
-      if(ri->_rendering_threads==1)
-        ri->_waiting_for_start_mutex.unlock();
-
       const gsize rowstride = ri->get_pixbuf()->get_rowstride();
       guint8* const all_pixels  = ri->get_pixbuf()->get_pixels();
 
     ri->_render_mutex.unlock();
+
+    ri->_waiting_for_start.wait();
 
     while(!ri->_aborted)
     {
@@ -157,15 +157,8 @@ namespace Raytracer
 
       ri->_render_mutex.unlock();
 
-      for(guint y=0; y<tile.h; ++y)
+      for(guint y=0; y<tile.h && !ri->_aborted; ++y)
       {
-        if(y%16==0)
-        {
-          ri->_invalidate_mutex.lock();
-          ri->_invalidate = true;
-          ri->_invalidate_mutex.unlock();
-        }
-
         px  = all_pixels + tile.x*4 + rowstride*(tile.y+y);
 
         for(guint x=0; x<tile.w; ++x, px+=4)
@@ -184,6 +177,7 @@ namespace Raytracer
     ri->_render_mutex.lock();
     ri->_rendering_threads--;
     ri->_render_mutex.unlock();
+    ri->_waiting_for_finish.wait();
   }
 
   void ResultingImage::render()
@@ -191,37 +185,57 @@ namespace Raytracer
     _render_mutex.lock();
 
     _rendering_threads = 0;
+    _ui_timer_ready = false;
     _aborted = false;
 
     _render_mutex.unlock();
 
-    _waiting_for_start_mutex.lock();
-
     for(guint i=0; i<get_n_cores(); ++i)
       Glib::Thread::create(sigc::bind(sigc::ptr_fun(ResultingImage::render_thread), this), false);
 
-    _waiting_for_start_mutex.lock();
-    _waiting_for_start_mutex.unlock();
+    _waiting_for_start.wait();
+
+    think_ui_timer();
 
     while(!_aborted && _rendering_threads!=0)
     {
-      while(Gtk::Main::events_pending())
-      {
-        Gtk::Main::iteration();
-        _aborted |= Process::is_curr_process_aborted();
-
-        if(_invalidate)
-        {
-          _invalidate_mutex.lock();
-          _invalidate = false;
-          _invalidate_mutex.unlock();
-          signal_invalidated();
-        }
-      }
+      Gtk::Main::iteration(false);
     }
 
-    signal_invalidated();
+    _waiting_for_finish.wait();
 
     g_assert(_aborted || _rendering_threads==0);
+
+    while(!_ui_timer_ready)
+    {
+      Gtk::Main::iteration(false);
+    }
+
+    on_invalidated();
+
+  }
+
+  void ResultingImage::think_ui_timer()
+  {
+    Glib::signal_timeout().connect_once(sigc::mem_fun(*this, &ResultingImage::ui_timer_on_think), 250);
+  }
+
+  void ResultingImage::ui_timer_on_think()
+  {
+    if(_rendering_threads==0)
+    {
+      _ui_timer_ready = true;
+      return;
+    }
+
+    _aborted |= Process::is_curr_process_aborted();
+
+    on_invalidated();
+
+    if(_aborted)
+    {
+      _ui_timer_ready = true;
+    }else
+      think_ui_timer();
   }
 }

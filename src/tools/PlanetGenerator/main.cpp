@@ -18,7 +18,6 @@
  */
 
 #include <stdio.h>
-#include <boost/thread/thread.hpp>
 
 #include "./MainWindow.hpp"
 

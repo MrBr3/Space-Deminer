@@ -77,7 +77,7 @@ MainWindow::MainWindow()
         _render_preview_scrollbars.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
         _render_preview_scrollbars.add(_render_preview);
           _render_preview.show();
-          Raytracer::Manager::get_resulting_image().signal_invalidated().connect(sigc::mem_fun(*this, &MainWindow::invalidate_render_preview));
+          Raytracer::Manager::get_resulting_image().on_invalidated = sigc::mem_fun(*this, &MainWindow::invalidate_render_preview);
           Raytracer::Manager::get_resulting_image().signal_new_pixbuf_created().connect(sigc::mem_fun(*this, &MainWindow::update_render_preview));
       _vbox.pack_end(_statusbar, false, false);
       _vbox.pack_end(_statusbar_sep, false, false, LENGTH_SMALLSPACE);

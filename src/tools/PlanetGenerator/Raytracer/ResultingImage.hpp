@@ -56,19 +56,20 @@ namespace Raytracer
   private:
     guint _rendering_threads;
     Glib::Mutex _render_mutex;
-    Glib::Mutex _invalidate_mutex;
-    Glib::Mutex _waiting_for_start_mutex;
+    boost::barrier _waiting_for_start;
+    boost::barrier _waiting_for_finish;
+    bool _ui_timer_ready;
     bool _aborted;
     bool _invalidate;
 
-    sigc::signal<void> _signal_invalidated;
-
     static void render_thread(ResultingImage* ri);
+    void ui_timer_on_think();
+    void think_ui_timer();
   public:
 
     void render();
 
-    sigc::signal<void>& signal_invalidated(){return _signal_invalidated;}
+    sigc::slot<void> on_invalidated;
 
   public:
     ResultingImage();
