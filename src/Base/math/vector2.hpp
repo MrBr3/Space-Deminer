@@ -62,6 +62,9 @@ public:
     y = other.y;
   }
 
+  /**@name Add & Subtract
+   * */
+  //@{
   /** \brief Multiplies each component of the Vector with a.
    *
    * \param a a real number
@@ -77,16 +80,36 @@ public:
 
   Vector2 operator*(gfloat a)const throw(){return Vector2(x*a, y*a);}
 
+  /** \brief Gets the scalar product.
+   * */
+  gfloat operator*(const Vector2& v)const throw(){return v.x*x, v.y*y;}
+  //@}
+
+  /**@name Add & Subtract
+   * */
+  //@{
   Vector2 operator+(const Vector2& v)const throw()
   {
     return Vector2(x+v.x, y+v.y);
   }
 
+  Vector2& operator+=(const Vector2& v)throw()
+  {
+    x += v.x;
+    y += v.y;
+
+    return *this;
+  }
+  //@}
+
+  /**@name Length
+   * */
+  //@{
   /** \brief Gets the length of the vector squared.
    *
    * \return The length of the vector squared
    * */
-  gfloat square_length()const throw()
+  gfloat get_square_length()const throw()
   {
     return x*x + y*y;
   }
@@ -95,9 +118,9 @@ public:
    *
    * \return The length of the vector
    * */
-  gfloat length()const throw()
+  gfloat get_length()const throw()
   {
-    return sqrt(square_length());
+    return sqrt(get_square_length());
   }
 
   /** \brief Sets the Length of the Vector to 1.
@@ -108,7 +131,7 @@ public:
   {
     if(x!=0.f || y!=0.f)
     {
-      gfloat tmp  = length();
+      gfloat tmp  = get_length();
       g_assert(tmp!=0.f);
 
       tmp = 1.f/tmp;
@@ -117,6 +140,7 @@ public:
       y *= tmp;
     }
   }
+  //@}
 };
 
 #endif

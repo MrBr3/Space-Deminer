@@ -67,30 +67,41 @@ public:
     z = other.z;
   }
 
-  Vector3 operator*(gfloat a)const throw(){return Vector3(x*a, y*a, z*a);}
-
+  /** @name Add & Subtract
+   * */
+  //@{
   Vector3 operator+(const Vector3& v)const throw()
   {
     return Vector3(x+v.x, y+v.y, z+v.z);
   }
 
-  /** \brief Gets the length of the vector squared.
-   *
-   * \return The length of the vector squared
-   * */
-  gfloat square_length()const throw()
+  Vector3& operator+=(const Vector3& v)throw()
   {
-    return x*x + y*y + z*z;
+    x += v.x;
+    y += v.y;
+    z += v.z;
+
+    return *this;
+  }
+  Vector3 operator-(const Vector3& v)const throw()
+  {
+    return Vector3(x-v.x, y-v.y, z-v.z);
   }
 
-  /** \brief Gets the length of the vector.
-   *
-   * \return The length of the vector
-   * */
-  gfloat length()const throw()
+  Vector3& operator-=(const Vector3& v)throw()
   {
-    return sqrt(square_length());
+    x -= v.x;
+    y -= v.y;
+    z -= v.z;
+
+    return *this;
   }
+  //@}
+
+  /** @name Products & Quotients
+   * */
+  //@{
+  Vector3 operator*(gfloat a)const throw(){return Vector3(x*a, y*a, z*a);}
 
   /** \brief Multiplies each component of the Vector with a.
    *
@@ -106,6 +117,32 @@ public:
    return *this;
   }
 
+  /** \brief Calcs the Scalar product of this and the second vector
+   * */
+  gfloat operator*(const Vector3& b)const throw(){return x*b.x + y*b.y + z*b.z;}
+  //@}
+
+  /** @name Lengths
+   * */
+  //@{
+  /** \brief Gets the length of the vector squared.
+   *
+   * \return The length of the vector squared
+   * */
+  gfloat get_square_length()const throw()
+  {
+    return x*x + y*y + z*z;
+  }
+
+  /** \brief Gets the length of the vector.
+   *
+   * \return The length of the vector
+   * */
+  gfloat get_length()const throw()
+  {
+    return sqrt(get_square_length());
+  }
+
   /** \brief Sets the Length of the Vector to 1.
    *
    * A vector without length won't be touched.
@@ -114,7 +151,7 @@ public:
   {
     if(x!=0.f || y!=0.f || z!=0.f)
     {
-      gfloat tmp  = length();
+      gfloat tmp  = get_length();
       g_assert(tmp!=0.f);
 
       tmp = 1.f/tmp;
@@ -124,6 +161,7 @@ public:
       z *= tmp;
     }
   }
+  //@}
 };
 
 #endif
