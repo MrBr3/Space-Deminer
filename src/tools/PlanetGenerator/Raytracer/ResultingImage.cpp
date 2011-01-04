@@ -25,11 +25,18 @@ namespace Raytracer
   {
     g_assert(Manager::get_resulting_image().get_pixbuf());
 
-    guint half_width = Manager::get_resulting_image().get_pixbuf()->get_height()>>1;
-    guint half_height = Manager::get_resulting_image().get_pixbuf()->get_height()>>1;
+    gint image_center_x = Manager::get_resulting_image().get_pixbuf()->get_width()>>1;
+    gint image_center_y = Manager::get_resulting_image().get_pixbuf()->get_height()>>1;
+    gint half_tile_width = w>>1;
+    gint half_tile_height = h>>1;
 
-    guint this_d  = abs(x-half_width)*abs(x-half_width) + abs(y-half_height)*abs(y-half_height);
-    guint that_d  = abs(t.x-half_width)*abs(t.x-half_width) + abs(t.y-half_height)*abs(t.y-half_height);
+    gint this_center_x =   x+half_tile_width;
+    gint this_center_y =   y+half_tile_height;
+    gint that_center_x = t.x+half_tile_width;
+    gint that_center_y = t.y+half_tile_height;
+
+    guint this_d  = abs(this_center_x-image_center_x)*abs(this_center_x-image_center_x) + abs(this_center_y-image_center_y)*abs(this_center_y-image_center_y);
+    guint that_d  = abs(that_center_x-image_center_x)*abs(that_center_x-image_center_x) + abs(that_center_y-image_center_y)*abs(that_center_y-image_center_y);
 
     if(this_d!=that_d)
       return this_d<that_d;
@@ -85,6 +92,7 @@ namespace Raytracer
     tiles.clear();
 
     const gint n_tiles_axis = Manager::get_settings().get_n_render_tiles();
+    std::cout<<"n tiles: "<<n_tiles_axis<<"\n";
 
     max_tile_width  = 0;
     max_tile_height  = 0;

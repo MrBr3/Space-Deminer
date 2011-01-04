@@ -126,11 +126,13 @@ MainWindow::MainWindow()
         menu_render_render_view.set_accel_key("F5");
         menu_render_render_view.set_use_underline();
         menu_render_render_view.signal_activate().connect(sigc::bind(sigc::ptr_fun(&Raytracer::Manager::render), true));
+        signal_sensitive_for_changes_changed().connect(SettingsWidget::create_updater<bool, bool>(sigc::mem_fun(*this, &MainWindow::get_sensitive_for_changes), sigc::mem_fun(menu_render_render_view, &MyMenuItem::set_sensitive)));
       menu_render_menu.append(menu_render_render);
         menu_render_render.set_label(_("Render"));
         menu_render_render.set_accel_key("<control>F5");
         menu_render_render.set_use_underline();
         menu_render_render.signal_activate().connect(sigc::bind(sigc::ptr_fun(&Raytracer::Manager::render), false));
+        signal_sensitive_for_changes_changed().connect(SettingsWidget::create_updater<bool, bool>(sigc::mem_fun(*this, &MainWindow::get_sensitive_for_changes), sigc::mem_fun(menu_render_render, &MyMenuItem::set_sensitive)));
       menu_render_menu.append(menu_render_sep1);
       menu_render_menu.append(menu_render_close_preview);
         menu_render_close_preview.set_sensitive(false);

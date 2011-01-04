@@ -57,4 +57,6 @@ template<typename T>inline void exchange(T& a, T&b)
 inline gfloat get_frac_part(gfloat n){gfloat dummy; return modff(n, &dummy);}
 inline gdouble get_frac_part(gdouble n){gdouble dummy; return modf(n, &dummy);}
 
+inline bool XOR(bool a, bool b){return a!=b;}
+
 #endif
