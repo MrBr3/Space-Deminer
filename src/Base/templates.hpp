@@ -43,4 +43,6 @@ public:
   }
 };
 
+#include "vector_creators.hpp"
+
 #endif

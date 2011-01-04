@@ -27,6 +27,7 @@
     <File Name="opengl.hpp"/>
     <File Name="opengl.cpp"/>
     <File Name="macros.hpp"/>
+    <File Name="vector_creators.hpp"/>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>
   <VirtualDirectory Name="external">
