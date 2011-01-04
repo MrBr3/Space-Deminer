@@ -88,6 +88,10 @@ public:
   {
     return append_string_widget(table, n_entries, name, label, tooltip,  getter, setter, signal_changed);
   }
+  Gtk::Widget& append_enum_widget(const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const std::vector<Glib::ustring>& items, const sigc::slot<int>& getter, const sigc::slot<void, int>& setter, sigc::signal<void>& signal_changed)
+  {
+    return append_enum_widget(table, n_entries, name, label, tooltip, items, getter, setter, signal_changed);
+  }
 
   static Gtk::Widget& append_color_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<Gdk::Color>& getter, const sigc::slot<void, const Gdk::Color&>& setter, sigc::signal<void>& signal_changed);
   static Gtk::Widget& append_boolean_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<bool>& getter, const sigc::slot<void, bool>& setter, sigc::signal<void>& signal_changed);
@@ -95,6 +99,7 @@ public:
   static Gtk::Widget& append_imagefile_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const Glib::RefPtr<ImageFile>& imagefile);
   static Gtk::Widget& append_filename_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const Gtk::FileFilter& filter, const sigc::slot<Glib::ustring>& getter, const sigc::slot<void, const Glib::ustring&>& setter, sigc::signal<void>& signal_changed);
   static Gtk::Widget& append_string_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<Glib::ustring>& getter, const sigc::slot<void, const Glib::ustring&>& setter, sigc::signal<void>& signal_changed);
+  static Gtk::Widget& append_enum_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const std::vector<Glib::ustring>& items, const sigc::slot<int>& getter, const sigc::slot<void, int>& setter, sigc::signal<void>& signal_changed);
 public:
   void attach_full_line(Gtk::Widget& w)
   {

@@ -71,9 +71,9 @@ namespace Raytracer
     signal_n_render_tiles_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
     append_int_widget(table_performance, n, "raytrace-render-tiles", _("RenderTiles"), _("The number of render-tiles along one axis used in order to use mutltithreading to fasten redering"), X_GETTER_SETTER_SIGNAL(Settings, n_render_tiles));
 
-    antialiasing  = 8;
+    antialiasing  = 3;
     signal_antialiasing_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
-    append_int_widget(table_performance, n, "raytrace-antialiasing", _("Antialiasing"), _("The amount of Antialiasing"), X_GETTER_SETTER_SIGNAL(Settings, antialiasing));
+    append_enum_widget(table_performance, n, "raytrace-antialiasing", _("Antialiasing"), _("The amount of Antialiasing"), create_vector<Glib::ustring>("1 ray per Pixel", "2 rays per Pixel", "4 rays per Pixel", "8 rays per Pixel"), X_GETTER_SETTER_SIGNAL(Settings, antialiasing));
 
 
     //================
@@ -167,7 +167,7 @@ namespace Raytracer
 
   void Settings::set_antialiasing(int a)
   {
-    antialiasing = 8; // TODO this value shouldn't be ignored
+    antialiasing = a;
 
     signal_antialiasing_changed().emit();
   }

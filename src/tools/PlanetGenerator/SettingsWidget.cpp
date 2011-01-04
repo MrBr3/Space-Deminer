@@ -201,6 +201,96 @@ Gtk::Widget& SettingsWidget::append_int_widget(Gtk::Table& table, guint& n_entri
   return *spin_button;
 }
 
+namespace Private
+{
+  class MyComboBoxText : public Gtk::ComboBox
+  {
+    class MyColumnRecord : public Gtk::TreeModel::ColumnRecord
+    {
+    public:
+      Gtk::TreeModelColumn<Glib::ustring> text;
+
+      MyColumnRecord()
+      {
+        add(text);
+      }
+
+    }columns;
+
+    Glib::RefPtr<Gtk::ListStore> _list_store;
+  public:
+    void set_active_row_number(int i)
+    {
+      g_assert(get_model());
+
+      if(get_active_row_number()==i)
+        return;
+      if(i<0)
+        Gtk::ComboBox::set_active(-1);
+
+      int j=0;
+      for(Gtk::TreeModel::iterator iter=_list_store->children().begin(); iter!=_list_store->children().end(); ++iter)
+      {
+        if(i==j)
+        {
+          set_active(iter);
+          return;
+        }
+
+        ++j;
+      }
+
+      Gtk::ComboBox::set_active(-1);
+    }
+
+    void append_text(const Glib::ustring& txt)
+    {
+      Gtk::TreeModel::iterator iter  = _list_store->append();
+      (*iter)[columns.text] = txt;
+    }
+
+    MyComboBoxText()
+    {
+      _list_store = Gtk::ListStore::create(columns);
+      set_model(_list_store);
+
+      pack_start(columns.text);
+    }
+  };
+}
+
+using Private::MyComboBoxText;
+
+Gtk::Widget& SettingsWidget::append_enum_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const std::vector<Glib::ustring>& items, const sigc::slot<int>& getter, const sigc::slot<void, int>& setter, sigc::signal<void>& signal_changed)
+{
+  Gtk::Label* wlabel  = Gtk::manage(new Gtk::Label(label));
+  MyComboBoxText* cb_text  = Gtk::manage(new MyComboBoxText());
+
+  wlabel->set_alignment(0., 0.5);
+  wlabel->show();
+
+  sigc::slot<int> w_getter = sigc::mem_fun(*cb_text, &MyComboBoxText::get_active_row_number);
+  sigc::slot<void, int> w_setter = sigc::mem_fun(*cb_text, &MyComboBoxText::set_active_row_number);
+
+  for(std::vector<Glib::ustring>::const_iterator i = items.begin(); i!=items.end(); ++i)
+  {
+    cb_text->append_text(*i);
+  }
+
+  w_setter(getter());
+
+  cb_text->show();
+  cb_text->set_tooltip_text(tooltip);
+  cb_text->signal_changed().connect(create_updater(w_getter, setter));
+  signal_changed.connect(create_updater(getter, w_setter));
+
+  table.attach(*wlabel, 0, 1, n_entries, n_entries+1, Gtk::FILL, Gtk::FILL);
+  table.attach(*cb_text, 1, 2, n_entries, n_entries+1, Gtk::EXPAND|Gtk::FILL, Gtk::FILL);
+  ++n_entries;
+
+  return *cb_text;
+}
+
 Gtk::Widget& SettingsWidget::append_imagefile_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const Glib::RefPtr<ImageFile>& imagefile)
 {
   ImageFileSettings* image_file_widget  = Gtk::manage(new ImageFileSettings(imagefile, name, label, tooltip));
