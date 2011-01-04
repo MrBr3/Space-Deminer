@@ -55,6 +55,7 @@ namespace Raytracer
 
   private:
     guint _rendering_threads;
+    guint _rendered_tiles;
     Glib::Mutex _render_mutex;
     boost::barrier _waiting_for_start;
     boost::barrier _waiting_for_finish;

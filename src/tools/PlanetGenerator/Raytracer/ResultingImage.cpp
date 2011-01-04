@@ -56,6 +56,7 @@ namespace Raytracer
     max_tile_height  = 0;
 
     _rendering_threads = 0;
+    _rendered_tiles = 0;
     _invalidate = false;
     _ui_timer_ready = false;
   }
@@ -84,7 +85,7 @@ namespace Raytracer
     {
       _pixbuf.reset();
       _pixbuf = Gdk::Pixbuf::create(Gdk::COLORSPACE_RGB, true, 8, get_width(), get_height());
-      _pixbuf->fill(0x000000ff);
+      _pixbuf->fill(0x00000000);
 
       signal_new_pixbuf_created().emit();
     }
@@ -92,7 +93,6 @@ namespace Raytracer
     tiles.clear();
 
     const gint n_tiles_axis = Manager::get_settings().get_n_render_tiles();
-    std::cout<<"n tiles: "<<n_tiles_axis<<"\n";
 
     max_tile_width  = 0;
     max_tile_height  = 0;
@@ -163,6 +163,8 @@ namespace Raytracer
 
         guint8* px  = all_pixels + tile.x*4 + rowstride*tile.y;
 
+       ri->_rendered_tiles++;
+
       ri->_render_mutex.unlock();
 
       for(guint y=0; y<tile.h && !ri->_aborted; ++y)
@@ -171,11 +173,10 @@ namespace Raytracer
 
         for(guint x=0; x<tile.w; ++x, px+=4)
         {
-
           px[0] = 255;
           px[1] = 64;
           px[2] = 16;
-          px[3] = 0;
+          px[3] = 255;
 
           Glib::usleep(50);
         }
@@ -193,6 +194,7 @@ namespace Raytracer
     _render_mutex.lock();
 
     _rendering_threads = 0;
+    _rendered_tiles = 0;
     _ui_timer_ready = false;
     _aborted = false;
 
@@ -235,6 +237,14 @@ namespace Raytracer
       _ui_timer_ready = true;
       return;
     }
+
+    _render_mutex.lock();
+      while(_rendered_tiles>0)
+      {
+        _rendered_tiles--;
+        Process::processing_step_done(Process::PROCESS_RENDER);
+      }
+    _render_mutex.unlock();
 
     _aborted |= Process::is_curr_process_aborted();
 

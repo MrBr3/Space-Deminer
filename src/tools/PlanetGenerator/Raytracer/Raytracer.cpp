@@ -180,7 +180,7 @@ namespace Raytracer
 
   void Manager::render(bool preview)
   {
-    Process::PushProcess pp("Rendering", true, Process::PROCESS_RENDER, 0*0, true);
+    Process::PushProcess pp("Rendering", true, Process::PROCESS_RENDER, get_settings().get_n_render_tiles()*get_settings().get_n_render_tiles(), true);
 
     if(get_singletonA()->prepare_textures())
     {
