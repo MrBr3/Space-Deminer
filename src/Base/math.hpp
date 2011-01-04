@@ -24,6 +24,8 @@
 
 #include <math.h>
 
+#include "./dependencies.hpp"
+
 #include "./math/vector2.hpp"
 #include "./math/vector3.hpp"
 

@@ -32,6 +32,16 @@ public:
     z = z_;
   }
 
+   /** \brief Does nothing (use it only for performance reasons)
+    *
+    * The values of <tt>x</tt>, <tt>y</tt>, <tt>z</tt> are unkown.
+    *
+    * \param  di pass <tt>DONT_INIT</tt>
+    * */
+  Vector3(DontInit di)throw()
+  {
+  }
+
   /** \brief Constructor setting all components to 0
    * */
   Vector3()throw()
@@ -120,6 +130,26 @@ public:
   /** \brief Calcs the Scalar product of this and the second vector
    * */
   gfloat operator*(const Vector3& b)const throw(){return x*b.x + y*b.y + z*b.z;}
+
+  /** \brief Sets vector to represent the cross product with another vector
+   * */
+   Vector3& set_cross(const Vector3& v)throw()
+   {
+     x  = y*v.z - z*v.y;
+     y  = x*v.z - z*v.x;
+     z  = x*v.y - y*v.x;
+
+     return *this;
+   }
+
+  /** \brief Calcs a vector representing the cross product with another vector
+   * */
+   Vector3 cross(const Vector3& b)const throw()
+   {
+     Vector3 v  = *this;
+     v.set_cross(b);
+     return v;
+   }
   //@}
 
   /** @name Lengths

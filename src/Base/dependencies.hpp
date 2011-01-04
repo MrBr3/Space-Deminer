@@ -82,4 +82,6 @@ public:
   ~BadEnum()throw(){}
 };
 
+enum DontInit{DONT_INIT};
+
 #endif

@@ -31,6 +31,16 @@ public:
     y = y_;
   }
 
+   /** \brief Does nothing (use it only for performance reasons)
+    *
+    * The values of <tt>x</tt>, <tt>y</tt> are unkown.
+    *
+    * \param  di pass <tt>DONT_INIT</tt>
+    * */
+  Vector2(DontInit di)throw()
+  {
+  }
+
   /** \brief Constructor setting all components to 0
    * */
   Vector2() throw()
@@ -62,7 +72,7 @@ public:
     y = other.y;
   }
 
-  /**@name Add & Subtract
+  /**@name Products & Quotients
    * */
   //@{
   /** \brief Multiplies each component of the Vector with a.
@@ -83,6 +93,25 @@ public:
   /** \brief Gets the scalar product.
    * */
   gfloat operator*(const Vector2& v)const throw(){return v.x*x, v.y*y;}
+
+  /** \brief Sets vector to represent the cross product with another vector
+   * */
+   Vector2& set_cross(const Vector2& v)throw()
+   {
+     x  = y;
+     y  =-x;
+
+     return *this;
+   }
+
+  /** \brief Calcs a vector representing the cross product with another vector
+   * */
+   Vector2 cross(const Vector2& b)const throw()
+   {
+     Vector2 v  = *this;
+     v.set_cross(b);
+     return v;
+   }
   //@}
 
   /**@name Add & Subtract
