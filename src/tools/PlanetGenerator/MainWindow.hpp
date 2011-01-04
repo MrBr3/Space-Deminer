@@ -69,6 +69,14 @@ class MainWindow : public Gtk::Window
     }
   };
 
+  class RenderResultView : public Gtk::DrawingArea
+  {
+  public:
+    bool on_expose_event(GdkEventExpose* e);
+    void pixbuf_object_changed();
+    RenderResultView();
+  };
+
   MyMenuItem menu_file;
   Gtk::Menu  menu_file_menu;
     MyMenuItem menu_file_export;
@@ -92,6 +100,7 @@ class MainWindow : public Gtk::Window
     MyCheckMenuItem menu_view_show_sidebar;
     MyCheckMenuItem menu_view_wireframed;
     MyMenuItem menu_view_settings;
+
   Gtk::VBox _vbox;
     Gtk::MenuBar _menu_bar;
     Gtk::HPaned _hpaned;
@@ -101,7 +110,7 @@ class MainWindow : public Gtk::Window
         Gtk::VBox _settings;
           int last_settings_size_request;
     Gtk::ScrolledWindow _render_preview_scrollbars;
-      Gtk::Image _render_preview;
+      RenderResultView _render_preview;
     Gtk::HSeparator _statusbar_sep;
     Gtk::HBox _statusbar;
       Gtk::Label _status_label;
@@ -131,7 +140,6 @@ class MainWindow : public Gtk::Window
   void on_show();
   void update_statusbar();
 
-  void update_render_preview();
   void invalidate_render_preview();
 
 public:

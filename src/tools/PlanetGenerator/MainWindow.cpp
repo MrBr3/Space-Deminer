@@ -78,7 +78,7 @@ MainWindow::MainWindow()
         _render_preview_scrollbars.add(_render_preview);
           _render_preview.show();
           Raytracer::Manager::get_resulting_image().on_invalidated = sigc::mem_fun(*this, &MainWindow::invalidate_render_preview);
-          Raytracer::Manager::get_resulting_image().signal_new_pixbuf_created().connect(sigc::mem_fun(*this, &MainWindow::update_render_preview));
+          Raytracer::Manager::get_resulting_image().signal_new_pixbuf_created().connect(sigc::mem_fun(_render_preview, &RenderResultView::pixbuf_object_changed));
       _vbox.pack_end(_statusbar, false, false);
       _vbox.pack_end(_statusbar_sep, false, false, LENGTH_SMALLSPACE);
         _statusbar_sep.show();
@@ -228,17 +228,52 @@ void MainWindow::update_statusbar()
   }
 }
 
+MainWindow::RenderResultView::RenderResultView()
+{
+}
+
+void MainWindow::RenderResultView::pixbuf_object_changed()
+{
+  Glib::RefPtr<Gdk::Pixbuf> pb  = Raytracer::Manager::get_resulting_image().get_pixbuf();
+
+  if(!pb)
+    return;
+
+  set_size_request(pb->get_width(), pb->get_height());
+}
+
+bool MainWindow::RenderResultView::on_expose_event(GdkEventExpose* e)
+{
+  g_assert(e);
+
+  Glib::RefPtr<Gdk::Window> window  = get_window();
+  Glib::RefPtr<Gdk::Pixbuf> pb  = Raytracer::Manager::get_resulting_image().get_pixbuf();
+
+  if(window)
+  {
+    Glib::RefPtr<Gdk::GC> gc = Gdk::GC::create(window);
+    Gdk::Color black("000000");
+
+    gc->set_foreground(black);
+    if(pb)
+    {
+      window->draw_rectangle(gc, true, 0, 0, pb->get_width(), pb->get_height());
+      window->draw_pixbuf(gc, pb, 0, 0, 0, 0, pb->get_width(), pb->get_height(), Gdk::RGB_DITHER_NONE, 0, 0);
+    }else
+    {
+      window->draw_rectangle(gc, true, 0, 0, get_width(), get_height());
+    }
+  }
+
+  return true;
+}
+
 void MainWindow::invalidate_render_preview()
 {
   Glib::RefPtr<Gdk::Window> w = _render_preview.get_window();
 
   if(w)
     w->invalidate(false);
-}
-
-void MainWindow::update_render_preview()
-{
-  _render_preview.set(Raytracer::Manager::get_resulting_image().get_pixbuf());
 }
 
 void MainWindow::adapt_settings_size_request(Gtk::Requisition* r)

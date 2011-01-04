@@ -88,6 +88,9 @@ namespace Raytracer
       _pixbuf->fill(0x00000000);
 
       signal_new_pixbuf_created().emit();
+    }else
+    {
+      _pixbuf->fill(0x00000000);
     }
 
     tiles.clear();
@@ -144,6 +147,7 @@ namespace Raytracer
 
       const gsize rowstride = ri->get_pixbuf()->get_rowstride();
       guint8* const all_pixels  = ri->get_pixbuf()->get_pixels();
+      bool first_tile = true;
 
     ri->_render_mutex.unlock();
 
@@ -163,7 +167,13 @@ namespace Raytracer
 
         guint8* px  = all_pixels + tile.x*4 + rowstride*tile.y;
 
-       ri->_rendered_tiles++;
+       if(first_tile)
+       {
+         first_tile = false;
+       }else
+       {
+         ri->_rendered_tiles++;
+       }
 
       ri->_render_mutex.unlock();
 
