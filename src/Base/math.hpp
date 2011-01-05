@@ -28,6 +28,7 @@
 
 #include "./math/Vector2.hpp"
 #include "./math/Vector3.hpp"
+#include "./math/Matrix44.hpp"
 #include "./math/ColorRGBA.hpp"
 
 #define PI2 (G_PI*2.0)

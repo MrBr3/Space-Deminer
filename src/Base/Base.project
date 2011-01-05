@@ -24,6 +24,7 @@
       <File Name="math/ColorRGBA.hpp"/>
       <File Name="math/Vector2.hpp"/>
       <File Name="math/Vector3.hpp"/>
+      <File Name="math/Matrix44.hpp"/>
     </VirtualDirectory>
     <File Name="opengl.hpp"/>
     <File Name="opengl.cpp"/>
