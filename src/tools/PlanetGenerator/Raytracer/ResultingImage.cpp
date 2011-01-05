@@ -44,9 +44,9 @@ namespace Raytracer
       return this_d<that_d;
 
     if(x==t.x)
-      return x<t.x;
+      return y<t.y;
 
-    return y<t.y;
+    return x<t.x;
   }
 
   ResultingImage::ResultingImage() : _waiting_for_start(get_n_cores()+1), _waiting_for_finish(get_n_cores()+1)
