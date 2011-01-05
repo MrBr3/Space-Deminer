@@ -70,6 +70,7 @@
       <File Name="Raytracer/Texture.hpp"/>
       <File Name="Raytracer/ResultingImage.cpp"/>
       <File Name="Raytracer/ResultingImage.hpp"/>
+      <File Name="Raytracer/CalcPixelColor.cpp"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug">

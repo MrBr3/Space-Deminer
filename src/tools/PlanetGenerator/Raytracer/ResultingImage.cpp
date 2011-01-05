@@ -21,6 +21,8 @@
 
 namespace Raytracer
 {
+  void calc_pixel_color(ColorRGBA& resulting_color, gfloat x, gfloat y);
+
   bool ResultingImage::Tile::operator<(const Tile& t)const
   {
     g_assert(Manager::get_resulting_image().get_pixbuf());
@@ -151,6 +153,10 @@ namespace Raytracer
 
     ri->_render_mutex.unlock();
 
+    gfloat inv_width  = 1.f/gfloat(ri->_width);
+    gfloat inv_height = 1.f/gfloat(ri->_height);
+    ColorRGBA col(DONT_INIT);
+
     ri->_waiting_for_start.wait();
 
     while(!ri->_aborted)
@@ -183,10 +189,9 @@ namespace Raytracer
 
         for(guint x=0; x<tile.w; ++x, px+=4)
         {
-          px[0] = 255;
-          px[1] = 64;
-          px[2] = 16;
-          px[3] = 255;
+          calc_pixel_color(col, gfloat(x+tile.x)*inv_width, gfloat(y+tile.y)*inv_height);
+
+          col.fill(px);
 
           Glib::usleep(50);
         }
