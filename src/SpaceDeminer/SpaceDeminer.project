@@ -112,15 +112,25 @@
     <Project Name="Base"/>
   </Dependencies>
   <Settings Type="Executable">
+    <GlobalSettings>
+      <Compiler Options="$$(pkg-config --cflags gtkmm-2.4 --cflags gtkglextmm-1.2)" C_Options="$$(pkg-config --cflags gtkmm-2.4 --cflags gtkglextmm-1.2)">
+        <IncludePath Value="./src"/>
+        <IncludePath Value="./../include"/>
+      </Compiler>
+      <Linker Options="$$(pkg-config --libs gtkmm-2.4 --libs gtkglextmm-1.2) -lbase">
+        <LibraryPath Value="."/>
+      </Linker>
+      <ResourceCompiler Options=""/>
+    </GlobalSettings>
     <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="-g -DNDEBUG" Required="yes" PreCompiledHeader="">
+      <Compiler Options="-g -DNDEBUG -std=c++0x" C_Options="-g -DNDEBUG" Required="yes" PreCompiledHeader="">
         <IncludePath Value="."/>
       </Compiler>
       <Linker Options="" Required="yes">
         <LibraryPath Value="./../../lib-d"/>
       </Linker>
       <ResourceCompiler Options="" Required="no"/>
-      <General OutputFile="./../../bin-d/space-deminer" IntermediateDirectory="./../../obj-d/space-deminer" Command="./../../bin-d/space-deminer" CommandArguments="-ovideo-fullscreen=false" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
+      <General OutputFile="./../../bin-d/space-deminer" IntermediateDirectory="./../../obj-d/space-deminer" Command="./../../bin-d/space-deminer" CommandArguments="-ovideo-fullscreen=false" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;"/>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
         <PostConnectCommands/>
@@ -144,14 +154,14 @@
       </AdditionalRules>
     </Configuration>
     <Configuration Name="Release" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="" Required="yes" PreCompiledHeader="">
+      <Compiler Options="" C_Options="" Required="yes" PreCompiledHeader="">
         <IncludePath Value="."/>
       </Compiler>
       <Linker Options="-O2" Required="yes">
         <LibraryPath Value="./../../lib"/>
       </Linker>
       <ResourceCompiler Options="" Required="no"/>
-      <General OutputFile="./../../bin/space-deminer" IntermediateDirectory="./../../obj/space-deminer" Command="./../../bin/space-deminer" CommandArguments="-ovideo-fullscreen=true" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
+      <General OutputFile="./../../bin/space-deminer" IntermediateDirectory="./../../obj/space-deminer" Command="./../../bin/space-deminer" CommandArguments="-ovideo-fullscreen=true" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;"/>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
         <PostConnectCommands/>
@@ -174,15 +184,5 @@
         <CustomPreBuild/>
       </AdditionalRules>
     </Configuration>
-    <GlobalSettings>
-      <Compiler Options="$$(pkg-config --cflags gtkmm-2.4 --cflags gtkglextmm-1.2)">
-        <IncludePath Value="./src"/>
-        <IncludePath Value="./../include"/>
-      </Compiler>
-      <Linker Options="$$(pkg-config --libs gtkmm-2.4 --libs gtkglextmm-1.2) -lbase">
-        <LibraryPath Value="."/>
-      </Linker>
-      <ResourceCompiler Options=""/>
-    </GlobalSettings>
   </Settings>
 </CodeLite_Project>
