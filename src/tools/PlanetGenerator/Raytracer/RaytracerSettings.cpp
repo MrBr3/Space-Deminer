@@ -68,6 +68,10 @@ namespace Raytracer
     signal_overwrite_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
     append_boolean_widget(table_dest_file, n, "raytrace-overwrite", _("Overwrite"), _("If set, a possibly existing file will be overwritten withour asking"), X_GETTER_SETTER_SIGNAL(Settings, overwrite));
 
+    clear_before_rendering = true;
+    signal_clear_before_rendering_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
+    append_boolean_widget(table_dest_file, n, "raytrace-clear-before-rendering", _("ClearBeforeRendering"), _("If not set you can see how the old image disappears behind the new one.\nThis option has no influence on the result."), X_GETTER_SETTER_SIGNAL(Settings, clear_before_rendering));
+
     //================
     n=0;
 
@@ -181,6 +185,13 @@ namespace Raytracer
     antialiasing = a;
 
     signal_antialiasing_changed().emit();
+  }
+
+  void Settings::set_clear_before_rendering(bool c)
+  {
+    clear_before_rendering = c;
+
+    signal_clear_before_rendering_changed().emit();
   }
 
   //============

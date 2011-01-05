@@ -90,7 +90,7 @@ namespace Raytracer
       _pixbuf->fill(0x00000000);
 
       signal_new_pixbuf_created().emit();
-    }else
+    }else if(Manager::get_settings().get_clear_before_rendering())
     {
       _pixbuf->fill(0x00000000);
     }
