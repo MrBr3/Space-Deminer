@@ -56,6 +56,10 @@ namespace Raytracer
     signal_height_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
     append_int_widget(table_dest_file, n, "raytrace-height", _("Height"), _("The height of the resulting image"), X_GETTER_SETTER_SIGNAL(Settings, height));
 
+    dithering = true;
+    signal_dithering_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
+    append_boolean_widget(table_dest_file, n, "raytrace-dithering", _("Use Dithering"), _("If set, the resulting image will be dithered"), X_GETTER_SETTER_SIGNAL(Settings, dithering));
+
     dest_file = "~/Desktop/planet.png";
     signal_dest_file_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
     append_string_widget(table_dest_file, n, "raytrace-dest-file", _("Dest. File"), _("The filename, the image will be saved, to\n\n")+get_filename_macros_description(), X_GETTER_SETTER_SIGNAL(Settings, dest_file));
@@ -140,6 +144,13 @@ namespace Raytracer
     height = correct_image_size(h);
 
     signal_height_changed().emit();
+  }
+
+  void Settings::set_dithering(bool d)
+  {
+    dithering = d;
+
+    signal_dithering_changed().emit();
   }
 
   void Settings::set_dest_file(const Glib::ustring& df)

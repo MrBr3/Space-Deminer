@@ -31,6 +31,7 @@ namespace Raytracer
   private:
     INTEGER_SETTING(width)
     INTEGER_SETTING(height)
+    BOOLEAN_SETTING(dithering)
     STRING_SETTING(dest_file)
     BOOLEAN_SETTING(overwrite)
 

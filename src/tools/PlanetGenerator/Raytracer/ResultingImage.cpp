@@ -157,6 +157,24 @@ namespace Raytracer
     gfloat inv_height = 1.f/gfloat(ri->_height);
     ColorRGBA col(DONT_INIT);
 
+    struct DitherHelper
+    {
+      ColorRGBA* line;
+      ColorRGBA se;
+
+      DitherHelper() : line(nullptr)
+      {
+      }
+
+      ~DitherHelper()
+      {
+        delete[] line;
+      }
+    }dh;
+
+    if(Manager::get_settings().get_dithering())
+      dh.line = new ColorRGBA[ri->max_tile_width+2];
+
     ri->_waiting_for_start.wait();
 
     while(!ri->_aborted)
@@ -191,7 +209,25 @@ namespace Raytracer
         {
           calc_pixel_color(col, gfloat(x+tile.x)*inv_width, gfloat(y+tile.y)*inv_height);
 
-          col.fill(px);
+          if(dh.line)
+          {
+            ColorRGBA temp = dh.se;
+
+            dh.se.set();
+
+            col.fill_dithered(px,
+                              dh.line[1+x], // current pixel
+                              dh.line[2+x], // eastern pixel
+                              dh.se,           // southeaster pixel
+                              dh.line[1+x], // southern pixel
+                              dh.line[x]);  // southwest pixel
+
+            dh.line[1+x].r  += temp.r;
+            dh.line[1+x].g  += temp.g;
+            dh.line[1+x].b  += temp.b;
+            dh.line[1+x].a  += temp.a;
+          }else
+            col.fill(px);
 
           Glib::usleep(50);
         }
