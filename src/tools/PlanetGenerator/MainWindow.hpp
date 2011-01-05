@@ -114,6 +114,7 @@ class MainWindow : public Gtk::Window
       RenderResultView _render_preview;
     Gtk::HSeparator _statusbar_sep;
     Gtk::HBox _statusbar;
+      int last_statusbar_size_request;
       Gtk::Label _status_label;
       Gtk::ProgressBar _status_progressbar;
       Gtk::Button _status_abortbutton;
@@ -135,6 +136,7 @@ class MainWindow : public Gtk::Window
 
   void _adapt_show_sidebar();
 
+  void adapt_statusbar_size_request(Gtk::Requisition*);
   void adapt_settings_size_request(Gtk::Requisition*);
 
   void on_realize();

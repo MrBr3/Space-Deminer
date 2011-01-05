@@ -83,6 +83,8 @@ MainWindow::MainWindow()
       _vbox.pack_end(_statusbar_sep, false, false, LENGTH_SMALLSPACE);
         _statusbar_sep.show();
         _statusbar.show();
+          last_statusbar_size_request  = 0;
+          _statusbar.signal_size_request().connect(sigc::mem_fun(*this, &MainWindow::adapt_statusbar_size_request));
           _statusbar.set_spacing(LENGTH_BORDER_WIDTH);
           _statusbar.pack_start(_status_label, false, false);
           _statusbar.pack_start(_status_progressbar);
@@ -298,6 +300,11 @@ void MainWindow::invalidate_render_preview()
 
   if(w)
     w->invalidate(false);
+}
+
+void MainWindow::adapt_statusbar_size_request(Gtk::Requisition* r)
+{
+  r->height  = last_statusbar_size_request = MAX(r->height, last_statusbar_size_request);
 }
 
 void MainWindow::adapt_settings_size_request(Gtk::Requisition* r)
