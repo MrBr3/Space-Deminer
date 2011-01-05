@@ -196,6 +196,13 @@ void MainWindow::on_show()
   Gtk::Window::on_show();
 }
 
+void MainWindow::get_render_view_size(guint& width, guint& height)
+{
+  g_assert(this);
+  width = _render_preview_scrollbars.get_child()->get_width();
+  height = _render_preview_scrollbars.get_child()->get_height();
+}
+
 void MainWindow::update_statusbar()
 {
   Process::State state;
@@ -232,14 +239,29 @@ MainWindow::RenderResultView::RenderResultView()
 {
 }
 
+void MainWindow::prepare_render(bool viewer_size)
+{
+  if(viewer_size)
+  {
+    _render_preview_scrollbars.set_policy(Gtk::POLICY_NEVER, Gtk::POLICY_NEVER);
+    _render_preview.set_size_request(-1, -1);
+
+  }else
+  {
+    _render_preview_scrollbars.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+    _render_preview.set_size_request(Raytracer::Manager::get_settings().get_width(), Raytracer::Manager::get_settings().get_height());
+  }
+
+  while(Gtk::Main::events_pending())
+    Gtk::Main::iteration();
+}
+
 void MainWindow::RenderResultView::pixbuf_object_changed()
 {
   Glib::RefPtr<Gdk::Pixbuf> pb  = Raytracer::Manager::get_resulting_image().get_pixbuf();
 
   if(!pb)
     return;
-
-  set_size_request(pb->get_width(), pb->get_height());
 }
 
 bool MainWindow::RenderResultView::on_expose_event(GdkEventExpose* e)
@@ -257,8 +279,10 @@ bool MainWindow::RenderResultView::on_expose_event(GdkEventExpose* e)
     gc->set_foreground(black);
     if(pb)
     {
-      window->draw_rectangle(gc, true, 0, 0, pb->get_width(), pb->get_height());
-      window->draw_pixbuf(gc, pb, 0, 0, 0, 0, pb->get_width(), pb->get_height(), Gdk::RGB_DITHER_NONE, 0, 0);
+      int w = MIN(get_width(), pb->get_width());
+      int h = MIN(get_height(), pb->get_height());
+      window->draw_rectangle(gc, true, 0, 0, w, h);
+      window->draw_pixbuf(gc, pb, 0, 0, 0, 0, w, h, Gdk::RGB_DITHER_NONE, 0, 0);
     }else
     {
       window->draw_rectangle(gc, true, 0, 0, get_width(), get_height());

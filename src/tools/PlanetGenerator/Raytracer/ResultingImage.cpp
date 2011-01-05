@@ -71,6 +71,7 @@ namespace Raytracer
   {
     Process::PushProcess pp("Preparing pixelbuffer", true, Process::PROCESS_RENDER, 0, true);
 
+    main_window->prepare_render(preview);
     if(preview)
     {
       main_window->get_render_view_size(_width, _height);

@@ -72,6 +72,7 @@ class MainWindow : public Gtk::Window
   class RenderResultView : public Gtk::DrawingArea
   {
   public:
+    void prepare_render_in_viewer_size();
     bool on_expose_event(GdkEventExpose* e);
     void pixbuf_object_changed();
     RenderResultView();
@@ -146,12 +147,8 @@ public:
   MainWindow();
   ~MainWindow()throw();
 
-  void get_render_view_size(guint& width, guint& height)
-  {
-    g_assert(this);
-    width = _render_preview.get_width();
-    height = _render_preview.get_height();
-  }
+  void get_render_view_size(guint& width, guint& height);
+  void prepare_render(bool viewer_size);
 
   bool get_sensitive_for_changes()const
   {
