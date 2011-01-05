@@ -21,8 +21,9 @@
     <File Name="strings.hpp"/>
     <File Name="templates.hpp"/>
     <VirtualDirectory Name="math">
-      <File Name="math/vector3.hpp"/>
-      <File Name="math/vector2.hpp"/>
+      <File Name="math/ColorRGBA.hpp"/>
+      <File Name="math/Vector2.hpp"/>
+      <File Name="math/Vector3.hpp"/>
     </VirtualDirectory>
     <File Name="opengl.hpp"/>
     <File Name="opengl.cpp"/>
