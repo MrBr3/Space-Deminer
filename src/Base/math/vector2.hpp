@@ -81,37 +81,44 @@ public:
    *
    * \return A reference to the Vector
    * */
-   Vector2& operator*=(gfloat a) throw()
-   {
-     x  *= a;
-     y  *= a;
-     return *this;
-   }
+  Vector2& operator*=(gfloat a) throw()
+  {
+   x  *= a;
+   y  *= a;
+   return *this;
+  }
 
   Vector2 operator*(gfloat a)const throw(){return Vector2(x*a, y*a);}
 
   /** \brief Gets the scalar product.
    * */
   gfloat operator*(const Vector2& v)const throw(){return v.x*x, v.y*y;}
+  //@}
 
-  /** \brief Sets vector to represent the cross product with another vector
+  /**@name Mapping
    * */
-   Vector2& set_cross(const Vector2& v)throw()
-   {
-     x  = y;
-     y  =-x;
-
-     return *this;
-   }
-
-  /** \brief Calcs a vector representing the cross product with another vector
+  //@{
+  /** \brief Rotates the Vector clock-wise about 90 degrees
    * */
-   Vector2 cross(const Vector2& b)const throw()
-   {
-     Vector2 v  = *this;
-     v.set_cross(b);
-     return v;
-   }
+  Vector2& rotate_90_cw()throw()
+  {
+    gfloat _x_  = x;
+    x =  y;
+    y =-_x_;
+
+   return *this;
+  }
+
+  /** \brief Rotates the Vector counter-clock-wise about 90 degrees
+   * */
+  Vector2& rotate_90_ccw()throw()
+  {
+    gfloat _x_  = x;
+    x = -y;
+    y = _x_;
+
+   return *this;
+  }
   //@}
 
   /**@name Add & Subtract
@@ -168,6 +175,15 @@ public:
       x *= tmp;
       y *= tmp;
     }
+  }
+  //@}
+
+  /** @name Debugging
+   * */
+  //@{
+  operator const char*()const
+  {
+    return Glib::ustring::compose("(%1, %2)", x, y).c_str();
   }
   //@}
 };

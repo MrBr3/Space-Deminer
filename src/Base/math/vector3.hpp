@@ -51,6 +51,13 @@ public:
     z = 0.f;
   }
 
+  Vector3(const Vector2& other)throw()
+  {
+    x = other.x;
+    y = other.y;
+    z = 0.f;
+  }
+
   Vector3(const Vector3& other)throw()
   {
     x = other.x;
@@ -68,6 +75,13 @@ public:
     x = x_;
     y = y_;
     z = z_;
+  }
+
+  void set(const Vector2& other)throw()
+  {
+    x = other.x;
+    y = other.y;
+    z = 0.f;
   }
 
   void set(const Vector3& other)throw()
@@ -131,16 +145,19 @@ public:
    * */
   gfloat operator*(const Vector3& b)const throw(){return x*b.x + y*b.y + z*b.z;}
 
-  /** \brief Sets vector to represent the cross product with another vector
+  /** \brief Sets vector to represent the cross product with another vector   *
    * */
-   Vector3& set_cross(const Vector3& v)throw()
-   {
-     x  = y*v.z - z*v.y;
-     y  = x*v.z - z*v.x;
-     z  = x*v.y - y*v.x;
+  Vector3& set_cross(const Vector3& v)throw()
+  {
+    gfloat _x  = x;
+    gfloat _y  = y;
 
-     return *this;
-   }
+    x  =  y*v.z -  z*v.y;
+    y  =  z*v.x - _x*v.z;
+    z  = _x*v.y - _y*v.x;
+
+    return *this;
+  }
 
   /** \brief Calcs a vector representing the cross product with another vector
    * */
@@ -150,6 +167,13 @@ public:
      v.set_cross(b);
      return v;
    }
+
+  /** \brief Calcs a vector representing the cross product with another vector
+   * */
+  friend Vector3 cross(const Vector3& a, const Vector3& b)throw()
+  {
+    return a.cross(b);
+  }
   //@}
 
   /** @name Lengths
@@ -190,6 +214,15 @@ public:
       y *= tmp;
       z *= tmp;
     }
+  }
+  //@}
+
+  /** @name Debugging
+   * */
+  //@{
+  operator const char*()const
+  {
+    return Glib::ustring::compose("(%1, %2, %3)", x, y, z).c_str();
   }
   //@}
 };

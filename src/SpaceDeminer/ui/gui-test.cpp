@@ -22,24 +22,20 @@
 
 const Gdk::Rectangle* dummy_r=nullptr;
 
-class GUITest : public Framework::Window
-{
+class GUITest : public Framework::Window {
 public:
-  enum AbortTests{ABORT_TESTS, USER_ABORTS_TESTS};
+  enum AbortTests {ABORT_TESTS, USER_ABORTS_TESTS};
 
-  void on_expose(EventExpose& paint_tool)
-  {
+  void on_expose(EventExpose& paint_tool) {
     paint_tool.draw_color_rect(0.f, 0.f, 800.f, 600.f, MenuFrame::get_back_color_r(), MenuFrame::get_back_color_g(), MenuFrame::get_back_color_b());
 
     Framework::Window::on_expose(paint_tool);
   }
 
-  GUITest()
-  {
+  GUITest() {
   }
 
-  static void update_arrowtype(Gtk::Arrow* arrow, const Gtk::ToggleButton* left_tbutton)
-  {
+  static void update_arrowtype(Gtk::Arrow* arrow, const Gtk::ToggleButton* left_tbutton) {
     g_assert(left_tbutton);
     g_assert(arrow);
 
@@ -48,15 +44,13 @@ public:
     else
       arrow->set(Gtk::ARROW_RIGHT, Gtk::SHADOW_IN);
   }
-  static void update_dependent_togglebutton(const Gtk::ToggleButton* self_tbutton, Gtk::ToggleButton* other_tbutton)
-  {
+  static void update_dependent_togglebutton(const Gtk::ToggleButton* self_tbutton, Gtk::ToggleButton* other_tbutton) {
     g_assert(self_tbutton);
     g_assert(other_tbutton);
 
     other_tbutton->set_active(!self_tbutton->get_active());
   }
-  static void set_image(Gtk::Image* img, Glib::RefPtr<Gdk::Pixbuf>& pb)
-  {
+  static void set_image(Gtk::Image* img, Glib::RefPtr<Gdk::Pixbuf>& pb) {
     g_assert(img);
     g_assert(pb);
 
@@ -70,34 +64,80 @@ public:
 template<typename T>
 void check_expect(const T& result, const T& reference)
 {
-  if(result!=reference)
-  {
+  if(result!=reference) {
     std::cout<<"**GUITest::check_expect** test failed\n";
     throw GUITest::USER_ABORTS_TESTS;
   }
 }
 
-void start_gui_test()
+template<typename T>
+void check_within(const T& result, const T& reference, const T& epsilon)
+{
+  if(abs(result-reference)>epsilon) {
+    std::cout<<"**GUITest::check_within** test failed\n";
+    throw GUITest::USER_ABORTS_TESTS;
+  }
+}
+
+void check_within(const gfloat& result, const gfloat& reference, const gfloat& epsilon)
+{
+  if(abs(result-reference)>epsilon) {
+    std::cout<<"**GUITest::check_within** test failed\nexpected "<<reference<<"    the real value is "<<result<<"\n";
+    throw GUITest::USER_ABORTS_TESTS;
+  }
+}
+
+template<typename T>
+void check_within(const T& result, const T& reference)
+{
+  check_within(result, reference, T(1.e-4f));
+}
+
+template<typename T=Vector2>
+void check_within(const Vector2& result, const Vector2& reference, gfloat epsilon=1.e-4f)
 {
   try
   {
+    check_within(result.x, reference.x, epsilon);
+    check_within(result.y, reference.y, epsilon);
+  }catch(...)
+  {
+    std::cout<<"expected \n"<<reference<<"\n got \n"<<result<<"\n";
+    throw;
+  }
+}
+
+template<typename T=Vector3>
+void check_within(const Vector3& result, const Vector3& reference, gfloat epsilon=1.e-4f)
+{
+  try
+  {
+    check_within(result.x, reference.x, epsilon);
+    check_within(result.y, reference.y, epsilon);
+    check_within(result.z, reference.z, epsilon);
+  }catch(...)
+  {
+    std::cout<<"expected \n"<<reference<<"\n got \n"<<result<<"\n";
+    throw;
+  }
+}
+
+void start_gui_test() {
+  try {
     {
       int w=0, h=0;
       bool need_to_resize = false;
       MainWindow::get_singleton()->get_size(w, h);
-      if(MenuAlignment::get_singleton()->get_width()<800)
-      {
+      if(MenuAlignment::get_singleton()->get_width()<800) {
         need_to_resize  = true;
         w  += 800-MenuAlignment::get_singleton()->get_width();
       }
-      if(MenuAlignment::get_singleton()->get_height()<600)
-      {
+      if(MenuAlignment::get_singleton()->get_height()<600) {
         h  += 600-MenuAlignment::get_singleton()->get_height();
         need_to_resize  = true;
       }
 
-      if(need_to_resize)
-      {
+      if(need_to_resize) {
         MainWindow::get_singleton()->resize(w, h);
 
         Glib::Timer timer;
@@ -142,6 +182,15 @@ void start_gui_test()
       check_expect<Glib::ustring>(str_copy_replace_last_with("~/Desktop/earth.day.svg", '.', ".large."), "~/Desktop/earth.day.large.svg");
       check_expect<Glib::ustring>(str_copy_replace_last_with("~/Desktop/earth.day.svg", 0, ".png"), "~/Desktop/earth.day.svg.png");
       check_expect<Glib::ustring>(str_copy_replace_last_with("~/Desktop/Foo.svg", 'x', "-large."), "~/Desktop/Foo.svg");
+    }
+    {
+      check_within(Vector2( 1.0f, 0.0f).rotate_90_cw() , Vector2( 0.f, -1.f));
+      check_within(Vector2( 1.0f, 0.0f).rotate_90_ccw(), Vector2( 0.f,  1.f));
+      check_within(Vector2( 0.5f,-1.0f)*Vector2( 0.5f,-1.0f).rotate_90_ccw(), 0.f);
+      check_within(Vector2( 0.5f,-1.0f)*Vector2( 0.5f,-1.0f).rotate_90_cw(),  0.f);
+      check_within(Vector2( 0.5f,-1.0f).rotate_90_cw(),  Vector2(-1.f, -0.5));
+      check_within<Vector3>(cross(Vector2(0.5f,-1.0f), Vector3(0.f, 0.f, 1.f)), Vector2(-1.f, -0.5f));
+      check_within<Vector3>(cross(Vector2(0.5f,-1.0f), Vector3(0.f, 0.f,-1.f)), Vector2( 1.f,  0.5f));
     }
     {
       Framework::Layout layout, layout2;
@@ -289,8 +338,7 @@ void start_gui_test()
       Framework::VBox vbox[4];
       Framework::DummyWidget dummy[N];
 
-      for(int j=0; j<4; ++j)
-      {
+      for(int j=0; j<4; ++j) {
         dummy[0+j*6].set_color(0xff0000ff);
         dummy[1+j*6].set_color(0x00ff00ff);
         dummy[2+j*6].set_color(0x0000ffff);
@@ -298,8 +346,8 @@ void start_gui_test()
         dummy[4+j*6].set_color(0x008000ff);
         dummy[5+j*6].set_color(0x000080ff);
         if(j!=0)
-        for(int k=0; k<6; ++k)
-          dummy[j*6+k].set_size_request(75, 25);
+          for(int k=0; k<6; ++k)
+            dummy[j*6+k].set_size_request(75, 25);
       }
 
       layout.add(vbox[0],   0, 0, 199, 600);
@@ -395,8 +443,7 @@ void start_gui_test()
       Framework::HBox hbox[4];
       Framework::DummyWidget dummy[N];
 
-      for(int j=0; j<4; ++j)
-      {
+      for(int j=0; j<4; ++j) {
         dummy[0+j*6].set_color(0xff0000ff);
         dummy[1+j*6].set_color(0x00ff00ff);
         dummy[2+j*6].set_color(0x0000ffff);
@@ -404,8 +451,8 @@ void start_gui_test()
         dummy[4+j*6].set_color(0x008000ff);
         dummy[5+j*6].set_color(0x000080ff);
         if(j!=0)
-        for(int k=0; k<6; ++k)
-          dummy[j*6+k].set_size_request(25, 75);
+          for(int k=0; k<6; ++k)
+            dummy[j*6+k].set_size_request(25, 75);
       }
 
       layout.add(hbox[0], 0, 0, 800, 149);
@@ -501,8 +548,7 @@ void start_gui_test()
       Framework::HButtonBox hbtnbox[5];
       Framework::DummyWidget dummy[N];
 
-      for(int j=0; j<5; ++j)
-      {
+      for(int j=0; j<5; ++j) {
         dummy[0+j*6].set_color(0xff0000ff);
         dummy[1+j*6].set_color(0x00ff00ff);
         dummy[2+j*6].set_color(0x0000ffff);
@@ -510,7 +556,7 @@ void start_gui_test()
         dummy[4+j*6].set_color(0x008000ff);
         dummy[5+j*6].set_color(0x000080ff);
         //for(int k=0; k<6; ++k)
-          dummy[j*6+2].set_size_request(75, 25);
+        dummy[j*6+2].set_size_request(75, 25);
 
         hbtnbox[j].pack_start(dummy[0+j*6]);
         hbtnbox[j].pack_start(dummy[1+j*6], false, true);
@@ -536,8 +582,7 @@ void start_gui_test()
       gui_test.show_all_children();
       gui_test.compare("hbuttonbox-001");
 
-      for(int j=0; j<5; ++j)
-      {
+      for(int j=0; j<5; ++j) {
         hbtnbox[j].set_spacing(16);
       }
 
@@ -612,24 +657,22 @@ void start_gui_test()
       gui_test.show_all_children();
       gui_test.compare("label-001");
     }
-  }catch(GUITest::AbortTests at)
-  {
-    switch(at)
-    {
+  } catch(GUITest::AbortTests at) {
+    switch(at) {
     case GUITest::ABORT_TESTS:
       std::cout<<"User aborts the following tests.\n";
       break;
     case GUITest::USER_ABORTS_TESTS:
-      std::cout<<"The following tests were tests.\n";
+      std::cout<<"The following tests were ignored.\n";
       break;
     default:
       g_assert_not_reached();
     }
-  }CATCH_ALL("**GUITest::start_gui_test** ", throw;)
+  }
+  CATCH_ALL("**GUITest::start_gui_test** ", throw;)
 }
 
-inline void GUITest::exchange_bytes(guint8* a, guint8* b, gsize n)
-{
+inline void GUITest::exchange_bytes(guint8* a, guint8* b, gsize n) {
   typedef guint32 guint_x_;
   guint_x_* ax  = (guint_x_*)a;
   guint_x_* bx  = (guint_x_*)b;
@@ -640,8 +683,7 @@ inline void GUITest::exchange_bytes(guint8* a, guint8* b, gsize n)
   b += i*sizeof(guint_x_);
   n %= sizeof(guint_x_);
 
-  while(i>0)
-  {
+  while(i>0) {
     guint_x_ tmp  = *ax;
     *ax = *bx;
     *bx = tmp;
@@ -652,8 +694,7 @@ inline void GUITest::exchange_bytes(guint8* a, guint8* b, gsize n)
     --i;
   }
 
-  while(n!=0)
-  {
+  while(n!=0) {
     guint8 tmp  = *a;
     *a = *b;
     *b = tmp;
@@ -664,8 +705,7 @@ inline void GUITest::exchange_bytes(guint8* a, guint8* b, gsize n)
   }
 }
 
-void GUITest::compare(const Glib::ustring& test_name)
-{
+void GUITest::compare(const Glib::ustring& test_name) {
   std::cout<<"**GUITest::compare** beginning test \""<<test_name.c_str()<<"\"\n";
 
   while(Gtk::Main::events_pending())
@@ -685,21 +725,18 @@ void GUITest::compare(const Glib::ustring& test_name)
 
   Glib::RefPtr<Gdk::Pixbuf> snapshot = Gdk::Pixbuf::create_from_data(snapshot_data, Gdk::COLORSPACE_RGB, false, 8, 800, 600, 800*3);
 
-  if(!snapshot)
-  {
+  if(!snapshot) {
     std::cout<<"**GUITest::compare** Couldn't create pixbuf from snapshot!\n";
     return;
   }
 
-  try
-  {
+  try {
     Glib::RefPtr<Gdk::Pixbuf> old_version;
 
     if(exist_regular_file(filename+".png"))
       old_version = Gdk::Pixbuf::create_from_file(Glib::filename_from_utf8(filename+".png"));
 
-    if(old_version)
-    {
+    if(old_version) {
       bool different_pixels=true;
       const guint8* old_line  = old_version->get_pixels();
       const guint8* new_line  = snapshot->get_pixels();
@@ -709,16 +746,13 @@ void GUITest::compare(const Glib::ustring& test_name)
       g_assert(old_version->get_width()==800);
       g_assert(old_version->get_height()==600);
 
-      if(snapshot->get_n_channels() == old_version->get_n_channels())
-      {
+      if(snapshot->get_n_channels() == old_version->get_n_channels()) {
         different_pixels  = false;
 
         g_assert(old_version->get_rowstride() >= 800*snapshot->get_n_channels());
 
-        for(int y=0; y<600; ++y)
-        {
-          if(memcmp(old_line, new_line, 800*snapshot->get_n_channels())!=0)
-          {
+        for(int y=0; y<600; ++y) {
+          if(memcmp(old_line, new_line, 800*snapshot->get_n_channels())!=0) {
             different_pixels  = true;
             break;
           }
@@ -728,8 +762,7 @@ void GUITest::compare(const Glib::ustring& test_name)
         }
       }
 
-      if(different_pixels)
-      {
+      if(different_pixels) {
         const int RESPONSE_KEEP_BOTH = 1;
         const int RESPONSE_KEEP_NEW  = 2;
         const int RESPONSE_KEEP_OLD  = 3;
@@ -750,50 +783,49 @@ void GUITest::compare(const Glib::ustring& test_name)
         compare_dlg.set_position(Gtk::WIN_POS_CENTER);
         compare_dlg.set_deletable(false);
         compare_dlg.get_vbox()->pack_start(vbox, true, true);
-          vbox.show();
-          vbox.set_border_width(SPACING_NORMAL);
-          vbox.set_spacing(SPACING_NORMAL);
-            vbox.pack_start(bb_choose_old_new_display, false, false);
-              bb_choose_old_new_display.show();
-              bb_choose_old_new_display.set_layout(Gtk::BUTTONBOX_CENTER);
-              bb_choose_old_new_display.set_spacing(0);
-              bb_choose_old_new_display.pack_start(btn_show_old);
-                btn_show_old.show();
-                btn_show_old.signal_toggled().connect(sigc::bind(sigc::ptr_fun(update_dependent_togglebutton), &btn_show_old, &btn_show_new));
-                btn_show_old.signal_toggled().connect(sigc::bind(sigc::ptr_fun(update_arrowtype), &arrow, &btn_show_old));
-                btn_show_old.signal_toggled().connect(sigc::bind(sigc::ptr_fun(set_image), &image, old_version));
-              bb_choose_old_new_display.pack_start(arrow);
-                arrow.show();
-              bb_choose_old_new_display.pack_start(btn_show_new);
-                btn_show_new.show();
-                btn_show_new.set_active(true);
-                btn_show_new.signal_toggled().connect(sigc::bind(sigc::ptr_fun(update_dependent_togglebutton), &btn_show_new, &btn_show_old));
-                btn_show_new.signal_toggled().connect(sigc::bind(sigc::ptr_fun(set_image), &image, snapshot));
-            vbox.pack_start(sw_img);
-              sw_img.show();
-              sw_img.set_shadow_type(Gtk::SHADOW_IN);
-              sw_img.set_policy(Gtk::POLICY_NEVER, Gtk::POLICY_NEVER);
-              compare_dlg.signal_show().connect(sigc::bind(sigc::mem_fun(sw_img, &Gtk::ScrolledWindow::set_policy), Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC));
-              sw_img.add(image);
-                ((Gtk::Viewport*)image.get_parent())->set_shadow_type(Gtk::SHADOW_NONE);
-                image.set(snapshot);
-                image.show();
-            vbox.pack_end(cb_continue_tests, false, false);
-              cb_continue_tests.show();
-              cb_continue_tests.set_tooltip_text(_("If active, the tests will continue, otherwise they will be aborted"));
-              cb_continue_tests.set_active(true);
+        vbox.show();
+        vbox.set_border_width(SPACING_NORMAL);
+        vbox.set_spacing(SPACING_NORMAL);
+        vbox.pack_start(bb_choose_old_new_display, false, false);
+        bb_choose_old_new_display.show();
+        bb_choose_old_new_display.set_layout(Gtk::BUTTONBOX_CENTER);
+        bb_choose_old_new_display.set_spacing(0);
+        bb_choose_old_new_display.pack_start(btn_show_old);
+        btn_show_old.show();
+        btn_show_old.signal_toggled().connect(sigc::bind(sigc::ptr_fun(update_dependent_togglebutton), &btn_show_old, &btn_show_new));
+        btn_show_old.signal_toggled().connect(sigc::bind(sigc::ptr_fun(update_arrowtype), &arrow, &btn_show_old));
+        btn_show_old.signal_toggled().connect(sigc::bind(sigc::ptr_fun(set_image), &image, old_version));
+        bb_choose_old_new_display.pack_start(arrow);
+        arrow.show();
+        bb_choose_old_new_display.pack_start(btn_show_new);
+        btn_show_new.show();
+        btn_show_new.set_active(true);
+        btn_show_new.signal_toggled().connect(sigc::bind(sigc::ptr_fun(update_dependent_togglebutton), &btn_show_new, &btn_show_old));
+        btn_show_new.signal_toggled().connect(sigc::bind(sigc::ptr_fun(set_image), &image, snapshot));
+        vbox.pack_start(sw_img);
+        sw_img.show();
+        sw_img.set_shadow_type(Gtk::SHADOW_IN);
+        sw_img.set_policy(Gtk::POLICY_NEVER, Gtk::POLICY_NEVER);
+        compare_dlg.signal_show().connect(sigc::bind(sigc::mem_fun(sw_img, &Gtk::ScrolledWindow::set_policy), Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC));
+        sw_img.add(image);
+        ((Gtk::Viewport*)image.get_parent())->set_shadow_type(Gtk::SHADOW_NONE);
+        image.set(snapshot);
+        image.show();
+        vbox.pack_end(cb_continue_tests, false, false);
+        cb_continue_tests.show();
+        cb_continue_tests.set_tooltip_text(_("If active, the tests will continue, otherwise they will be aborted"));
+        cb_continue_tests.set_active(true);
         compare_dlg.add_action_widget(btn_keep_both, RESPONSE_KEEP_BOTH);
         compare_dlg.add_action_widget(btn_keep_new, RESPONSE_KEEP_NEW);
         compare_dlg.add_action_widget(btn_keep_old, RESPONSE_KEEP_OLD);
-          btn_keep_both.show();
-          btn_keep_new.show();
-          btn_keep_old.show();
-          btn_keep_both.set_tooltip_text(_("Saves the the result to the same folder as the old result, including a \"-new.png\" suffix."));
-          btn_keep_new .set_tooltip_text(_("Discards the old result and saves the new result"));
-          btn_keep_old .set_tooltip_text(_("Discards the new result and changes nothing"));
+        btn_keep_both.show();
+        btn_keep_new.show();
+        btn_keep_old.show();
+        btn_keep_both.set_tooltip_text(_("Saves the the result to the same folder as the old result, including a \"-new.png\" suffix."));
+        btn_keep_new .set_tooltip_text(_("Discards the old result and saves the new result"));
+        btn_keep_old .set_tooltip_text(_("Discards the new result and changes nothing"));
 
-        switch(compare_dlg.run())
-        {
+        switch(compare_dlg.run()) {
         case RESPONSE_KEEP_BOTH:
           snapshot->save(Glib::filename_from_utf8(filename+"-new.png"), "png");
           break;
@@ -805,21 +837,17 @@ void GUITest::compare(const Glib::ustring& test_name)
           break;
         }
 
-        if(!cb_continue_tests.get_active())
-        {
+        if(!cb_continue_tests.get_active()) {
           std::cout<<"**GUITest::compare** ending test \""<<test_name.c_str()<<"\"\n";
           throw USER_ABORTS_TESTS;
         }
       }
-    }else
-    {
+    } else {
       snapshot->save(Glib::filename_from_utf8(filename+".png"), "png");
     }
-  }catch(AbortTests)
-  {
+  } catch(AbortTests) {
     throw;
-  }catch(...)
-  {
+  } catch(...) {
   }
   std::cout<<"**GUITest::compare** ending test \""<<test_name.c_str()<<"\"\n";
 }
