@@ -182,6 +182,9 @@ namespace Raytracer
   {
     Process::PushProcess pp("Rendering", true, Process::PROCESS_RENDER, get_settings().get_n_render_tiles()*get_settings().get_n_render_tiles(), true);
 
+    Glib::TimeVal start_time;
+    start_time.assign_current_time();
+
     if(get_singletonA()->prepare_textures())
     {
       get_singletonA()->resulting_image.prepare(preview);
@@ -206,7 +209,12 @@ namespace Raytracer
       }
 
       // ==== Let the user decide, how long the results are aviable to see
-      Process::PushProcess pp("View Render Result", false, Process::PROCESS_RENDER, 0, true);
+      // How low has the Rendering taken
+      Glib::TimeVal render_time;
+      render_time.assign_current_time();
+      render_time-=start_time;
+
+      Process::PushProcess pp(Glib::ustring::compose(_("Rendering took %1"), time_val_to_str_hms(render_time)), false, Process::PROCESS_RENDER, 0, true);
       set_doing_preview(true);
 
       while(get_doing_preview() && main_window->get_visible())
