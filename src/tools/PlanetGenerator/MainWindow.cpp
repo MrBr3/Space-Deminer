@@ -198,13 +198,6 @@ void MainWindow::on_show()
   Gtk::Window::on_show();
 }
 
-void MainWindow::get_render_view_size(guint& width, guint& height)
-{
-  g_assert(this);
-  width = _render_preview_scrollbars.get_child()->get_width();
-  height = _render_preview_scrollbars.get_child()->get_height();
-}
-
 void MainWindow::update_statusbar()
 {
   Process::State state;
@@ -235,6 +228,15 @@ void MainWindow::update_statusbar()
   {
     Gtk::Main::iteration();
   }
+}
+
+void MainWindow::get_render_view_size(guint& width, guint& height)
+{
+  g_assert(this);
+  width = _render_preview.get_width();
+  height = _render_preview.get_height();
+  _render_preview.set_size_request(width, height);
+  _render_preview_scrollbars.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
 }
 
 MainWindow::RenderResultView::RenderResultView()
