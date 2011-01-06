@@ -363,8 +363,8 @@ public:
 
     Matrix44& set_rotate_z(gfloat angle)
     {
-      gfloat c  = cos(angle);
-      gfloat s  = sin(angle);
+      gfloat c  = cos(angle*degree);
+      gfloat s  = sin(angle*degree);
 
       return set(  c,  -s, 0.f, 0.f,
                    s,   c, 0.f, 0.f,
@@ -374,8 +374,8 @@ public:
 
     Matrix44& set_rotate_x(gfloat angle)
     {
-      gfloat c  = cos(angle);
-      gfloat s  = sin(angle);
+      gfloat c  = cos(angle*degree);
+      gfloat s  = sin(angle*degree);
 
       return set(1.f, 0.f, 0.f, 0.f,
                  0.f,   c,  -s, 0.f,
@@ -385,8 +385,8 @@ public:
 
     Matrix44& set_rotate_y(gfloat angle)
     {
-      gfloat c  = cos(angle);
-      gfloat s  = sin(angle);
+      gfloat c  = cos(angle*degree);
+      gfloat s  = sin(angle*degree);
 
       return set(  c, 0.f,   s, 0.f,
                  0.f, 1.f, 0.f, 0.f,
@@ -433,6 +433,40 @@ public:
 
       return *this *= tmp;
     }
+
+    /** \brief Makes the current Matrix to represent a perspective Matrix.
+     *
+     * Implementation based on http://www.opengl.org/sdk/docs/man/xhtml/gluPerspective.xml (2011-01-06)
+     *
+     * \param fovy the field of view in degrees
+     *
+     * \note It makes no difference, whether the previos represented matrix has been an identity matrix or something else.
+     * */
+    Matrix44& set_perspective(gfloat fovy, gfloat aspect, gfloat znear, gfloat zfar)
+    {
+      gfloat f  = 1.f/tan(fovy*0.5f*degree);
+      gfloat inv_nmf  = 1.f/(znear-zfar);
+
+      set_identity();
+      (*this)(1,1)  = f/aspect;
+      (*this)(2,2)  = f;
+      (*this)(3,3)  = inv_nmf*(znear+zfar);
+      (*this)(3,4)  = inv_nmf*2.f*znear*zfar;
+      (*this)(4,3)  =-1.f;
+      (*this)(4,4)  = 0.f;
+    }
+  //@}
+
+  /** @name OpenGL
+   * */
+  //@{
+  /** \brief Multiplies the current OpenGL Matrix with this Matrix
+   * */
+   void glMultMatrix();
+
+  /** \brief Replaces the current OpenGL Matrix with this Matrix
+   * */
+   void glLoadMatrix();
   //@}
 
   /** @name Debugging

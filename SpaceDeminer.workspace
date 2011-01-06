@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CodeLite_Workspace Name="SpaceDeminer" Database="./SpaceDeminer.tags">
-  <Project Name="SpaceDeminer" Path="src/SpaceDeminer/SpaceDeminer.project" Active="Yes"/>
-  <Project Name="PlanetGenerator" Path="src/tools/PlanetGenerator/PlanetGenerator.project" Active="No"/>
+  <Project Name="SpaceDeminer" Path="src/SpaceDeminer/SpaceDeminer.project" Active="No"/>
+  <Project Name="PlanetGenerator" Path="src/tools/PlanetGenerator/PlanetGenerator.project" Active="Yes"/>
   <Project Name="Base" Path="src/Base/Base.project"/>
   <BuildMatrix>
     <WorkspaceConfiguration Name="Debug" Selected="yes">
