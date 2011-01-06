@@ -392,6 +392,167 @@ void start_gui_test() {
       check_within(m(4, 4), 16.f);
       m.set_identity();
       SHOULD_FAIL(check_within(abc, m))
+
+      m.set_scale(2.f);
+      check_within(m, s2);
+      m.set_identity();
+      SHOULD_FAIL(check_within(s2, m))
+
+      m.set_scale(23.f, 42.f, 64.f);
+
+      check_within(m, Matrix44(23.f,  0.f,  0.f,  0.f,
+                                0.f, 42.f,  0.f,  0.f,
+                                0.f,  0.f, 64.f,  0.f,
+                                0.f,  0.f,  0.f,  1.f));
+      m.set_identity();
+
+      m.scale(2.f);
+      check_within(m, s2);
+      m.scale(0.5f);
+      check_within(m, i);
+      m.scale(8.f);
+      check_within(m, Matrix44(s2).scale(4.f));
+      m.set_identity();
+
+      m.rotate_z(42.f);
+      m.rotate_z(-42.f);
+
+      check_within(m, Matrix44(1.f, 0.f, 0.f, 0.f,
+                               0.f, 1.f, 0.f, 0.f,
+                               0.f, 0.f, 1.f, 0.f,
+                               0.f, 0.f, 0.f, 1.f));
+      m.set_identity();
+
+      m.rotate_z(90.f*degree);
+      m.rotate_z(270.f*degree);
+
+      check_within(m, Matrix44(1.f, 0.f, 0.f, 0.f,
+                               0.f, 1.f, 0.f, 0.f,
+                               0.f, 0.f, 1.f, 0.f,
+                               0.f, 0.f, 0.f, 1.f));
+      m.set_identity();
+
+      m.rotate_z(90.f*degree);
+
+      check_within(m, Matrix44(0.f,-1.f, 0.f, 0.f,
+                               1.f, 0.f, 0.f, 0.f,
+                               0.f, 0.f, 1.f, 0.f,
+                               0.f, 0.f, 0.f, 1.f));
+
+      m.set_identity();
+
+      m.rotate_z(180.f*degree);
+
+      check_within(m, Matrix44(-1.f, 0.f, 0.f, 0.f,
+                                0.f,-1.f, 0.f, 0.f,
+                                0.f, 0.f, 1.f, 0.f,
+                                0.f, 0.f, 0.f, 1.f));
+      m.set_identity();
+
+      m.rotate_x(42.f);
+      m.rotate_x(-42.f);
+
+      check_within(m, Matrix44(1.f, 0.f, 0.f, 0.f,
+                               0.f, 1.f, 0.f, 0.f,
+                               0.f, 0.f, 1.f, 0.f,
+                               0.f, 0.f, 0.f, 1.f));
+      m.set_identity();
+
+      m.rotate_x(92.f*degree);
+      m.rotate_x(268.f*degree);
+
+      check_within(m, Matrix44(1.f, 0.f, 0.f, 0.f,
+                               0.f, 1.f, 0.f, 0.f,
+                               0.f, 0.f, 1.f, 0.f,
+                               0.f, 0.f, 0.f, 1.f));
+      m.set_identity();
+
+      m.rotate_x(90.f*degree);
+
+      check_within(m, Matrix44(1.f, 0.f, 0.f, 0.f,
+                               0.f, 0.f,-1.f, 0.f,
+                               0.f, 1.f, 0.f, 0.f,
+                               0.f, 0.f, 0.f, 1.f));
+
+      m.set_identity();
+
+      m.rotate_x(180.f*degree);
+
+      check_within(m, Matrix44( 1.f, 0.f, 0.f, 0.f,
+                                0.f,-1.f, 0.f, 0.f,
+                                0.f, 0.f,-1.f, 0.f,
+                                0.f, 0.f, 0.f, 1.f));
+      m.set_identity();
+
+      m.rotate_y(42.f);
+      m.rotate_y(-42.f);
+
+      check_within(m, Matrix44(1.f, 0.f, 0.f, 0.f,
+                               0.f, 1.f, 0.f, 0.f,
+                               0.f, 0.f, 1.f, 0.f,
+                               0.f, 0.f, 0.f, 1.f));
+      m.set_identity();
+
+      m.rotate_y(92.f*degree);
+      m.rotate_y(268.f*degree);
+
+      check_within(m, Matrix44(1.f, 0.f, 0.f, 0.f,
+                               0.f, 1.f, 0.f, 0.f,
+                               0.f, 0.f, 1.f, 0.f,
+                               0.f, 0.f, 0.f, 1.f));
+      m.set_identity();
+
+      m.rotate_y(90.f*degree);
+
+      check_within(m, Matrix44( 0.f, 0.f, 1.f, 0.f,
+                                0.f, 1.f, 0.f, 0.f,
+                               -1.f, 0.f, 0.f, 0.f,
+                                0.f, 0.f, 0.f, 1.f));
+
+      m.set_identity();
+
+      m.rotate_y(180.f*degree);
+
+      check_within(m, Matrix44(-1.f, 0.f, 0.f, 0.f,
+                                0.f, 1.f, 0.f, 0.f,
+                                0.f, 0.f,-1.f, 0.f,
+                                0.f, 0.f, 0.f, 1.f));
+      m.set_identity();
+
+      m.translate( 42.f, 32.f,-23.f);
+      m.translate(-42.f,-32.f, 23.f);
+
+      check_within(m, Matrix44(1.f, 0.f, 0.f, 0.f,
+                               0.f, 1.f, 0.f, 0.f,
+                               0.f, 0.f, 1.f, 0.f,
+                               0.f, 0.f, 0.f, 1.f));
+      m.set_identity();
+
+      m.translate( 42.f, 32.f,-23.f);
+      m.translate(  1.f, -2.f,-3.f);
+
+      check_within(m, Matrix44(1.f, 0.f, 0.f, 43.f,
+                               0.f, 1.f, 0.f, 30.f,
+                               0.f, 0.f, 1.f,-26.f,
+                               0.f, 0.f, 0.f,  1.f));
+      m.set_identity();
+
+      m.translate(5.f, 7.f, 11.f);
+
+      check_within(m, Matrix44(1.f, 0.f, 0.f,  5.f,
+                               0.f, 1.f, 0.f,  7.f,
+                               0.f, 0.f, 1.f, 11.f,
+                               0.f, 0.f, 0.f,  1.f));
+
+      m.set_identity();
+
+      m.translate(0.f, 0.f, 0.f);
+
+      check_within(m, Matrix44( 1.f, 0.f, 0.f, 0.f,
+                                0.f, 1.f, 0.f, 0.f,
+                                0.f, 0.f, 1.f, 0.f,
+                                0.f, 0.f, 0.f, 1.f));
+      m.set_identity();
     }
     std::cout<<"==== Testing GUI ====\n";
     {
@@ -859,6 +1020,7 @@ void start_gui_test() {
       gui_test.show_all_children();
       gui_test.compare("label-001");
     }
+    std::cout<<"==== All Tests Passed :) ====\n";
   } catch(GUITest::AbortTests at) {
     switch(at) {
     case GUITest::ABORT_TESTS:

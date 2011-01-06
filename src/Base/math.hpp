@@ -34,6 +34,8 @@
 
 #define PI2 (G_PI*2.0)
 
+const gfloat degree = G_PI/180.f;
+
 /** Gets the integer parte of the binear logarithm of n.
  * */
 inline guint blog_int(guint n)
