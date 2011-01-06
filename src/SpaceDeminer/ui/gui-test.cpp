@@ -102,7 +102,7 @@ void check_within(const Vector2& result, const Vector2& reference, gfloat epsilo
     check_within(result.y, reference.y, epsilon);
   }catch(...)
   {
-    std::cout<<"expected \n"<<reference<<"\n got \n"<<result<<"\n";
+    std::cout<<"expected \n"<<reference.str()<<"\n got \n"<<result.str()<<"\n";
     throw;
   }
 }
@@ -117,10 +117,42 @@ void check_within(const Vector3& result, const Vector3& reference, gfloat epsilo
     check_within(result.z, reference.z, epsilon);
   }catch(...)
   {
-    std::cout<<"expected \n"<<reference<<"\n got \n"<<result<<"\n";
+    std::cout<<"expected \n"<<reference.str()<<"\n got \n"<<result.str()<<"\n";
     throw;
   }
 }
+
+template<typename T=Vector4>
+void check_within(const Vector4& result, const Vector4& reference, gfloat epsilon=1.e-4f)
+{
+  try
+  {
+    check_within(result.x, reference.x, epsilon);
+    check_within(result.y, reference.y, epsilon);
+    check_within(result.z, reference.z, epsilon);
+    check_within(result.w, reference.w, epsilon);
+  }catch(...)
+  {
+    std::cout<<"expected \n"<<reference.str()<<"\n got \n"<<result.str()<<"\n";
+    throw;
+  }
+}
+
+template<typename T=Matrix44>
+void check_within(const Matrix44& result, const Matrix44& reference, gfloat epsilon=1.e-4f)
+{
+  try
+  {
+    for(gsize i=0; i<16; ++i)
+      check_within(result.m[i], reference.m[i], epsilon);
+  }catch(...)
+  {
+    std::cout<<"expected \n"<<reference.str()<<"\n got \n"<<result.str()<<"\n";
+    throw;
+  }
+}
+
+#define SHOULD_FAIL(x) try{x; std::cout<<"the test \"" #x "\" should fail\n";throw GUITest::USER_ABORTS_TESTS;}catch(...){}
 
 void start_gui_test() {
   try {
@@ -155,10 +187,12 @@ void start_gui_test() {
     MainWindow::get_window_manager()->register_window(0xffff, gui_test);
     gui_test.show();
 
-    gui_test.compare("nothing");
+    std::cout<<"==== initialising Tests ====\n";
 
     Framework::ResPtr<Framework::Image> img_16x16_0x00ff00 = Framework::Image::create_from_file(Glib::filename_from_utf8(apply_filename_macros("$(exe-share)/ui/tests/img_16x16_0x00ff00.png")));
     Framework::ResPtr<Framework::Image> img_skull48 = Framework::Image::create_from_file(Glib::filename_from_utf8(apply_filename_macros("$(exe-share)/ui/icons/48/skull.png")));
+
+    std::cout<<"==== Testing String ====\n";
 
     {
       check_expect<Glib::ustring>(clip_last_slash("/abc"), "/abc");
@@ -183,6 +217,7 @@ void start_gui_test() {
       check_expect<Glib::ustring>(str_copy_replace_last_with("~/Desktop/earth.day.svg", 0, ".png"), "~/Desktop/earth.day.svg.png");
       check_expect<Glib::ustring>(str_copy_replace_last_with("~/Desktop/Foo.svg", 'x', "-large."), "~/Desktop/Foo.svg");
     }
+    std::cout<<"==== Testing Vector ====\n";
     {
       check_within(Vector2( 1.0f, 0.0f).rotate_90_cw() , Vector2( 0.f, -1.f));
       check_within(Vector2( 1.0f, 0.0f).rotate_90_ccw(), Vector2( 0.f,  1.f));
@@ -191,7 +226,174 @@ void start_gui_test() {
       check_within(Vector2( 0.5f,-1.0f).rotate_90_cw(),  Vector2(-1.f, -0.5));
       check_within<Vector3>(cross(Vector2(0.5f,-1.0f), Vector3(0.f, 0.f, 1.f)), Vector2(-1.f, -0.5f));
       check_within<Vector3>(cross(Vector2(0.5f,-1.0f), Vector3(0.f, 0.f,-1.f)), Vector2( 1.f,  0.5f));
+      check_within(Vector3(0.5f,-1.0f, 0.f) * Vector3(0.f, 0.f,-1.f), 0.f);
     }
+    std::cout<<"==== Testing Matrix ====\n";
+    {
+      check_expect(sizeof(Matrix44), 16*sizeof(gfloat));
+      const Matrix44 abc( 1,  5,  9, 13,
+                          2,  6, 10, 14,
+                          3,  7, 11, 15,
+                          4,  8, 12, 16);
+      const Matrix44 i(1.f, 0.f, 0.f, 0.f,
+                       0.f, 1.f, 0.f, 0.f,
+                       0.f, 0.f, 1.f, 0.f,
+                       0.f, 0.f, 0.f, 1.f);
+      const Matrix44 s2(2.f, 0.f, 0.f, 0.f,
+                        0.f, 2.f, 0.f, 0.f,
+                        0.f, 0.f, 2.f, 0.f,
+                        0.f, 0.f, 0.f, 1.f);
+      const Vector4 c1( 1,  2,  3,  4);
+      const Vector4 c2( 5,  6,  7,  8);
+      const Vector4 c3( 9, 10, 11, 12);
+      const Vector4 c4(13, 14, 15, 16);
+      const Vector3 c4_v3(13, 14, 15);
+      const Vector4 r1( 1,  5,  9, 13);
+      const Vector4 r2( 2,  6, 10, 14);
+      const Vector4 r3( 3,  7, 11, 15);
+      const Vector4 r4( 4,  8, 12, 16);
+      const Vector3 r4_v3( 4,  8, 12);
+
+      Matrix44 m;
+
+      SHOULD_FAIL(SHOULD_FAIL(check_within(Matrix44::identity, i)));
+      m = abc;
+      check_within(abc, m);
+      m.set_identity();
+      SHOULD_FAIL(check_within(abc, m))
+      check_within(m, i);
+      SHOULD_FAIL(check_within(s2, m))
+      SHOULD_FAIL(check_within(m, s2))
+      check_within(m.get_row(1), Vector4(1.f, 0.f, 0.f, 0.f));
+      check_within(m.get_row(2), Vector4(0.f, 1.f, 0.f, 0.f));
+      check_within(m.get_row(3), Vector4(0.f, 0.f, 1.f, 0.f));
+      check_within(m.get_row(4), Vector4(0.f, 0.f, 0.f, 1.f));
+      check_within(m.get_column(1), Vector4(1.f, 0.f, 0.f, 0.f));
+      check_within(m.get_column(2), Vector4(0.f, 1.f, 0.f, 0.f));
+      check_within(m.get_column(3), Vector4(0.f, 0.f, 1.f, 0.f));
+      check_within(m.get_column(4), Vector4(0.f, 0.f, 0.f, 1.f));
+      check_within(abc.get_row(1), r1);
+      check_within(abc.get_row(2), r2);
+      check_within(abc.get_row(3), r3);
+      check_within(abc.get_row(4), r4);
+      check_within(abc.get_column(1), c1);
+      check_within(abc.get_column(2), c2);
+      check_within(abc.get_column(3), c3);
+      check_within(abc.get_column(4), c4);
+      check_within(abc, Matrix44(c1, c2, c3, c4));
+      check_within(abc, Matrix44(c1, c2, c3, c4_v3, 16.f));
+
+      m.set( 1,  5,  9, 13,
+             2,  6, 10, 14,
+             3,  7, 11, 15,
+             4,  8, 12, 16);
+
+      check_within(abc, m);
+      m.set_identity();
+      SHOULD_FAIL(check_within(abc, m))
+
+      m.set_by_columns(c1, c2, c3, c4);
+
+      check_within(abc, m);
+      m.set_identity();
+      SHOULD_FAIL(check_within(abc, m))
+
+      m.set_by_columns(c1, c2, c3, c4_v3, 16.f);
+
+      check_within(abc, m);
+      m.set_identity();
+      SHOULD_FAIL(check_within(abc, m))
+
+      m.set_by_rows(r1, r2, r3, r4);
+
+      check_within(abc, m);
+      m.set_identity();
+      SHOULD_FAIL(check_within(abc, m))
+
+      m.set_by_rows(r1, r2, r3, r4_v3, 16.f);
+
+      check_within(abc, m);
+      m.set_identity();
+      SHOULD_FAIL(check_within(abc, m))
+
+      m.set_column(1, c1);
+      m.set_column(2, c2);
+      m.set_column(3, c3);
+      m.set_column(4, c4);
+      SHOULD_FAIL(m.set_column(0, r4))
+      SHOULD_FAIL(m.set_column(5, r4))
+      SHOULD_FAIL(m.set_column(6, r4))
+
+      check_within(abc, m);
+      m.set_identity();
+      SHOULD_FAIL(check_within(abc, m))
+
+      m.set_row(1, r1);
+      m.set_row(2, r2);
+      m.set_row(3, r3);
+      m.set_row(4, r4);
+      SHOULD_FAIL(m.set_row(0, r4))
+      SHOULD_FAIL(m.set_row(5, r4))
+      SHOULD_FAIL(m.set_row(6, r4))
+
+      check_within(abc, m);
+      m.set_identity();
+      SHOULD_FAIL(check_within(abc, m))
+
+      m(1, 1) = 1.f;
+      m(2, 1) = 2.f;
+      m(3, 1) = 3.f;
+      m(4, 1) = 4.f;
+
+      m(1, 2) = 5.f;
+      m(2, 2) = 6.f;
+      m(3, 2) = 7.f;
+      m(4, 2) = 8.f;
+
+      m(1, 3) = 9.f;
+      m(2, 3) = 10.f;
+      m(3, 3) = 11.f;
+      m(4, 3) = 12.f;
+
+      m(1, 4) = 13.f;
+      m(2, 4) = 14.f;
+      m(3, 4) = 15.f;
+      m(4, 4) = 16.f;
+      SHOULD_FAIL(m(0, 0))
+      SHOULD_FAIL(m(0, 1))
+      SHOULD_FAIL(m(1, 0))
+      SHOULD_FAIL(m(1, 5))
+      SHOULD_FAIL(m(5, 5))
+      SHOULD_FAIL(m(5, 1))
+
+      for(gsize r = 1; r<=4; ++r)
+      for(gsize c = 1; c<=4; ++c)
+      {
+        check_within(m(r, c) , abc(r, c));
+      }
+
+      check_within(abc, m);
+      check_within(m(1, 1), 1.f);
+      SHOULD_FAIL(check_within(m(2, 1), 1.f));
+      check_within(m(2, 1), 2.f);
+      check_within(m(3, 1), 3.f);
+      check_within(m(4, 1), 4.f);
+      check_within(m(1, 2), 5.f);
+      check_within(m(2, 2), 6.f);
+      check_within(m(3, 2), 7.f);
+      check_within(m(4, 2), 8.f);
+      check_within(m(1, 3), 9.f);
+      check_within(m(2, 3), 10.f);
+      check_within(m(3, 3), 11.f);
+      check_within(m(4, 3), 12.f);
+      check_within(m(1, 4), 13.f);
+      check_within(m(2, 4), 14.f);
+      check_within(m(3, 4), 15.f);
+      check_within(m(4, 4), 16.f);
+      m.set_identity();
+      SHOULD_FAIL(check_within(abc, m))
+    }
+    std::cout<<"==== Testing GUI ====\n";
     {
       Framework::Layout layout, layout2;
       Framework::DummyWidget dummy[2];

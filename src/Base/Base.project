@@ -26,6 +26,7 @@
       <File Name="math/Vector3.hpp"/>
       <File Name="math/Matrix44.hpp"/>
       <File Name="math/Vector4.hpp"/>
+      <File Name="math/Matrix44.cpp"/>
     </VirtualDirectory>
     <File Name="opengl.hpp"/>
     <File Name="opengl.cpp"/>

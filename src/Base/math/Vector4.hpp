@@ -77,7 +77,7 @@ public:
     w = other.w;
   }
 
-  void set(gfloat all gfloat w_=1.f)throw()
+  void set(gfloat all, gfloat w_=1.f)throw()
   {
     x=y=z=all;
     w = w_;
@@ -180,56 +180,16 @@ public:
   }*/
 
   /** \brief Calcs the Scalar product of this and the second vector
+   *
+   * \note the <tt>w</tt> component is also taken into account
    * */
   gfloat operator*(const Vector4& b)const throw(){return x*b.x + y*b.y + z*b.z + w*b.w;}
-  //@}
-
-  /** @name Lengths
-   * */
-  //@{
-  /** \brief Gets the length of the vector squared.
-   *
-   * \return The length of the vector squared
-   * */
-  gfloat get_square_length()const throw()
-  {
-    return x*x + y*y + z*z + w*w; // TODO check,whether w should also be usedfor w
-  }
-
-  /** \brief Gets the length of the vector.
-   *
-   * \return The length of the vector
-   * */
-  gfloat get_length()const throw()
-  {
-    return sqrt(get_square_length());
-  }
-
-  /** \brief Sets the Length of the Vector to 1.
-   *
-   * A vector without length won't be touched.
-   * */
-  void normalize()throw()
-  {
-    if(x!=0.f || y!=0.f || z!=0.f)
-    {
-      gfloat tmp  = get_length();
-      g_assert(tmp!=0.f);
-
-      tmp = 1.f/tmp;
-
-      x *= tmp;
-      y *= tmp;
-      z *= tmp;
-      w *= tmp; // TODO check,whether w should also be usedfor w
-    }
-  }
   //@}
 
   /** @name Debugging
    * */
   //@{
-  operator const char*()const
+  std::string str()const
   {
     return Glib::ustring::compose("(%1, %2, %3, %4)", x, y, z, w).c_str();
   }

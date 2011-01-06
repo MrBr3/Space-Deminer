@@ -181,7 +181,7 @@ public:
   /** @name Debugging
    * */
   //@{
-  operator const char*()const
+  std::string str()const
   {
     return Glib::ustring::compose("(%1, %2)", x, y).c_str();
   }
