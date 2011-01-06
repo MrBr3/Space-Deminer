@@ -78,4 +78,6 @@ public:
 
   SphereMesh sphere_mesh;
   Glib::RefPtr<Texture> base_texture, cloud_texture, night_texture, weight_texture;
+
+  Matrix44 model_matrix, view_matrix, projection_matrix;
 };

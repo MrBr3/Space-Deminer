@@ -26,15 +26,15 @@
 
 #include "./dependencies.hpp"
 
+#define PI2 (G_PI*2.0)
+
+const gfloat degree = G_PI/180.f;
+
 #include "./math/Vector2.hpp"
 #include "./math/Vector3.hpp"
 #include "./math/Vector4.hpp"
 #include "./math/Matrix44.hpp"
 #include "./math/ColorRGBA.hpp"
-
-#define PI2 (G_PI*2.0)
-
-const gfloat degree = G_PI/180.f;
 
 /** Gets the integer parte of the binear logarithm of n.
  * */

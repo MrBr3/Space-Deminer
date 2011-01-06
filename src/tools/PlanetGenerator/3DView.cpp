@@ -132,17 +132,22 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   else
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-  glLoadIdentity();
+  glMatrixMode(GL_PROJECTION);
 
   gfloat aspect = gfloat(get_width())/gfloat(get_height());
-  gluPerspective(50., aspect, 1e-3, 1000.);
 
-  glTranslatef(0., 0.f, -1.f -1e-2f - 1.5f*distance);
+  projection_matrix.set_perspective(50., aspect, 1e-3, 1000.);
+  projection_matrix.glLoadMatrix();
 
-  glRotatef(-90.f, 1.f, 0.f, 0.f);
+  glMatrixMode(GL_MODELVIEW);
 
-  glRotatef(sphere->get_x_rotation(), 1.f, 0.f, 0.f);
-  glRotatef(sphere->get_z_rotation(), 0.f, 0.f, 1.f);
+  view_matrix.set_translate(0., 0.f, -1.f -1e-2f - 1.5f*distance);
+  view_matrix.rotate_x(-90.f);
+  view_matrix.glLoadMatrix();
+
+  model_matrix.set_rotate_x(sphere->get_x_rotation());
+  model_matrix.rotate_z(sphere->get_z_rotation());
+  model_matrix.glMultMatrix();
 
   bool warped_uv = false; // TODO delete if there's abetter solution
 
