@@ -149,7 +149,7 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   model_matrix.rotate_z(sphere->get_z_rotation());
   model_matrix.glMultMatrix();
 
-  bool warped_uv = false; // TODO delete if there's abetter solution
+  bool warped_uv = false;
 
   glEnable(GL_TEXTURE_2D);
   Glib::RefPtr<Layer> only_visible_layer  = LayerModel::just_one_layer_visible(); // Gets the only visible Layer
