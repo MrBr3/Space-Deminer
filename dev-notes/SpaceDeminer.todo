@@ -44,10 +44,50 @@ PlanetGenerator
     [ ] warped version berechnen und als Bild speichern können
     [ ] riesige Bilder (für offline rendering) verwenden können
   [ ] offline rendering
-    [ ] extra Texturangabe für offline rendering
-    [ ] Sphere aufteilen, um große Texturen zu erlauben?
-      (geht wohl nur perfect ohne antialiasing?)
-    [ ] Bildschirm aufteilen, um große ergebnisse zu erlauben?
+    [X] extra Texturangabe für offline rendering
+    [X] Sphere aufteilen, um große Texturen zu erlauben?
+      => Nope
+    [X] Bildschirm aufteilen, um große ergebnisse zu erlauben?
+      => Nope
+    [ ] Raytracer
+      [ ] Matrix
+        [ ] Matrix invertieren
+          [ ] Minoren bestimmenn können
+            [ ] Determinante einer 3x3 Matrix bestimmen (definiert durch eine 4x4 Matrix, bei der eine beliebige
+                  Spalte und eine beliebige Zeile ausgelassen)
+          [ ] Determinante einer 4x4 Matrix bestimmen
+          [ ] Adjunkte einer 4x4 Matrix bestimmen
+      [ ] RenderParam
+        [ ] Inverse Matrizen
+        [ ] die absolute pixelposition und kehrwerte für breite/höhe (kehrwerte werden für antialiasing benötigt)
+        [ ] relative pixelposition der Kugelmitte
+        [ ] Radius der Kug
+      [ ] CalcPixelColor sollte anstatt relative pixelposition nur RenderParam als Parameter annehmen
+      [ ] Mitternachtsformel
+      [ ] Strahl implementieren
+      [ ] Kugel implementieren
+        [ ] mit Mittelpunkt, falls später schatten gewünscht sind.
+      [ ] Schnitt Strahl-Kugel
+      [ ] "Shader" für Planet
+        [ ] pixel innerhalb der kugel mit 100% Blau rendern
+      [ ] Antialiasing
+        [ ] no antialiasing
+        [ ] 2 rays per pixel
+        [ ] 4 rays per pixel
+        [ ] 8 rays per pixel
+      [ ] Hintergrundfarbe und UV wert entsprechend der Kugel anzeigen
+        [ ] unkorrigiert
+        [ ] korrigiert
+      [ ] Base Textur anzeigen
+        [ ] Farbe anhand UV herholen (ceil/floor könnte sehr praktisch sein)
+          [ ] für u/v werte außerhalb von intervall [0, 1] wählen können zwischen
+            [ ] Transparent
+            [ ] Textur wieerholt
+            [ ] CLAMPed
+      [ ] BaseTexture mit Wolken
+      [ ] Ebene implementieren
+      [ ] Schnitt Strahl-Ebene
+        [ ] Andeutung für Atmosphäreneffekt
   [ ] Shader
     [ ] Textur mit vier Kanälen (alpha invertiert?), wobie jede der vier Texturen für ein eigenes Material steht
       z.B Rot: Wüsten, Grün: kein Glanzlicht, Blau: Eis, Alpha-Invertiert: Wasser
