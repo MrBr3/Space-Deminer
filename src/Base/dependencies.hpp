@@ -23,6 +23,8 @@
 #define nullptr 0
 
 #include <stdexcept>
+#include <iostream>
+#include <iomanip>
 #include <sigc++/trackable.h>
 #include <glibmm.h>
 #include <iostream>

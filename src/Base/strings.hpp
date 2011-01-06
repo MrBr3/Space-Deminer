@@ -22,6 +22,14 @@
 
 #include <glibmm.h>
 
+#ifdef G_OS_UNIX
+#define SET_FILL_0 std::setfill(L'0')
+#else
+#define SET_FILL_0 std::setfill('0')
+#endif
+
+Glib::ustring time_val_to_str_hms(Glib::TimeVal tv, gchar sep=0);
+
 /** \brief Replaces the only last appereance of the character <tt>replace</tt> with the string <tt>width</tt>.
 *
 * \param str - the string where to replace (as this is a reference, this string string itself will store the result afterwards)

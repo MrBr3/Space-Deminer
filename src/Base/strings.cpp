@@ -19,6 +19,23 @@
 
 #include "./base.hpp"
 
+Glib::ustring time_val_to_str_hms(Glib::TimeVal tv, gchar sep)
+{
+  GTimeVal& time_val  = *((GTimeVal*)&tv);
+  g_assert(sizeof(tv)==sizeof(time_val));
+
+  int sec = time_val.tv_sec % 60;
+  time_val.tv_sec = (time_val.tv_sec-sec)/60;
+  int min = time_val.tv_sec % 60;
+  time_val.tv_sec = (time_val.tv_sec-min)/60;
+  int hour  = time_val.tv_sec ;
+
+  if(sep!=0)
+    return Glib::ustring::compose("%1%4%2%4%3", hour, Glib::ustring::format(SET_FILL_0, std::setw(2), min), Glib::ustring::format(SET_FILL_0, std::setw(2), sec), sep);
+  else
+    return Glib::ustring::compose(_("%1h %2min %3sec"), hour, Glib::ustring::format(SET_FILL_0, std::setw(2), min), Glib::ustring::format(SET_FILL_0, std::setw(2), sec));
+}
+
 void str_replace_last_with(Glib::ustring& str, Glib::ustring::value_type replace, const Glib::ustring& with)
 {
   if(!replace)
