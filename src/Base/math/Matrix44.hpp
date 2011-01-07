@@ -312,6 +312,17 @@ public:
     return (*this) * Vector4(b);
   }
 
+  Matrix44& operator *= (gfloat n)
+  {
+    Matrix44& m  = *this;
+
+    for(gsize r=1; r<=4; ++r)
+    for(gsize c=1; c<=4; ++c)
+      m(r, c) *= n;
+
+    return *this;
+  }
+
   Matrix44& operator *= (const Matrix44& b)
   {
     Matrix44 a = *this;
@@ -408,7 +419,7 @@ public:
     return *this;
   }
 
-  /** \brief Gets a transposed matrix of the the current matrix
+  /** \brief Gets a transposed matrix of the the current matrix.
    * */
   Matrix44 get_transposed()const throw()
   {
@@ -420,6 +431,92 @@ public:
     {
       m(c, r) = n(r, c);
     }
+
+    return m;
+  }
+
+  /** \brief Gets the Determinant of this Matrix.
+   *
+   * see http://de.wikipedia.org/wiki/Determinante#Laplacescher_Entwicklungssatz (2011-01-07)
+   * */
+  gfloat get_determinant()const throw()
+  {
+    const Matrix44& m = *this;
+    gfloat d  = 0.f;
+
+    const gsize c = 1;
+
+    for(gsize r=1; r<=4; ++r)
+    {
+      d += get_cofactor(r, c) * m(r, c);
+    }
+
+    return d;
+  }
+
+  Matrix44& set_adjugate_of(const Matrix44& m)throw()
+  {
+    if(&m == this)
+    {
+      Matrix44 tmp  = m;
+      return set_adjugate_of(tmp);
+    }
+
+    Matrix44& n = *this;
+
+    for(gsize r=1; r<=4; ++r)
+    for(gsize c=1; c<=4; ++c)
+    {
+      n(c, r) = m.get_cofactor(r, c);
+    }
+
+    return *this;
+  }
+
+  Matrix44 get_adjugate()const throw()
+  {
+    Matrix44 m(DONT_INIT);
+    return m.set_adjugate_of(*this);
+  }
+
+  /** \brief Inverts the current matrix.
+   *
+   * see http://de.wikipedia.org/wiki/Inverse_Matrix#Adjunkte (2011-01-07)
+   *
+   * \return false if the inverse matrix is not invertible.
+   * */
+  bool invert()throw()
+  {
+    gfloat d  = get_determinant();
+
+    if(d==0.f)
+      return false;
+
+    set_adjugate_of(*this);
+    *this *= 1.f/d;
+
+    return true;
+  }
+
+  /** \brief Gets the inversion of the current matrix.
+   *
+   * see http://de.wikipedia.org/wiki/Inverse_Matrix#Adjunkte (2011-01-07)
+   *
+   * \param not_invertible the Matrix to return, if this Matrix is not invertible.
+   *
+   * \return false if the inverse matrix is not invertible.
+   * */
+  Matrix44 get_inversion(const Matrix44& not_invertible=identity)const throw()
+  {
+    Matrix44 m(DONT_INIT);
+
+    gfloat d  = get_determinant();
+
+    if(d==0.f)
+      return not_invertible;
+
+    m.set_adjugate_of(*this);
+    m *= 1.f/d;
 
     return m;
   }

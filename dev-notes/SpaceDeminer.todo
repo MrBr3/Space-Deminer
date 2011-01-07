@@ -50,14 +50,14 @@ PlanetGenerator
     [X] Bildschirm aufteilen, um große ergebnisse zu erlauben?
       => Nope
     [ ] Raytracer
-      [ ] Matrix
-        [ ] Matrix invertieren
+      [X] Matrix
+        [X] Matrix invertieren
           [X] Cofaktoren bestimmenn können
             [X] 3x3 Untermatrix durch auslassen einer Spalte und einer Zeile bestimmen können
             [X] Determinante einer 3x3 Untermatrix bestimmen
             [X] Minoren bestimmen
-          [ ] Determinante einer 4x4 Matrix bestimmen
-          [ ] Adjunkte einer 4x4 Matrix bestimmen
+          [X] Determinante einer 4x4 Matrix bestimmen
+          [X] Adjunkte einer 4x4 Matrix bestimmen
       [ ] RenderParam
         [ ] Inverse Matrizen
         [ ] die absolute pixelposition und kehrwerte für breite/höhe (kehrwerte werden für antialiasing benötigt)
