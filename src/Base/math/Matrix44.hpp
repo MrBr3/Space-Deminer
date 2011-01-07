@@ -324,9 +324,12 @@ public:
     Matrix44 tmp  = *this;
     return tmp *= b;
   }
+  //@}
 
-private:
-
+  /** @name Inversion stuff
+   * */
+  //@{
+protected:
   /** \brief Gets a single value of 3x3 Matrix defined by this Matrix and "stroking"
    * one row and one column.
    *
@@ -337,7 +340,7 @@ private:
    *
    * \return the requested value
    * */
-  gfloat get_single_item_of_sub_3x3_matrix(gsize r, gsize c, gsize sr, gsize sc)const
+  gfloat get_single_item_of_sub_3x3_matrix(gsize r, gsize c, gsize sr, gsize sc)const throw(std::invalid_argument)
   {
     if(c<1 || c>3)
       throw std::invalid_argument("**Matrix44::operator()** c must be one of {1, 2, 3}");
@@ -354,6 +357,71 @@ private:
       ++c;
 
     return (*this)(r, c);
+  }
+
+public:
+  /** \brief Gets the minor of a certain position
+   *
+   * see http://de.wikipedia.org/wiki/Adjunkte (2011-01-07) and http://de.wikipedia.org/wiki/Determinante (2011-01-07)
+   * */
+  gfloat get_minor(gsize r, gsize c)const throw(std::invalid_argument)
+  {
+    gfloat a11  = get_single_item_of_sub_3x3_matrix(1, 1, r, c);
+    gfloat a12  = get_single_item_of_sub_3x3_matrix(1, 2, r, c);
+    gfloat a13  = get_single_item_of_sub_3x3_matrix(1, 3, r, c);
+    gfloat a21  = get_single_item_of_sub_3x3_matrix(2, 1, r, c);
+    gfloat a22  = get_single_item_of_sub_3x3_matrix(2, 2, r, c);
+    gfloat a23  = get_single_item_of_sub_3x3_matrix(2, 3, r, c);
+    gfloat a31  = get_single_item_of_sub_3x3_matrix(3, 1, r, c);
+    gfloat a32  = get_single_item_of_sub_3x3_matrix(3, 2, r, c);
+    gfloat a33  = get_single_item_of_sub_3x3_matrix(3, 3, r, c);
+
+    return a11*a22*a33 + a12*a23*a31 + a13*a21*a32 - a13*a22*a31 - a12*a21*a33 - a11*a23*a32;
+  }
+
+  /** \brief Gets the cofactor of a certain position
+   *
+   * see http://de.wikipedia.org/wiki/Adjunkte (2011-01-07)
+   * */
+  gfloat get_cofactor(gsize r, gsize c)const throw(std::invalid_argument)
+  {
+    gfloat minor  = get_minor(r, c);
+    if(XOR(r%2, c%2))
+      return -minor;
+    else
+      return minor;
+  }
+
+  /** \brief Sets the current matrix to be the transposed matrix of the current one.
+   * */
+  Matrix44& transpose()throw()
+  {
+    Matrix44& m = *this;
+
+    for(gsize r=1; r<=4; ++r)
+    for(gsize c=1; c<=4; ++c)
+    {
+      if(c>r) // just one side of the diagonal, otherwise would to exchages result in no exchange
+        exchange(m(c, r), m(r, c));
+    }
+
+    return *this;
+  }
+
+  /** \brief Gets a transposed matrix of the the current matrix
+   * */
+  Matrix44 get_transposed()const throw()
+  {
+    Matrix44 m(DONT_INIT);
+    const Matrix44& n = *this;
+
+    for(gsize r=1; r<=4; ++r)
+    for(gsize c=1; c<=4; ++c)
+    {
+      m(c, r) = n(r, c);
+    }
+
+    return m;
   }
   //@}
 

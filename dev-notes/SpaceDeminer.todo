@@ -52,10 +52,10 @@ PlanetGenerator
     [ ] Raytracer
       [ ] Matrix
         [ ] Matrix invertieren
-          [ ] Cofaktoren bestimmenn können
+          [X] Cofaktoren bestimmenn können
             [X] 3x3 Untermatrix durch auslassen einer Spalte und einer Zeile bestimmen können
-            [ ] Determinante einer 3x3 Untermatrix bestimmen
-            [ ] Minoren bestimmen
+            [X] Determinante einer 3x3 Untermatrix bestimmen
+            [X] Minoren bestimmen
           [ ] Determinante einer 4x4 Matrix bestimmen
           [ ] Adjunkte einer 4x4 Matrix bestimmen
       [ ] RenderParam

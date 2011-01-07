@@ -402,4 +402,17 @@ void test_matrix()
   check_expect<std::string>(abc.str_sub3x3(1, 1), "(6  10  14)\n"
                                                   "(7  11  15)\n"
                                                   "(8  12  16)");
+
+  m = abc;
+  m.transpose();
+
+  check_within(m, Matrix44(1.f,  2.f,  3.f,  4.f,
+                           5.f,  6.f,  7.f,  8.f,
+                           9.f, 10.f, 11.f, 12.f,
+                           13.f, 14.f, 15.f, 16.f));
+  check_within(m, abc.get_transposed());
+  m.transpose();
+  check_within(m, abc);
+  check_within(abc.get_transposed().get_transposed(), abc);
+  m.set_identity();
 }

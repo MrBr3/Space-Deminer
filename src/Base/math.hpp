@@ -30,12 +30,6 @@
 
 const gfloat degree = G_PI/180.f;
 
-#include "./math/Vector2.hpp"
-#include "./math/Vector3.hpp"
-#include "./math/Vector4.hpp"
-#include "./math/Matrix44.hpp"
-#include "./math/ColorRGBA.hpp"
-
 /** Gets the integer parte of the binear logarithm of n.
  * */
 inline guint blog_int(guint n)
@@ -65,5 +59,11 @@ inline gfloat get_frac_part(gfloat n){gfloat dummy; return modff(n, &dummy);}
 inline gdouble get_frac_part(gdouble n){gdouble dummy; return modf(n, &dummy);}
 
 inline bool XOR(bool a, bool b){return a!=b;}
+
+#include "./math/Vector2.hpp"
+#include "./math/Vector3.hpp"
+#include "./math/Vector4.hpp"
+#include "./math/Matrix44.hpp"
+#include "./math/ColorRGBA.hpp"
 
 #endif
