@@ -479,9 +479,11 @@ public:
   Matrix44& set_perspective(gfloat fovy, gfloat aspect, gfloat znear, gfloat zfar)throw(std::invalid_argument)
   {
     if(fovy<=0.f)
-      throw std::invalid_argument("**Matrix44::set_perspective** fov must be >= 0");
+      throw std::invalid_argument("**Matrix44::set_perspective** fov must be > 0°");
+    if(fovy>=180.f)
+      throw std::invalid_argument("**Matrix44::set_perspective** fov must be < 180°");
     if(aspect<=0.f)
-      throw std::invalid_argument("**Matrix44::set_perspective** aspect must be >= 0");
+      throw std::invalid_argument("**Matrix44::set_perspective** aspect must be > 0");
     if(znear-zfar == 0.f)
       throw std::invalid_argument("**Matrix44::set_perspective** znear-zfar mustn't be == 0");
 

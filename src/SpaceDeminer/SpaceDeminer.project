@@ -97,7 +97,7 @@
       <File Name="ui/dark-theme.hpp"/>
       <File Name="ui/dark-theme.cpp"/>
       <File Name="main.cpp"/>
-      <File Name="ui/gui-test.cpp"/>
+      <File Name="tests/gui-test.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="game">
       <File Name="game/difficulty.hpp"/>

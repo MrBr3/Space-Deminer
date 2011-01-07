@@ -552,7 +552,36 @@ void start_gui_test() {
                                 0.f, 1.f, 0.f, 0.f,
                                 0.f, 0.f, 1.f, 0.f,
                                 0.f, 0.f, 0.f, 1.f));
-      m.set_identity();
+
+      SHOULD_FAIL(m.set_row(0, Vector4(42.f, 42.f, 42.f, 42.f)));
+      SHOULD_FAIL(m.set_row(5, Vector4(42.f, 42.f, 42.f, 42.f)));
+      SHOULD_FAIL(m.set_column(0, Vector4(42.f, 42.f, 42.f, 42.f)));
+      SHOULD_FAIL(m.set_column(5, Vector4(42.f, 42.f, 42.f, 42.f)));
+      SHOULD_FAIL(m.get_row(0));
+      SHOULD_FAIL(m.get_row(5));
+      SHOULD_FAIL(m.get_column(0));
+      SHOULD_FAIL(m.get_column(5));
+
+      check_within(m, Matrix44( 1.f, 0.f, 0.f, 0.f,
+                                0.f, 1.f, 0.f, 0.f,
+                                0.f, 0.f, 1.f, 0.f,
+                                0.f, 0.f, 0.f, 1.f));
+      check_within(m, Matrix44( 1.f, 0.f, 0.f, 0.f,
+                                0.f, 42.f, 0.f, 0.f,
+                                0.f, 0.f, 1.f, 0.f,
+                                0.f, 0.f, 0.f, 1.f));
+
+      /*SHOULD_FAIL(abc.get_single_item_of_sub_3x3_matrix(4, 5, 1, 1))
+      SHOULD_FAIL(abc.get_single_item_of_sub_3x3_matrix(4, 6, 1, 1))
+      SHOULD_FAIL(abc.get_single_item_of_sub_3x3_matrix(5, 4, 1, 1))
+      SHOULD_FAIL(abc.get_single_item_of_sub_3x3_matrix(2, 0, 1, 1))
+      SHOULD_FAIL(abc.get_single_item_of_sub_3x3_matrix(0, 2 1, 1))
+      SHOULD_FAIL(abc.get_single_item_of_sub_3x3_matrix(2, 2 0, 1))
+      SHOULD_FAIL(abc.get_single_item_of_sub_3x3_matrix(2, 2 1, 0))
+      SHOULD_FAIL(abc.get_single_item_of_sub_3x3_matrix(2, 2 1, 5))
+      SHOULD_FAIL(abc.get_single_item_of_sub_3x3_matrix(2, 2 5, 5))*/
+
+      //check_expect(abc.str_sub3x3(4, 4), "()");
     }
     std::cout<<"==== Testing GUI ====\n";
     {
