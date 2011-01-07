@@ -415,4 +415,44 @@ void test_matrix()
   check_within(m, abc);
   check_within(abc.get_transposed().get_transposed(), abc);
   m.set_identity();
+
+  m = abc;
+  m *= 2.f;
+  check_within(m, Matrix44( 2, 10, 18, 26,
+                            4, 12, 20, 28,
+                            6, 14, 22, 30,
+                            8, 16, 24, 32));
+  check_within(abc*2, Matrix44( 2, 10, 18, 26,
+                                4, 12, 20, 28,
+                                6, 14, 22, 30,
+                                8, 16, 24, 32));
+  m.set_identity();
+
+  check_within(Matrix44::identity.get_inversion(), m);
+  check_within(abc.get_inversion(abc), abc);
+
+  m = abc;
+  check_expect<bool>(m.invert(), false);
+  check_within(m, abc);
+
+  m.set_translate(23., 42., 63);
+  Matrix44 n  = m;
+  check_expect<bool>(n.invert(), true);
+  check_within(n, Matrix44(1.f, 0.f, 0.f,-23.f,
+                           0.f, 1.f, 0.f,-42.f,
+                           0.f, 0.f, 1.f,-63.f,
+                           0.f, 0.f, 0.f,  1.f));
+  check_within(m*n, Matrix44::identity);
+  check_within(n*m, Matrix44::identity);
+  check_within(n.get_inversion(abc)*m.get_inversion(abc), Matrix44::identity);
+
+  m.set_perspective(61.f, 1.33f, 0.1, 1023.f);
+  m.rotate_x(23.f);
+  m.rotate_y(47.f);
+  m.rotate_z(63.f);
+  n  = m;
+  check_expect<bool>(n.invert(), true);
+  check_within(m*n, Matrix44::identity);
+  check_within(n*m, Matrix44::identity);
+  check_within(n.get_inversion(abc)*m.get_inversion(abc), Matrix44::identity);
 }

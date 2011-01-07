@@ -302,17 +302,17 @@ public:
    * */
   //@{
 public:
-  Vector4 operator * (const Vector4& b)const
+  Vector4 operator * (const Vector4& b)const throw()
   {
     return Vector4(get_row(1)*b, get_row(2)*b, get_row(3)*b, get_row(4)*b);
   }
 
-  Vector3 operator * (const Vector3& b)const
+  Vector3 operator * (const Vector3& b)const throw()
   {
     return (*this) * Vector4(b);
   }
 
-  Matrix44& operator *= (gfloat n)
+  Matrix44& operator *= (gfloat n)throw()
   {
     Matrix44& m  = *this;
 
@@ -323,14 +323,20 @@ public:
     return *this;
   }
 
-  Matrix44& operator *= (const Matrix44& b)
+  Matrix44 operator * (gfloat n)const throw()
+  {
+    Matrix44 tmp  = *this;
+    return tmp *= n;
+  }
+
+  Matrix44& operator *= (const Matrix44& b) throw()
   {
     Matrix44 a = *this;
 
     return set_by_columns(a*b.get_column(1), a*b.get_column(2), a*b.get_column(3), a*b.get_column(4));
   }
 
-  Matrix44 operator * (const Matrix44& b)const
+  Matrix44 operator * (const Matrix44& b)const throw()
   {
     Matrix44 tmp  = *this;
     return tmp *= b;
