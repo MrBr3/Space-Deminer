@@ -301,160 +301,203 @@ public:
   /** @name Multiplication stuff
    * */
   //@{
-    Vector4 operator * (const Vector4& b)const
-    {
-      return Vector4(get_row(1)*b, get_row(2)*b, get_row(3)*b, get_row(4)*b);
-    }
+public:
+  Vector4 operator * (const Vector4& b)const
+  {
+    return Vector4(get_row(1)*b, get_row(2)*b, get_row(3)*b, get_row(4)*b);
+  }
 
-    Vector3 operator * (const Vector3& b)const
-    {
-      return (*this) * Vector4(b);
-    }
+  Vector3 operator * (const Vector3& b)const
+  {
+    return (*this) * Vector4(b);
+  }
 
-    Matrix44& operator *= (const Matrix44& b)
-    {
-      Matrix44 a = *this;
+  Matrix44& operator *= (const Matrix44& b)
+  {
+    Matrix44 a = *this;
 
-      return set_by_columns(a*b.get_column(1), a*b.get_column(2), a*b.get_column(3), a*b.get_column(4));
-    }
+    return set_by_columns(a*b.get_column(1), a*b.get_column(2), a*b.get_column(3), a*b.get_column(4));
+  }
 
-    Matrix44 operator * (const Matrix44& b)const
-    {
-      Matrix44 tmp  = *this;
-      return tmp *= b;
-    }
+  Matrix44 operator * (const Matrix44& b)const
+  {
+    Matrix44 tmp  = *this;
+    return tmp *= b;
+  }
+
+private:
+
+  /** \brief Gets a single value of 3x3 Matrix defined by this Matrix and "stroking"
+   * one row and one column.
+   *
+   * \param r the row of the 3x3 Matrix
+   * \param c the column of the 3x3 Matrix
+   * \param sr the row of this 4x4 Matrix to get the 3x3 Matrix
+   * \param sc the column of this 4x4 Matrix to get the 3x3 Matrix
+   *
+   * \return the requested value
+   * */
+  gfloat get_single_item_of_sub_3x3_matrix(gsize r, gsize c, gsize sr, gsize sc)
+  {
+    if(c<1 || c>3)
+      throw std::invalid_argument("**Matrix44::operator()** c must be one of {1, 2, 3}");
+    if(r<1 || r>3)
+      throw std::invalid_argument("**Matrix44::operator()** r must be one of {1, 2, 3}");
+    if(sc<1 || sc>4)
+      throw std::invalid_argument("**Matrix44::operator()** sc must be one of {1, 2, 3, 4}");
+    if(sr<1 || sr>4)
+      throw std::invalid_argument("**Matrix44::operator()** sr must be one of {1, 2, 3, 4}");
+
+    if(r>=sr)
+      ++r;
+    if(c>=sc)
+      ++c;
+
+    return (*this)(r, c);
+  }
   //@}
 
   /** @name Transformations
    * */
   //@{
-    Matrix44& set_scale(gfloat x, gfloat y, gfloat z)
-    {
-      set_identity();
-      (*this)(1, 1) = x;
-      (*this)(2, 2) = y;
-      (*this)(3, 3) = z;
+public:
+  Matrix44& set_scale(gfloat x, gfloat y, gfloat z)throw()
+  {
+    set_identity();
+    (*this)(1, 1) = x;
+    (*this)(2, 2) = y;
+    (*this)(3, 3) = z;
 
-      return *this;
-    }
+    return *this;
+  }
 
-    Matrix44& set_scale(gfloat s)
-    {
-      return set_scale(s, s, s);
-    }
+  Matrix44& set_scale(gfloat s)throw()
+  {
+    return set_scale(s, s, s);
+  }
 
-    Matrix44& scale(gfloat x, gfloat y, gfloat z)
-    {
-      Matrix44 tmp(DONT_INIT);
+  Matrix44& scale(gfloat x, gfloat y, gfloat z)throw()
+  {
+    Matrix44 tmp(DONT_INIT);
 
-      tmp.set_scale(x, y, z);
+    tmp.set_scale(x, y, z);
 
-      return *this *= tmp;
-    }
+    return *this *= tmp;
+  }
 
-    Matrix44& scale(gfloat s)
-    {
-      Matrix44 tmp(DONT_INIT);
+  Matrix44& scale(gfloat s)throw()
+  {
+    Matrix44 tmp(DONT_INIT);
 
-      tmp.set_scale(s);
+    tmp.set_scale(s);
 
-      return *this *= tmp;
-    }
+    return *this *= tmp;
+  }
 
-    Matrix44& set_rotate_z(gfloat angle)
-    {
-      gfloat c  = cos(angle*degree);
-      gfloat s  = sin(angle*degree);
+  Matrix44& set_rotate_z(gfloat angle)throw()
+  {
+    gfloat c  = cos(angle*degree);
+    gfloat s  = sin(angle*degree);
 
-      return set(  c,  -s, 0.f, 0.f,
-                   s,   c, 0.f, 0.f,
-                 0.f, 0.f, 1.f, 0.f,
-                 0.f, 0.f, 0.f, 1.f);
-    }
+    return set(  c,  -s, 0.f, 0.f,
+                 s,   c, 0.f, 0.f,
+               0.f, 0.f, 1.f, 0.f,
+               0.f, 0.f, 0.f, 1.f);
+  }
 
-    Matrix44& set_rotate_x(gfloat angle)
-    {
-      gfloat c  = cos(angle*degree);
-      gfloat s  = sin(angle*degree);
+  Matrix44& set_rotate_x(gfloat angle)throw()
+  {
+    gfloat c  = cos(angle*degree);
+    gfloat s  = sin(angle*degree);
 
-      return set(1.f, 0.f, 0.f, 0.f,
-                 0.f,   c,  -s, 0.f,
-                 0.f,   s,   c, 0.f,
-                 0.f, 0.f, 0.f, 1.f);
-    }
+    return set(1.f, 0.f, 0.f, 0.f,
+               0.f,   c,  -s, 0.f,
+               0.f,   s,   c, 0.f,
+               0.f, 0.f, 0.f, 1.f);
+  }
 
-    Matrix44& set_rotate_y(gfloat angle)
-    {
-      gfloat c  = cos(angle*degree);
-      gfloat s  = sin(angle*degree);
+  Matrix44& set_rotate_y(gfloat angle)throw()
+  {
+    gfloat c  = cos(angle*degree);
+    gfloat s  = sin(angle*degree);
 
-      return set(  c, 0.f,   s, 0.f,
-                 0.f, 1.f, 0.f, 0.f,
-                  -s, 0.f,   c, 0.f,
-                 0.f, 0.f, 0.f, 1.f);
-    }
+    return set(  c, 0.f,   s, 0.f,
+               0.f, 1.f, 0.f, 0.f,
+                -s, 0.f,   c, 0.f,
+               0.f, 0.f, 0.f, 1.f);
+  }
 
-    Matrix44& set_translate(gfloat x, gfloat y, gfloat z)
-    {
-      return set(1.f, 0.f, 0.f,   x,
-                 0.f, 1.f, 0.f,   y,
-                 0.f, 0.f, 1.f,   z,
-                 0.f, 0.f, 0.f, 1.f);
-    }
+  Matrix44& set_translate(gfloat x, gfloat y, gfloat z)throw()
+  {
+    return set(1.f, 0.f, 0.f,   x,
+               0.f, 1.f, 0.f,   y,
+               0.f, 0.f, 1.f,   z,
+               0.f, 0.f, 0.f, 1.f);
+  }
 
-    Matrix44& rotate_z(gfloat angle)
-    {
-      Matrix44 tmp(DONT_INIT);
-      tmp.set_rotate_z(angle);
+  Matrix44& rotate_z(gfloat angle)throw()
+  {
+    Matrix44 tmp(DONT_INIT);
+    tmp.set_rotate_z(angle);
 
-      return *this *= tmp;
-    }
+    return *this *= tmp;
+  }
 
-    Matrix44& rotate_x(gfloat angle)
-    {
-      Matrix44 tmp(DONT_INIT);
-      tmp.set_rotate_x(angle);
+  Matrix44& rotate_x(gfloat angle)throw()
+  {
+    Matrix44 tmp(DONT_INIT);
+    tmp.set_rotate_x(angle);
 
-      return *this *= tmp;
-    }
+    return *this *= tmp;
+  }
 
-    Matrix44& rotate_y(gfloat angle)
-    {
-      Matrix44 tmp(DONT_INIT);
-      tmp.set_rotate_y(angle);
+  Matrix44& rotate_y(gfloat angle)throw()
+  {
+    Matrix44 tmp(DONT_INIT);
+    tmp.set_rotate_y(angle);
 
-      return *this *= tmp;
-    }
+    return *this *= tmp;
+  }
 
-    Matrix44& translate(float x, gfloat y, gfloat z)
-    {
-      Matrix44 tmp(DONT_INIT);
-      tmp.set_translate(x, y, z);
+  Matrix44& translate(float x, gfloat y, gfloat z)throw()
+  {
+    Matrix44 tmp(DONT_INIT);
+    tmp.set_translate(x, y, z);
 
-      return *this *= tmp;
-    }
+    return *this *= tmp;
+  }
 
-    /** \brief Makes the current Matrix to represent a perspective Matrix.
-     *
-     * Implementation based on http://www.opengl.org/sdk/docs/man/xhtml/gluPerspective.xml (2011-01-06)
-     *
-     * \param fovy the field of view in degrees
-     *
-     * \note It makes no difference, whether the previos represented matrix has been an identity matrix or something else.
-     * */
-    Matrix44& set_perspective(gfloat fovy, gfloat aspect, gfloat znear, gfloat zfar)
-    {
-      gfloat f  = 1.f/tan(fovy*0.5f*degree);
-      gfloat inv_nmf  = 1.f/(znear-zfar);
+  /** \brief Makes the current Matrix to represent a perspective Matrix.
+   *
+   * Implementation based on http://www.opengl.org/sdk/docs/man/xhtml/gluPerspective.xml (2011-01-06)
+   *
+   * \param fovy the field of view in degrees
+   *
+   * \note It makes no difference, whether the previos represented matrix has been an identity matrix or something else.
+   * */
+public:
+  Matrix44& set_perspective(gfloat fovy, gfloat aspect, gfloat znear, gfloat zfar)throw(std::invalid_argument)
+  {
+    if(fovy<=0.f)
+      throw std::invalid_argument("**Matrix44::set_perspective** fov must be >= 0");
+    if(aspect<=0.f)
+      throw std::invalid_argument("**Matrix44::set_perspective** aspect must be >= 0");
+    if(znear-zfar == 0.f)
+      throw std::invalid_argument("**Matrix44::set_perspective** znear-zfar mustn't be == 0");
 
-      set_identity();
-      (*this)(1,1)  = f/aspect;
-      (*this)(2,2)  = f;
-      (*this)(3,3)  = inv_nmf*(znear+zfar);
-      (*this)(3,4)  = inv_nmf*2.f*znear*zfar;
-      (*this)(4,3)  =-1.f;
-      (*this)(4,4)  = 0.f;
-    }
+    gfloat f  = 1.f/tan(fovy*0.5f*degree);
+    gfloat inv_nmf  = 1.f/(znear-zfar);
+
+    set_identity();
+    (*this)(1,1)  = f/aspect;
+    (*this)(2,2)  = f;
+    (*this)(3,3)  = inv_nmf*(znear+zfar);
+    (*this)(3,4)  = inv_nmf*2.f*znear*zfar;
+    (*this)(4,3)  =-1.f;
+    (*this)(4,4)  = 0.f;
+
+    return *this;
+  }
   //@}
 
   /** @name OpenGL
@@ -472,12 +515,30 @@ public:
   /** @name Debugging
    * */
   //@{
+public:
   std::string str()const
   {
-    return Glib::ustring::compose("%1\n%2\n%3\n%4", get_row(1).str(), get_row(2).str(), get_row(3).str(), get_row(4).str()).c_str();
+    return Glib::ustring::compose("%1\n%2\n%3\n%4", get_row(1).str(), get_row(2).str(), get_row(3).str(), get_row(4).str()).raw();
+  }
+
+  std::string str_sub3x3(gsize sr, gsize sc)
+  {
+    return Glib::ustring::compose("(%1  %4  %7)\n"
+                                  "(%2  %5  %8)\n"
+                                  "(%3  %6  %9)",
+                                  get_single_item_of_sub_3x3_matrix(1, 1, sr, sr),
+                                  get_single_item_of_sub_3x3_matrix(2, 1, sr, sr),
+                                  get_single_item_of_sub_3x3_matrix(3, 1, sr, sr),
+                                  get_single_item_of_sub_3x3_matrix(1, 2, sr, sr),
+                                  get_single_item_of_sub_3x3_matrix(2, 2, sr, sr),
+                                  get_single_item_of_sub_3x3_matrix(3, 2, sr, sr),
+                                  get_single_item_of_sub_3x3_matrix(1, 3, sr, sr),
+                                  get_single_item_of_sub_3x3_matrix(2, 3, sr, sr),
+                                  get_single_item_of_sub_3x3_matrix(3, 3, sr, sr)).raw();
   }
   //@}
 
+public:
   static const Matrix44 identity;
 };
 
