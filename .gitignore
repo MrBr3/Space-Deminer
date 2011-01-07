@@ -1027,3 +1027,5 @@
 /obj-d/planet-generator/Raytracer_CalcPixelColor.o.d
 /obj-d/base/math_Matrix44.o
 /obj-d/base/math_Matrix44.o.d
+/obj-d/space-deminer/tests_test-gui.o
+/obj-d/space-deminer/tests_test-gui.o.d

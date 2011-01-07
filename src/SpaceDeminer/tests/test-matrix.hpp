@@ -195,8 +195,8 @@ void test_matrix()
                            0.f, 0.f, 0.f, 1.f));
   m.set_identity();
 
-  m.rotate_z(90.f*degree);
-  m.rotate_z(270.f*degree);
+  m.rotate_z(90.f);
+  m.rotate_z(270.f);
 
   check_within(m, Matrix44(1.f, 0.f, 0.f, 0.f,
                            0.f, 1.f, 0.f, 0.f,
@@ -204,7 +204,7 @@ void test_matrix()
                            0.f, 0.f, 0.f, 1.f));
   m.set_identity();
 
-  m.rotate_z(90.f*degree);
+  m.rotate_z(90.f);
 
   check_within(m, Matrix44(0.f,-1.f, 0.f, 0.f,
                            1.f, 0.f, 0.f, 0.f,
@@ -213,7 +213,7 @@ void test_matrix()
 
   m.set_identity();
 
-  m.rotate_z(180.f*degree);
+  m.rotate_z(180.f);
 
   check_within(m, Matrix44(-1.f, 0.f, 0.f, 0.f,
                             0.f,-1.f, 0.f, 0.f,
@@ -230,8 +230,8 @@ void test_matrix()
                            0.f, 0.f, 0.f, 1.f));
   m.set_identity();
 
-  m.rotate_x(92.f*degree);
-  m.rotate_x(268.f*degree);
+  m.rotate_x(92.f);
+  m.rotate_x(268.f);
 
   check_within(m, Matrix44(1.f, 0.f, 0.f, 0.f,
                            0.f, 1.f, 0.f, 0.f,
@@ -239,7 +239,7 @@ void test_matrix()
                            0.f, 0.f, 0.f, 1.f));
   m.set_identity();
 
-  m.rotate_x(90.f*degree);
+  m.rotate_x(90.f);
 
   check_within(m, Matrix44(1.f, 0.f, 0.f, 0.f,
                            0.f, 0.f,-1.f, 0.f,
@@ -248,7 +248,7 @@ void test_matrix()
 
   m.set_identity();
 
-  m.rotate_x(180.f*degree);
+  m.rotate_x(180.f);
 
   check_within(m, Matrix44( 1.f, 0.f, 0.f, 0.f,
                             0.f,-1.f, 0.f, 0.f,
@@ -265,8 +265,8 @@ void test_matrix()
                            0.f, 0.f, 0.f, 1.f));
   m.set_identity();
 
-  m.rotate_y(92.f*degree);
-  m.rotate_y(268.f*degree);
+  m.rotate_y(92.f);
+  m.rotate_y(268.f);
 
   check_within(m, Matrix44(1.f, 0.f, 0.f, 0.f,
                            0.f, 1.f, 0.f, 0.f,
@@ -274,7 +274,7 @@ void test_matrix()
                            0.f, 0.f, 0.f, 1.f));
   m.set_identity();
 
-  m.rotate_y(90.f*degree);
+  m.rotate_y(90.f);
 
   check_within(m, Matrix44( 0.f, 0.f, 1.f, 0.f,
                             0.f, 1.f, 0.f, 0.f,
@@ -283,7 +283,7 @@ void test_matrix()
 
   m.set_identity();
 
-  m.rotate_y(180.f*degree);
+  m.rotate_y(180.f);
 
   check_within(m, Matrix44(-1.f, 0.f, 0.f, 0.f,
                             0.f, 1.f, 0.f, 0.f,
@@ -338,20 +338,68 @@ void test_matrix()
                             0.f, 1.f, 0.f, 0.f,
                             0.f, 0.f, 1.f, 0.f,
                             0.f, 0.f, 0.f, 1.f));
-  check_within(m, Matrix44( 1.f, 0.f, 0.f, 0.f,
-                            0.f, 42.f, 0.f, 0.f,
-                            0.f, 0.f, 1.f, 0.f,
-                            0.f, 0.f, 0.f, 1.f));
 
   SHOULD_FAIL(abc.get_single_item_of_sub_3x3_matrix(4, 5, 1, 1))
   SHOULD_FAIL(abc.get_single_item_of_sub_3x3_matrix(4, 6, 1, 1))
   SHOULD_FAIL(abc.get_single_item_of_sub_3x3_matrix(5, 4, 1, 1))
   SHOULD_FAIL(abc.get_single_item_of_sub_3x3_matrix(2, 0, 1, 1))
-  SHOULD_FAIL(abc.get_single_item_of_sub_3x3_matrix(0, 2 1, 1))
-  SHOULD_FAIL(abc.get_single_item_of_sub_3x3_matrix(2, 2 0, 1))
-  SHOULD_FAIL(abc.get_single_item_of_sub_3x3_matrix(2, 2 1, 0))
-  SHOULD_FAIL(abc.get_single_item_of_sub_3x3_matrix(2, 2 1, 5))
-  SHOULD_FAIL(abc.get_single_item_of_sub_3x3_matrix(2, 2 5, 5))
+  SHOULD_FAIL(abc.get_single_item_of_sub_3x3_matrix(0, 2, 1, 1))
+  SHOULD_FAIL(abc.get_single_item_of_sub_3x3_matrix(2, 2, 0, 1))
+  SHOULD_FAIL(abc.get_single_item_of_sub_3x3_matrix(2, 2, 1, 0))
+  SHOULD_FAIL(abc.get_single_item_of_sub_3x3_matrix(2, 2, 1, 5))
+  SHOULD_FAIL(abc.get_single_item_of_sub_3x3_matrix(2, 2, 5, 5))
 
-  //check_expect(abc.str_sub3x3(4, 4), "()");
+  check_within<gfloat>(abc.get_single_item_of_sub_3x3_matrix(1, 3, 4, 3), 13.);
+
+  SHOULD_FAIL(check_expect<std::string>(abc.str_sub3x3(4, 4), "(1  5  9)\n"
+                                                              "(2  6  10)\n"
+                                                              "(3  7  11)\n"))
+  check_expect<std::string>(abc.str_sub3x3(4, 4), "(1  5  9)\n"
+                                                  "(2  6  10)\n"
+                                                  "(3  7  11)");
+  check_expect<std::string>(abc.str_sub3x3(4, 3), "(1  5  13)\n"
+                                                  "(2  6  14)\n"
+                                                  "(3  7  15)");
+  check_expect<std::string>(abc.str_sub3x3(4, 2), "(1  9  13)\n"
+                                                  "(2  10  14)\n"
+                                                  "(3  11  15)");
+  check_expect<std::string>(abc.str_sub3x3(4, 1), "(5  9  13)\n"
+                                                  "(6  10  14)\n"
+                                                  "(7  11  15)");
+  check_expect<std::string>(abc.str_sub3x3(3, 4), "(1  5  9)\n"
+                                                  "(2  6  10)\n"
+                                                  "(4  8  12)");
+  check_expect<std::string>(abc.str_sub3x3(3, 3), "(1  5  13)\n"
+                                                  "(2  6  14)\n"
+                                                  "(4  8  16)");
+  check_expect<std::string>(abc.str_sub3x3(3, 2), "(1  9  13)\n"
+                                                  "(2  10  14)\n"
+                                                  "(4  12  16)");
+  check_expect<std::string>(abc.str_sub3x3(3, 1), "(5  9  13)\n"
+                                                  "(6  10  14)\n"
+                                                  "(8  12  16)");
+  check_expect<std::string>(abc.str_sub3x3(2, 4), "(1  5  9)\n"
+                                                  "(3  7  11)\n"
+                                                  "(4  8  12)");
+  check_expect<std::string>(abc.str_sub3x3(2, 3), "(1  5  13)\n"
+                                                  "(3  7  15)\n"
+                                                  "(4  8  16)");
+  check_expect<std::string>(abc.str_sub3x3(2, 2), "(1  9  13)\n"
+                                                  "(3  11  15)\n"
+                                                  "(4  12  16)");
+  check_expect<std::string>(abc.str_sub3x3(2, 1), "(5  9  13)\n"
+                                                  "(7  11  15)\n"
+                                                  "(8  12  16)");
+  check_expect<std::string>(abc.str_sub3x3(1, 4), "(2  6  10)\n"
+                                                  "(3  7  11)\n"
+                                                  "(4  8  12)");
+  check_expect<std::string>(abc.str_sub3x3(1, 3), "(2  6  14)\n"
+                                                  "(3  7  15)\n"
+                                                  "(4  8  16)");
+  check_expect<std::string>(abc.str_sub3x3(1, 2), "(2  10  14)\n"
+                                                  "(3  11  15)\n"
+                                                  "(4  12  16)");
+  check_expect<std::string>(abc.str_sub3x3(1, 1), "(6  10  14)\n"
+                                                  "(7  11  15)\n"
+                                                  "(8  12  16)");
 }

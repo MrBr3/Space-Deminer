@@ -337,7 +337,7 @@ private:
    *
    * \return the requested value
    * */
-  gfloat get_single_item_of_sub_3x3_matrix(gsize r, gsize c, gsize sr, gsize sc)
+  gfloat get_single_item_of_sub_3x3_matrix(gsize r, gsize c, gsize sr, gsize sc)const
   {
     if(c<1 || c>3)
       throw std::invalid_argument("**Matrix44::operator()** c must be one of {1, 2, 3}");
@@ -520,24 +520,34 @@ public:
 public:
   std::string str()const
   {
-    return Glib::ustring::compose("%1\n%2\n%3\n%4", get_row(1).str(), get_row(2).str(), get_row(3).str(), get_row(4).str()).raw();
+    return Glib::ustring::compose("%1\n%2\n%3\n%4", get_row(1).str(), get_row(2).str(), get_row(3).str(), get_row(4).str()).c_str();
   }
 
-  std::string str_sub3x3(gsize sr, gsize sc)
+  /** \brief Gets the string representation of a single value of 3x3 Matrix defined by this Matrix and "stroking"
+   * one row and one column.
+   *
+   * \param sr the row of this 4x4 Matrix to get the 3x3 Matrix
+   * \param sc the column of this 4x4 Matrix to get the 3x3 Matrix
+   *
+   * \return the string representation of the 3x3 submatrix
+   * */
+  std::string str_sub3x3(gsize sr, gsize sc)const
   {
     return Glib::ustring::compose("(%1  %4  %7)\n"
                                   "(%2  %5  %8)\n"
                                   "(%3  %6  %9)",
-                                  get_single_item_of_sub_3x3_matrix(1, 1, sr, sr),
-                                  get_single_item_of_sub_3x3_matrix(2, 1, sr, sr),
-                                  get_single_item_of_sub_3x3_matrix(3, 1, sr, sr),
-                                  get_single_item_of_sub_3x3_matrix(1, 2, sr, sr),
-                                  get_single_item_of_sub_3x3_matrix(2, 2, sr, sr),
-                                  get_single_item_of_sub_3x3_matrix(3, 2, sr, sr),
-                                  get_single_item_of_sub_3x3_matrix(1, 3, sr, sr),
-                                  get_single_item_of_sub_3x3_matrix(2, 3, sr, sr),
-                                  get_single_item_of_sub_3x3_matrix(3, 3, sr, sr)).raw();
+                                  get_single_item_of_sub_3x3_matrix(1, 1, sr, sc),
+                                  get_single_item_of_sub_3x3_matrix(2, 1, sr, sc),
+                                  get_single_item_of_sub_3x3_matrix(3, 1, sr, sc),
+                                  get_single_item_of_sub_3x3_matrix(1, 2, sr, sc),
+                                  get_single_item_of_sub_3x3_matrix(2, 2, sr, sc),
+                                  get_single_item_of_sub_3x3_matrix(3, 2, sr, sc),
+                                  get_single_item_of_sub_3x3_matrix(1, 3, sr, sc),
+                                  get_single_item_of_sub_3x3_matrix(2, 3, sr, sc),
+                                  get_single_item_of_sub_3x3_matrix(3, 3, sr, sc)).c_str();
   }
+
+  friend void test_matrix();
   //@}
 
 public:

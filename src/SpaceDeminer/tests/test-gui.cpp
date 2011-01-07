@@ -17,7 +17,7 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "./main-window.hpp"
+#include "./../ui/main-window.hpp"
 #include <gtkmm.h>
 
 const Gdk::Rectangle* dummy_r=nullptr;
@@ -70,6 +70,15 @@ void check_expect(const T& result, const T& reference)
   }
 }
 
+template<typename T=std::string>
+void check_expect(const std::string& result, const std::string& reference)
+{
+  if(result!=reference) {
+    std::cout<<"**GUITest::check_expect** test failed\nexpected \n\""<<reference<<"\"\nthe real value is\n\""<<result<<"\"\n";
+    throw GUITest::USER_ABORTS_TESTS;
+  }
+}
+
 template<typename T>
 void check_within(const T& result, const T& reference, const T& epsilon)
 {
@@ -82,7 +91,7 @@ void check_within(const T& result, const T& reference, const T& epsilon)
 void check_within(const gfloat& result, const gfloat& reference, const gfloat& epsilon)
 {
   if(abs(result-reference)>epsilon) {
-    std::cout<<"**GUITest::check_within** test failed\nexpected "<<reference<<"    the real value is "<<result<<"\n";
+    std::cout<<"**GUITest::check_within** test failed\nexpected\n"<<reference<<"\nthe real value is\n"<<result<<"\n";
     throw GUITest::USER_ABORTS_TESTS;
   }
 }
@@ -154,7 +163,7 @@ void check_within(const Matrix44& result, const Matrix44& reference, gfloat epsi
 
 #define SHOULD_FAIL(x) try{x; std::cout<<"the test \"" #x "\" should fail\n";throw GUITest::USER_ABORTS_TESTS;}catch(...){}
 
-#include "matrix-test.inl"
+#include "./test-matrix.hpp"
 
 void start_gui_test() {
   try {
