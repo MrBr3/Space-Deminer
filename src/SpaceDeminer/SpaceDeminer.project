@@ -97,13 +97,16 @@
       <File Name="ui/dark-theme.hpp"/>
       <File Name="ui/dark-theme.cpp"/>
       <File Name="main.cpp"/>
-      <File Name="tests/gui-test.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="game">
       <File Name="game/difficulty.hpp"/>
     </VirtualDirectory>
     <File Name="options.hpp"/>
     <File Name="options.cpp"/>
+    <VirtualDirectory Name="tests">
+      <File Name="tests/test-matrix.hpp"/>
+      <File Name="tests/test-gui.cpp"/>
+    </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug">
     <Project Name="Base"/>
