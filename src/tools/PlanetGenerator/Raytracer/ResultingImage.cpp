@@ -21,7 +21,7 @@
 
 namespace Raytracer
 {
-  void calc_pixel_color(ColorRGBA& resulting_color, gfloat x, gfloat y);
+  void calc_pixel_color(ColorRGBA& resulting_color, const RenderParam& rp, int x, int y);
 
   bool ResultingImage::Tile::operator<(const Tile& t)const
   {
@@ -154,9 +154,8 @@ namespace Raytracer
 
     ri->_render_mutex.unlock();
 
-    gfloat inv_width  = 1.f/gfloat(ri->_width);
-    gfloat inv_height = 1.f/gfloat(ri->_height);
     ColorRGBA col(DONT_INIT);
+    const RenderParam& render_param = ri->get_render_param();
 
     struct DitherHelper
     {
@@ -208,7 +207,7 @@ namespace Raytracer
 
         for(guint x=0; x<tile.w; ++x, px+=4)
         {
-          calc_pixel_color(col, gfloat(x+tile.x)*inv_width, gfloat(y+tile.y)*inv_height);
+          calc_pixel_color(col, render_param, x+tile.x, y+tile.y);
 
           if(dh.line)
           {
@@ -245,6 +244,10 @@ namespace Raytracer
   {
     _render_mutex.lock();
 
+    g_assert(!_render_param);
+    _render_param = RenderParam::create(_width, _height);
+    g_assert(_render_param);
+
     _rendering_threads = 0;
     _rendered_tiles = 0;
     _ui_timer_ready = false;
@@ -275,6 +278,7 @@ namespace Raytracer
 
     on_invalidated();
 
+    _render_param.reset();
   }
 
   void ResultingImage::think_ui_timer()
@@ -307,5 +311,16 @@ namespace Raytracer
       _ui_timer_ready = true;
     }else
       think_ui_timer();
+  }
+
+  Glib::RefPtr<RenderParam> RenderParam::create(int img_width, int img_height)
+  {
+    const Settings& settings = Manager::get_settings();
+    const View3D& view3d = main_window->get_view_3d();
+
+    g_assert(&settings);
+    g_assert(&view3d);
+
+    return RenderParam::create(view3d.planet_model_matrix, /*view3d.ring_model_matrix, */view3d.view_matrix, view3d.projection_matrix, img_width, img_height, settings.get_antialiasing());
   }
 }

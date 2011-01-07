@@ -58,12 +58,10 @@ PlanetGenerator
             [X] Minoren bestimmen
           [X] Determinante einer 4x4 Matrix bestimmen
           [X] Adjunkte einer 4x4 Matrix bestimmen
-      [ ] RenderParam
-        [ ] Inverse Matrizen
-        [ ] die absolute pixelposition und kehrwerte für breite/höhe (kehrwerte werden für antialiasing benötigt)
-        [ ] relative pixelposition der Kugelmitte
-        [ ] Radius der Kug
-      [ ] CalcPixelColor sollte anstatt relative pixelposition nur RenderParam als Parameter annehmen
+      [X] RenderParam
+        [X] Inverse Matrizen
+        [X] die absolute pixelposition und kehrwerte für breite/höhe (kehrwerte werden für antialiasing benötigt)
+      [X] CalcPixelColor sollte anstatt relative pixelposition nur RenderParam als Parameter annehmen
       [ ] Mitternachtsformel
       [ ] Strahl implementieren
       [ ] Kugel implementieren
@@ -86,9 +84,11 @@ PlanetGenerator
             [ ] Textur wieerholt
             [ ] CLAMPed
       [ ] BaseTexture mit Wolken
-      [ ] Ebene implementieren
-      [ ] Schnitt Strahl-Ebene
-        [ ] Andeutung für Atmosphäreneffekt
+      [ ] Entfernung, mit der der Strahl an der Kugel vorbeifliegt bestimmen können
+      [ ] Atmosphären effekt
+      [ ] Ringe
+        [ ] Ebene implementieren
+        [ ] Schnitt Strahl-Ebene
   [ ] Shader
     [ ] Textur mit vier Kanälen (alpha invertiert?), wobie jede der vier Texturen für ein eigenes Material steht
       z.B Rot: Wüsten, Grün: kein Glanzlicht, Blau: Eis, Alpha-Invertiert: Wasser

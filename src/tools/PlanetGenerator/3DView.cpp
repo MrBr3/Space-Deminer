@@ -145,9 +145,9 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   view_matrix.rotate_x(-90.f);
   view_matrix.glLoadMatrix();
 
-  model_matrix.set_rotate_x(sphere->get_x_rotation());
-  model_matrix.rotate_z(sphere->get_z_rotation());
-  model_matrix.glMultMatrix();
+  planet_model_matrix.set_rotate_x(sphere->get_x_rotation());
+  planet_model_matrix.rotate_z(sphere->get_z_rotation());
+  planet_model_matrix.glMultMatrix();
 
   bool warped_uv = false;
 

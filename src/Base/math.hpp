@@ -55,6 +55,9 @@ template<typename T>inline void exchange(T& a, T&b)
   b = tmp;
 }
 
+inline gfloat square(gfloat x){return x*x;}
+inline gdouble square(gdouble x){return x*x;}
+
 inline gfloat get_frac_part(gfloat n){gfloat dummy; return modff(n, &dummy);}
 inline gdouble get_frac_part(gdouble n){gdouble dummy; return modf(n, &dummy);}
 
