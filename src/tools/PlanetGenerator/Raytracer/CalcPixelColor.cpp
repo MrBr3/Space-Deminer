@@ -28,7 +28,7 @@ namespace Raytracer
     gfloat screen_rel_x  = gfloat(x)*render_param.inv_img_width;
     gfloat screen_rel_y  = gfloat(y)*render_param.inv_img_height;
 
-    Ray ray(screen_rel_x*2.f-1.f, -2.f*screen_rel_y+.1f, render_param);
+    Ray ray(screen_rel_x*2.f-1.f, -2.f*screen_rel_y+1.f, render_param);
 
     ray.get_color(resulting_color);
   }
