@@ -63,17 +63,18 @@ PlanetGenerator
         [X] die absolute pixelposition und kehrwerte für breite/höhe (kehrwerte werden für antialiasing benötigt)
       [X] CalcPixelColor sollte anstatt relative pixelposition nur RenderParam als Parameter annehmen
       [X] Mitternachtsformel
-      [ ] Strahl implementieren
-      [ ] Kugel implementieren
-        [ ] mit Mittelpunkt, falls später schatten gewünscht sind.
-      [ ] Schnitt Strahl-Kugel
+      [X] Strahl implementieren
+      [X] Kugel implementieren
+        [X] mit Mittelpunkt, falls später schatten gewünscht sind.
+      [X] Schnitt Strahl-Kugel
       [ ] "Shader" für Planet
-        [ ] pixel innerhalb der kugel mit 100% Blau rendern
-      [ ] Antialiasing
-        [ ] no antialiasing
-        [ ] 2 rays per pixel
-        [ ] 4 rays per pixel
-        [ ] 8 rays per pixel
+        [X] pixel innerhalb der kugel mit 100% Blau rendern
+      [X] Antialiasing
+        [X] no antialiasing
+        [X] 2 rays per pixel
+        [x] 4 rays per pixel
+        [X] 8 rays per pixel
+      [ ] pixelerror: SEE ~/Desktop/pixel-error.png !!!
       [ ] Hintergrundfarbe und UV wert entsprechend der Kugel anzeigen
         [ ] unkorrigiert
         [ ] korrigiert

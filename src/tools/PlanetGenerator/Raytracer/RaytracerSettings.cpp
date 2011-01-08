@@ -81,7 +81,7 @@ namespace Raytracer
 
     antialiasing  = 3;
     signal_antialiasing_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
-    append_enum_widget(table_performance, n, "raytrace-antialiasing", _("Antialiasing"), _("The amount of Antialiasing"), create_vector<Glib::ustring>("1 ray per Pixel", "2 rays per Pixel", "4 rays per Pixel", "8 rays per Pixel"), X_GETTER_SETTER_SIGNAL(Settings, antialiasing));
+    append_enum_widget(table_performance, n, "raytrace-antialiasing", _("Antialiasing"), _("The amount of Antialiasing"), create_vector<Glib::ustring>("No Antialiasing", "2 Rays per Pixel", "4 Rays per Pixel", "8 Rays per Pixel"), X_GETTER_SETTER_SIGNAL(Settings, antialiasing));
 
 
     //================
