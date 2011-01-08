@@ -106,7 +106,9 @@ void check_within(const T& result, const T& reference, const T& epsilon)
 
 void check_within(const gfloat& result, const gfloat& reference, const gfloat& epsilon)
 {
-  if(abs(result-reference)>epsilon)
+  gfloat diff = result-reference;
+  diff  = fabs(diff);
+  if(diff > epsilon)
   {
     std::cout<<"**GUITest::check_within** test failed\nexpected\n"<<reference<<"\nthe real value is\n"<<result<<"\n(line "<<curr_line<<", file <"<<curr_file<<">\n";
     throw GUITest::USER_ABORTS_TESTS;

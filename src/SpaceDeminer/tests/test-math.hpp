@@ -32,6 +32,9 @@ void test_math()
     check_expect<guint>(blog_int(7), 2);
     check_expect<guint>(blog_int(8), 3);
     check_expect<guint>(blog_int(9), 3);
+
+    check_expect<guint>(abs(-0.5f), 0.5f);
+    check_expect<guint>(abs(0.5f), 0.5f);
   }
   {
     gfloat x_1, x_2;

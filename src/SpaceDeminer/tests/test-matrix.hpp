@@ -474,4 +474,10 @@ void test_matrix()
   check_within(m*n, Matrix44::identity);
   check_within(n*m, Matrix44::identity);
   check_within(n.get_inversion(abc)*m.get_inversion(abc), Matrix44::identity);
+
+  m.set_perspective(61.f, 1.33333f, 1.f, 11.f);
+  SHOULD_FAIL(check_within(Vector3(0.f, 0.f, -1.f), Vector3(0.5f, 0.5f, 1.0f)))
+  check_within<Vector3>(m*Vector3(0.f, 0.f,-11.f), Vector3(0.0f, 0.0f, 1.0f));
+  check_within<Vector3>(m*Vector3(0.f, 0.f, -1.f), Vector3(0.0f, 0.0f,-1.0f));
+  check_within<Vector3>(m*Vector3(0.f, 0.f, -1.83333333333333333f), Vector3(0.0f, 0.0f, 0.0f)); // TODO, check,whether this is correct
 }
