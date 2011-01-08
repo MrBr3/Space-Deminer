@@ -71,6 +71,8 @@
       <File Name="Raytracer/ResultingImage.cpp"/>
       <File Name="Raytracer/ResultingImage.hpp"/>
       <File Name="Raytracer/CalcPixelColor.cpp"/>
+      <File Name="Raytracer/RenderParam.hpp"/>
+      <File Name="Raytracer/RenderParam.cpp"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug">

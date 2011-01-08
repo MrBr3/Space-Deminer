@@ -17,9 +17,12 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "./Sphere.hpp"
+#include "./RenderParam.hpp"
+#include "./Plane.hpp"
+
 namespace Raytracer
 {
-  class RenderParam;
   class ResultingImage : public Refable
   {
   private:
@@ -79,70 +82,6 @@ namespace Raytracer
   public:
     ResultingImage();
     ~ResultingImage()throw();
-  };
-
-  class RenderParam : public Refable
-  {
-    //gfloat _sphere_center_x, _sphere_center_y;
-    //gfloat _inv_sphere_radius_y_dir;
-  public:
-    const Matrix44& planet_model_matrix;
-    //const Matrix44& ring_model_matrix;
-    const Matrix44& view_matrix;
-    const Matrix44& projection_matrix;
-    Matrix44 inv_planet_model_matrix;
-    //Matrix44 inv_ring_model_matrix;
-    Matrix44 inv_view_matrix;
-    Matrix44 inv_projection_matrix;
-
-    const int img_width, img_height;
-    gfloat inv_img_width, inv_img_height;
-    gfloat aspect;
-    gfloat inv_aspect;
-    int rays_per_pixel;
-
-    /* TODO uncomment * \brief Gets the relative
-     * */
-    /*gfloat get_distance_to_planet_center(gfloat rel_x, gfloat rel_y)const throw()
-    {
-      return sqrt(square((_sphere_center_x-rel_x)*aspect)+square(_sphere_center_y-rel_y))*_inv_sphere_radius_y_dir;
-    }*/
-
-  public:
-    static Glib::RefPtr<RenderParam> create(int img_width, int img_height);
-    static Glib::RefPtr<RenderParam> create(const Matrix44& planet_model_matrix_, /*Matrix44& ring_model_matrix_,*/ const Matrix44& view_matrix_, const Matrix44& projection_matrix_,
-                                            int img_width_, int img_height_, int antialiasing_)
-    {
-      return Glib::RefPtr<RenderParam>(new RenderParam(planet_model_matrix_, /*ring_model_matrix_, */ view_matrix_, projection_matrix_, img_width_, img_height_, antialiasing_));
-    }
-
-private:
-    RenderParam(const Matrix44& planet_model_matrix_, /*Matrix44& ring_model_matrix_,*/ const Matrix44& view_matrix_, const Matrix44& projection_matrix_,
-                int img_width_, int img_height_, int antialiasing) :
-                          planet_model_matrix(planet_model_matrix_), /*ring_model_matrix(ring_model_matrix_),*/ view_matrix( view_matrix_), projection_matrix(projection_matrix_),
-                          inv_planet_model_matrix(planet_model_matrix_), /*inv_ring_model_matrix(ring_model_matrix_),*/ inv_view_matrix(view_matrix_), inv_projection_matrix(projection_matrix_),
-                          img_width(img_width_), img_height(img_height_)
-    {
-      g_assert(img_width>0);
-      g_assert(img_height>0);
-      g_assert(antialiasing>=0 && antialiasing<4);
-
-      //_sphere_center_x  = 0.5f;
-      //_sphere_center_y  = 0.5f;
-      //_inv_sphere_radius_y_dir
-
-      inv_planet_model_matrix.invert();
-      //inv_ring_model_matrix.invert();
-      inv_view_matrix.invert();
-      inv_projection_matrix.invert();
-      inv_img_width  = 1.f/gfloat(img_width);
-      inv_img_height  = 1.f/gfloat(img_height);
-      aspect  = gfloat(img_width)/gfloat(img_height);
-      inv_aspect  = 1.f/aspect;
-
-      rays_per_pixel  = 1<<antialiasing;
-      g_assert(rays_per_pixel==1 || rays_per_pixel==2 || rays_per_pixel==4 || rays_per_pixel==8);
-    }
   };
 }
 

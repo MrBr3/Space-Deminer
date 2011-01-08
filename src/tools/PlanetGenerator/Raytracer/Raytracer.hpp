@@ -27,6 +27,7 @@
 #include "./RaytracerSettings.hpp"
 #include "./Texture.hpp"
 #include "./ResultingImage.hpp"
+#include "./Ray.hpp"
 
 namespace Raytracer
 {

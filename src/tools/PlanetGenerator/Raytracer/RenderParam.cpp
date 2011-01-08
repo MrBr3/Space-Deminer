@@ -17,21 +17,18 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "./../MainWindow.hpp"
+
 namespace Raytracer
 {
-  class Ray
+  Glib::RefPtr<RenderParam> RenderParam::create(int img_width, int img_height)
   {
-    Ray();
-  public:
-    /** \brief Constructer making the Ray to represent a Ray sent by the camera
-     * */
-    Ray(gfloat x, gfloat y, const RenderParam& render_param_);
+    const Settings& settings = Manager::get_settings();
+    const View3D& view3d = main_window->get_view_3d();
 
-    const RenderParam& render_param;
-    Vector3 dir; //> The direction of the Ray
-    Vector3 origin; //> The origin of the Ray
+    g_assert(&settings);
+    g_assert(&view3d);
 
-    void transform(const Matrix44& m);
-    void get_color(ColorRGBA& resulting_color);
-  };
+    return RenderParam::create(Sphere(view3d.planet_model_matrix, 1.f), view3d.view_matrix, view3d.projection_matrix, img_width, img_height, settings.get_antialiasing());
+  }
 }

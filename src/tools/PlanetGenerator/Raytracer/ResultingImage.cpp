@@ -312,15 +312,4 @@ namespace Raytracer
     }else
       think_ui_timer();
   }
-
-  Glib::RefPtr<RenderParam> RenderParam::create(int img_width, int img_height)
-  {
-    const Settings& settings = Manager::get_settings();
-    const View3D& view3d = main_window->get_view_3d();
-
-    g_assert(&settings);
-    g_assert(&view3d);
-
-    return RenderParam::create(view3d.planet_model_matrix, /*view3d.ring_model_matrix, */view3d.view_matrix, view3d.projection_matrix, img_width, img_height, settings.get_antialiasing());
-  }
 }

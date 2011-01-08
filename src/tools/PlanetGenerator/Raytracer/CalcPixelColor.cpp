@@ -23,9 +23,13 @@ namespace Raytracer
 {
   void calc_pixel_color(ColorRGBA& resulting_color, const RenderParam& render_param, int x, int y)
   {
-    gfloat rel_x  = gfloat(x)*render_param.inv_img_width;
-    gfloat rel_y  = gfloat(y)*render_param.inv_img_height;
+    ColorRGBA color;
 
-    resulting_color.set(rel_x, rel_y, 0.f);
+    gfloat screen_rel_x  = gfloat(x)*render_param.inv_img_width;
+    gfloat screen_rel_y  = gfloat(y)*render_param.inv_img_height;
+
+    Ray ray(screen_rel_x*2.f-1.f, -2.f*screen_rel_y+.1f, render_param);
+
+    ray.get_color(resulting_color);
   }
 }

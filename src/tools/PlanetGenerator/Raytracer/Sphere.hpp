@@ -19,4 +19,50 @@
 
 namespace Raytracer
 {
+  class Ray;
+  class RenderParam;
+  class Geometry
+  {
+  protected:
+    /** \brief Gets the color by a ray
+     *
+     * \param color the resulting color, if not hit, this color won't be changed
+     * \param ray a ray in modelspace
+     * \param render_param
+     *
+     * \return true if hit, otherwise false
+     * */
+    virtual bool v_get_color(ColorRGBA& color, const Ray& ray)const = 0;
+
+  public:
+    const Matrix44& transformation;
+    Matrix44 inv_transformation;
+
+    /** \brief Gets the color by a ray
+     *
+     * \param color the resulting color, if not hit, this color fully transparent
+     * \param ray a ray in worldspace
+     * \param render_param
+     *
+     * \return true if hit, otherwise false
+     * */
+    bool get_color(ColorRGBA& color, Ray ray)const;
+
+    Geometry(const Matrix44& transformation_);
+  };
+
+  class Sphere : public Geometry
+  {
+  protected:
+    bool v_get_color(ColorRGBA& color, const Ray& ray)const;
+
+    static void vec_to_uv(Vector2& uv, const Vector3& p);
+
+  public:
+    gfloat radius;
+
+    Sphere(const Matrix44& transformation_, gfloat radius_);
+  };
+
+  void get_planet_color(ColorRGBA& color, const Vector2& uv, const Vector3& normal, const RenderParam& render_param);
 }
