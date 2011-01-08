@@ -92,7 +92,7 @@ public:
 
   /** \brief Gets the scalar product.
    * */
-  gfloat operator*(const Vector2& v)const throw(){return v.x*x, v.y*y;}
+  gfloat operator*(const Vector2& v)const throw(){return v.x*x + v.y*y;}
   //@}
 
   /**@name Mapping
