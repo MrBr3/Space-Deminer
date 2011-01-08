@@ -106,6 +106,7 @@
     <VirtualDirectory Name="tests">
       <File Name="tests/test-matrix.hpp"/>
       <File Name="tests/test-gui.cpp"/>
+      <File Name="tests/test-math.hpp"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug">

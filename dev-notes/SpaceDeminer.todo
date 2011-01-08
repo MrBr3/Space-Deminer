@@ -62,7 +62,7 @@ PlanetGenerator
         [X] Inverse Matrizen
         [X] die absolute pixelposition und kehrwerte für breite/höhe (kehrwerte werden für antialiasing benötigt)
       [X] CalcPixelColor sollte anstatt relative pixelposition nur RenderParam als Parameter annehmen
-      [ ] Mitternachtsformel
+      [X] Mitternachtsformel
       [ ] Strahl implementieren
       [ ] Kugel implementieren
         [ ] mit Mittelpunkt, falls später schatten gewünscht sind.

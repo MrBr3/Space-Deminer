@@ -61,11 +61,15 @@ public:
   void exchange_bytes(guint8* a, guint8* b, gsize n);
 };
 
+int curr_line;
+Glib::ustring curr_file;
+
 template<typename T>
 void check_expect(const T& result, const T& reference)
 {
-  if(result!=reference) {
-    std::cout<<"**GUITest::check_expect** test failed\n";
+  if(result!=reference)
+  {
+    std::cout<<"**GUITest::check_expect** test failed\n(line "<<curr_line<<", file <"<<curr_file<<">\n";
     throw GUITest::USER_ABORTS_TESTS;
   }
 }
@@ -73,8 +77,19 @@ void check_expect(const T& result, const T& reference)
 template<typename T=std::string>
 void check_expect(const std::string& result, const std::string& reference)
 {
-  if(result!=reference) {
-    std::cout<<"**GUITest::check_expect** test failed\nexpected \n\""<<reference<<"\"\nthe real value is\n\""<<result<<"\"\n";
+  if(result!=reference)
+  {
+    std::cout<<"**GUITest::check_expect** test failed\nexpected \n\""<<reference<<"\"\nthe real value is\n\""<<result<<"\"\n(line "<<curr_line<<", file <"<<curr_file<<">\n";
+    throw GUITest::USER_ABORTS_TESTS;
+  }
+}
+
+template<typename T=guint>
+void check_expect(guint result, guint reference)
+{
+  if(result!=reference)
+  {
+    std::cout<<"**GUITest::check_expect** test failed\nexpected \n"<<reference<<"\nthe real value is\n"<<result<<"\n(line "<<curr_line<<", file <"<<curr_file<<">\n";
     throw GUITest::USER_ABORTS_TESTS;
   }
 }
@@ -82,16 +97,18 @@ void check_expect(const std::string& result, const std::string& reference)
 template<typename T>
 void check_within(const T& result, const T& reference, const T& epsilon)
 {
-  if(abs(result-reference)>epsilon) {
-    std::cout<<"**GUITest::check_within** test failed\n";
+  if(abs(result-reference)>epsilon)
+  {
+    std::cout<<"**GUITest::check_within** test failed\n(line "<<curr_line<<", file <"<<curr_file<<">\n";
     throw GUITest::USER_ABORTS_TESTS;
   }
 }
 
 void check_within(const gfloat& result, const gfloat& reference, const gfloat& epsilon)
 {
-  if(abs(result-reference)>epsilon) {
-    std::cout<<"**GUITest::check_within** test failed\nexpected\n"<<reference<<"\nthe real value is\n"<<result<<"\n";
+  if(abs(result-reference)>epsilon)
+  {
+    std::cout<<"**GUITest::check_within** test failed\nexpected\n"<<reference<<"\nthe real value is\n"<<result<<"\n(line "<<curr_line<<", file <"<<curr_file<<">\n";
     throw GUITest::USER_ABORTS_TESTS;
   }
 }
@@ -111,7 +128,7 @@ void check_within(const Vector2& result, const Vector2& reference, gfloat epsilo
     check_within(result.y, reference.y, epsilon);
   }catch(...)
   {
-    std::cout<<"expected \n"<<reference.str()<<"\n got \n"<<result.str()<<"\n";
+    std::cout<<"expected \n"<<reference.str()<<"\n got \n"<<result.str()<<"\n(line "<<curr_line<<", file <"<<curr_file<<">\n";
     throw;
   }
 }
@@ -161,9 +178,13 @@ void check_within(const Matrix44& result, const Matrix44& reference, gfloat epsi
   }
 }
 
+#define check_expect curr_line = __LINE__;curr_file=__FILE__;check_expect
+#define check_within curr_line = __LINE__;curr_file=__FILE__;check_within
+
 #define SHOULD_FAIL(x) try{x; std::cout<<"the test \"" #x "\" should fail\n";throw GUITest::USER_ABORTS_TESTS;}catch(...){}
 
 #include "./test-matrix.hpp"
+#include "./test-math.hpp"
 
 void start_gui_test() {
   try {
@@ -228,17 +249,7 @@ void start_gui_test() {
       check_expect<Glib::ustring>(str_copy_replace_last_with("~/Desktop/earth.day.svg", 0, ".png"), "~/Desktop/earth.day.svg.png");
       check_expect<Glib::ustring>(str_copy_replace_last_with("~/Desktop/Foo.svg", 'x', "-large."), "~/Desktop/Foo.svg");
     }
-    std::cout<<"==== Testing Vector ====\n";
-    {
-      check_within(Vector2( 1.0f, 0.0f).rotate_90_cw() , Vector2( 0.f, -1.f));
-      check_within(Vector2( 1.0f, 0.0f).rotate_90_ccw(), Vector2( 0.f,  1.f));
-      check_within(Vector2( 0.5f,-1.0f)*Vector2( 0.5f,-1.0f).rotate_90_ccw(), 0.f);
-      check_within(Vector2( 0.5f,-1.0f)*Vector2( 0.5f,-1.0f).rotate_90_cw(),  0.f);
-      check_within(Vector2( 0.5f,-1.0f).rotate_90_cw(),  Vector2(-1.f, -0.5));
-      check_within<Vector3>(cross(Vector2(0.5f,-1.0f), Vector3(0.f, 0.f, 1.f)), Vector2(-1.f, -0.5f));
-      check_within<Vector3>(cross(Vector2(0.5f,-1.0f), Vector3(0.f, 0.f,-1.f)), Vector2( 1.f,  0.5f));
-      check_within(Vector3(0.5f,-1.0f, 0.f) * Vector3(0.f, 0.f,-1.f), 0.f);
-    }
+    test_math();
     test_matrix();
     std::cout<<"==== Testing GUI ====\n";
     {

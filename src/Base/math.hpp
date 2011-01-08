@@ -58,6 +58,33 @@ template<typename T>inline void exchange(T& a, T&b)
 inline gfloat square(gfloat x){return x*x;}
 inline gdouble square(gdouble x){return x*x;}
 
+/** \brief Solves a quadric formula.
+ *
+ * This functions solves the equation \f$0=ax^2+bx+c\f$, if the Variables \f$a\f$, \f$b\f$ and \f$c\f$ are known.
+ *
+ * \param x_1 the first solution of the equation. If the equation is not solvable, this value won't be changed
+ * \param x_2 the first solution of the equation. If the equation is not solvable, this value won't be changed
+ * \param a
+ * \param b
+ * \param c
+ *
+ * \return false if the equation is not solvable.
+ * */
+inline bool solve_quadric_formula(gfloat& x_1, gfloat& x_2, gfloat a, gfloat b, gfloat c)
+{
+  gfloat d  = b*b-4.f*a*c;
+
+  if(d<0)
+    return false;
+
+  d = sqrt(d);
+  gfloat ia2  = 1.f/(2.f*a);
+
+  x_1 = (-b+d)*ia2;
+  x_2 = (-b-d)*ia2;
+  return true;
+}
+
 inline gfloat get_frac_part(gfloat n){gfloat dummy; return modff(n, &dummy);}
 inline gdouble get_frac_part(gdouble n){gdouble dummy; return modf(n, &dummy);}
 
