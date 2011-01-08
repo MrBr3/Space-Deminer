@@ -26,7 +26,7 @@ namespace Raytracer
   public:
     Sphere planet;
     const Matrix44& view_matrix;
-    const Matrix44& projection_matrix;
+    const Matrix44 projection_matrix;
     Matrix44 inv_view_matrix;
     Matrix44 inv_projection_matrix;
 

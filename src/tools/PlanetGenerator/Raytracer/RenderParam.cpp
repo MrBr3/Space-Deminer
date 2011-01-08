@@ -29,6 +29,9 @@ namespace Raytracer
     g_assert(&settings);
     g_assert(&view3d);
 
-    return RenderParam::create(Sphere(view3d.planet_model_matrix, 1.f), view3d.view_matrix, view3d.projection_matrix, img_width, img_height, settings.get_antialiasing());
+    Matrix44 m;
+    view3d.calc_projection_matrix(m, gfloat(img_width)/gfloat(img_height));
+
+    return RenderParam::create(Sphere(view3d.planet_model_matrix, 1.f), view3d.view_matrix, m, img_width, img_height, settings.get_antialiasing());
   }
 }

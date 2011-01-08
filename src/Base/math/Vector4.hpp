@@ -119,7 +119,7 @@ public:
   {
     if(w==0.f)
     {
-      g_warning("**Vector4::operator Vector3** w==0");
+      //g_warning("**Vector4::operator Vector3** w==0");
       return Vector3(x, y, z);
     }
     gfloat inv_w  = 1.f/w;

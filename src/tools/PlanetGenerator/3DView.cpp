@@ -106,6 +106,11 @@ void View3D::on_size_allocate(Gtk::Allocation& allocation)
   glViewport(0, 0, allocation.get_width(), allocation.get_height());
 }
 
+Matrix44 View3D::calc_projection_matrix(Matrix44& dest, gfloat aspect)const
+{
+  dest.set_perspective(50., aspect, 1e-3, 1000.);
+}
+
 bool View3D::on_expose_event(GdkEventExpose* event)
 {
   if(!_gl_initialized)
@@ -136,7 +141,7 @@ bool View3D::on_expose_event(GdkEventExpose* event)
 
   gfloat aspect = gfloat(get_width())/gfloat(get_height());
 
-  projection_matrix.set_perspective(50., aspect, 1e-3, 1000.);
+  calc_projection_matrix(projection_matrix, aspect);
   projection_matrix.glLoadMatrix();
 
   glMatrixMode(GL_MODELVIEW);
