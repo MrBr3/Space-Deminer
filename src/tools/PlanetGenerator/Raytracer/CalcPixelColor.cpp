@@ -28,8 +28,48 @@ namespace Raytracer
     gfloat screen_rel_x  = gfloat(x)*render_param.inv_img_width;
     gfloat screen_rel_y  = gfloat(y)*render_param.inv_img_height;
 
-    Ray ray(screen_rel_x*2.f-1.f, -2.f*screen_rel_y+1.f, render_param);
+    gfloat pos_x = screen_rel_x*2.f-1.f;
+    gfloat pos_y = -2.f*screen_rel_y+1.f;
+    gfloat hw = render_param.inv_img_width;
+    gfloat hh = render_param.inv_img_height;
+    gfloat qw = render_param.inv_img_width * 0.5f;
+    gfloat qh = render_param.inv_img_height * 0.5f;
 
-    ray.get_color(resulting_color);
+    ColorRGBA tmp[8];
+
+    switch(render_param.rays_per_pixel)
+    {
+    case 8:
+      Ray(pos_x+qw, pos_y+qh, render_param).get_color(tmp[7]);
+      Ray(pos_x-qw, pos_y+qh, render_param).get_color(tmp[6]);
+      Ray(pos_x-qw, pos_y-qh, render_param).get_color(tmp[5]);
+      Ray(pos_x+qw, pos_y-qh, render_param).get_color(tmp[4]);
+    case 4:
+      Ray(pos_x+hw, pos_y, render_param).get_color(tmp[3]);
+      Ray(pos_x, pos_y+hh, render_param).get_color(tmp[2]);
+    case 2:
+      Ray(pos_x+hw, pos_y+hh, render_param).get_color(tmp[1]);
+    case 1:
+      Ray(pos_x, pos_y, render_param).get_color(tmp[0]);
+      break;
+    default:
+      g_assert_not_reached();
+    }
+
+    resulting_color.set(0.f, 0.f, 0.f, 0.f);
+    gfloat w  = 0.f;
+    for(gsize i=0; i<render_param.rays_per_pixel; ++i)
+    {
+      if(tmp[i].a>0.f)
+      {
+        gfloat inv_a = 1.f/gfloat(tmp[i].a);
+        resulting_color.r += tmp[i].r * inv_a;
+        resulting_color.g += tmp[i].g * inv_a;
+        resulting_color.b += tmp[i].b * inv_a;
+        resulting_color.a += tmp[i].a;
+      }
+    }
+
+    resulting_color.a /= render_param.rays_per_pixel;
   }
 }
