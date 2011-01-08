@@ -23,7 +23,8 @@ namespace Raytracer
 {
   Ray::Ray(gfloat x, gfloat y, const RenderParam& render_param_) : render_param(render_param_)
   {
-    dir = render_param.inv_view_matrix*Vector4(x*render_param.aspect, y, -1.f, 0.f);//render_param.inv_projection_matrix * render_param.inv_view_matrix  * Vector4(x, y, 1.f, 1.f);
+    dir = render_param.inv_projection_matrix * Vector3(x, y, 0.f);
+    dir = render_param.inv_view_matrix * Vector4(dir, 0.f);
     dir.normalize();
     origin = render_param.inv_view_matrix * Vector3(0.f, 0.f, 0.f);
   }

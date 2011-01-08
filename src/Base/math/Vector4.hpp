@@ -61,12 +61,12 @@ public:
     w = 1.f;
   }
 
-  Vector4(const Vector3& other)throw()
+  Vector4(const Vector3& other, gfloat w_=1.f)throw()
   {
     x = other.x;
     y = other.y;
     z = other.z;
-    w = 1.f;
+    w = w_;
   }
 
   Vector4(const Vector4& other)throw()
