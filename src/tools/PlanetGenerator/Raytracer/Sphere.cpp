@@ -54,7 +54,22 @@ namespace Raytracer
                               square(ray.origin.x) + square(ray.origin.y) + square(ray.origin.z) - square(radius)))
       return false;
 
-    resulting_color.set(0.f, 0.f, 1.f, 1.f);
+    if(t1<0.f && t2<0.f)
+      return false;
+
+    if(t1<0.f)
+      t1 = t2;
+
+    if(t2<0.f)
+      t2 = t1;
+
+    t1  = MIN(t1, t2);
+
+    Vector3 p = ray.origin + ray.dir*t1;
+    Vector3 normal = p;
+    normal.normalize();
+
+    resulting_color.set(0.5f*normal.x+0.5f, 0.5f*normal.y+0.5f, 0.5f*normal.z+0.5f, 1.f);
 
     return true;
   }
