@@ -19,6 +19,8 @@
 
 #include "./../MainWindow.hpp"
 
+//#define DEBUG_RENDER_THREAD
+
 namespace Raytracer
 {
   void calc_pixel_color(ColorRGBA& resulting_color, const RenderParam& rp, int x, int y);
@@ -159,10 +161,22 @@ namespace Raytracer
 
     struct DitherHelper
     {
+      const gsize array_size;
       ColorRGBA* line;
       ColorRGBA se;
 
-      DitherHelper() : line(nullptr)
+      inline void clear()
+      {
+        se.set(0.f, 0.f, 0.f, 0.f);
+        memset(line, array_size*sizeof(ColorRGBA), 0);
+      }
+
+      void init()
+      {
+        line = new ColorRGBA[array_size];
+      }
+
+      DitherHelper(gsize array_size_) : array_size(array_size_), line(nullptr)
       {
       }
 
@@ -170,12 +184,16 @@ namespace Raytracer
       {
         delete[] line;
       }
-    }dh;
+    };
+
+    DitherHelper dh(ri->max_tile_width+2);
 
     if(Manager::get_settings().get_dithering())
-      dh.line = new ColorRGBA[ri->max_tile_width+2];
+      dh.init();
 
+#ifndef DEBUG_RENDER_THREAD
     ri->_waiting_for_start.wait();
+#endif
 
     while(!ri->_aborted)
     {
@@ -201,6 +219,8 @@ namespace Raytracer
 
       ri->_render_mutex.unlock();
 
+      dh.clear();
+
       for(guint y=0; y<tile.h && !ri->_aborted; ++y)
       {
         px  = all_pixels + tile.x*4 + rowstride*(tile.y+y);
@@ -209,7 +229,12 @@ namespace Raytracer
         {
           calc_pixel_color(col, render_param, x+tile.x, y+tile.y);
 
-          if(dh.line)
+          if(x+tile.x==80 && y+tile.y==116)
+          {
+            get_n_cores();
+          }
+
+          if(dh.line) // Dither
           {
             ColorRGBA temp = dh.se;
 
@@ -228,8 +253,6 @@ namespace Raytracer
             dh.line[1+x].a  += temp.a;
           }else
             col.fill(px);
-
-          Glib::usleep(50);
         }
       }
     }
@@ -237,7 +260,9 @@ namespace Raytracer
     ri->_render_mutex.lock();
     ri->_rendering_threads--;
     ri->_render_mutex.unlock();
+#ifndef DEBUG_RENDER_THREAD
     ri->_waiting_for_finish.wait();
+#endif
   }
 
   void ResultingImage::render()
@@ -255,10 +280,14 @@ namespace Raytracer
 
     _render_mutex.unlock();
 
+#ifndef DEBUG_RENDER_THREAD
     for(guint i=0; i<get_n_cores(); ++i)
       Glib::Thread::create(sigc::bind(sigc::ptr_fun(ResultingImage::render_thread), this), false);
 
     _waiting_for_start.wait();
+#else
+    ResultingImage::render_thread(this);
+#endif
 
     think_ui_timer();
 
@@ -267,7 +296,9 @@ namespace Raytracer
       Gtk::Main::iteration(false);
     }
 
+#ifndef DEBUG_RENDER_THREAD
     _waiting_for_finish.wait();
+#endif
 
     g_assert(_aborted || _rendering_threads==0);
 
