@@ -167,8 +167,8 @@ namespace Raytracer
 
       inline void clear()
       {
-        se.set(0.f, 0.f, 0.f, 0.f);
-        memset(line, array_size*sizeof(ColorRGBA), 0);
+        //se.set(0.f, 0.f, 0.f, 0.f);
+        //memset(line, array_size*sizeof(ColorRGBA), 0);
       }
 
       void init()
@@ -219,31 +219,28 @@ namespace Raytracer
 
       ri->_render_mutex.unlock();
 
-      dh.clear();
-
       for(guint y=0; y<tile.h && !ri->_aborted; ++y)
       {
         px  = all_pixels + tile.x*4 + rowstride*(tile.y+y);
 
+        dh.clear();
+
         for(guint x=0; x<tile.w; ++x, px+=4)
         {
-          calc_pixel_color(col, render_param, x+tile.x, y+tile.y);
+          g_assert(x < ri->max_tile_width);
 
-          if(x+tile.x==80 && y+tile.y==116)
-          {
-            get_n_cores();
-          }
+          calc_pixel_color(col, render_param, x+tile.x, y+tile.y);
 
           if(dh.line) // Dither
           {
             ColorRGBA temp = dh.se;
 
-            dh.se.set();
+            dh.se.set(0.f, 0.f, 0.f, 0.f);
 
             col.fill_dithered(px,
                               dh.line[1+x], // current pixel
                               dh.line[2+x], // eastern pixel
-                              dh.se,           // southeaster pixel
+                              dh.se,        // southeaster pixel
                               dh.line[1+x], // southern pixel
                               dh.line[x]);  // southwest pixel
 

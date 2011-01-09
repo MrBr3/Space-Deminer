@@ -71,16 +71,19 @@ public:
    * */
   //@{
 
+  static guint8 convert_to_0_255(gfloat x){return CLAMP(round(x*255.f), 0, 255);}
+  static gfloat clamp_to_0_1f(gfloat x){return CLAMP(x, 0.f, 1.f);}
+
   /** \brief Sets four bytes with the desired color
    *
    * \note the caller owns the four bytes and has to make sure they area valid
    * */
   void fill(guint8* pixels)
   {
-    pixels[0] = CLAMP(guint8(r*255.f), 0, 255);
-    pixels[1] = CLAMP(guint8(g*255.f), 0, 255);
-    pixels[2] = CLAMP(guint8(b*255.f), 0, 255);
-    pixels[3] = CLAMP(guint8(a*255.f), 0, 255);
+    pixels[0] = convert_to_0_255(r);
+    pixels[1] = convert_to_0_255(g);
+    pixels[2] = convert_to_0_255(b);
+    pixels[3] = convert_to_0_255(a);
   }
 
   /** \brief Sets four bytes with the desired color and calculates dithering.
@@ -91,20 +94,20 @@ public:
    * */
   void fill_dithered(guint8* pixels, const ColorRGBA& add, ColorRGBA& dither_e, ColorRGBA& dither_se, ColorRGBA& dither_s, ColorRGBA& dither_sw)
   {
-    ColorRGBA resctricted(CLAMP(round((add.r+r)*255.f), 0, 255),
-                          CLAMP(round((add.g+g)*255.f), 0, 255),
-                          CLAMP(round((add.b+b)*255.f), 0, 255),
-                          CLAMP(round((add.a+a)*255.f), 0, 255));
+    ColorRGBA resctricted(convert_to_0_255(add.r+r),
+                          convert_to_0_255(add.g+g),
+                          convert_to_0_255(add.b+b),
+                          convert_to_0_255(add.a+a));
     pixels[0] = guint8(resctricted.r);
     pixels[1] = guint8(resctricted.g);
     pixels[2] = guint8(resctricted.b);
     pixels[3] = guint8(resctricted.a);
 
     ColorRGBA& diff = resctricted;
-    diff.r = r - resctricted.r/255.f;
-    diff.g = g - resctricted.g/255.f;
-    diff.b = b - resctricted.b/255.f;
-    diff.a = a - resctricted.a/255.f;
+    diff.r = clamp_to_0_1f(r) - resctricted.r/255.f;
+    diff.g = clamp_to_0_1f(g) - resctricted.g/255.f;
+    diff.b = clamp_to_0_1f(b) - resctricted.b/255.f;
+    diff.a = clamp_to_0_1f(a) - resctricted.a/255.f;
 
     const gfloat _7  = 7.f/16.f;
     const gfloat _1  = 1.f/16.f;

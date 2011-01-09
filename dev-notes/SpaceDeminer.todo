@@ -74,7 +74,7 @@ PlanetGenerator
         [X] 2 rays per pixel
         [x] 4 rays per pixel
         [X] 8 rays per pixel
-      [ ] pixelerror: SEE ~/Desktop/pixel-error.png !!!
+      [X] fix dithering
       [ ] Hintergrundfarbe und UV wert entsprechend der Kugel anzeigen
         [ ] unkorrigiert
         [ ] korrigiert

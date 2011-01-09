@@ -56,20 +56,29 @@ namespace Raytracer
       g_assert_not_reached();
     }
 
+    gfloat n_visible = 0;
+
     resulting_color.set(0.f, 0.f, 0.f, 0.f);
-    gfloat w  = 0.f;
     for(gsize i=0; i<render_param.rays_per_pixel; ++i)
     {
-      if(tmp[i].a>0.f)
+      if(tmp[i].a>1e-6f)
       {
-        gfloat inv_a = 1.f/gfloat(tmp[i].a);
-        resulting_color.r += tmp[i].r * inv_a;
-        resulting_color.g += tmp[i].g * inv_a;
-        resulting_color.b += tmp[i].b * inv_a;
+        n_visible+=1.f;
+        gfloat a = tmp[i].a;
+        resulting_color.r += tmp[i].r * a;
+        resulting_color.g += tmp[i].g * a;
+        resulting_color.b += tmp[i].b * a;
         resulting_color.a += tmp[i].a;
       }
     }
 
+    if(n_visible>0.f)
+    {
+      gfloat inv_n_visible  = 1.f/n_visible;
+      resulting_color.r *= inv_n_visible;
+      resulting_color.g *= inv_n_visible;
+      resulting_color.b *= inv_n_visible;
+    }
     resulting_color.a /= render_param.rays_per_pixel;
   }
 }
