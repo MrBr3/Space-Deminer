@@ -56,7 +56,7 @@ namespace Raytracer
       g_assert_not_reached();
     }
 
-    gfloat n_visible = 0;
+    gfloat n_visible = 0.f;
 
     resulting_color.set(0.f, 0.f, 0.f, 0.f);
     for(gsize i=0; i<render_param.rays_per_pixel; ++i)
@@ -80,5 +80,44 @@ namespace Raytracer
       resulting_color.b *= inv_n_visible;
     }
     resulting_color.a /= render_param.rays_per_pixel;
+
+    static bool bad_pixels = false;
+
+    if(resulting_color.r<0.f)
+    {
+      resulting_color.r = 0.f;
+      if(!bad_pixels)
+      {
+        bad_pixels  = true;
+        std::cout<<"*calc_pixel_color** There are bad pixels [r]\n";
+      }
+    }
+    if(resulting_color.g<0.f)
+    {
+      resulting_color.g = 0.f;
+      if(!bad_pixels)
+      {
+        bad_pixels  = true;
+        std::cout<<"*calc_pixel_color** There are bad pixels [g]\n";
+      }
+    }
+    if(resulting_color.b<0.f)
+    {
+      resulting_color.b = 0.f;
+      if(!bad_pixels)
+      {
+        bad_pixels  = true;
+        std::cout<<"*calc_pixel_color** There are bad pixels [b]\n";
+      }
+    }
+    if(resulting_color.a<0.f)
+    {
+      resulting_color.a = 0.f;
+      if(!bad_pixels)
+      {
+        bad_pixels  = true;
+        std::cout<<"*calc_pixel_color** There are bad pixels [a]\n";
+      }
+    }
   }
 }
