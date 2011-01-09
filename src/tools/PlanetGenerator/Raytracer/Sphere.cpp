@@ -100,10 +100,7 @@ namespace Raytracer
 
     uv.x  = get_angle_from_dir(n.x*inv_horizontal_radius, n.y*inv_horizontal_radius);
 
-    if(n.y<0.f)
-      uv.x  += 0.5f-uv.x;
-
-    uv.y  = asin(n.z)/G_PI;
+    uv.y  = acos(-n.z)/G_PI;
   }
 
   //-------------
