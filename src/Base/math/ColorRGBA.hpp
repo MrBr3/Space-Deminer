@@ -74,6 +74,14 @@ public:
   static guint8 convert_to_0_255(gfloat x){return CLAMP(round(x*255.f), 0, 255);}
   static gfloat clamp_to_0_1f(gfloat x){return CLAMP(x, 0.f, 1.f);}
 
+  void clamp()
+  {
+    r = clamp_to_0_1f(r);
+    g = clamp_to_0_1f(g);
+    b = clamp_to_0_1f(b);
+    a = clamp_to_0_1f(a);
+  }
+
   /** \brief Sets four bytes with the desired color
    *
    * \note the caller owns the four bytes and has to make sure they area valid
