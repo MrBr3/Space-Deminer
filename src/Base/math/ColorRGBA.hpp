@@ -71,7 +71,7 @@ public:
    * */
   //@{
 
-  static guint8 convert_to_0_255(gfloat x){return CLAMP(round(x*255.f), 0, 255);}
+  static guint8 convert_to_0_255(gfloat x){return round(CLAMP(x*255.f, 0.f, 255.f));}
   static gfloat clamp_to_0_1f(gfloat x){return CLAMP(x, 0.f, 1.f);}
 
   void clamp()
