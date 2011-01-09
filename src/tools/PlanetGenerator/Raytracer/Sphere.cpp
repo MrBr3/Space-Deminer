@@ -66,25 +66,44 @@ namespace Raytracer
     t1  = MIN(t1, t2);
 
     Vector3 p = ray.origin + ray.dir*t1;
+    p.normalize();
+    p *= radius;
+
     Vector3 normal = p;
     normal.normalize();
 
-    resulting_color.set(0.5f*normal.x+0.5f, 0.5f*normal.y+0.5f, 0.5f*normal.z+0.5f, 1.f);
+    if(Manager::get_settings().get_dbg_normal())
+    {
+      resulting_color.set(0.5f*normal.x+0.5f, 0.5f*normal.y+0.5f, 0.5f*normal.z+0.5f, 1.f);
+    }else
+    {
+      Vector2 uv;
+
+      vec_to_uv(uv, normal);
+
+      if(Manager::get_settings().get_dbg_uv())
+      {
+        resulting_color.set(uv.x, uv.y, 0.f, 1.f);
+      }else
+      {
+        //if(Manager::get_settings().get_dbg_unlit_base_texture())
+        resulting_color.set(0.f, 0.f, 1.f, 1.f);
+      }
+    }
 
     return true;
   }
 
-  void Sphere::vec_to_uv(Vector2& uv, const Vector3& p)
-  {/*
-    if(p.x>p.y)
-      uv.x  = acos(p.x)/G_PI;
-    else
-      uv.x  = acos(p.y)/G_PI;
+  void Sphere::vec_to_uv(Vector2& uv, const Vector3& n)
+  {
+    gfloat inv_horizontal_radius  = 1.f/sqrt(n.x*n.x + n.y*n.y);
 
-    gfloat d  = sqrt(p.x*p.x+p.y*p.y);
+    uv.x  = get_angle_from_dir(n.x*inv_horizontal_radius, n.y*inv_horizontal_radius);
 
-    if(p.z>d)
-      uv.y  = sin()*/
+    if(n.y<0.f)
+      uv.x  += 0.5f-uv.x;
+
+    uv.y  = asin(n.z)/G_PI;
   }
 
   //-------------

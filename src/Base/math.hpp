@@ -85,6 +85,25 @@ inline bool solve_quadric_formula(gfloat& x_1, gfloat& x_2, gfloat a, gfloat b, 
   return true;
 }
 
+/** \brief Gets the angle described by x and y
+ *
+ * The vector described by x and y must be normalized.
+ *
+ * The following example will return a:
+ * \code
+ * get_angle_from_dir(cos(a*PI), sin(a*PI));
+ * \endcode
+ *
+ * \return The angle In the Interval [0, 1] (1 stands for 360°)
+ * */
+inline gfloat get_angle_from_dir(gfloat x, gfloat y)
+{
+  gfloat a  = acos(x)/PI2;
+  if(y<0.f)
+    a = 1.f - a;
+  return a;
+}
+
 inline gfloat get_frac_part(gfloat n){gfloat dummy; return modff(n, &dummy);}
 inline gdouble get_frac_part(gdouble n){gdouble dummy; return modf(n, &dummy);}
 

@@ -48,6 +48,14 @@ void test_math()
     check_within(x_1, 2.f);
     check_within(x_2, 2.f);
   }
+  {
+    check_within(get_angle_from_dir(cos(120.f*degree), sin(120.f*degree))*360.f, 120.f);
+    check_within(get_angle_from_dir(cos(5.f*degree), sin(5.f*degree))*360.f, 5.f);
+    check_within(get_angle_from_dir(cos(0.f*degree), sin(0.f*degree))*360.f, 0.f);
+    check_within(get_angle_from_dir(cos(180.f*degree), sin(180.f*degree))*360.f, 180.f);
+    check_within(get_angle_from_dir(cos(190.f*degree), sin(190.f*degree))*360.f, 190.f);
+    check_within(get_angle_from_dir(cos(270.f*degree), sin(270.f*degree))*360.f, 270.f);
+  }
   std::cout<<"---- Testing Vector ----\n";
   {
     check_within(Vector2( 1.0f, 0.0f).rotate_90_cw() , Vector2( 0.f, -1.f));
