@@ -39,9 +39,14 @@ namespace Raytracer
     INTEGER_SETTING(antialiasing)
     BOOLEAN_SETTING(clear_before_rendering)
 
-    BOOLEAN_SETTING(save_also_normal)
-    BOOLEAN_SETTING(save_also_uv)
-    BOOLEAN_SETTING(save_also_unlit_base_texture)
+    BOOLEAN_SETTING(dbg_normal)
+    BOOLEAN_SETTING(dbg_uv)
+    BOOLEAN_SETTING(dbg_unlit_base_texture)
+    /** \brief Deactivates all debugging Flags
+     *
+     * \param deactivate if false nothing will be done
+     * */
+    void no_debugging(bool deactivate);
 
     BOOLEAN_SETTING(use_large_texture)
     STRING_SETTING(replace_lt_last_slash_with)

@@ -27,7 +27,7 @@ namespace Raytracer
 
     attach_full_line(frame_dest_file);
     attach_full_line(frame_performance);
-    /*attach_full_line(frame_debugging);*/
+    attach_full_line(frame_debugging);
     attach_full_line(frame_textures);
 
     frame_dest_file.add(table_dest_file);
@@ -85,20 +85,20 @@ namespace Raytracer
 
 
     //================
-   /* n=0;
+    n=0;
 
-    save_also_normal  = true;
-    signal_save_also_normal_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
-    append_boolean_widget(table_debugging, n, "raytrace-save-also-normal", _("Normals"), _("If set, the normals will be also saved"), X_GETTER_SETTER_SIGNAL(Settings, save_also_normal));
+    dbg_normal  = false;
+    signal_dbg_normal_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
+    append_boolean_widget(table_debugging, n, "raytrace-dbg-normal", _("Normals"), _("If set, the normals will be also saved"), X_GETTER_SETTER_SIGNAL(Settings, dbg_normal));
 
-    save_also_uv  = true;
-    signal_save_also_uv_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
-    append_boolean_widget(table_debugging, n, "raytrace-save-also-uv", _("UV"), _("If set, the UV-Coordinates wil be also saved"), X_GETTER_SETTER_SIGNAL(Settings, save_also_uv));
+    dbg_uv  = false;
+    signal_dbg_uv_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
+    append_boolean_widget(table_debugging, n, "raytrace-dbg-uv", _("UV"), _("If set, the UV-Coordinates wil be also saved"), X_GETTER_SETTER_SIGNAL(Settings, dbg_uv));
 
-    save_also_unlit_base_texture  = true;
-    signal_save_also_unlit_base_texture_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
-    append_boolean_widget(table_debugging, n, "raytrace-save-also-unlit-base-texture", _("BaseTexture"), _("If set, a unlit version of the base texture wil be also saved"), X_GETTER_SETTER_SIGNAL(Settings, save_also_unlit_base_texture));
-*/
+    dbg_unlit_base_texture  = false;
+    signal_dbg_unlit_base_texture_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
+    append_boolean_widget(table_debugging, n, "raytrace-dbg-unlit-base-texture", _("BaseTexture"), _("If set, a unlit version of the base texture wil be also saved"), X_GETTER_SETTER_SIGNAL(Settings, dbg_unlit_base_texture));
+
     //================
     n=0;
 
@@ -196,28 +196,50 @@ namespace Raytracer
 
   //============
 
-  /*void Settings::set_save_also_normal(bool o)
+  void Settings::no_debugging(bool deactivate)
   {
-    save_also_normal = true; // TODO this value shouldn't be ignored
+    if(deactivate)
+    {
+      set_dbg_normal(false);
+      set_dbg_uv(false);
+      set_dbg_unlit_base_texture(false);
+    }
+  }
 
-    signal_save_also_normal_changed().emit();
+  void Settings::set_dbg_normal(bool o)
+  {
+    if(dbg_normal==o)
+      return;
+
+    no_debugging(o);
+    dbg_normal = o; // TODO this value shouldn't be ignored
+
+    signal_dbg_normal_changed().emit();
   }
 
 
-  void Settings::set_save_also_uv(bool o)
+  void Settings::set_dbg_uv(bool o)
   {
-    save_also_uv= true; // TODO this value shouldn't be ignored
+    if(dbg_uv==o)
+      return;
 
-    signal_save_also_uv_changed().emit();
+    no_debugging(o);
+    dbg_uv= o; // TODO this value shouldn't be ignored
+
+    signal_dbg_uv_changed().emit();
   }
 
 
-  void Settings::set_save_also_unlit_base_texture(bool o)
+  void Settings::set_dbg_unlit_base_texture(bool o)
   {
-    save_also_unlit_base_texture= true; // TODO this value shouldn't be ignored
+    if(dbg_unlit_base_texture==o)
+      return;
 
-    signal_save_also_unlit_base_texture_changed().emit();
-  }*/
+    no_debugging(o);
+    dbg_unlit_base_texture= o; // TODO this value shouldn't be ignored
+
+    signal_dbg_unlit_base_texture_changed().emit();
+  }
 
   //============
 
