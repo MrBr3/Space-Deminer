@@ -27,7 +27,7 @@ namespace Raytracer
 
     attach_full_line(frame_dest_file);
     attach_full_line(frame_performance);
-    attach_full_line(frame_debugging);
+    /*attach_full_line(frame_debugging);*/
     attach_full_line(frame_textures);
 
     frame_dest_file.add(table_dest_file);
@@ -85,7 +85,7 @@ namespace Raytracer
 
 
     //================
-    n=0;
+   /* n=0;
 
     save_also_normal  = true;
     signal_save_also_normal_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
@@ -98,7 +98,7 @@ namespace Raytracer
     save_also_unlit_base_texture  = true;
     signal_save_also_unlit_base_texture_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
     append_boolean_widget(table_debugging, n, "raytrace-save-also-unlit-base-texture", _("BaseTexture"), _("If set, a unlit version of the base texture wil be also saved"), X_GETTER_SETTER_SIGNAL(Settings, save_also_unlit_base_texture));
-
+*/
     //================
     n=0;
 
@@ -196,7 +196,7 @@ namespace Raytracer
 
   //============
 
-  void Settings::set_save_also_normal(bool o)
+  /*void Settings::set_save_also_normal(bool o)
   {
     save_also_normal = true; // TODO this value shouldn't be ignored
 
@@ -217,7 +217,7 @@ namespace Raytracer
     save_also_unlit_base_texture= true; // TODO this value shouldn't be ignored
 
     signal_save_also_unlit_base_texture_changed().emit();
-  }
+  }*/
 
   //============
 
