@@ -70,8 +70,11 @@ inline gdouble square(gdouble x){return x*x;}
  *
  * \return false if the equation is not solvable.
  * */
-inline bool solve_quadric_formula(gfloat& x_1, gfloat& x_2, gfloat a, gfloat b, gfloat c)
+inline bool solve_quadric_formula(gfloat& x_1, gfloat& x_2, gfloat a, gfloat b, gfloat c)throw(std::invalid_argument)
 {
+  if(a==0)
+    throw std::invalid_argument("**solve_quadric_formula** a is not allowed to be==0\n");
+
   gfloat d  = b*b-4.f*a*c;
 
   if(d<0)
@@ -98,7 +101,7 @@ inline bool solve_quadric_formula(gfloat& x_1, gfloat& x_2, gfloat a, gfloat b, 
  * */
 inline gfloat get_angle_from_dir(gfloat x, gfloat y)
 {
-  gfloat a  = acos(x)/PI2;
+  gfloat a  = acos(CLAMP(x, -1.f, 1.f))/PI2;
   if(y<0.f)
     a = 1.f - a;
   return a;

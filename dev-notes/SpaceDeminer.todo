@@ -78,7 +78,7 @@ PlanetGenerator
       [X] Hintergrundfarbe und UV wert entsprechend der Kugel anzeigen
         [X] unkorrigiert
         [X] korrigiert
-      [ ] mystische Artefakte entfernen
+      [X] mystische Artefakte entfernen
       [ ] Base Textur anzeigen
         [ ] Farbe anhand UV herholen (ceil/floor könnte sehr praktisch sein)
           [ ] für u/v werte außerhalb von intervall [0, 1] wählen können zwischen

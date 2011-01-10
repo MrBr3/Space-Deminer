@@ -31,8 +31,6 @@ namespace Raytracer
   {
     static bool bad_pixels = false;
 
-    ColorRGBA color;
-
     gfloat screen_rel_x  = gfloat(x)*render_param.inv_img_width;
     gfloat screen_rel_y  = gfloat(y)*render_param.inv_img_height;
 
