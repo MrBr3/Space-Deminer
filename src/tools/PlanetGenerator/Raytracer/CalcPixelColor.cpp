@@ -19,10 +19,18 @@
 
 #include "./../MainWindow.hpp"
 
+#define warning_bad_pixels(x)if(!bad_pixels)\
+      {\
+        bad_pixels  = true;\
+        std::cout<<"*calc_pixel_color** There are bad pixels "<<x<<"\n";\
+      }
+
 namespace Raytracer
 {
   void calc_pixel_color(ColorRGBA& resulting_color, const RenderParam& render_param, int x, int y)
   {
+    static bool bad_pixels = false;
+
     ColorRGBA color;
 
     gfloat screen_rel_x  = gfloat(x)*render_param.inv_img_width;
@@ -56,68 +64,50 @@ namespace Raytracer
       g_assert_not_reached();
     }
 
-    gfloat n_visible = 0.f;
+    gfloat alpha_sum = 0.f;
 
     resulting_color.set(0.f, 0.f, 0.f, 0.f);
     for(gsize i=0; i<render_param.rays_per_pixel; ++i)
     {
-      if(tmp[i].a>1e-6f)
+      if(tmp[i].a<0.f)
       {
-        n_visible+=1.f;
-        gfloat a = tmp[i].a;
-        resulting_color.r += tmp[i].r * a;
-        resulting_color.g += tmp[i].g * a;
-        resulting_color.b += tmp[i].b * a;
-        resulting_color.a += tmp[i].a;
+        tmp[i].a = 0.f;
+        warning_bad_pixels("[a]");
       }
+
+      gfloat a = tmp[i].a;
+      resulting_color.r += tmp[i].r * a;
+      resulting_color.g += tmp[i].g * a;
+      resulting_color.b += tmp[i].b * a;
+      resulting_color.a += tmp[i].a;
+      alpha_sum += a;
     }
 
-    if(n_visible>0.f)
+    if(alpha_sum>0.f)
     {
-      gfloat inv_n_visible  = 1.f/n_visible;
-      resulting_color.r *= inv_n_visible;
-      resulting_color.g *= inv_n_visible;
-      resulting_color.b *= inv_n_visible;
-    }
-    resulting_color.a /= render_param.rays_per_pixel;
+      gfloat inv_alpha_sum  = 1.f/alpha_sum;
+      resulting_color.r *= inv_alpha_sum;
+      resulting_color.g *= inv_alpha_sum;
+      resulting_color.b *= inv_alpha_sum;
+    }else if(alpha_sum<0.f)
+        warning_bad_pixels("[a]");
 
-    static bool bad_pixels = false;
+    resulting_color.a /= render_param.rays_per_pixel;
 
     if(resulting_color.r<0.f)
     {
       resulting_color.r = 0.f;
-      if(!bad_pixels)
-      {
-        bad_pixels  = true;
-        std::cout<<"*calc_pixel_color** There are bad pixels [r]\n";
-      }
+      warning_bad_pixels("[r]");
     }
     if(resulting_color.g<0.f)
     {
       resulting_color.g = 0.f;
-      if(!bad_pixels)
-      {
-        bad_pixels  = true;
-        std::cout<<"*calc_pixel_color** There are bad pixels [g]\n";
-      }
+      warning_bad_pixels("[g]");
     }
     if(resulting_color.b<0.f)
     {
       resulting_color.b = 0.f;
-      if(!bad_pixels)
-      {
-        bad_pixels  = true;
-        std::cout<<"*calc_pixel_color** There are bad pixels [b]\n";
-      }
-    }
-    if(resulting_color.a<0.f)
-    {
-      resulting_color.a = 0.f;
-      if(!bad_pixels)
-      {
-        bad_pixels  = true;
-        std::cout<<"*calc_pixel_color** There are bad pixels [a]\n";
-      }
+      warning_bad_pixels("[b]");
     }
   }
 }
