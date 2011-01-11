@@ -79,6 +79,11 @@ PlanetGenerator
         [X] unkorrigiert
         [X] korrigiert
       [X] mystische Artefakte entfernen
+      [ ] Strahl und Kugel in Base verschieben
+      [ ] Ebene implementieren
+        [ ] Schnitt Strahl-Ebene
+      [ ] Performance Steigerung mit Frustrumculling pro Kachel
+      [ ] gucken, ob antialiasing wirklich funzt
       [ ] Base Textur anzeigen
         [ ] Farbe anhand UV herholen (ceil/floor könnte sehr praktisch sein)
           [ ] für u/v werte außerhalb von intervall [0, 1] wählen können zwischen
@@ -89,8 +94,6 @@ PlanetGenerator
       [ ] Entfernung, mit der der Strahl an der Kugel vorbeifliegt bestimmen können
       [ ] Atmosphären effekt
       [ ] Ringe
-        [ ] Ebene implementieren
-        [ ] Schnitt Strahl-Ebene
   [ ] Shader
     [ ] Textur mit vier Kanälen (alpha invertiert?), wobie jede der vier Texturen für ein eigenes Material steht
       z.B Rot: Wüsten, Grün: kein Glanzlicht, Blau: Eis, Alpha-Invertiert: Wasser

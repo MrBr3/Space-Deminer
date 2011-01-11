@@ -117,7 +117,7 @@
   </Dependencies>
   <Settings Type="Executable">
     <GlobalSettings>
-      <Compiler Options="$$(pkg-config --cflags gtkmm-2.4 --cflags gtkglextmm-1.2)" C_Options="$$(pkg-config --cflags gtkmm-2.4 --cflags gtkglextmm-1.2)">
+      <Compiler Options="$$(pkg-config --cflags gtkmm-2.4 --cflags gtkglextmm-1.2) -std=c++0x" C_Options="$$(pkg-config --cflags gtkmm-2.4 --cflags gtkglextmm-1.2)">
         <IncludePath Value="./src"/>
         <IncludePath Value="./../include"/>
       </Compiler>
@@ -127,7 +127,7 @@
       <ResourceCompiler Options=""/>
     </GlobalSettings>
     <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="-g -DNDEBUG -std=c++0x" C_Options="-g -DNDEBUG" Required="yes" PreCompiledHeader="">
+      <Compiler Options="-g -DNDEBUG" C_Options="-g -DNDEBUG" Required="yes" PreCompiledHeader="">
         <IncludePath Value="."/>
       </Compiler>
       <Linker Options="" Required="yes">

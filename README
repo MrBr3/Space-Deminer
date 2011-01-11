@@ -19,6 +19,7 @@ Gitg
 
 Libraries we use:
 
+cairomm
 gtkmm
 gtkglextmm
 glew
