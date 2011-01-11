@@ -54,7 +54,7 @@ public:
 
   void invalidate();
 
-  Glib::RefPtr<Sphere> sphere;
+  Glib::RefPtr<Planet> planet;
 
   /** \brief Gets, whether the Mesh should be drawn wireframed.
    * */

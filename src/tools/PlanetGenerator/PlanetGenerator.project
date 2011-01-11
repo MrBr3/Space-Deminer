@@ -55,8 +55,6 @@
     <File Name="opengl.cpp"/>
     <VirtualDirectory Name="Raytracer">
       <File Name="Raytracer/Raytracer.hpp"/>
-      <File Name="Raytracer/Plane.cpp"/>
-      <File Name="Raytracer/Plane.hpp"/>
       <File Name="Raytracer/Ray.cpp"/>
       <File Name="Raytracer/Ray.hpp"/>
       <File Name="Raytracer/Raytracer.cpp"/>
@@ -64,8 +62,6 @@
       <File Name="Raytracer/RaytracerSettings.hpp"/>
       <File Name="Raytracer/Shader.cpp"/>
       <File Name="Raytracer/Shader.hpp"/>
-      <File Name="Raytracer/Sphere.cpp"/>
-      <File Name="Raytracer/Sphere.hpp"/>
       <File Name="Raytracer/Texture.cpp"/>
       <File Name="Raytracer/Texture.hpp"/>
       <File Name="Raytracer/ResultingImage.cpp"/>
@@ -73,6 +69,8 @@
       <File Name="Raytracer/CalcPixelColor.cpp"/>
       <File Name="Raytracer/RenderParam.hpp"/>
       <File Name="Raytracer/RenderParam.cpp"/>
+      <File Name="Raytracer/Planet.hpp"/>
+      <File Name="Raytracer/Planet.cpp"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug">

@@ -21,11 +21,11 @@
 
 const gfloat dt = 0.05f;
 
-Sphere* Sphere::_sphere = nullptr;
+Planet* Planet::_planet = nullptr;
 
-Sphere::Sphere()
+Planet::Planet()
 {
-  g_assert(!_sphere);
+  g_assert(!_planet);
 
   _rotation_x  = 0.f;
   _rotation_y  = 0.f;
@@ -35,47 +35,47 @@ Sphere::Sphere()
   _z_speed  = 0.f;
   _rotating = false;
 
-  _sphere  = this;
+  _planet  = this;
 }
 
-Sphere::~Sphere()throw()
+Planet::~Planet()throw()
 {
-  g_assert(_sphere);
+  g_assert(_planet);
 
-  _sphere  = nullptr;
+  _planet  = nullptr;
 }
 
-void Sphere::set_rotation_x_speed(gfloat x_speed)
+void Planet::set_rotation_x_speed(gfloat x_speed)
 {
   _x_speed  = x_speed;
 
   if(!_rotating && (_x_speed || _y_speed || _z_speed))
   {
     _rotating = true;
-    Glib::signal_timeout().connect_once(sigc::mem_fun(*this, &Sphere::_rotate),
+    Glib::signal_timeout().connect_once(sigc::mem_fun(*this, &Planet::_rotate),
                                         1000*dt);
   }
 }
 
-void Sphere::set_rotation_z_speed(gfloat z_speed)
+void Planet::set_rotation_z_speed(gfloat z_speed)
 {
   _z_speed  = z_speed;
 
   if(!_rotating && (_x_speed || _y_speed || _z_speed))
   {
     _rotating = true;
-    Glib::signal_timeout().connect_once(sigc::mem_fun(*this, &Sphere::_rotate),
+    Glib::signal_timeout().connect_once(sigc::mem_fun(*this, &Planet::_rotate),
                                         1000*dt);
   }
 }
 
-void Sphere::_rotate()
+void Planet::_rotate()
 {
   _rotating = _x_speed || _y_speed || _z_speed;
 
   if(_rotating)
   {
-    Glib::signal_timeout().connect_once(sigc::mem_fun(*this, &Sphere::_rotate),
+    Glib::signal_timeout().connect_once(sigc::mem_fun(*this, &Planet::_rotate),
                                         1000*dt);
 
     rotate_x(_x_speed * dt);

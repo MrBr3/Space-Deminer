@@ -17,7 +17,7 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-class Sphere : public Refable
+class Planet : public Refable
 {
   gfloat _rotation_x, _rotation_y, _rotation_z;
   gfloat _x_speed, _y_speed, _z_speed;
@@ -27,10 +27,10 @@ class Sphere : public Refable
 
   void _invalidate(){_signal_invalidated.emit();}
 
-  static Sphere* _sphere;
+  static Planet* _planet;
 
-  Sphere();
-  Sphere(const Sphere&);
+  Planet();
+  Planet(const Planet&);
 
   void _rotate();
 
@@ -69,12 +69,12 @@ public:
   void set_rotation_x_speed(gfloat x_speed);
   void set_rotation_z_speed(gfloat z_speed);
 
-  ~Sphere()throw();
-  static Glib::RefPtr<Sphere> create()
+  ~Planet()throw();
+  static Glib::RefPtr<Planet> create()
   {
-    if(!_sphere)
-      return Glib::RefPtr<Sphere>(new Sphere);
-    _sphere->reference();
-    return Glib::RefPtr<Sphere>(_sphere);
+    if(!_planet)
+      return Glib::RefPtr<Planet>(new Planet);
+    _planet->reference();
+    return Glib::RefPtr<Planet>(_planet);
   }
 };

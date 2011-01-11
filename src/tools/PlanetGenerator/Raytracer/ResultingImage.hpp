@@ -17,9 +17,8 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "./Sphere.hpp"
+#include "./Planet.hpp"
 #include "./RenderParam.hpp"
-#include "./Plane.hpp"
 
 namespace Raytracer
 {

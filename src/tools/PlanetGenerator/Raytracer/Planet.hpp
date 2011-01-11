@@ -21,22 +21,15 @@ namespace Raytracer
 {
   class Ray;
   class RenderParam;
-  class Geometry
+  class Planet
   {
+    Planet();
+    Planet(const Planet&);
   protected:
-    /** \brief Gets the color by a ray
-     *
-     * \param color the resulting color, if not hit, this color won't be changed
-     * \param ray a ray in modelspace
-     * \param render_param
-     *
-     * \return true if hit, otherwise false
-     * */
-    virtual bool v_get_color(ColorRGBA& color, const Ray& ray)const = 0;
+    static void vec_to_uv(Vector2& uv, const Vector3& p);
 
   public:
-    const Matrix44& transformation;
-    Matrix44 inv_transformation;
+    Math::Sphere sphere;
 
     /** \brief Gets the color by a ray
      *
@@ -46,22 +39,11 @@ namespace Raytracer
      *
      * \return true if hit, otherwise false
      * */
-    bool get_color(ColorRGBA& color, Ray ray)const;
+    bool get_color(ColorRGBA& color, Math::Ray ray)const;
 
-    Geometry(const Matrix44& transformation_);
-  };
+    static void shader(ColorRGBA& color, const Vector2& uv, const Vector3& normal);
 
-  class Sphere : public Geometry
-  {
-  protected:
-    bool v_get_color(ColorRGBA& color, const Ray& ray)const;
-
-    static void vec_to_uv(Vector2& uv, const Vector3& p);
-
-  public:
-    gfloat radius;
-
-    Sphere(const Matrix44& transformation_, gfloat radius_);
+    Planet(const Matrix44& transformation_, gfloat radius_);
   };
 
   void get_planet_color(ColorRGBA& color, const Vector2& uv, const Vector3& normal, const RenderParam& render_param);

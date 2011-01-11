@@ -28,8 +28,8 @@ View3D::View3D() : Gtk::GL::DrawingArea(Gdk::GL::Config::create(Gdk::GL::MODE_RG
   _rotating_with_mouse  = false;
   _draw_wireframed  = false;
 
-  sphere  = Sphere::create();
-  sphere->signal_invalidated().connect(sigc::mem_fun(*this, &View3D::invalidate));
+  planet  = Planet::create();
+  planet->signal_invalidated().connect(sigc::mem_fun(*this, &View3D::invalidate));
 
   distance  = 1.f;
 
@@ -150,8 +150,8 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   view_matrix.rotate_x(-90.f);
   view_matrix.glLoadMatrix();
 
-  planet_model_matrix.set_rotate_x(sphere->get_x_rotation());
-  planet_model_matrix.rotate_z(sphere->get_z_rotation());
+  planet_model_matrix.set_rotate_x(planet->get_x_rotation());
+  planet_model_matrix.rotate_z(planet->get_z_rotation());
   planet_model_matrix.glMultMatrix();
 
   bool warped_uv = false;
@@ -235,8 +235,8 @@ bool View3D::on_motion_notify_event(GdkEventMotion* event)
   {
     gfloat r_frac = CLAMP(distance*distance*1.5f, 0.1f, 1.f);
 
-    sphere->rotate_z(-(mouse_drag_start_x-event->x*1.f) * r_frac);
-    sphere->rotate_x(-(mouse_drag_start_y-event->y*1.f) * r_frac);
+    planet->rotate_z(-(mouse_drag_start_x-event->x*1.f) * r_frac);
+    planet->rotate_x(-(mouse_drag_start_y-event->y*1.f) * r_frac);
 
     mouse_drag_start_x  = event->x;
     mouse_drag_start_y  = event->y;

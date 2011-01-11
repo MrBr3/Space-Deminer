@@ -17,18 +17,28 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Raytracer
+#ifndef _SPACE_DEMINER_BASE_MATH_RAY_H_
+#define _SPACE_DEMINER_BASE_MATH_RAY_H_
+
+class Ray
 {
-  class Ray : public Math::Ray
+public:
+  Vector3 origin; //> The origin of the Ray
+  Vector3 dir; //> The direction of the Ray
+
+  void transform(const Matrix44& m)
   {
-    Ray();
-  public:
-    /** \brief Constructer making the Ray to represent a Ray sent by the camera
-     * */
-    Ray(gfloat x, gfloat y, const RenderParam& render_param_);
+    dir = m * dir;
+    origin  = m * origin;
+  }
 
-    const RenderParam& render_param;
+  Ray()
+  {
+  }
 
-    void get_color(ColorRGBA& resulting_color);
-  };
-}
+  Ray(const Vector3& origin_, const Vector3& dir_) : origin(origin_), dir(dir_)
+  {
+  }
+};
+
+#endif

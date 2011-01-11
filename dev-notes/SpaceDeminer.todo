@@ -79,7 +79,7 @@ PlanetGenerator
         [X] unkorrigiert
         [X] korrigiert
       [X] mystische Artefakte entfernen
-      [ ] Strahl und Kugel in Base verschieben
+      [X] Strahl und Kugel in Base verschieben
       [ ] Ebene implementieren
         [ ] Schnitt Strahl-Ebene
       [ ] Performance Steigerung mit Frustrumculling pro Kachel

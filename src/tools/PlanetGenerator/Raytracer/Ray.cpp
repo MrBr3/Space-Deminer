@@ -33,10 +33,4 @@ namespace Raytracer
   {
     render_param.planet.get_color(resulting_color, *this);
   }
-
-  void Ray::transform(const Matrix44& m)
-  {
-    dir = m * dir;
-    origin  = m * origin;
-  }
 }

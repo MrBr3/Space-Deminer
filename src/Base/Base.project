@@ -27,6 +27,9 @@
       <File Name="math/Matrix44.hpp"/>
       <File Name="math/Vector4.hpp"/>
       <File Name="math/Matrix44.cpp"/>
+      <File Name="math/Sphere.hpp"/>
+      <File Name="math/Geometry.hpp"/>
+      <File Name="math/Ray.hpp"/>
     </VirtualDirectory>
     <File Name="opengl.hpp"/>
     <File Name="opengl.cpp"/>

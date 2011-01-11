@@ -17,18 +17,35 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Raytracer
+#ifndef _SPACE_DEMINER_BASE_MATH_GEOMETRY_H_
+#define _SPACE_DEMINER_BASE_MATH_GEOMETRY_H_
+
+class Geometry
 {
-  class Ray : public Math::Ray
+public:
+  Matrix44 transformation;
+  Matrix44 inv_transformation;
+
+  /** \brief Gets the nearest intersection of a ray in global local space
+   * */
+  bool intersects_global(Ray ray, gfloat& first_intersection)const
   {
-    Ray();
-  public:
-    /** \brief Constructer making the Ray to represent a Ray sent by the camera
-     * */
-    Ray(gfloat x, gfloat y, const RenderParam& render_param_);
+    ray.transform(inv_transformation);
+    return intersects_local(ray, first_intersection);
+  }
 
-    const RenderParam& render_param;
+  /** \brief Gets the nearest intersection of a ray in the geometries local space
+   * */
+  virtual bool intersects_local(const Ray& ray, gfloat& first_intersection)const=0;
 
-    void get_color(ColorRGBA& resulting_color);
-  };
-}
+  Geometry()
+  {
+  }
+
+  Geometry(const Matrix44& transformation_) : transformation(transformation_), inv_transformation(transformation_)
+  {
+    inv_transformation.invert();
+  }
+};
+
+#endif

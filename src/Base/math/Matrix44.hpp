@@ -346,7 +346,7 @@ public:
   /** @name Inversion stuff
    * */
   //@{
-protected:
+public:
   /** \brief Gets a single value of 3x3 Matrix defined by this Matrix and "stroking"
    * one row and one column.
    *
@@ -376,7 +376,6 @@ protected:
     return (*this)(r, c);
   }
 
-public:
   /** \brief Gets the minor of a certain position
    *
    * see http://de.wikipedia.org/wiki/Adjunkte (2011-01-07) and http://de.wikipedia.org/wiki/Determinante (2011-01-07)
@@ -717,8 +716,6 @@ public:
                                   get_single_item_of_sub_3x3_matrix(2, 3, sr, sc),
                                   get_single_item_of_sub_3x3_matrix(3, 3, sr, sc)).c_str();
   }
-
-  friend void test_matrix();
   //@}
 
 public:

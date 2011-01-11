@@ -21,56 +21,32 @@
 
 namespace Raytracer
 {
-  Geometry::Geometry(const Matrix44& transformation_) : transformation(transformation_), inv_transformation(transformation_)
-  {
-    inv_transformation.invert();
-  }
-
-  bool Geometry::get_color(ColorRGBA& color, Ray ray)const
-  {
-    color.r = 0.f;
-    color.g = 0.f;
-    color.b = 0.f;
-    color.a = 0.f;
-
-    ray.transform(inv_transformation);
-
-    return v_get_color(color, ray);
-  }
-
-  //-------------
-
-  Sphere::Sphere(const Matrix44& transformation_, gfloat radius_) : Geometry(transformation_), radius(radius_)
+  Planet::Planet(const Matrix44& transformation_, gfloat radius_) : sphere(transformation_, radius_)
   {
   }
 
-  bool Sphere::v_get_color(ColorRGBA& resulting_color, const Ray& ray)const
+  bool Planet::get_color(ColorRGBA& resulting_color, Math::Ray ray)const
   {
-    gfloat t1, t2;
-
-    if(!solve_quadric_formula(t1, t2,
-                              square(ray.dir.x) + square(ray.dir.y) + square(ray.dir.z),
-                              2.f*(ray.dir.x*ray.origin.x + ray.dir.y*ray.origin.y + ray.dir.z*ray.origin.z),
-                              square(ray.origin.x) + square(ray.origin.y) + square(ray.origin.z) - square(radius)))
+    if(sphere.radius<=0.f)
       return false;
 
-    if(t1<0.f && t2<0.f)
+    gfloat dist;
+
+    resulting_color.r = 0.f;
+    resulting_color.g = 0.f;
+    resulting_color.b = 0.f;
+    resulting_color.a = 0.f;
+
+    ray.transform(sphere.inv_transformation);
+    if(!sphere.intersects_local(ray, dist))
       return false;
 
-    if(t1<0.f)
-      t1 = t2;
-
-    if(t2<0.f)
-      t2 = t1;
-
-    t1  = MIN(t1, t2);
-
-    Vector3 p = ray.origin + ray.dir*t1;
+    Vector3 p = ray.origin + ray.dir*dist;
     p.normalize();
-    p *= radius;
+    p *= sphere.radius;
 
     Vector3 normal = p;
-    normal.normalize();
+    normal *= 1.f/sphere.radius;
 
     if(Manager::get_settings().get_dbg_normal())
     {
@@ -87,29 +63,27 @@ namespace Raytracer
       }else
       {
         //if(Manager::get_settings().get_dbg_unlit_base_texture())
-        resulting_color.set(0.f, 0.f, 1.f, 1.f);
+        shader(resulting_color, uv, normal);
       }
     }
 
     return true;
   }
 
-  void Sphere::vec_to_uv(Vector2& uv, const Vector3& n)
+  void Planet::vec_to_uv(Vector2& uv, const Vector3& n)
   {
     gfloat inv_horizontal_radius  = 1.f/sqrt(n.x*n.x + n.y*n.y);
 
     uv.x  = get_angle_from_dir(n.x*inv_horizontal_radius, n.y*inv_horizontal_radius);
 
-    uv.y  = acos(-n.z)/G_PI;
+    uv.y  = acos(CLAMP(n.z, -1.f, 1.f))/G_PI;
   }
 
-  //-------------
-
-  void get_planet_color(ColorRGBA& color, const Vector2& uv, const Vector3& normal)
+  void Planet::shader(ColorRGBA& color, const Vector2& uv, const Vector3& normal)
   {
-    color.r = uv.x;
-    color.g = uv.y;
-    color.b = 0.f;
+    color.r = 0.f;
+    color.g = 0.f;
+    color.b = 1.f;
     color.a = 1.f;
   }
 }
