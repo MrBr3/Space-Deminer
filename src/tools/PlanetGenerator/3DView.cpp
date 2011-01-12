@@ -19,7 +19,7 @@
 
 #include "./MainWindow.hpp"
 
-View3D::View3D() : Gtk::GL::DrawingArea(Gdk::GL::Config::create(Gdk::GL::MODE_RGBA|Gdk::GL::MODE_DOUBLE|Gdk::GL::MODE_ALPHA))
+View3D::View3D() : Gtk::GL::DrawingArea(Gdk::GL::Config::create(Gdk::GL::MODE_DEPTH|Gdk::GL::MODE_RGBA|Gdk::GL::MODE_DOUBLE|Gdk::GL::MODE_ALPHA))
 {
   add_events(Gdk::POINTER_MOTION_MASK|Gdk::BUTTON_PRESS_MASK|Gdk::BUTTON_RELEASE_MASK|Gdk::SCROLL_MASK|Gdk::LEAVE_NOTIFY_MASK|Gdk::ENTER_NOTIFY_MASK);
 
@@ -94,6 +94,11 @@ void View3D::on_realize()
   night_texture->init();
   weight_texture->init();
 
+  glEnable(GL_DEPTH_TEST);
+
+  glDepthFunc(GL_LEQUAL);
+  glDepthMask(GL_TRUE);
+
   _gl_initialized = true;
 
   view_settings->signal_n_sphere_segments_changed().connect(sigc::mem_fun(*this, &View3D::reinit_sphere_mesh));
@@ -116,7 +121,7 @@ void View3D::on_size_allocate(Gtk::Allocation& allocation)
 
 Matrix44 View3D::calc_projection_matrix(Matrix44& dest, gfloat aspect)const
 {
-  dest.set_perspective(50., aspect, 1e-3, 1000.);
+  dest.set_perspective(50., aspect, 1.e-2f, 1000.f);
 }
 
 bool View3D::on_expose_event(GdkEventExpose* event)
@@ -135,13 +140,11 @@ bool View3D::on_expose_event(GdkEventExpose* event)
                view_settings->get_back_color_green(),
                view_settings->get_back_color_blue(),
                0.f);
+  glClearDepth(1.f);
 
-  glClear(GL_COLOR_BUFFER_BIT /*| GL_DEPTH_BUFFER_BIT*/);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   glEnable(GL_CULL_FACE);
-  glEnable(GL_DEPTH_TEST);
-
-  //glDepthFunc(GL_GREATER);
 
   if(get_draw_wireframed())
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -196,9 +199,9 @@ bool View3D::on_expose_event(GdkEventExpose* event)
 
   sphere_mesh.render(warped_uv);
 
-  glPopMatrix();
-
   unbind_all_textures();
+
+  glPopMatrix();
 
   if(RingLayer::get_singleton()->get_visible())
   {
