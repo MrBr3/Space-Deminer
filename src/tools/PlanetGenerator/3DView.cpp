@@ -48,6 +48,14 @@ View3D::~View3D()throw()
 {
 }
 
+void View3D::unbind_all_textures()
+{
+  base_texture->unbind();
+  cloud_texture->unbind();
+  night_texture->unbind();
+  weight_texture->unbind();
+}
+
 void View3D::deinit()
 {
   if(_gl_initialized)
@@ -128,9 +136,12 @@ bool View3D::on_expose_event(GdkEventExpose* event)
                view_settings->get_back_color_blue(),
                0.f);
 
-  glClear(GL_COLOR_BUFFER_BIT);
+  glClear(GL_COLOR_BUFFER_BIT /*| GL_DEPTH_BUFFER_BIT*/);
 
   glEnable(GL_CULL_FACE);
+  glEnable(GL_DEPTH_TEST);
+
+  //glDepthFunc(GL_GREATER);
 
   if(get_draw_wireframed())
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -149,6 +160,9 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   view_matrix.set_translate(0., 0.f, -1.f -1e-2f - 1.5f*distance);
   view_matrix.rotate_x(-90.f);
   view_matrix.glLoadMatrix();
+
+
+  glPushMatrix();
 
   planet_model_matrix.set_rotate_x(planet->get_x_rotation());
   planet_model_matrix.rotate_z(planet->get_z_rotation());
@@ -174,13 +188,43 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   {
     weight_texture->bind();
     warped_uv = WeightTextureLayer::get_imagefile()->get_needs_to_be_warped();
-  }else
+  }else if(only_visible_layer.operator->()!=RingLayer::get_singleton())
   {
     base_texture->bind();
     warped_uv = BaseTextureLayer::get_imagefile()->get_needs_to_be_warped();
   }
 
   sphere_mesh.render(warped_uv);
+
+  glPopMatrix();
+
+  unbind_all_textures();
+
+  if(RingLayer::get_singleton()->get_visible())
+  {
+    RingLayer* ring_planet = RingLayer::get_singleton();
+
+    glPushMatrix();
+
+    glDisable(GL_CULL_FACE);
+
+    ring_model_matrix = planet_model_matrix;
+    ring_model_matrix.rotate_z(ring_planet->get_z_rotation());
+    ring_model_matrix.rotate_x(ring_planet->get_x_rotation());
+    ring_model_matrix.scale(ring_planet->get_outer_radius());
+    ring_model_matrix.glMultMatrix();
+
+    glBegin(GL_QUADS);
+      glVertex3f(-1.f, -1.f, 0.f);
+      glVertex3f( 1.f, -1.f, 0.f);
+      glVertex3f( 1.f,  1.f, 0.f);
+      glVertex3f(-1.f,  1.f, 0.f);
+    glEnd();
+
+    unbind_all_textures();
+
+    glPopMatrix();
+  }
 
   gl_drawable->swap_buffers();
   return true;

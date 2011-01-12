@@ -79,7 +79,9 @@ public:
   SphereMesh sphere_mesh;
   Glib::RefPtr<Texture> base_texture, cloud_texture, night_texture, weight_texture;
 
+  void unbind_all_textures();
+
   Matrix44 calc_projection_matrix(Matrix44& dest, gfloat aspect)const;
 
-  Matrix44 planet_model_matrix, view_matrix, projection_matrix;
+  Matrix44 planet_model_matrix, ring_model_matrix, view_matrix, projection_matrix;
 };

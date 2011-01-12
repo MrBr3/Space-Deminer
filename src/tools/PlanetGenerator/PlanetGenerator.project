@@ -46,6 +46,8 @@
       <File Name="WeightTextureLayer.hpp"/>
       <File Name="WeightTextureLayer.cpp"/>
       <File Name="Process.hpp"/>
+      <File Name="RingLayer.hpp"/>
+      <File Name="RingLayer.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Both">
       <File Name="Options.cpp"/>

@@ -23,10 +23,12 @@ class ViewSettings : public SettingsWidget
   gfloat _back_color_green;
   gfloat _back_color_blue;
 
+  int _n_ring_segments;
   int _n_sphere_segments;
 
   sigc::signal<void> _signal_back_color_changed;
   sigc::signal<void> _signal_n_sphere_segments_changed;
+  sigc::signal<void> _signal_n_ring_segments_changed;
   sigc::signal<void> _signal_something_changed;
 
 public:
@@ -40,9 +42,13 @@ public:
   int get_n_sphere_segments()const{return _n_sphere_segments;}
   void set_n_sphere_segments(int n);
 
+  int get_n_ring_segments()const{return _n_ring_segments;}
+  void set_n_ring_segments(int n);
+
   sigc::signal<void>& signal_back_color_changed(){return _signal_back_color_changed;}
   sigc::signal<void>& signal_something_changed(){return _signal_something_changed;}
   sigc::signal<void>& signal_n_sphere_segments_changed(){return _signal_n_sphere_segments_changed;}
+  sigc::signal<void>& signal_n_ring_segments_changed(){return _signal_n_ring_segments_changed;}
 
 public:
   ViewSettings();

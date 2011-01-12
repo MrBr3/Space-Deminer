@@ -33,6 +33,7 @@ public:
   ~Texture()throw();
 
   void bind();
+  void unbind();
 
   void deinit();
   void init();

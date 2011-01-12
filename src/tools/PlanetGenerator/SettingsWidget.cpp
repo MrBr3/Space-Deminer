@@ -201,6 +201,35 @@ Gtk::Widget& SettingsWidget::append_int_widget(Gtk::Table& table, guint& n_entri
   return *spin_button;
 }
 
+Gtk::Widget& SettingsWidget::append_real_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<gfloat>& getter, const sigc::slot<void, gfloat>& setter, sigc::signal<void>& signal_changed)
+{
+  Gtk::Label* wlabel  = Gtk::manage(new Gtk::Label(label));
+  Gtk::SpinButton* spin_button  = Gtk::manage(new Gtk::SpinButton);
+
+  wlabel->set_alignment(0., 0.5);
+  wlabel->show();
+
+  sigc::slot<gdouble> w_getter = sigc::mem_fun(*spin_button, &Gtk::SpinButton::get_value);
+  sigc::slot<void, gdouble> w_setter = sigc::mem_fun(*spin_button, &Gtk::SpinButton::set_value);
+
+  spin_button->set_range(G_MININT, G_MAXINT);
+
+  w_setter(getter());
+
+  spin_button->show();
+  spin_button->set_tooltip_text(tooltip);
+  spin_button->set_increments(1, 5);
+  spin_button->set_digits(3);
+  spin_button->signal_value_changed().connect(create_updater(w_getter, setter));
+  signal_changed.connect(create_updater(getter, w_setter));
+
+  table.attach(*wlabel, 0, 1, n_entries, n_entries+1, Gtk::FILL, Gtk::FILL);
+  table.attach(*spin_button, 1, 2, n_entries, n_entries+1, Gtk::EXPAND|Gtk::FILL, Gtk::FILL);
+  ++n_entries;
+
+  return *spin_button;
+}
+
 namespace Private
 {
   class MyComboBoxText : public Gtk::ComboBox

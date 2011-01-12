@@ -41,6 +41,14 @@ void Texture::bind()
   glBindTexture(GL_TEXTURE_2D, _texture);
 }
 
+void Texture::unbind()
+{
+  if(!_initialized)
+    return;
+
+  glBindTexture(GL_TEXTURE_2D, 0);
+}
+
 void Texture::deinit()
 {
   if(!_initialized)

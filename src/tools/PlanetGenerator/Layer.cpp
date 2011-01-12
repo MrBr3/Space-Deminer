@@ -39,6 +39,7 @@ LayerModel::LayerModel()
   register_night_texture_layer();
   register_weight_texture_layer();
   register_cloud_texture_layer();
+  register_ring_layer();
 }
 
 LayerModel::~LayerModel()throw()
