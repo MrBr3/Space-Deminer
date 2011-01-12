@@ -66,5 +66,17 @@ void test_math()
     check_within<Vector3>(cross(Vector2(0.5f,-1.0f), Vector3(0.f, 0.f, 1.f)), Vector2(-1.f, -0.5f));
     check_within<Vector3>(cross(Vector2(0.5f,-1.0f), Vector3(0.f, 0.f,-1.f)), Vector2( 1.f,  0.5f));
     check_within(Vector3(0.5f,-1.0f, 0.f) * Vector3(0.f, 0.f,-1.f), 0.f);
+    check_within(Vector2(INV_SQRT_2, INV_SQRT_2).get_length(), 1.f);
+  }
+  std::cout<<"---- Testing Planes ----\n";
+  {
+    Plane plane1(Vector3(-1.f, 0.f, 1.f), Vector3(0.f, -1.f, 0.f), Vector3(5.f, 0.f, 0.f));
+
+    check_within(plane1, Plane(Vector3(INV_SQRT_2, 0.f, INV_SQRT_2), Vector3(5.f, 0.f, 0.f)));
+    check_expect(plane1.check_point(Vector3(5.0f, 0.f, 0.f)), Math::INSIDE);
+    check_expect(plane1.check_point(Vector3(5.0f, 256.f, 0.f)), Math::INSIDE);
+    check_expect(plane1.check_point(Vector3(5.0f,-256.f, 0.f)), Math::INSIDE);
+    check_expect(plane1.check_point(Vector3(5.1f,-256.f, 0.f)), Math::FORESIDE);
+    check_expect(plane1.check_point(Vector3(4.9f,-256.f, 0.f)), Math::BACKSIDE);
   }
 }

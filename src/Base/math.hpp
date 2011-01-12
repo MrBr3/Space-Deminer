@@ -27,6 +27,7 @@
 #include "./dependencies.hpp"
 
 #define PI2 (G_PI*2.0)
+#define INV_SQRT_2 0.7071067811865475f
 
 const gfloat degree = G_PI/180.f;
 
@@ -114,12 +115,18 @@ inline bool XOR(bool a, bool b){return a!=b;}
 
 namespace Math
 {
+  enum Overlap
+  {
+    OVERLAPPING, BACKSIDE, FORESIDE, INSIDE, OUTSIDE
+  };
+
 #include "./math/Vector2.hpp"
 #include "./math/Vector3.hpp"
 #include "./math/Vector4.hpp"
 #include "./math/Matrix44.hpp"
 #include "./math/ColorRGBA.hpp"
 #include "./math/Ray.hpp"
+#include "./math/Plane.hpp"
 #include "./math/Geometry.hpp"
 #include "./math/Sphere.hpp"
 }
@@ -128,6 +135,7 @@ using Math::Vector2;
 using Math::Vector3;
 using Math::Vector4;
 using Math::Matrix44;
+using Math::Plane;
 using Math::ColorRGBA;
 
 #endif

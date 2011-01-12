@@ -180,6 +180,20 @@ void check_within(const Matrix44& result, const Matrix44& reference, gfloat epsi
   }
 }
 
+template<typename T=Plane>
+void check_within(const Plane& result, const Plane& reference, gfloat epsilon=1.e-4f)
+{
+  try
+  {
+    check_within(result.normal, reference.normal, epsilon);
+    check_within(result.d, reference.d, epsilon);
+  }catch(...)
+  {
+    std::cout<<"expected \n"<<reference.str()<<"\n got \n"<<result.str()<<"\n";
+    throw;
+  }
+}
+
 #define check_expect curr_line = __LINE__;curr_file=__FILE__;check_expect
 #define check_within curr_line = __LINE__;curr_file=__FILE__;check_within
 

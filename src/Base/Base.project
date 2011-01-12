@@ -30,6 +30,7 @@
       <File Name="math/Sphere.hpp"/>
       <File Name="math/Geometry.hpp"/>
       <File Name="math/Ray.hpp"/>
+      <File Name="math/Plane.hpp"/>
     </VirtualDirectory>
     <File Name="opengl.hpp"/>
     <File Name="opengl.cpp"/>
