@@ -35,6 +35,7 @@ class View3D : public Gtk::GL::DrawingArea
   sigc::signal<void> _sig_wireframed_changed_noparam;
 
   void reinit_sphere_mesh();
+  void reinit_ring_mesh();
 
 public:
 
@@ -77,7 +78,8 @@ public:
   sigc::signal<void>& sig_wireframed_changed_noparam(){return _sig_wireframed_changed_noparam;}
 
   SphereMesh sphere_mesh;
-  Glib::RefPtr<Texture> base_texture, cloud_texture, night_texture, weight_texture;
+  RingMesh ring_mesh;
+  Glib::RefPtr<Texture> base_texture, cloud_texture, night_texture, weight_texture, ring_texture;
 
   void unbind_all_textures();
 

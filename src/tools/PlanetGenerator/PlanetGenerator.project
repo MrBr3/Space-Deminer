@@ -28,6 +28,8 @@
       <File Name="UVMeshExporter.cpp"/>
       <File Name="WarningListDialog.hpp"/>
       <File Name="WarningListDialog.cpp"/>
+      <File Name="RingMesh.hpp"/>
+      <File Name="RingMesh.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Model">
       <File Name="Model.hpp"/>

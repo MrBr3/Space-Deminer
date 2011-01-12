@@ -42,6 +42,7 @@ View3D::View3D() : Gtk::GL::DrawingArea(Gdk::GL::Config::create(Gdk::GL::MODE_DE
   cloud_texture  = Texture::create(CloudTextureLayer::get_imagefile());
   night_texture  = Texture::create(NightTextureLayer::get_imagefile());
   weight_texture  = Texture::create(WeightTextureLayer::get_imagefile());
+  ring_texture  = Texture::create(RingLayer::get_imagefile());
 }
 
 View3D::~View3D()throw()
@@ -54,6 +55,7 @@ void View3D::unbind_all_textures()
   cloud_texture->unbind();
   night_texture->unbind();
   weight_texture->unbind();
+  ring_texture->unbind();
 }
 
 void View3D::deinit()
@@ -89,10 +91,12 @@ void View3D::on_realize()
   gl_drawable->gl_begin(get_gl_context());
 
   sphere_mesh.init(view_settings->get_n_sphere_segments());
+  ring_mesh.init(view_settings->get_n_ring_segments());
   base_texture->init();
   cloud_texture->init();
   night_texture->init();
   weight_texture->init();
+  ring_texture->init();
 
   glEnable(GL_DEPTH_TEST);
 
@@ -102,6 +106,7 @@ void View3D::on_realize()
   _gl_initialized = true;
 
   view_settings->signal_n_sphere_segments_changed().connect(sigc::mem_fun(*this, &View3D::reinit_sphere_mesh));
+  view_settings->signal_n_ring_segments_changed().connect(sigc::mem_fun(*this, &View3D::reinit_ring_mesh));
 
   signal_wireframed_changed().connect(sigc::hide(sigc::mem_fun(sig_wireframed_changed_noparam(), &sigc::signal<void>::emit)));
 }
@@ -109,6 +114,12 @@ void View3D::on_realize()
 void View3D::reinit_sphere_mesh()
 {
   sphere_mesh.set_segment_division(view_settings->get_n_sphere_segments());
+  invalidate();
+}
+
+void View3D::reinit_ring_mesh()
+{
+  ring_mesh.set_segment_division(view_settings->get_n_ring_segments());
   invalidate();
 }
 
@@ -214,15 +225,11 @@ bool View3D::on_expose_event(GdkEventExpose* event)
     ring_model_matrix = planet_model_matrix;
     ring_model_matrix.rotate_z(ring_planet->get_z_rotation());
     ring_model_matrix.rotate_x(ring_planet->get_x_rotation());
-    ring_model_matrix.scale(ring_planet->get_outer_radius());
     ring_model_matrix.glMultMatrix();
 
-    glBegin(GL_QUADS);
-      glVertex3f(-1.f, -1.f, 0.f);
-      glVertex3f( 1.f, -1.f, 0.f);
-      glVertex3f( 1.f,  1.f, 0.f);
-      glVertex3f(-1.f,  1.f, 0.f);
-    glEnd();
+    //ring_texture->bind();
+
+    ring_mesh.render(ring_planet->get_inner_radius(), ring_planet->get_outer_radius());
 
     unbind_all_textures();
 

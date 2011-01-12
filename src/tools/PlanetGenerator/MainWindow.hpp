@@ -26,6 +26,7 @@
 
 using TriangleVersion::SphereMesh;
 
+#include "RingMesh.hpp"
 #include "Process.hpp"
 #include "Texture.hpp"
 #include "WarningListDialog.hpp"

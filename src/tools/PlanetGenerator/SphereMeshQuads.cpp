@@ -197,6 +197,8 @@ namespace QuadVersion
       glBindBufferARB(GL_ARRAY_BUFFER_ARB,_vertex_buffer_uv_warped);
       glBufferDataARB(GL_ARRAY_BUFFER_ARB,_n_quads * sizeof(UV), circle.uv_warped, GL_STATIC_DRAW_ARB);
     }
+
+    signal_changed().emit();
   }
 
   namespace Private_SphereMesh_
