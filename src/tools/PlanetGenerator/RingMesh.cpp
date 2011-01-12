@@ -59,14 +59,21 @@ void RingMesh::deinit()
   _n_triangles  = 0;
 }
 
-void RingMesh::render(gfloat inner_radius, gfloat outer_radius)
+void RingMesh::render(gfloat width, gfloat outer_radius)
 {
+  if(!_initialized || width<=0.f || outer_radius<=1.f)
+    return;
+
   glPushMatrix();
+
+  width  = MIN(width, 1.f);
 
   glScalef(outer_radius, outer_radius, outer_radius);
 
-  if(!_initialized)
-    return;
+  glMatrixMode(GL_TEXTURE);
+
+  glLoadIdentity();
+  glScalef(outer_radius/((outer_radius-1.f)*width), 1.f, 1.f);
 
   g_assert(_vertex_buffer_triangles);
   g_assert(_vertex_buffer_normals);
@@ -93,6 +100,8 @@ void RingMesh::render(gfloat inner_radius, gfloat outer_radius)
   glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
   glPopMatrix();
+
+  glMatrixMode(GL_MODELVIEW);
 }
 
 void RingMesh::set_segment_division(gsize n_segments)

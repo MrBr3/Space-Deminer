@@ -201,7 +201,7 @@ Gtk::Widget& SettingsWidget::append_int_widget(Gtk::Table& table, guint& n_entri
   return *spin_button;
 }
 
-Gtk::Widget& SettingsWidget::append_real_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<gfloat>& getter, const sigc::slot<void, gfloat>& setter, sigc::signal<void>& signal_changed)
+Gtk::Widget& SettingsWidget::append_real_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<gfloat>& getter, const sigc::slot<void, gfloat>& setter, sigc::signal<void>& signal_changed, gfloat step_increment, gfloat page_increment, guint n_digits)
 {
   Gtk::Label* wlabel  = Gtk::manage(new Gtk::Label(label));
   Gtk::SpinButton* spin_button  = Gtk::manage(new Gtk::SpinButton);
@@ -218,8 +218,8 @@ Gtk::Widget& SettingsWidget::append_real_widget(Gtk::Table& table, guint& n_entr
 
   spin_button->show();
   spin_button->set_tooltip_text(tooltip);
-  spin_button->set_increments(1, 5);
-  spin_button->set_digits(3);
+  spin_button->set_increments(step_increment, page_increment);
+  spin_button->set_digits(n_digits);
   spin_button->signal_value_changed().connect(create_updater(w_getter, setter));
   signal_changed.connect(create_updater(getter, w_setter));
 

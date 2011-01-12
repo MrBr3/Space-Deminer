@@ -41,6 +41,38 @@ void Texture::bind()
   glBindTexture(GL_TEXTURE_2D, _texture);
 }
 
+void Texture::set_wrapping(WrapMode wm_u, WrapMode wm_v)
+{
+  if(!_initialized)
+    return;
+
+  GLint p_u, p_v;
+
+  switch(wm_u)
+  {
+  case CLAMP:
+    p_u = GL_CLAMP;
+   break;
+  case REPEAT:
+  default:
+    p_u = GL_REPEAT;
+  }
+  switch(wm_v)
+  {
+  case CLAMP:
+    p_v = GL_CLAMP;
+   break;
+  case REPEAT:
+  default:
+    p_v = GL_REPEAT;
+  }
+
+  bind();
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, p_u);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, p_v);
+}
+
 void Texture::unbind()
 {
   if(!_initialized)

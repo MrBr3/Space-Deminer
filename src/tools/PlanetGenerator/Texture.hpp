@@ -32,6 +32,14 @@ private:
 public:
   ~Texture()throw();
 
+  enum WrapMode
+  {
+    REPEAT,
+    CLAMP,
+  };
+
+  void set_wrapping(WrapMode wm_u, WrapMode wm_v);
+
   void bind();
   void unbind();
 

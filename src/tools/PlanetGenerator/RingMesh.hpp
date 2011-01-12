@@ -73,7 +73,7 @@ public:
    *
    * This Function won't change anything in lightning nor any texture settings - just the polygons, the uvmesh and the normals.
    * */
-  void render(gfloat inner_radius, gfloat outer_radius);
+  void render(gfloat width, gfloat outer_radius);
 
   RingMesh();
   ~RingMesh()throw();

@@ -97,6 +97,7 @@ void View3D::on_realize()
   night_texture->init();
   weight_texture->init();
   ring_texture->init();
+  ring_texture->set_wrapping(Texture::CLAMP, Texture::REPEAT);
 
   glEnable(GL_DEPTH_TEST);
 
@@ -162,6 +163,10 @@ bool View3D::on_expose_event(GdkEventExpose* event)
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   else
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+  glMatrixMode(GL_TEXTURE);
+
+  glLoadIdentity();
 
   glMatrixMode(GL_PROJECTION);
 
@@ -233,7 +238,7 @@ bool View3D::on_expose_event(GdkEventExpose* event)
 
     ring_texture->bind();
 
-    ring_mesh.render(ring_planet->get_inner_radius(), ring_planet->get_outer_radius());
+    ring_mesh.render(ring_planet->get_width(), ring_planet->get_outer_radius());
 
     unbind_all_textures();
 

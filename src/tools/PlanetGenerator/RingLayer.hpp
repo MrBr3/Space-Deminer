@@ -27,12 +27,12 @@ private:
   gfloat z_rotation;
 
   gfloat outer_radius;
-  gfloat inner_radius;
+  gfloat width;
 
   sigc::signal<void> _signal_x_rotation_changed;
   sigc::signal<void> _signal_z_rotation_changed;
   sigc::signal<void> _signal_rotation_changed;
-  sigc::signal<void> _signal_inner_radius_changed;
+  sigc::signal<void> _signal_width_changed;
   sigc::signal<void> _signal_outer_radius_changed;
 
 public:
@@ -51,16 +51,21 @@ public:
   gfloat get_z_rotation()const{return z_rotation;}
   gfloat get_x_rotation()const{return x_rotation;}
   gfloat get_outer_radius()const{return outer_radius;}
-  gfloat get_inner_radius()const{return inner_radius;}
+  gfloat get_width()const{return width;}
   void set_outer_radius(gfloat r){outer_radius=CLAMP(r, 1.f, 100.f);_signal_outer_radius_changed.emit();}
-  void set_inner_radius(gfloat r){inner_radius=CLAMP(r, 1.f, 100.f);_signal_inner_radius_changed.emit();}
+
+  /** \brief S the width of the Ring.
+   *
+   * \param w the new with of the Ring (0 means the ring begins at the planets surface, 0.5 in the middle between outer radius and the planets surface)
+   * */
+  void set_width(gfloat w){width=CLAMP(w, 0.f, 1.f);_signal_width_changed.emit();}
 
   // TODO Subsurface scattering
 
   sigc::signal<void>& signal_x_rotation_changed(){return _signal_x_rotation_changed;}
   sigc::signal<void>& signal_z_rotation_changed(){return _signal_z_rotation_changed;}
   sigc::signal<void>& signal_rotation_changed(){return _signal_rotation_changed;}
-  sigc::signal<void>& signal_inner_radius_changed(){return _signal_inner_radius_changed;}
+  sigc::signal<void>& signal_width_changed(){return _signal_width_changed;}
   sigc::signal<void>& signal_outer_radius_changed(){return _signal_outer_radius_changed;}
 
   RingLayer();
