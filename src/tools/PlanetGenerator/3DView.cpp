@@ -156,6 +156,7 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   glEnable(GL_CULL_FACE);
+  glDisable(GL_BLEND);
 
   if(get_draw_wireframed())
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -221,13 +222,16 @@ bool View3D::on_expose_event(GdkEventExpose* event)
     glPushMatrix();
 
     glDisable(GL_CULL_FACE);
+    glEnable(GL_BLEND);
+
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     ring_model_matrix = planet_model_matrix;
     ring_model_matrix.rotate_z(ring_planet->get_z_rotation());
     ring_model_matrix.rotate_x(ring_planet->get_x_rotation());
     ring_model_matrix.glMultMatrix();
 
-    //ring_texture->bind();
+    ring_texture->bind();
 
     ring_mesh.render(ring_planet->get_inner_radius(), ring_planet->get_outer_radius());
 

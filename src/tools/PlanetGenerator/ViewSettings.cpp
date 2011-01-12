@@ -26,9 +26,9 @@ ViewSettings::ViewSettings()
   g_assert(!view_settings);
   view_settings = this;
 
-  _back_color_red = 0.5f;
-  _back_color_green = 0.5f;
-  _back_color_blue = 0.5f;
+  _back_color_red = 0.f;
+  _back_color_green = 0.f;
+  _back_color_blue = 0.f;
 
   _n_sphere_segments  = 42;
   _n_ring_segments  = 64;
