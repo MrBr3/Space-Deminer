@@ -25,6 +25,11 @@ namespace Raytracer
   {
     inv_transformation.invert();
 
+    normal  = /*transformation * */Vector4(0.f, 0.f, 1.f, 0.f);
+    normal.normalize();
+    inv_normal  = normal;
+    inv_normal  *= -1.f;
+
     const RingLayer& rl = *RingLayer::get_singleton();
     g_assert(&rl);
 
@@ -49,11 +54,13 @@ namespace Raytracer
     if(p.get_square_length()>outer_radius_pow_2 || p.get_square_length()<inner_radius_pow_2)
       return false;
 
+    const Vector3& n = ray.origin.z>0.f ? normal : inv_normal;
+
     //Vector2 uv(1.f);
 
     //if(Manager::get_settings().get_dbg_normal())
     {
-      color.set(0.f, 0.f, 1.f, 1.f);
+      color.set_direction(n);
     }
 
     return true;

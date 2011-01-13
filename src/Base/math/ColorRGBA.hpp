@@ -67,6 +67,19 @@ public:
     a = a_;
   }
 
+  void set_direction(const Vector3& dir)
+  {
+    if(fabs(dir.get_square_length()-1.f)>1.e-8)
+    {
+      Vector3 v=dir;
+      v.normalize();
+      set(0.5f*v.x+0.5f, 0.5f*v.y+0.5f, 0.5f*v.z+0.5f, 1.f);
+      return;
+    }
+
+    set(0.5f*dir.x+0.5f, 0.5f*dir.y+0.5f, 0.5f*dir.z+0.5f, 1.f);
+  }
+
   /** @name  Conversion
    * */
   //@{

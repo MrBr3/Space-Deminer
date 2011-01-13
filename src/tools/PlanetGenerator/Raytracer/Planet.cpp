@@ -43,7 +43,7 @@ namespace Raytracer
 
     if(Manager::get_settings().get_dbg_normal())
     {
-      resulting_color.set(0.5f*normal.x+0.5f, 0.5f*normal.y+0.5f, 0.5f*normal.z+0.5f, 1.f);
+      resulting_color.set_direction(normal);
     }else
     {
       Vector2 uv;

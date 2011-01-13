@@ -26,6 +26,8 @@ namespace Raytracer
     Matrix44 transformation;
     Matrix44 inv_transformation;
 
+    Vector3 normal, inv_normal;
+
     gfloat inner_radius;
     gfloat outer_radius;
     gfloat inner_radius_pow_2;
