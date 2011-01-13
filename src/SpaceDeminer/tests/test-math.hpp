@@ -70,6 +70,7 @@ void test_math()
   }
   std::cout<<"---- Testing Planes ----\n";
   {
+    gfloat t;
     Plane plane1(Vector3(-1.f, 0.f, 1.f), Vector3(0.f, -1.f, 0.f), Vector3(5.f, 0.f, 0.f));
 
     check_within(plane1, Plane(Vector3(INV_SQRT_2, 0.f, INV_SQRT_2), Vector3(5.f, 0.f, 0.f)));
@@ -78,5 +79,30 @@ void test_math()
     check_expect(plane1.check_point(Vector3(5.0f,-256.f, 0.f)), Math::INSIDE);
     check_expect(plane1.check_point(Vector3(5.1f,-256.f, 0.f)), Math::FORESIDE);
     check_expect(plane1.check_point(Vector3(4.9f,-256.f, 0.f)), Math::BACKSIDE);
+    check_expect<gfloat>(plane1.get_distance(Vector3(0.f, 0.f, 0.f)), fabs(plane1.d));
+    check_within(plane1.get_distance(Vector3(5.f, 0.f, 0.f)), 0.f);
+    check_expect(plane1.check_ray(Math::Ray(Vector3(0.f, 0.f, 0.f), Vector3(0.f, 1.f, 0.f)), t), false);
+    check_expect(plane1.check_ray(Math::Ray(Vector3(0.f, 0.f, 0.f), Vector3(INV_SQRT_2, 0.f,-INV_SQRT_2)), t), false);
+    check_expect(plane1.check_ray(Math::Ray(Vector3(0.f, 0.f, 0.f), Vector3(-INV_SQRT_2, 0.f, INV_SQRT_2)), t), false);
+    check_expect(plane1.check_ray(Math::Ray(Vector3(0.f, 0.f, 0.f), Vector3(INV_SQRT_2, 0.f, INV_SQRT_2)), t), true);
+    check_within<gfloat>(t, fabs(plane1.d));
+    check_expect(plane1.check_ray(Math::Ray(Vector3(-INV_SQRT_2, 20.f, -INV_SQRT_2), Vector3(INV_SQRT_2, 0.f, INV_SQRT_2)), t), true);
+    check_within<gfloat>(t, 1.f+fabs(plane1.d));
+    check_expect(plane1.check_ray(Math::Ray(Vector3(5.f, 0.f, 0.f), Vector3(INV_SQRT_2, 0.f, INV_SQRT_2)), t), true);
+    check_within(t, 0.f);
+    check_expect(plane1.check_ray(Math::Ray(Vector3(5.f, 0.f, 0.f), Vector3(-INV_SQRT_2, 0.f, INV_SQRT_2)), t), true);
+    check_within(t, 0.f);
+
+    Math::Sphere sphere(Matrix44::identity, fabs(plane1.d));
+    check_expect(plane1.check_sphere(sphere), Math::OVERLAPPING);
+    sphere.transformation.set_translate(-1.f, 5.f, 0.f);
+    check_expect(plane1.check_sphere(sphere), Math::BACKSIDE);
+    sphere.transformation.set_translate(10.f, 5.f, 10.f);
+    check_expect(plane1.check_sphere(sphere), Math::FORESIDE);
+    plane1.normal*=-1.f;
+    plane1.d*=-1.f;
+    check_expect(plane1.check_sphere(sphere), Math::BACKSIDE);
+    sphere.transformation.set_translate(-1.f, 5.f, 0.f);
+    check_expect(plane1.check_sphere(sphere), Math::FORESIDE);
   }
 }

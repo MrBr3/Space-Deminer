@@ -20,11 +20,19 @@
 class Plane
 {
   Plane();
+
+  void check()const
+  {
+    if(normal.get_square_length()==0.f)
+      throw std::runtime_error("**void Math::Plane::check** zero length normal is not allowed");
+  }
 public:
   gfloat d; //> distance to origin
   Vector3 normal;
 
   /** \brief Defines the Plane using a normal and the distance to the origin
+   *
+   * \note the normal becomes automatically normalized
    * */
   Plane(const Vector3& normal, gfloat d)throw(std::invalid_argument)
   {
@@ -32,6 +40,8 @@ public:
   }
 
   /** \brief Defines the Plane using a normal and the distance to the origin
+   *
+   * \note the normal becomes automatically normalized
    * */
   void set(const Vector3& normal, gfloat d)throw(std::invalid_argument)
   {
@@ -45,6 +55,8 @@ public:
   }
 
   /** \brief Defines the Plane using a normal and one Point within the plane
+   *
+   * \note the normal becomes automatically normalized
    * */
   Plane(const Vector3& normal, const Vector3& p)throw(std::invalid_argument)
   {
@@ -52,6 +64,8 @@ public:
   }
 
   /** \brief Defines the Plane using a normal (not parallel) and one Point within the plane
+   *
+   * \note the normal becomes automatically normalized
    * */
   void set(Vector3 normal, const Vector3& p)throw(std::invalid_argument)
   {
@@ -61,6 +75,8 @@ public:
   }
 
   /** \brief Defines the Plane using two tangents (pointing to different directions) and one Point within the plane
+   *
+   * \note the normal becomes automatically normalized
    * */
   Plane(const Vector3& t1, const Vector3& t2, const Vector3& p)throw(std::invalid_argument)
   {
@@ -68,6 +84,8 @@ public:
   }
 
   /** \brief Defines the Plane using two tangents (not parallel) and one Point within the plane
+   *
+   * \note the normal becomes automatically normalized
    * */
   void set(const Vector3& t1, const Vector3& t2, const Vector3& p)throw(std::invalid_argument)
   {
@@ -87,11 +105,15 @@ public:
    * */
   //@{
     /** \brief Checks, whether a point is within the plane, if not on which side.
-     *
-     * \return Collision one of \li \c BACKSIDE \li \c FORESIDE \li \c OUTSIDE
+    *
+    * \note for a valid result the normal must be normalized
+    *
+    * \return Collision one of \li \c BACKSIDE \li \c FORESIDE \li \c OUTSIDE
     */
-    Overlap check_point(const Vector3& p, gfloat epsilon=1e-5)const throw()
+    Overlap check_point(const Vector3& p, gfloat epsilon=1e-5)const
     {
+      check();
+
       gfloat x  = normal * p;
 
       if(fabs(x-d)<=epsilon)
@@ -100,6 +122,59 @@ public:
         return BACKSIDE;
       return FORESIDE;
     }
+
+    /** \brief Checks, whether a Sphere overlaps, of touches the plane and if not it checks the side
+    *
+    * \param sphere
+    *
+    * \return \li \c OVERLAPPING if the Sphere is overlapping/touching the plane
+    *         \li \c FORESIDE if the plane is fully on the foreside of the plane
+    *         \li \c BACKSIDE if the plane is fully on the backside of the plane
+    * */
+    Overlap check_sphere(const Sphere& sphere)const;
+
+    /** \brief Checks whether and where the Ray intersects the plane.
+    *
+    * \note for a valid result the normal must be normalized
+    *
+    * \param ray
+    * \param t if the direction vecto of the ray has been normalized, this reference will contain the
+    *        distance from the rays origin to the intersectionpoint.
+    *
+    * \return false if there is no intersection
+    **/
+    bool check_ray(const Ray& ray, gfloat& t)const
+    {
+      gfloat plane_normal_dot_ray_dir = normal * ray.dir;
+
+      if(plane_normal_dot_ray_dir==0.f)
+      {
+        if(check_point(ray.origin)==INSIDE)
+        {
+          t = 0.f;
+          return true;
+        }
+        return false;
+      }
+
+      t = (d - normal*ray.origin)/plane_normal_dot_ray_dir;
+      return true;
+    }
+  //@}
+
+  /** @name Distance
+   * */
+  //@{
+    /** \brief Gets the distance of a point to the plane
+    *
+    * \note for a valid result the normal must be normalized
+    * */
+    gfloat get_distance(const Vector3& p)const
+    {
+      check();
+
+      return fabs(normal*p - d);
+    }
   //@}
 
   /** @name Debugging
@@ -107,7 +182,7 @@ public:
   //@{
   std::string str()const
   {
-    return Glib::ustring::compose("%1*a + %2*b + %3 = %4", normal.x, normal.y, normal.z, d).c_str();
+    return Glib::ustring::compose("%1*a + %2*b + %3 - %4 = 0", normal.x, normal.y, normal.z, d).c_str();
   }
   //@}
 };

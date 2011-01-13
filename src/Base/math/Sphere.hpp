@@ -56,4 +56,16 @@ public:
   }
 };
 
+inline Overlap Plane::check_sphere(const Sphere& sphere)const
+{
+  Vector3 sphere_pos  = sphere.get_position();
+
+  Overlap o = check_point(sphere_pos, sphere.radius);
+
+  if(o==INSIDE)
+    return OVERLAPPING;
+
+  return o;
+}
+
 #endif

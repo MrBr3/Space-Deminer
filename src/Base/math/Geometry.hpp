@@ -26,6 +26,8 @@ public:
   Matrix44 transformation;
   Matrix44 inv_transformation;
 
+  Vector3 get_position()const{return transformation.get_column(4);}
+
   /** \brief Gets the nearest intersection of a ray in global local space
    * */
   bool intersects_global(Ray ray, gfloat& first_intersection)const

@@ -120,6 +120,9 @@ namespace Math
     OVERLAPPING, BACKSIDE, FORESIDE, INSIDE, OUTSIDE
   };
 
+  class Ray;
+  class Sphere;
+
 #include "./math/Vector2.hpp"
 #include "./math/Vector3.hpp"
 #include "./math/Vector4.hpp"
