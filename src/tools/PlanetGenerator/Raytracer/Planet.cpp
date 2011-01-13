@@ -25,23 +25,16 @@ namespace Raytracer
   {
   }
 
-  bool Planet::get_color(ColorRGBA& resulting_color, Math::Ray ray)const
+  bool Planet::get_color(ColorRGBA& resulting_color, Math::Ray ray, gfloat& distance)const
   {
     if(sphere.radius<=0.f)
       return false;
 
-    gfloat dist;
-
-    resulting_color.r = 0.f;
-    resulting_color.g = 0.f;
-    resulting_color.b = 0.f;
-    resulting_color.a = 0.f;
-
     ray.transform(sphere.inv_transformation);
-    if(!sphere.intersects_local(ray, dist))
+    if(!sphere.intersects_local(ray, distance))
       return false;
 
-    Vector3 p = ray.origin + ray.dir*dist;
+    Vector3 p = ray.origin + ray.dir*distance;
     p.normalize();
     p *= sphere.radius;
 

@@ -25,6 +25,7 @@ namespace Raytracer
     //gfloat _inv_sphere_radius_y_dir;
   public:
     Planet planet;
+    Ring ring;
     const Matrix44& view_matrix;
     const Matrix44 projection_matrix;
     Matrix44 inv_view_matrix;
@@ -45,16 +46,16 @@ namespace Raytracer
 
   public:
     static Glib::RefPtr<RenderParam> create(int img_width, int img_height);
-    static Glib::RefPtr<RenderParam> create(const Matrix44& planet_matrix, const Matrix44& view_matrix_, const Matrix44& projection_matrix_,
+    static Glib::RefPtr<RenderParam> create(const Matrix44& ring_matrix, const Matrix44& planet_matrix, const Matrix44& view_matrix_, const Matrix44& projection_matrix_,
                                             int img_width_, int img_height_, int antialiasing_)
     {
-      return Glib::RefPtr<RenderParam>(new RenderParam(planet_matrix, view_matrix_, projection_matrix_, img_width_, img_height_, antialiasing_));
+      return Glib::RefPtr<RenderParam>(new RenderParam(ring_matrix, planet_matrix, view_matrix_, projection_matrix_, img_width_, img_height_, antialiasing_));
     }
 
 private:
-    RenderParam(const Matrix44& planet_matrix,  const Matrix44& view_matrix_, const Matrix44& projection_matrix_,
+    RenderParam(const Matrix44& ring_matrix, const Matrix44& planet_matrix,  const Matrix44& view_matrix_, const Matrix44& projection_matrix_,
                 int img_width_, int img_height_, int antialiasing) :
-                          planet(planet_matrix, 1.f), view_matrix( view_matrix_), projection_matrix(projection_matrix_),
+                          planet(planet_matrix, 1.f), ring(planet_matrix*ring_matrix), view_matrix( view_matrix_), projection_matrix(projection_matrix_),
                           inv_view_matrix(view_matrix_), inv_projection_matrix(projection_matrix_),
                           img_width(img_width_), img_height(img_height_)
     {

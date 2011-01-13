@@ -31,6 +31,28 @@ namespace Raytracer
 
   void Ray::get_color(ColorRGBA& resulting_color)
   {
-    render_param.planet.get_color(resulting_color, *this);
+    ColorRGBA planet_color, ring_color;
+    gfloat planet_distance, ring_distance;
+    bool planet_hit, ring_hit;
+
+    planet_hit  = render_param.planet.get_color(planet_color, *this, planet_distance);
+    ring_hit  = render_param.ring.get_color(ring_color, *this, ring_distance);
+
+    if(planet_hit)
+    {
+      if(ring_hit && ring_distance<=planet_distance)
+      {
+        resulting_color = ring_color;
+      }else
+      {
+        resulting_color = planet_color;
+      }
+    }else
+    {
+      if(ring_hit)
+        resulting_color = ring_color;
+      else
+        resulting_color.set(0.f, 0.f, 0.f, 0.f);
+    }
   }
 }

@@ -52,6 +52,7 @@ public:
   gfloat get_x_rotation()const{return x_rotation;}
   gfloat get_outer_radius()const{return outer_radius;}
   gfloat get_width()const{return width;}
+  gfloat get_inner_radius()const{return outer_radius * (2.f - width);}
   void set_outer_radius(gfloat r){outer_radius=CLAMP(r, 1.f, 100.f);_signal_outer_radius_changed.emit();}
 
   /** \brief S the width of the Ring.

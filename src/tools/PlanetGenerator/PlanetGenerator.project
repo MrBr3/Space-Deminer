@@ -75,6 +75,8 @@
       <File Name="Raytracer/RenderParam.cpp"/>
       <File Name="Raytracer/Planet.hpp"/>
       <File Name="Raytracer/Planet.cpp"/>
+      <File Name="Raytracer/Ring.hpp"/>
+      <File Name="Raytracer/Ring.cpp"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug">

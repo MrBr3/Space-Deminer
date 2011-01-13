@@ -19,33 +19,32 @@
 
 namespace Raytracer
 {
-  class Ray;
-  class RenderParam;
-  class Planet
+  class Ring
   {
-    Planet();
-    Planet(const Planet&);
-  protected:
-    static void vec_to_uv(Vector2& uv, const Vector3& p);
-
   public:
-    Math::Sphere sphere;
+    Plane plane;
+    Matrix44 transformation;
+    Matrix44 inv_transformation;
+
+    gfloat inner_radius;
+    gfloat outer_radius;
+    gfloat inner_radius_pow_2;
+    gfloat outer_radius_pow_2;
+
+    bool visible;
+
+    Ring(const Matrix44& m);
 
     /** \brief Gets the color by a ray
      *
-     * \param color the resulting color, if not hit, if not hit, this color is unspecified
+     * \param color the resulting color, if not hit, this color is unspecified
      * \param ray a ray in worldspace
+     * \param render_param
      *
      * \return true if hit, otherwise false
      * */
     bool get_color(ColorRGBA& color, Math::Ray ray, gfloat& distance)const;
 
     static void shader(ColorRGBA& color, const Vector2& uv, const Vector3& normal);
-
-    Planet(const Matrix44& transformation_, gfloat radius_);
   };
-
-  void get_planet_color(ColorRGBA& color, const Vector2& uv, const Vector3& normal, const RenderParam& render_param);
 }
-
-#include "./Ring.hpp"
