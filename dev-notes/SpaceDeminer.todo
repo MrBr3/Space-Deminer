@@ -35,7 +35,7 @@ PlanetGenerator
     [X] UV-Fehler bei Caps beheben
     [X] decide whether only quads
     [ ] decide whether mix of quads and triangles
-    [ ] anisotropes filtering
+    [ ] anisotropes filtering?
   [X] LayerView
     [X] mit einfachen Klick entsprechende Settings anzeigen
     [X] mit Klick auf das Auge zwischen sichtbar/unsichtbar umschalten
@@ -80,20 +80,22 @@ PlanetGenerator
         [X] korrigiert
       [X] mystische Artefakte entfernen
       [X] Strahl und Kugel in Base verschieben
-      [ ] Ebene implementieren
-        [ ] Schnitt Strahl-Ebene
+      [X] Ebene implementieren
+        [X] Schnitt Strahl-Ebene
+      [X] Ringe
+        [ ] RingTextur
       [ ] Performance Steigerung mit Frustrumculling pro Kachel
-      [ ] gucken, ob antialiasing wirklich funzt
+      [ ] gucken, ob antialiasing wirklich funzt (auch bei 2x und 4x?)
       [ ] Base Textur anzeigen
         [ ] Farbe anhand UV herholen (ceil/floor könnte sehr praktisch sein)
           [ ] für u/v werte außerhalb von intervall [0, 1] wählen können zwischen
             [ ] Transparent
-            [ ] Textur wieerholt
+            [ ] Textur wiederholt
             [ ] CLAMPed
       [ ] BaseTexture mit Wolken
-      [ ] Entfernung, mit der der Strahl an der Kugel vorbeifliegt bestimmen können
       [ ] Atmosphären effekt
-      [ ] Ringe
+        [ ] Entfernung, mit der der Strahl an der Kugel vorbeifliegt bestimmen können
+        [ ] Atmosphäre soll auch Ringe beeinflussen
   [ ] Shader
     [ ] Textur mit vier Kanälen (alpha invertiert?), wobie jede der vier Texturen für ein eigenes Material steht
       z.B Rot: Wüsten, Grün: kein Glanzlicht, Blau: Eis, Alpha-Invertiert: Wasser

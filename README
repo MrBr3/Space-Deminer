@@ -7,7 +7,7 @@ The Software an it's source is licenced under the conditions of the Generel Publ
 
 The Non-functional Data like Textures, images, music, models ... are licensed under the Creative Common License "BY-SA" (http://creativecommons.org/licenses/by-sa/3.0/de/)
 
-the only exceptions in licensing has a seperate README in it's or one of ot's parent folders
+the only exceptions in licensing has a seperate README in it's or one of it's parent folders
 
 Software we use in order to develop:
 
@@ -27,6 +27,6 @@ boost-thread
 
 Disclaimer
 
-At some points in the source, We've written Links to websites (outside github.com/Robert42), which inspired us. We always tell te date, we've visited the site last time. At at this date there were no dangerous or illegal content an that sites, but that sites are not created by us, so we can't garantee, this to be forever
+At some points in the source, We've written Links to websites (outside github.com/Robert42), which inspired us. We always tell te date, we've visited the site last time. At at this date there were no dangerous or illegal content an that sites, but that sites are not created by us, so we can't garantee, this to be forever.
 
-Manchmal (zum Beispiel an einigen Stellen im Quelltext) verwenden nennen wir Link's zu -- aus unserer Sicht -- interessanten Seiten, die uns teilweise inspiriert haben. Wir nennen dann das Datum, an dem wir diese Seite zum letzen mal besucht haben. Wir können nur sagen, dass zu jenem Zeitpunkt keine Gefährlichen oder illegalen Inhalte auf den Seiten gewesen ist, können und wollen aber nicht garantieren, dass sich das in der zwischenzeit geändert haben könnte
+Manchmal (zum Beispiel an einigen Stellen im Quelltext) verwenden nennen wir Link's zu -- aus unserer Sicht -- interessanten Seiten, die uns teilweise inspiriert haben. Wir nennen dann das Datum, an dem wir diese Seite zum letzen mal besucht haben. Wir können nur sagen, dass zu jenem Zeitpunkt keine Gefährlichen oder illegalen Inhalte auf den Seiten gewesen ist, können aber nicht garantieren, dass sich das in der zwischenzeit geändert haben könnte.
