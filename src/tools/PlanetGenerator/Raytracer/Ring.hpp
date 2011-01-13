@@ -23,6 +23,8 @@ namespace Raytracer
   {
   public:
     Plane plane;
+    Matrix44 planet_transformation;
+    Matrix44 ring_transformation;
     Matrix44 transformation;
     Matrix44 inv_transformation;
 
@@ -35,7 +37,7 @@ namespace Raytracer
 
     bool visible;
 
-    Ring(const Matrix44& m);
+    Ring(const Matrix44& planet, const Matrix44& ring);
 
     /** \brief Gets the color by a ray
      *

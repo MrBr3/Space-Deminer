@@ -55,7 +55,7 @@ namespace Raytracer
 private:
     RenderParam(const Matrix44& ring_matrix, const Matrix44& planet_matrix,  const Matrix44& view_matrix_, const Matrix44& projection_matrix_,
                 int img_width_, int img_height_, int antialiasing) :
-                          planet(planet_matrix, 1.f), ring(planet_matrix*ring_matrix), view_matrix( view_matrix_), projection_matrix(projection_matrix_),
+                          planet(planet_matrix, 1.f), ring(planet_matrix, ring_matrix), view_matrix( view_matrix_), projection_matrix(projection_matrix_),
                           inv_view_matrix(view_matrix_), inv_projection_matrix(projection_matrix_),
                           img_width(img_width_), img_height(img_height_)
     {

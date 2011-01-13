@@ -21,11 +21,13 @@
 
 namespace Raytracer
 {
-  Ring::Ring(const Matrix44& m) : plane(Vector3(0.f, 0.f, 1.f), 0.f), transformation(m), inv_transformation(m)
+  Ring::Ring(const Matrix44& planet, const Matrix44& ring) : plane(Vector3(0.f, 0.f, 1.f), 0.f), planet_transformation(planet), ring_transformation(ring)
   {
+    transformation = planet_transformation;
+    inv_transformation = (transformation *= ring_transformation);
     inv_transformation.invert();
 
-    normal  = /*transformation * */Vector4(0.f, 0.f, 1.f, 0.f);
+    normal  = Vector3(0.f, 0.f, 1.f);///*planet_transformation * */Vector4(0.f, 0.f, 1.f, 0.f);
     normal.normalize();
     inv_normal  = normal;
     inv_normal  *= -1.f;
@@ -34,7 +36,7 @@ namespace Raytracer
     g_assert(&rl);
 
     outer_radius  = rl.get_outer_radius();
-    inner_radius  = 1.f;//rl.get_inner_radius();
+    inner_radius  = rl.get_inner_radius();
     outer_radius_pow_2  = outer_radius*outer_radius;
     inner_radius_pow_2  = inner_radius*inner_radius;
     visible = rl.get_visible();
