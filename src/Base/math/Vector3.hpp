@@ -203,7 +203,7 @@ public:
    * */
   void normalize()throw()
   {
-    if(fabs(get_square_length()-1.f)>1.e-7 && (x!=0.f || y!=0.f || z!=0.f))
+    if(get_square_length()!=1.f && (x!=0.f || y!=0.f || z!=0.f))
     {
       gfloat tmp  = get_length();
       g_assert(tmp!=0.f);

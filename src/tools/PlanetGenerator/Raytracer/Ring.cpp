@@ -21,13 +21,13 @@
 
 namespace Raytracer
 {
-  Ring::Ring(const Matrix44& planet, const Matrix44& ring) : plane(Vector3(0.f, 0.f, 1.f), 0.f), planet_transformation(planet), ring_transformation(ring)
+  Ring::Ring(const Matrix44& planet_transformation, const Matrix44& ring_transformation) : plane(Vector3(0.f, 0.f, 1.f), 0.f), transformation(ring_transformation), inv_transformation(ring_transformation)
   {
-    transformation = planet_transformation;
-    inv_transformation = (transformation *= ring_transformation);
+    Matrix44 inv_planet_transformation  = planet_transformation;
+    inv_planet_transformation.invert();
     inv_transformation.invert();
 
-    normal  = Vector3(0.f, 0.f, 1.f);///*planet_transformation * */Vector4(0.f, 0.f, 1.f, 0.f);
+    normal  = inv_planet_transformation * ring_transformation * Vector4(0.f, 0.f, 1.f, 0.f);
     normal.normalize();
     inv_normal  = normal;
     inv_normal  *= -1.f;
@@ -37,6 +37,7 @@ namespace Raytracer
 
     outer_radius  = rl.get_outer_radius();
     inner_radius  = rl.get_inner_radius();
+    inv_outer_minus_inner_radius  = 1.f/(outer_radius-inner_radius);
     outer_radius_pow_2  = outer_radius*outer_radius;
     inner_radius_pow_2  = inner_radius*inner_radius;
     visible = rl.get_visible();
@@ -58,11 +59,23 @@ namespace Raytracer
 
     const Vector3& n = ray.origin.z>0.f ? normal : inv_normal;
 
-    //Vector2 uv(1.f);
+    gfloat distance_from_center = p.get_length();
 
-    //if(Manager::get_settings().get_dbg_normal())
+    if(Manager::get_settings().get_dbg_normal())
     {
       color.set_direction(n);
+    }else
+    {
+      Vector2 uv(1.f-(distance_from_center-inner_radius)*inv_outer_minus_inner_radius, 0.5f);
+
+      if(Manager::get_settings().get_dbg_uv())
+      {
+        color.set(uv.x, uv.y, 0.f, 1.f);
+      }else
+      {
+        //if(Manager::get_settings().get_dbg_unlit_base_texture())
+        shader(color, uv, n);
+      }
     }
 
     return true;

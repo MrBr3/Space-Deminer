@@ -25,7 +25,7 @@ RingLayer::RingLayer() : ParentClass(_("Ring"), true)
   SettingsWidget* settings  = new SettingsWidget;
   prepare_settings("ring-texture", settings);
 
-  width  = 0.5f;
+  width  = 0.75f;
   outer_radius  = 2.f;
 
   x_rotation = 0.f;

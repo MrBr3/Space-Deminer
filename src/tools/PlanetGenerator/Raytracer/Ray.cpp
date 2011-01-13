@@ -35,6 +35,8 @@ namespace Raytracer
     gfloat planet_distance, ring_distance;
     bool planet_hit, ring_hit;
 
+    resulting_color.set(0.f, 0.f, 0.f, 0.f);
+
     planet_hit  = render_param.planet.get_color(planet_color, *this, planet_distance);
     ring_hit  = render_param.ring.get_color(ring_color, *this, ring_distance);
 
@@ -51,8 +53,6 @@ namespace Raytracer
     {
       if(ring_hit)
         resulting_color = ring_color;
-      else
-        resulting_color.set(0.f, 0.f, 0.f, 0.f);
     }
   }
 }

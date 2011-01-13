@@ -23,8 +23,6 @@ namespace Raytracer
   {
   public:
     Plane plane;
-    Matrix44 planet_transformation;
-    Matrix44 ring_transformation;
     Matrix44 transformation;
     Matrix44 inv_transformation;
 
@@ -32,6 +30,7 @@ namespace Raytracer
 
     gfloat inner_radius;
     gfloat outer_radius;
+    gfloat inv_outer_minus_inner_radius;
     gfloat inner_radius_pow_2;
     gfloat outer_radius_pow_2;
 
