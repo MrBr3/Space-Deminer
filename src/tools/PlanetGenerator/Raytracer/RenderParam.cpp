@@ -32,7 +32,7 @@ namespace Raytracer
     g_assert(img_height>0);
     g_assert(antialiasing>=0 && antialiasing<4);
 
-    culling = Manager::get_setting().get_culling();
+    culling = Manager::get_settings().get_culling();
 
     if(ring.visible)
     {

@@ -41,6 +41,8 @@ namespace Raytracer
     gfloat inv_aspect;
     int rays_per_pixel;
 
+    bool culling;
+
     void get_ray_dir(Vector3& dir, gfloat x, gfloat y)const;
     void get_camera_pos(Vector3& dir)const;
 

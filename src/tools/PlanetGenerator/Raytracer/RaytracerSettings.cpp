@@ -83,6 +83,10 @@ namespace Raytracer
     signal_antialiasing_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
     append_enum_widget(table_performance, n, "raytrace-antialiasing", _("Antialiasing"), _("The amount of Antialiasing"), create_vector<Glib::ustring>("No Antialiasing", "2 Rays per Pixel", "4 Rays per Pixel", "8 Rays per Pixel"), X_GETTER_SETTER_SIGNAL(Settings, antialiasing));
 
+    culling = true;
+    signal_culling_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
+    append_boolean_widget(table_performance, n, "raytrace-culling", _("Culling"), _("If set, Tiles without content will be ignored."), X_GETTER_SETTER_SIGNAL(Settings, culling));
+
 
     //================
     n=0;
@@ -192,6 +196,13 @@ namespace Raytracer
     clear_before_rendering = c;
 
     signal_clear_before_rendering_changed().emit();
+  }
+
+  void Settings::set_culling(bool c)
+  {
+    culling = c;
+
+    signal_culling_changed().emit();
   }
 
   //============
