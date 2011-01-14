@@ -33,6 +33,7 @@ namespace Raytracer
     g_assert(antialiasing>=0 && antialiasing<4);
 
     culling = Manager::get_settings().get_culling();
+    culling_epsilon = Manager::get_settings().get_culling_epsilon()*2.f;
 
     if(ring.visible)
     {
@@ -100,10 +101,10 @@ namespace Raytracer
     Vector3 ray_dir_e, ray_dir_n, ray_dir_w, ray_dir_s;
     Vector3 y_axis, x_axis, camera_dir;
 
-    gfloat rel_w = (x-1)  *inv_img_width*2.f-1.f;
-    gfloat rel_e = (x+1+w)*inv_img_width*2.f-1.f;
-    gfloat rel_n =-(y-1)  *inv_img_height*2.f+1.f;
-    gfloat rel_s =-(y+1+h)*inv_img_height*2.f+1.f;
+    gfloat rel_w = (x)  *inv_img_width*2.f-1.f;
+    gfloat rel_e = (x+w)*inv_img_width*2.f-1.f;
+    gfloat rel_n =-(y)  *inv_img_height*2.f+1.f;
+    gfloat rel_s =-(y+h)*inv_img_height*2.f+1.f;
 
     get_camera_pos(camera_pos);
     get_ray_dir(ray_dir_w, rel_w, (rel_n+rel_s)*0.5f);
@@ -114,10 +115,10 @@ namespace Raytracer
     x_axis = ray_dir_e-ray_dir_w;
     y_axis = ray_dir_n-ray_dir_s;
 
-    frustrum[0].set(camera_dir, camera_pos);
+    /*frustrum[0].set(camera_dir, camera_pos);
     frustrum[1].set(camera_dir, camera_pos);
     frustrum[2].set(camera_dir, camera_pos);
-    frustrum[3].set(camera_dir, camera_pos);
+    frustrum[3].set(camera_dir, camera_pos);*/
 
     frustrum[0].set( y_axis, ray_dir_w, camera_pos);
     frustrum[1].set(-y_axis, ray_dir_e, camera_pos);
@@ -132,12 +133,14 @@ namespace Raytracer
     {
       if(visible_planet)
       {
-        visible_planet &= frustrum[i].check_sphere(bounding_sphere) != Math::BACKSIDE;
+        visible_planet = frustrum[i].check_sphere(bounding_sphere, culling_epsilon) != Math::BACKSIDE;
       }
       if(visible_ring)
       {
-        visible_ring  = false;
-        //visible_ring &= frustrum[i].check_sphere()!=Math::BACKSIDE;
+        visible_ring = (frustrum[i].check_point(bounding_ngon[0])!=Math::BACKSIDE || frustrum[i].check_point(bounding_ngon[1])!=Math::BACKSIDE ||
+                         frustrum[i].check_point(bounding_ngon[2])!=Math::BACKSIDE || frustrum[i].check_point(bounding_ngon[3])!=Math::BACKSIDE ||
+                         frustrum[i].check_point(bounding_ngon[4])!=Math::BACKSIDE || frustrum[i].check_point(bounding_ngon[5])!=Math::BACKSIDE ||
+                         frustrum[i].check_point(bounding_ngon[6])!=Math::BACKSIDE || frustrum[i].check_point(bounding_ngon[7])!=Math::BACKSIDE);
       }
     }
 

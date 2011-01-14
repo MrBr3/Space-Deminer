@@ -118,7 +118,7 @@ public:
 
       gfloat x  = normal * p;
 
-      if(fabs(x-d)<=epsilon)
+      if(fabs(x-d)<=fabs(epsilon))
         return INSIDE;
       if(x<d)
         return BACKSIDE;
@@ -133,7 +133,7 @@ public:
     *         \li \c FORESIDE if the plane is fully on the foreside of the plane
     *         \li \c BACKSIDE if the plane is fully on the backside of the plane
     * */
-    Overlap check_sphere(const Sphere& sphere)const;
+    Overlap check_sphere(const Sphere& sphere, gfloat epsilon = 1.e-4f)const;
 
     /** \brief Checks whether and where the Ray intersects the plane.
     *
