@@ -19,8 +19,6 @@
 
 class Plane
 {
-  Plane();
-
   void check()const
   {
     if(normal.get_square_length()==0.f)
@@ -29,6 +27,10 @@ class Plane
 public:
   gfloat d; //> distance to origin
   Vector3 normal;
+
+  Plane() : d(0.f), normal(0.f, 0.f, 1.f)
+  {
+  }
 
   /** \brief Defines the Plane using a normal and the distance to the origin
    *

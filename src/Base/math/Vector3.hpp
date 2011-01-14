@@ -94,6 +94,12 @@ public:
   /** @name Add & Subtract
    * */
   //@{
+
+  Vector3 operator-()throw()
+  {
+    return Vector3(-x, -y, -z);
+  }
+
   Vector3 operator+(const Vector3& v)const throw()
   {
     return Vector3(x+v.x, y+v.y, z+v.z);

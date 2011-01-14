@@ -26,16 +26,23 @@ namespace Raytracer
   public:
     Planet planet;
     Ring ring;
+    Math::Sphere bounding_sphere; // bounding sphere for the planet including it's atmosphere
+    Vector3 bounding_ngon[8]; // bounding ngon for the planets ring
     const Matrix44& view_matrix;
     const Matrix44 projection_matrix;
     Matrix44 inv_view_matrix;
     Matrix44 inv_projection_matrix;
+
+    bool is_something_visible_within(int x, int y, int w, int h)const;
 
     const int img_width, img_height;
     gfloat inv_img_width, inv_img_height;
     gfloat aspect;
     gfloat inv_aspect;
     int rays_per_pixel;
+
+    void get_ray_dir(Vector3& dir, gfloat x, gfloat y)const;
+    void get_camera_pos(Vector3& dir)const;
 
     /* TODO uncomment * \brief Gets the relative
      * */
@@ -54,28 +61,6 @@ namespace Raytracer
 
 private:
     RenderParam(const Matrix44& ring_matrix, const Matrix44& planet_matrix,  const Matrix44& view_matrix_, const Matrix44& projection_matrix_,
-                int img_width_, int img_height_, int antialiasing) :
-                          planet(planet_matrix, 1.f), ring(planet_matrix, ring_matrix), view_matrix( view_matrix_), projection_matrix(projection_matrix_),
-                          inv_view_matrix(view_matrix_), inv_projection_matrix(projection_matrix_),
-                          img_width(img_width_), img_height(img_height_)
-    {
-      g_assert(img_width>0);
-      g_assert(img_height>0);
-      g_assert(antialiasing>=0 && antialiasing<4);
-
-      //_sphere_center_x  = 0.5f;
-      //_sphere_center_y  = 0.5f;
-      //_inv_sphere_radius_y_dir
-
-      inv_view_matrix.invert();
-      inv_projection_matrix.invert();
-      inv_img_width  = 1.f/gfloat(img_width);
-      inv_img_height  = 1.f/gfloat(img_height);
-      aspect  = gfloat(img_width)/gfloat(img_height);
-      inv_aspect  = 1.f/aspect;
-
-      rays_per_pixel  = 1<<antialiasing;
-      g_assert(rays_per_pixel==1 || rays_per_pixel==2 || rays_per_pixel==4 || rays_per_pixel==8);
-    }
+                int img_width_, int img_height_, int antialiasing);
   };
 }

@@ -209,49 +209,51 @@ namespace Raytracer
 
         guint8* px  = all_pixels + tile.x*4 + rowstride*tile.y;
 
-       if(first_tile)
-       {
-         first_tile = false;
-       }else
-       {
-         ri->_rendered_tiles++;
-       }
+        if(first_tile)
+        {
+          first_tile = false;
+        }else
+        {
+          ri->_rendered_tiles++;
+        }
 
+        bool something_visible = render_param.is_something_visible_within(tile.x, tile.y, tile.w, tile.h);
       ri->_render_mutex.unlock();
 
-      for(guint y=0; y<tile.h && !ri->_aborted; ++y)
-      {
-        px  = all_pixels + tile.x*4 + rowstride*(tile.y+y);
-
-        dh.clear();
-
-        for(guint x=0; x<tile.w; ++x, px+=4)
+      if(something_visible)
+        for(guint y=0; y<tile.h && !ri->_aborted; ++y)
         {
-          g_assert(x < ri->max_tile_width);
+          px  = all_pixels + tile.x*4 + rowstride*(tile.y+y);
 
-          calc_pixel_color(col, render_param, x+tile.x, y+tile.y);
+          dh.clear();
 
-          if(dh.line) // Dither
+          for(guint x=0; x<tile.w; ++x, px+=4)
           {
-            ColorRGBA temp = dh.se;
+            g_assert(x < ri->max_tile_width);
 
-            dh.se.set(0.f, 0.f, 0.f, 0.f);
+            calc_pixel_color(col, render_param, x+tile.x, y+tile.y);
 
-            col.fill_dithered(px,
-                              dh.line[1+x], // current pixel
-                              dh.line[2+x], // eastern pixel
-                              dh.se,        // southeaster pixel
-                              dh.line[1+x], // southern pixel
-                              dh.line[x]);  // southwest pixel
+            if(dh.line) // Dither
+            {
+              ColorRGBA temp = dh.se;
 
-            dh.line[1+x].r  += temp.r;
-            dh.line[1+x].g  += temp.g;
-            dh.line[1+x].b  += temp.b;
-            dh.line[1+x].a  += temp.a;
-          }else
-            col.fill(px);
+              dh.se.set(0.f, 0.f, 0.f, 0.f);
+
+              col.fill_dithered(px,
+                                dh.line[1+x], // current pixel
+                                dh.line[2+x], // eastern pixel
+                                dh.se,        // southeaster pixel
+                                dh.line[1+x], // southern pixel
+                                dh.line[x]);  // southwest pixel
+
+              dh.line[1+x].r  += temp.r;
+              dh.line[1+x].g  += temp.g;
+              dh.line[1+x].b  += temp.b;
+              dh.line[1+x].a  += temp.a;
+            }else
+              col.fill(px);
+          }
         }
-      }
     }
 
     ri->_render_mutex.lock();

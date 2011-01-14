@@ -23,10 +23,8 @@ namespace Raytracer
 {
   Ray::Ray(gfloat x, gfloat y, const RenderParam& render_param_) : render_param(render_param_)
   {
-    dir = render_param.inv_projection_matrix * Vector3(x, y, 0.f);
-    dir = render_param.inv_view_matrix * Vector4(dir, 0.f);
-    dir.normalize();
-    origin = render_param.inv_view_matrix * Vector3(0.f, 0.f, 0.f);
+    render_param.get_ray_dir(dir, x, y);
+    render_param.get_camera_pos(origin);
   }
 
   void Ray::get_color(ColorRGBA& resulting_color)
