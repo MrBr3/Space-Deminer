@@ -32,6 +32,8 @@ namespace Raytracer
     g_assert(img_height>0);
     g_assert(antialiasing>=0 && antialiasing<4);
 
+    culling = Manager::get_setting().get_culling();
+
     if(ring.visible)
     {
       bounding_ngon[0].set(1.f, 0.f, 0.f);
@@ -90,15 +92,18 @@ namespace Raytracer
 
   bool RenderParam::is_something_visible_within(int x, int y, int w, int h)const
   {
+    if(!culling)
+      return true;
+
     Plane frustrum[5];
     Vector3 camera_pos;
     Vector3 ray_dir_e, ray_dir_n, ray_dir_w, ray_dir_s;
     Vector3 y_axis, x_axis, camera_dir;
 
-    gfloat rel_w = (x-1.f)*inv_img_width*2.f-1.f;
-    gfloat rel_n =-(y-1.f)*inv_img_height*2.f+1.f;
-    gfloat rel_e = (x+1.f+w)*inv_img_width*2.f-1.f;
-    gfloat rel_s =+(y+1.f+h)*inv_img_height*2.f+1.f;
+    gfloat rel_w = (x-1)  *inv_img_width*2.f-1.f;
+    gfloat rel_e = (x+1+w)*inv_img_width*2.f-1.f;
+    gfloat rel_n =-(y-1)  *inv_img_height*2.f+1.f;
+    gfloat rel_s =-(y+1+h)*inv_img_height*2.f+1.f;
 
     get_camera_pos(camera_pos);
     get_ray_dir(ray_dir_w, rel_w, (rel_n+rel_s)*0.5f);
@@ -109,11 +114,16 @@ namespace Raytracer
     x_axis = ray_dir_e-ray_dir_w;
     y_axis = ray_dir_n-ray_dir_s;
 
+    frustrum[0].set(camera_dir, camera_pos);
+    frustrum[1].set(camera_dir, camera_pos);
+    frustrum[2].set(camera_dir, camera_pos);
+    frustrum[3].set(camera_dir, camera_pos);
+
     frustrum[0].set( y_axis, ray_dir_w, camera_pos);
     frustrum[1].set(-y_axis, ray_dir_e, camera_pos);
     frustrum[2].set(-x_axis, ray_dir_n, camera_pos);
     frustrum[3].set( x_axis, ray_dir_s, camera_pos);
-    frustrum[4].set(-camera_dir, camera_pos);
+    frustrum[4].set(camera_dir, camera_pos);
 
     bool visible_planet = true;
     bool visible_ring = ring.visible;
