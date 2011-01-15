@@ -99,7 +99,7 @@ public:
    *
    * \note the caller owns the four bytes and has to make sure they area valid
    * */
-  void fill(guint8* pixels)
+  void fill(guint8* pixels)const
   {
     pixels[0] = convert_to_0_255(r);
     pixels[1] = convert_to_0_255(g);
@@ -113,7 +113,7 @@ public:
    *
    * \note the caller owns the four bytes and has to make sure they area valid
    * */
-  void fill_dithered(guint8* pixels, const ColorRGBA& add, ColorRGBA& dither_e, ColorRGBA& dither_se, ColorRGBA& dither_s, ColorRGBA& dither_sw)
+  void fill_dithered(guint8* pixels, const ColorRGBA& add, ColorRGBA& dither_e, ColorRGBA& dither_se, ColorRGBA& dither_s, ColorRGBA& dither_sw)const
   {
     ColorRGBA resctricted(convert_to_0_255(add.r+r),
                           convert_to_0_255(add.g+g),

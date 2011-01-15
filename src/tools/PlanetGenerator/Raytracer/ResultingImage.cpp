@@ -320,6 +320,15 @@ namespace Raytracer
 #ifndef DEBUG_RENDER_THREAD
     _waiting_for_finish.wait();
 #endif
+#ifdef MARK_ALL_IGNORED_TILES
+    if(_render_param->ring.visible)
+    {
+      draw_line(_render_param->bounding_ngon[0], _render_param->bounding_ngon[1], ColorRGBA(0.5f, 0.5f, 1.f, 1.f));
+      draw_line(_render_param->bounding_ngon[1], _render_param->bounding_ngon[2], ColorRGBA(0.5f, 0.5f, 1.f, 1.f));
+      draw_line(_render_param->bounding_ngon[2], _render_param->bounding_ngon[3], ColorRGBA(0.5f, 0.5f, 1.f, 1.f));
+      draw_line(_render_param->bounding_ngon[3], _render_param->bounding_ngon[0], ColorRGBA(0.5f, 0.5f, 1.f, 1.f));
+    }
+#endif
 
     g_assert(_aborted || _rendering_threads==0);
 
@@ -331,6 +340,49 @@ namespace Raytracer
     on_invalidated();
 
     _render_param.reset();
+  }
+
+  void ResultingImage::draw_line(const Vector3& a, const Vector3& b, const ColorRGBA& color)
+  {
+    for(int i=0; i<128; ++i)
+    {
+      gfloat w  = i/128.f;
+      gfloat om_w = 1.f-w;
+
+      draw_point(a*om_w + b*w, color);
+    }
+  }
+
+  void ResultingImage::draw_point(const Vector3& p, const ColorRGBA& color)
+  {
+    Glib::RefPtr<Gdk::Pixbuf> pb  = get_pixbuf();
+    Glib::RefPtr<RenderParam> rp  = _render_param;
+
+    if(!pb || !rp)
+      return;
+
+    const gsize rowstride = pb->get_rowstride();
+    guint8* const all_pixels  = pb->get_pixels();
+    int w = pb->get_width();
+    int h = pb->get_height();
+
+    if(!all_pixels || !w || !h)
+      return;
+
+    Vector3 screen_pos = rp->projection_matrix  * rp->view_matrix * p;
+
+    screen_pos.x  = (screen_pos.x+1.f)*0.5f;
+    screen_pos.y  = (screen_pos.y-1.f)*-0.5f;
+
+    int x = w*screen_pos.x;
+    int y = h*screen_pos.y;
+
+    if(x<0 || x>=w || y<0 || y>=h)
+      return;
+
+    g_assert(pb->get_n_channels()==4);
+
+    color.fill(&all_pixels[x*4 + y*rowstride]);
   }
 
   void ResultingImage::think_ui_timer()

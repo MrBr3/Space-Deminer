@@ -72,6 +72,9 @@ namespace Raytracer
     static void render_thread(ResultingImage* ri);
     void ui_timer_on_think();
     void think_ui_timer();
+
+     void draw_point(const Vector3& p, const ColorRGBA& color);
+     void draw_line(const Vector3& a, const Vector3& b, const ColorRGBA& color);
   public:
 
     void render();

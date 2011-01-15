@@ -83,8 +83,10 @@ PlanetGenerator
       [X] Ebene implementieren
         [X] Schnitt Strahl-Ebene
       [X] Ringe
-        [ ] RingTextur
       [ ] Performance Steigerung mit Frustrumculling pro Kachel
+        [ ] genauer erfassen
+      [ ] aktuellen zustand (inklusive rotation) speichern und laden können
+      [ ] komisches Artefakt finden und fixen
       [ ] gucken, ob antialiasing wirklich funzt (auch bei 2x und 4x?)
       [ ] Base Textur anzeigen
         [ ] Farbe anhand UV herholen (ceil/floor könnte sehr praktisch sein)
@@ -93,6 +95,7 @@ PlanetGenerator
             [ ] Textur wiederholt
             [ ] CLAMPed
       [ ] BaseTexture mit Wolken
+      [ ] RingTextur
       [ ] Atmosphären effekt
         [ ] Entfernung, mit der der Strahl an der Kugel vorbeifliegt bestimmen können
         [ ] Atmosphäre soll auch Ringe beeinflussen

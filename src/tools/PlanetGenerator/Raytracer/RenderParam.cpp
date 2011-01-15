@@ -35,12 +35,12 @@ namespace Raytracer
     culling = Manager::get_settings().get_culling();
     culling_epsilon = Manager::get_settings().get_culling_epsilon()*2.f;
 
-    if(ring.visible) // TODO punkte dürfen nicht im ring liegen
+    if(ring.visible)
     {
-      bounding_ngon[0].set(-1.f, 1.f, 0.f);
-      bounding_ngon[1].set( 1.f,-1.f, 0.f);
+      bounding_ngon[0].set( 1.f, 1.f, 0.f);
+      bounding_ngon[1].set(-1.f, 1.f, 0.f);
       bounding_ngon[2].set(-1.f,-1.f, 0.f);
-      bounding_ngon[3].set( 1.f, 1.f, 0.f);
+      bounding_ngon[3].set( 1.f,-1.f, 0.f);
 
       for(int i=0; i<4; ++i)
       {
