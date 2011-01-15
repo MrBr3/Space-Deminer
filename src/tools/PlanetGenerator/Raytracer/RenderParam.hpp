@@ -27,7 +27,7 @@ namespace Raytracer
     Planet planet;
     Ring ring;
     Math::Sphere bounding_sphere; // bounding sphere for the planet including it's atmosphere
-    Vector3 bounding_ngon[8]; // bounding ngon for the planets ring
+    Vector3 bounding_ngon[4]; // bounding ngon for the planets ring
     const Matrix44& view_matrix;
     const Matrix44 projection_matrix;
     Matrix44 inv_view_matrix;

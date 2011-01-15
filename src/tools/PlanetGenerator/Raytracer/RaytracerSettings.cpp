@@ -87,7 +87,7 @@ namespace Raytracer
     signal_culling_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
     append_boolean_widget(table_performance, n, "raytrace-culling", _("Culling"), _("If set, Tiles without content will be ignored."), X_GETTER_SETTER_SIGNAL(Settings, culling));
 
-    culling_epsilon  = 0.05f;
+    culling_epsilon  = 0.f;//0.05f; // TODO set again to 0.05f
     signal_culling_epsilon_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
     append_real_widget(table_performance, n, "raytrace-culling-epsilon", _("Culling ε"), _("The greater the value, the lesser the probability needed sections not to be rendered."), X_GETTER_SETTER_SIGNAL(Settings, culling_epsilon), 0.001f, 0.01f, 3);
 

@@ -35,19 +35,18 @@ namespace Raytracer
     culling = Manager::get_settings().get_culling();
     culling_epsilon = Manager::get_settings().get_culling_epsilon()*2.f;
 
-    if(ring.visible)
+    if(ring.visible) // TODO punkte dürfen nicht im ring liegen
     {
-      bounding_ngon[0].set(1.f, 0.f, 0.f);
-      bounding_ngon[1].set( INV_SQRT_2, INV_SQRT_2, 0.f);
-      bounding_ngon[2].set(0.f, 1.f, 0.f);
-      bounding_ngon[3].set(-INV_SQRT_2, INV_SQRT_2, 0.f);
-      bounding_ngon[4].set(-1.f, 0.f, 0.f);
-      bounding_ngon[5].set(-INV_SQRT_2,-INV_SQRT_2, 0.f);
-      bounding_ngon[6].set(0.f,-1.f, 0.f);
-      bounding_ngon[7].set( INV_SQRT_2,-INV_SQRT_2, 0.f);
+      bounding_ngon[0].set(-1.f, 1.f, 0.f);
+      bounding_ngon[1].set( 1.f,-1.f, 0.f);
+      bounding_ngon[2].set(-1.f,-1.f, 0.f);
+      bounding_ngon[3].set( 1.f, 1.f, 0.f);
 
-      for(int i=0; i<8; ++i)
+      for(int i=0; i<4; ++i)
+      {
         bounding_ngon[i]  *= ring.outer_radius;
+        bounding_ngon[i]  = ring_matrix * bounding_ngon[i];
+      }
     }
 
     //_sphere_center_x  = 0.5f;
@@ -112,18 +111,18 @@ namespace Raytracer
     get_ray_dir(ray_dir_n, (rel_w+rel_e)*0.5f, rel_n);
     get_ray_dir(ray_dir_s, (rel_w+rel_e)*0.5f, rel_s);
     get_ray_dir(camera_dir, (rel_w+rel_e)*0.5f, (rel_n+rel_s)*0.5f);
-    x_axis = ray_dir_e-ray_dir_w;
-    y_axis = ray_dir_n-ray_dir_s;
+    x_axis = ray_dir_e*10.f-ray_dir_w*10.f;
+    y_axis = ray_dir_n*10.f-ray_dir_s*10.f;
 
     /*frustrum[0].set(camera_dir, camera_pos);
     frustrum[1].set(camera_dir, camera_pos);
     frustrum[2].set(camera_dir, camera_pos);
     frustrum[3].set(camera_dir, camera_pos);*/
 
-    frustrum[0].set( y_axis, ray_dir_w, camera_pos);
-    frustrum[1].set(-y_axis, ray_dir_e, camera_pos);
-    frustrum[2].set(-x_axis, ray_dir_n, camera_pos);
-    frustrum[3].set( x_axis, ray_dir_s, camera_pos);
+    frustrum[0].set(ray_dir_w,  y_axis, camera_pos);
+    frustrum[1].set(ray_dir_e, -y_axis, camera_pos);
+    frustrum[2].set(ray_dir_n,  x_axis, camera_pos);
+    frustrum[3].set(ray_dir_s, -x_axis, camera_pos);
     frustrum[4].set(camera_dir, camera_pos);
 
     bool visible_planet = true;
@@ -137,10 +136,10 @@ namespace Raytracer
       }
       if(visible_ring)
       {
-        visible_ring = (frustrum[i].check_point(bounding_ngon[0])!=Math::BACKSIDE || frustrum[i].check_point(bounding_ngon[1])!=Math::BACKSIDE ||
-                         frustrum[i].check_point(bounding_ngon[2])!=Math::BACKSIDE || frustrum[i].check_point(bounding_ngon[3])!=Math::BACKSIDE ||
-                         frustrum[i].check_point(bounding_ngon[4])!=Math::BACKSIDE || frustrum[i].check_point(bounding_ngon[5])!=Math::BACKSIDE ||
-                         frustrum[i].check_point(bounding_ngon[6])!=Math::BACKSIDE || frustrum[i].check_point(bounding_ngon[7])!=Math::BACKSIDE);
+        visible_ring = (frustrum[i].check_point(bounding_ngon[0], culling_epsilon)!=Math::BACKSIDE ||
+                        frustrum[i].check_point(bounding_ngon[1], culling_epsilon)!=Math::BACKSIDE ||
+                        frustrum[i].check_point(bounding_ngon[2], culling_epsilon)!=Math::BACKSIDE ||
+                        frustrum[i].check_point(bounding_ngon[3], culling_epsilon)!=Math::BACKSIDE);
       }
     }
 

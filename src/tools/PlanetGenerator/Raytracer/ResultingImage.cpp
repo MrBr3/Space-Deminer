@@ -20,6 +20,7 @@
 #include "./../MainWindow.hpp"
 
 //#define DEBUG_RENDER_THREAD
+#define MARK_ALL_IGNORED_TILES
 
 namespace Raytracer
 {
@@ -167,6 +168,7 @@ namespace Raytracer
 
       inline void clear()
       {
+        //if(!line)return;
         //se.set(0.f, 0.f, 0.f, 0.f);
         //memset(line, array_size*sizeof(ColorRGBA), 0);
       }
@@ -221,6 +223,7 @@ namespace Raytracer
       ri->_render_mutex.unlock();
 
       if(something_visible)
+      {
         for(guint y=0; y<tile.h && !ri->_aborted; ++y)
         {
           px  = all_pixels + tile.x*4 + rowstride*(tile.y+y);
@@ -254,6 +257,25 @@ namespace Raytracer
               col.fill(px);
           }
         }
+      }
+#ifdef MARK_ALL_IGNORED_TILES
+      else
+      {
+        col.set(1.f, 0.f, 1.f, 1.f);
+        ColorRGBA border(1.f, 0.f, 0.f, 1.f);
+        for(guint y=0; y<tile.h && !ri->_aborted; ++y)
+        {
+          px  = all_pixels + tile.x*4 + rowstride*(tile.y+y);
+          for(guint x=0; x<tile.w; ++x, px+=4)
+          {
+            if(x==0 || y==0)
+              border.fill(px);
+            else
+              col.fill(px);
+          }
+        }
+      }
+#endif
     }
 
     ri->_render_mutex.lock();
