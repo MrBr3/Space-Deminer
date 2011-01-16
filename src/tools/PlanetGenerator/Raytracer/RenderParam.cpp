@@ -105,10 +105,10 @@ namespace Raytracer
     Vector3 ray_dir_e, ray_dir_n, ray_dir_w, ray_dir_s;
     Vector3 y_axis, x_axis, camera_dir;
 
-    gfloat rel_w = (x)  *inv_img_width*2.f-1.f;
-    gfloat rel_e = (x+w)*inv_img_width*2.f-1.f;
-    gfloat rel_n =-(y)  *inv_img_height*2.f+1.f;
-    gfloat rel_s =-(y+h)*inv_img_height*2.f+1.f;
+    gfloat rel_w = (x-1)  *inv_img_width*2.f-1.f;
+    gfloat rel_e = (x+w+1)*inv_img_width*2.f-1.f;
+    gfloat rel_n =-(y-1)  *inv_img_height*2.f+1.f;
+    gfloat rel_s =-(y+h+1)*inv_img_height*2.f+1.f;
 
     get_camera_pos(camera_pos);
     get_ray_dir(ray_dir_w, rel_w, (rel_n+rel_s)*0.5f);
