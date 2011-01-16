@@ -37,12 +37,17 @@ namespace Raytracer
 
     if(ring.visible)
     {
-      bounding_ngon[0].set( 1.f, 1.f, 0.f);
-      bounding_ngon[1].set(-1.f, 1.f, 0.f);
-      bounding_ngon[2].set(-1.f,-1.f, 0.f);
-      bounding_ngon[3].set( 1.f,-1.f, 0.f);
+      gfloat o  = 2.f*INV_SQRT_2-1.f+1.e-4f;
+      bounding_ngon[0].set( 1.f,   o, 0.f);
+      bounding_ngon[1].set(   o, 1.f, 0.f);
+      bounding_ngon[2].set(  -o, 1.f, 0.f);
+      bounding_ngon[3].set(-1.f,   o, 0.f);
+      bounding_ngon[4].set(-1.f,  -o, 0.f);
+      bounding_ngon[5].set(  -o,-1.f, 0.f);
+      bounding_ngon[6].set(   o,-1.f, 0.f);
+      bounding_ngon[7].set( 1.f,  -o, 0.f);
 
-      for(int i=0; i<4; ++i)
+      for(int i=0; i<8; ++i)
       {
         bounding_ngon[i]  *= ring.outer_radius;
         bounding_ngon[i]  = ring_matrix * bounding_ngon[i];
@@ -139,7 +144,11 @@ namespace Raytracer
         visible_ring = (frustrum[i].check_point(bounding_ngon[0], culling_epsilon)!=Math::BACKSIDE ||
                         frustrum[i].check_point(bounding_ngon[1], culling_epsilon)!=Math::BACKSIDE ||
                         frustrum[i].check_point(bounding_ngon[2], culling_epsilon)!=Math::BACKSIDE ||
-                        frustrum[i].check_point(bounding_ngon[3], culling_epsilon)!=Math::BACKSIDE);
+                        frustrum[i].check_point(bounding_ngon[3], culling_epsilon)!=Math::BACKSIDE ||
+                        frustrum[i].check_point(bounding_ngon[4], culling_epsilon)!=Math::BACKSIDE ||
+                        frustrum[i].check_point(bounding_ngon[5], culling_epsilon)!=Math::BACKSIDE ||
+                        frustrum[i].check_point(bounding_ngon[6], culling_epsilon)!=Math::BACKSIDE ||
+                        frustrum[i].check_point(bounding_ngon[7], culling_epsilon)!=Math::BACKSIDE);
       }
     }
 

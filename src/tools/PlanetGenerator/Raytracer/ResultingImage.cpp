@@ -326,7 +326,11 @@ namespace Raytracer
       draw_line(_render_param->bounding_ngon[0], _render_param->bounding_ngon[1], ColorRGBA(0.5f, 0.5f, 1.f, 1.f));
       draw_line(_render_param->bounding_ngon[1], _render_param->bounding_ngon[2], ColorRGBA(0.5f, 0.5f, 1.f, 1.f));
       draw_line(_render_param->bounding_ngon[2], _render_param->bounding_ngon[3], ColorRGBA(0.5f, 0.5f, 1.f, 1.f));
-      draw_line(_render_param->bounding_ngon[3], _render_param->bounding_ngon[0], ColorRGBA(0.5f, 0.5f, 1.f, 1.f));
+      draw_line(_render_param->bounding_ngon[3], _render_param->bounding_ngon[4], ColorRGBA(0.5f, 0.5f, 1.f, 1.f));
+      draw_line(_render_param->bounding_ngon[4], _render_param->bounding_ngon[5], ColorRGBA(0.5f, 0.5f, 1.f, 1.f));
+      draw_line(_render_param->bounding_ngon[5], _render_param->bounding_ngon[6], ColorRGBA(0.5f, 0.5f, 1.f, 1.f));
+      draw_line(_render_param->bounding_ngon[6], _render_param->bounding_ngon[7], ColorRGBA(0.5f, 0.5f, 1.f, 1.f));
+      draw_line(_render_param->bounding_ngon[7], _render_param->bounding_ngon[0], ColorRGBA(0.5f, 0.5f, 1.f, 1.f));
     }
 #endif
 
