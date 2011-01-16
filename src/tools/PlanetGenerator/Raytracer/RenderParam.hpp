@@ -24,9 +24,29 @@ namespace Raytracer
     //gfloat _sphere_center_x, _sphere_center_y;
     //gfloat _inv_sphere_radius_y_dir;
   public:
+    struct CullingCircle
+    {
+      gfloat r;
+      gfloat x, y;
+
+      gfloat square_dist(gfloat x, gfloat y)const
+      {
+        return square(x-this->x)+square(y-this->y);
+      }
+
+      bool is_within_tile(int tile_x, int tile_y, int tile_w, int tile_h, gfloat epsilon)const
+      {
+        gfloat square_r = r*r;
+        return square_dist(tile_x-1,        tile_y-1)        <= square_r+epsilon ||
+               square_dist(tile_x+tile_w+1, tile_y+tile_h+1) <= square_r+epsilon ||
+               square_dist(tile_x-1,        tile_y+tile_h+1) <= square_r+epsilon ||
+               square_dist(tile_x+tile_w+1, tile_y-1)        <= square_r+epsilon;
+      }
+    };
+
     Planet planet;
     Ring ring;
-    Math::Sphere bounding_sphere; // bounding sphere for the planet including it's atmosphere
+    CullingCircle bounding_sphere;
     Vector3 bounding_ngon[8]; // bounding ngon for the planets ring
     const Matrix44& view_matrix;
     const Matrix44 projection_matrix;

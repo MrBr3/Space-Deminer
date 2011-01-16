@@ -23,7 +23,7 @@ namespace Raytracer
 {
   RenderParam::RenderParam(const Matrix44& ring_matrix, const Matrix44& planet_matrix,  const Matrix44& view_matrix_, const Matrix44& projection_matrix_,
                            int img_width_, int img_height_, int antialiasing) :
-                           planet(planet_matrix, 1.f), ring(planet_matrix, ring_matrix), bounding_sphere(Matrix44::identity, 1.f),
+                           planet(planet_matrix, 1.f), ring(planet_matrix, ring_matrix),
                            view_matrix( view_matrix_), projection_matrix(projection_matrix_),
                            inv_view_matrix(view_matrix_), inv_projection_matrix(projection_matrix_),
                            img_width(img_width_), img_height(img_height_)
@@ -34,25 +34,6 @@ namespace Raytracer
 
     culling = Manager::get_settings().get_culling();
     culling_epsilon = Manager::get_settings().get_culling_epsilon()*2.f;
-
-    if(ring.visible)
-    {
-      gfloat o  = 2.f*INV_SQRT_2-1.f+1.e-4f;
-      bounding_ngon[0].set( 1.f,   o, 0.f);
-      bounding_ngon[1].set(   o, 1.f, 0.f);
-      bounding_ngon[2].set(  -o, 1.f, 0.f);
-      bounding_ngon[3].set(-1.f,   o, 0.f);
-      bounding_ngon[4].set(-1.f,  -o, 0.f);
-      bounding_ngon[5].set(  -o,-1.f, 0.f);
-      bounding_ngon[6].set(   o,-1.f, 0.f);
-      bounding_ngon[7].set( 1.f,  -o, 0.f);
-
-      for(int i=0; i<8; ++i)
-      {
-        bounding_ngon[i]  *= ring.outer_radius;
-        bounding_ngon[i]  = ring_matrix * bounding_ngon[i];
-      }
-    }
 
     //_sphere_center_x  = 0.5f;
     //_sphere_center_y  = 0.5f;
@@ -67,6 +48,33 @@ namespace Raytracer
 
     rays_per_pixel  = 1<<antialiasing;
     g_assert(rays_per_pixel==1 || rays_per_pixel==2 || rays_per_pixel==4 || rays_per_pixel==8);
+
+    if(culling)
+    {
+      Vector3 v = projection_matrix * view_matrix * Vector3(0.f, 0.f, 1.f);
+      bounding_sphere.r = fabs((projection_matrix * view_matrix * Vector3(0.f, 0.f, planet.sphere.radius)).y)*0.5f*img_height; // TODO Get real size, the sphere will need
+      bounding_sphere.x = 0.5f * img_width;
+      bounding_sphere.y = 0.5f * img_height;
+
+      if(ring.visible)
+      {
+        gfloat o  = 2.f*INV_SQRT_2-1.f+1.e-4f;
+        bounding_ngon[0].set( 1.f,   o, 0.f);
+        bounding_ngon[1].set(   o, 1.f, 0.f);
+        bounding_ngon[2].set(  -o, 1.f, 0.f);
+        bounding_ngon[3].set(-1.f,   o, 0.f);
+        bounding_ngon[4].set(-1.f,  -o, 0.f);
+        bounding_ngon[5].set(  -o,-1.f, 0.f);
+        bounding_ngon[6].set(   o,-1.f, 0.f);
+        bounding_ngon[7].set( 1.f,  -o, 0.f);
+
+        for(int i=0; i<8; ++i)
+        {
+          bounding_ngon[i]  *= ring.outer_radius;
+          bounding_ngon[i]  = ring_matrix * bounding_ngon[i];
+        }
+      }
+    }
   }
 
   Glib::RefPtr<RenderParam> RenderParam::create(int img_width, int img_height)
@@ -137,7 +145,7 @@ namespace Raytracer
     {
       if(visible_planet)
       {
-        visible_planet = frustrum[i].check_sphere(bounding_sphere, culling_epsilon) != Math::BACKSIDE;
+        visible_planet = bounding_sphere.is_within_tile(x, y, w, h, culling_epsilon); // frustrum[i].check_sphere(bounding_sphere, culling_epsilon) != Math::BACKSIDE;
       }
       if(visible_ring)
       {

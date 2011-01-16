@@ -85,6 +85,10 @@ PlanetGenerator
       [X] Ringe
       [ ] Performance Steigerung mit Frustrumculling pro Kachel
         [ ] genauer erfassen
+          [X] CullingSphere
+          [ ] Ring: BoundingCirlcepunkte als Cullingspheres
+            [ ] Debugrendering als parameter, ob welt, relative oder absolute Bildschirmkoordinaten
+          [ ] Sphere: die richtige scheinbaren Radius ermitteln
       [ ] aktuellen zustand (inklusive rotation) speichern und laden können
       [ ] komisches Artefakt finden und fixen
       [ ] gucken, ob antialiasing wirklich funzt (auch bei 2x und 4x?)
