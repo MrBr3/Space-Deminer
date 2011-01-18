@@ -35,10 +35,6 @@ namespace Raytracer
     culling = Manager::get_settings().get_culling();
     culling_epsilon = Manager::get_settings().get_culling_epsilon()*2.f;
 
-    //_sphere_center_x  = 0.5f;
-    //_sphere_center_y  = 0.5f;
-    //_inv_sphere_radius_y_dir
-
     inv_view_matrix.invert();
     inv_projection_matrix.invert();
     inv_img_width  = 1.f/gfloat(img_width);
@@ -51,27 +47,61 @@ namespace Raytracer
 
     if(culling)
     {
-      Vector3 v = projection_matrix * view_matrix * Vector3(0.f, 0.f, 1.f);
-      bounding_sphere.r = fabs((projection_matrix * view_matrix * Vector3(0.f, 0.f, planet.sphere.radius)).y)*0.5f*img_height; // TODO Get real size, the sphere will need
-      bounding_sphere.x = 0.5f * img_width;
-      bounding_sphere.y = 0.5f * img_height;
+      Vector3 sphere_outest_point;
+      Vector3 sphere_middle;
+
+      // Get the seeming radius of the planet
+      {
+        Vector3 frustrum_top_left;
+        Vector3 frustrum_top_middle;
+        Vector3 frustrum_top_right;
+
+        get_ray_dir(frustrum_top_left, -1.f, 1.f);
+        get_ray_dir(frustrum_top_middle, 0.f, 1.f);
+        get_ray_dir(frustrum_top_right, 1.f, 1.f);
+
+        sphere_outest_point = cross(frustrum_top_middle, frustrum_top_left-frustrum_top_right);
+        sphere_outest_point.normalize();
+
+        sphere_outest_point *= 1.f; // TODO multiply in order to see also the atmosphere
+      }
+
+      sphere_outest_point = projection_matrix * view_matrix * sphere_outest_point;
+      sphere_middle = projection_matrix * view_matrix * Vector3(0.f, 0.f, 0.f);
+
+      sphere_outest_point.x = (sphere_outest_point.x+1.f) * 0.5f * img_width;
+      sphere_outest_point.y =-(sphere_outest_point.y-1.f) * 0.5f * img_height;
+      sphere_middle.x = (sphere_middle.x+1.f) * 0.5f * img_width;
+      sphere_middle.y =-(sphere_middle.y-1.f) * 0.5f * img_height;
+
+      std::cout<<"border.x "<<sphere_outest_point.x<<" border.y "<<sphere_outest_point.y<<"\n";
+
+      bounding_sphere.r = (sphere_outest_point-sphere_middle).get_length();
+      bounding_sphere.x = sphere_middle.x;
+      bounding_sphere.y = sphere_middle.y;
 
       if(ring.visible)
       {
+        Vector3 tmp[8];
+
         gfloat o  = 2.f*INV_SQRT_2-1.f+1.e-4f;
-        bounding_ngon[0].set( 1.f,   o, 0.f);
-        bounding_ngon[1].set(   o, 1.f, 0.f);
-        bounding_ngon[2].set(  -o, 1.f, 0.f);
-        bounding_ngon[3].set(-1.f,   o, 0.f);
-        bounding_ngon[4].set(-1.f,  -o, 0.f);
-        bounding_ngon[5].set(  -o,-1.f, 0.f);
-        bounding_ngon[6].set(   o,-1.f, 0.f);
-        bounding_ngon[7].set( 1.f,  -o, 0.f);
+        tmp[0].set( 1.f,   o, 0.f);
+        tmp[1].set(   o, 1.f, 0.f);
+        tmp[2].set(  -o, 1.f, 0.f);
+        tmp[3].set(-1.f,   o, 0.f);
+        tmp[4].set(-1.f,  -o, 0.f);
+        tmp[5].set(  -o,-1.f, 0.f);
+        tmp[6].set(   o,-1.f, 0.f);
+        tmp[7].set( 1.f,  -o, 0.f);
 
         for(int i=0; i<8; ++i)
         {
-          bounding_ngon[i]  *= ring.outer_radius;
-          bounding_ngon[i]  = ring_matrix * bounding_ngon[i];
+          tmp[i]  = projection_matrix * view_matrix * ring_matrix * (tmp[i]*ring.outer_radius);
+          tmp[i].x  = (tmp[i].x+1.f)*0.5f;
+          tmp[i].y  = (tmp[i].y-1.f)*-0.5f;
+          tmp[i].x *= img_width;
+          tmp[i].y *= img_height;
+          bounding_ngon[i].set(Vector2(tmp[i]));
         }
       }
     }
@@ -108,56 +138,16 @@ namespace Raytracer
     if(!culling)
       return true;
 
-    Plane frustrum[5];
-    Vector3 camera_pos;
-    Vector3 ray_dir_e, ray_dir_n, ray_dir_w, ray_dir_s;
-    Vector3 y_axis, x_axis, camera_dir;
+    bool visible_planet;
+    bool visible_ring = false;
 
-    gfloat rel_w = (x-1)  *inv_img_width*2.f-1.f;
-    gfloat rel_e = (x+w+1)*inv_img_width*2.f-1.f;
-    gfloat rel_n =-(y-1)  *inv_img_height*2.f+1.f;
-    gfloat rel_s =-(y+h+1)*inv_img_height*2.f+1.f;
+    visible_planet = bounding_sphere.is_within_tile(x, y, w, h, culling_epsilon);
 
-    get_camera_pos(camera_pos);
-    get_ray_dir(ray_dir_w, rel_w, (rel_n+rel_s)*0.5f);
-    get_ray_dir(ray_dir_e, rel_e, (rel_n+rel_s)*0.5f);
-    get_ray_dir(ray_dir_n, (rel_w+rel_e)*0.5f, rel_n);
-    get_ray_dir(ray_dir_s, (rel_w+rel_e)*0.5f, rel_s);
-    get_ray_dir(camera_dir, (rel_w+rel_e)*0.5f, (rel_n+rel_s)*0.5f);
-    x_axis = ray_dir_e*10.f-ray_dir_w*10.f;
-    y_axis = ray_dir_n*10.f-ray_dir_s*10.f;
-
-    /*frustrum[0].set(camera_dir, camera_pos);
-    frustrum[1].set(camera_dir, camera_pos);
-    frustrum[2].set(camera_dir, camera_pos);
-    frustrum[3].set(camera_dir, camera_pos);*/
-
-    frustrum[0].set(ray_dir_w,  y_axis, camera_pos);
-    frustrum[1].set(ray_dir_e, -y_axis, camera_pos);
-    frustrum[2].set(ray_dir_n,  x_axis, camera_pos);
-    frustrum[3].set(ray_dir_s, -x_axis, camera_pos);
-    frustrum[4].set(camera_dir, camera_pos);
-
-    bool visible_planet = true;
-    bool visible_ring = ring.visible;
-
-    for(int i=0; i<5 && (visible_planet||visible_ring); ++i)
+    if(ring.visible && !visible_planet)
     {
-      if(visible_planet)
-      {
-        visible_planet = bounding_sphere.is_within_tile(x, y, w, h, culling_epsilon); // frustrum[i].check_sphere(bounding_sphere, culling_epsilon) != Math::BACKSIDE;
-      }
-      if(visible_ring)
-      {
-        visible_ring = (frustrum[i].check_point(bounding_ngon[0], culling_epsilon)!=Math::BACKSIDE ||
-                        frustrum[i].check_point(bounding_ngon[1], culling_epsilon)!=Math::BACKSIDE ||
-                        frustrum[i].check_point(bounding_ngon[2], culling_epsilon)!=Math::BACKSIDE ||
-                        frustrum[i].check_point(bounding_ngon[3], culling_epsilon)!=Math::BACKSIDE ||
-                        frustrum[i].check_point(bounding_ngon[4], culling_epsilon)!=Math::BACKSIDE ||
-                        frustrum[i].check_point(bounding_ngon[5], culling_epsilon)!=Math::BACKSIDE ||
-                        frustrum[i].check_point(bounding_ngon[6], culling_epsilon)!=Math::BACKSIDE ||
-                        frustrum[i].check_point(bounding_ngon[7], culling_epsilon)!=Math::BACKSIDE);
-      }
+      visible_ring  = true;
+
+      // TODO
     }
 
     return visible_planet || visible_ring;

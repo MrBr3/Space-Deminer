@@ -73,8 +73,14 @@ namespace Raytracer
     void ui_timer_on_think();
     void think_ui_timer();
 
-     void draw_point(const Vector3& p, const ColorRGBA& color);
-     void draw_line(const Vector3& a, const Vector3& b, const ColorRGBA& color);
+    enum DebugRenderCoord
+    {
+      DRC_WORLD = 2,
+      DRC_REL_SCREEN = 1,
+      DRC_ABS_SCREEN = 0
+    };
+    void draw_point(const Vector3& p, const ColorRGBA& color, DebugRenderCoord drc);
+    void draw_line(const Vector3& a, const Vector3& b, const ColorRGBA& color, DebugRenderCoord drc);
   public:
 
     void render();

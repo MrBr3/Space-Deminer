@@ -29,25 +29,65 @@ namespace Raytracer
       gfloat r;
       gfloat x, y;
 
+      gfloat x_dist(gfloat x)const
+      {
+        return fabs(x-this->x);
+      }
+
+      gfloat y_dist(gfloat y)const
+      {
+        return fabs(y-this->y);
+      }
+
       gfloat square_dist(gfloat x, gfloat y)const
       {
-        return square(x-this->x)+square(y-this->y);
+        return x_dist(x)*x_dist(x)+y_dist(y)*y_dist(y);
+      }
+
+      operator Vector2()const
+      {
+        return Vector2(x, y);
+      }
+
+      operator Vector3()const
+      {
+        return Vector2(x, y);
+      }
+
+      void set(const Vector2& pos, gfloat radius=INV_SQRT_2+1.e-4f)
+      {
+        r = MAX(1.f, radius);
+        x = pos.x;
+        y = pos.y;
       }
 
       bool is_within_tile(int tile_x, int tile_y, int tile_w, int tile_h, gfloat epsilon)const
       {
-        gfloat square_r = r*r;
-        return square_dist(tile_x-1,        tile_y-1)        <= square_r+epsilon ||
-               square_dist(tile_x+tile_w+1, tile_y+tile_h+1) <= square_r+epsilon ||
-               square_dist(tile_x-1,        tile_y+tile_h+1) <= square_r+epsilon ||
-               square_dist(tile_x+tile_w+1, tile_y-1)        <= square_r+epsilon;
+        bool intersect_h  = x>=tile_x && x<tile_x+tile_w;
+        bool intersect_v = y>=tile_y && y<tile_y+tile_h;
+
+        if(intersect_h && intersect_v)
+          return true;
+
+        if(intersect_v)
+          return x_dist(tile_x) <= r+epsilon || x_dist(tile_x+tile_w) <= r+epsilon;
+
+        if(intersect_h)
+          return y_dist(tile_y) <= r+epsilon || y_dist(tile_y+tile_h) <= r+epsilon;
+
+        gfloat rr = r*r+epsilon;
+
+        return square_dist(tile_x, tile_y)<=rr ||
+               square_dist(tile_x+tile_w, tile_y)<=rr ||
+               square_dist(tile_x, tile_y+tile_h)<=rr ||
+               square_dist(tile_x+tile_w, tile_y+tile_h)<=rr;
       }
     };
 
     Planet planet;
     Ring ring;
     CullingCircle bounding_sphere;
-    Vector3 bounding_ngon[8]; // bounding ngon for the planets ring
+    CullingCircle bounding_ngon[8]; // bounding ngon for the planets ring
     const Matrix44& view_matrix;
     const Matrix44 projection_matrix;
     Matrix44 inv_view_matrix;

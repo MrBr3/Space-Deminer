@@ -261,7 +261,7 @@ namespace Raytracer
 #ifdef MARK_ALL_IGNORED_TILES
       else
       {
-        col.set(1.f, 0.f, 1.f, 1.f);
+        col.set(1.f, 0.5f, 0.25f, 1.f);
         ColorRGBA border(1.f, 0.f, 0.f, 1.f);
         for(guint y=0; y<tile.h && !ri->_aborted; ++y)
         {
@@ -323,14 +323,14 @@ namespace Raytracer
 #ifdef MARK_ALL_IGNORED_TILES
     if(_render_param->ring.visible)
     {
-      draw_line(_render_param->bounding_ngon[0], _render_param->bounding_ngon[1], ColorRGBA(0.5f, 0.5f, 1.f, 1.f));
-      draw_line(_render_param->bounding_ngon[1], _render_param->bounding_ngon[2], ColorRGBA(0.5f, 0.5f, 1.f, 1.f));
-      draw_line(_render_param->bounding_ngon[2], _render_param->bounding_ngon[3], ColorRGBA(0.5f, 0.5f, 1.f, 1.f));
-      draw_line(_render_param->bounding_ngon[3], _render_param->bounding_ngon[4], ColorRGBA(0.5f, 0.5f, 1.f, 1.f));
-      draw_line(_render_param->bounding_ngon[4], _render_param->bounding_ngon[5], ColorRGBA(0.5f, 0.5f, 1.f, 1.f));
-      draw_line(_render_param->bounding_ngon[5], _render_param->bounding_ngon[6], ColorRGBA(0.5f, 0.5f, 1.f, 1.f));
-      draw_line(_render_param->bounding_ngon[6], _render_param->bounding_ngon[7], ColorRGBA(0.5f, 0.5f, 1.f, 1.f));
-      draw_line(_render_param->bounding_ngon[7], _render_param->bounding_ngon[0], ColorRGBA(0.5f, 0.5f, 1.f, 1.f));
+      draw_line(_render_param->bounding_ngon[0], _render_param->bounding_ngon[1], ColorRGBA(0.5f, 0.5f, 1.f, 1.f), DRC_ABS_SCREEN);
+      draw_line(_render_param->bounding_ngon[1], _render_param->bounding_ngon[2], ColorRGBA(0.5f, 0.5f, 1.f, 1.f), DRC_ABS_SCREEN);
+      draw_line(_render_param->bounding_ngon[2], _render_param->bounding_ngon[3], ColorRGBA(0.5f, 0.5f, 1.f, 1.f), DRC_ABS_SCREEN);
+      draw_line(_render_param->bounding_ngon[3], _render_param->bounding_ngon[4], ColorRGBA(0.5f, 0.5f, 1.f, 1.f), DRC_ABS_SCREEN);
+      draw_line(_render_param->bounding_ngon[4], _render_param->bounding_ngon[5], ColorRGBA(0.5f, 0.5f, 1.f, 1.f), DRC_ABS_SCREEN);
+      draw_line(_render_param->bounding_ngon[5], _render_param->bounding_ngon[6], ColorRGBA(0.5f, 0.5f, 1.f, 1.f), DRC_ABS_SCREEN);
+      draw_line(_render_param->bounding_ngon[6], _render_param->bounding_ngon[7], ColorRGBA(0.5f, 0.5f, 1.f, 1.f), DRC_ABS_SCREEN);
+      draw_line(_render_param->bounding_ngon[7], _render_param->bounding_ngon[0], ColorRGBA(0.5f, 0.5f, 1.f, 1.f), DRC_ABS_SCREEN);
     }
 #endif
 
@@ -346,18 +346,18 @@ namespace Raytracer
     _render_param.reset();
   }
 
-  void ResultingImage::draw_line(const Vector3& a, const Vector3& b, const ColorRGBA& color)
+  void ResultingImage::draw_line(const Vector3& a, const Vector3& b, const ColorRGBA& color, DebugRenderCoord drc)
   {
     for(int i=0; i<128; ++i)
     {
       gfloat w  = i/128.f;
       gfloat om_w = 1.f-w;
 
-      draw_point(a*om_w + b*w, color);
+      draw_point(a*om_w + b*w, color, drc);
     }
   }
 
-  void ResultingImage::draw_point(const Vector3& p, const ColorRGBA& color)
+  void ResultingImage::draw_point(const Vector3& p, const ColorRGBA& color, DebugRenderCoord drc)
   {
     Glib::RefPtr<Gdk::Pixbuf> pb  = get_pixbuf();
     Glib::RefPtr<RenderParam> rp  = _render_param;
@@ -373,13 +373,31 @@ namespace Raytracer
     if(!all_pixels || !w || !h)
       return;
 
-    Vector3 screen_pos = rp->projection_matrix  * rp->view_matrix * p;
+    Vector3 screen_pos;
 
-    screen_pos.x  = (screen_pos.x+1.f)*0.5f;
-    screen_pos.y  = (screen_pos.y-1.f)*-0.5f;
+    if(drc>=DRC_WORLD)
+      screen_pos = rp->projection_matrix  * rp->view_matrix * p;
+    else
+    {
+      screen_pos  = p;
+    }
 
-    int x = w*screen_pos.x;
-    int y = h*screen_pos.y;
+    int x, y;
+
+    if(drc>=DRC_REL_SCREEN)
+    {
+      screen_pos.x  = (screen_pos.x+1.f)*0.5f;
+      screen_pos.y  = (screen_pos.y-1.f)*-0.5f;
+
+      x = w*screen_pos.x;
+      y = h*screen_pos.y;
+    }else
+    {
+      x = round(screen_pos.x);
+      y = round(screen_pos.y);
+    }
+    screen_pos.z  = 0.f;
+
 
     if(x<0 || x>=w || y<0 || y>=h)
       return;
