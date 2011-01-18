@@ -33,7 +33,7 @@ namespace Raytracer
     g_assert(antialiasing>=0 && antialiasing<4);
 
     culling = Manager::get_settings().get_culling();
-    culling_epsilon = Manager::get_settings().get_culling_epsilon()*2.f;
+    culling_epsilon = Manager::get_settings().get_culling_epsilon();
 
     inv_view_matrix.invert();
     inv_projection_matrix.invert();
@@ -76,7 +76,7 @@ namespace Raytracer
 
       std::cout<<"border.x "<<sphere_outest_point.x<<" border.y "<<sphere_outest_point.y<<"\n";
 
-      bounding_sphere.r = (sphere_outest_point-sphere_middle).get_length();
+      bounding_sphere.r = ceil((sphere_outest_point-sphere_middle).get_length());
       bounding_sphere.x = sphere_middle.x;
       bounding_sphere.y = sphere_middle.y;
 

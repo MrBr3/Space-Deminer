@@ -38,7 +38,7 @@ namespace Raytracer
     INTEGER_SETTING(n_render_tiles)
     INTEGER_SETTING(antialiasing)
     BOOLEAN_SETTING(culling)
-    REAL_SETTING(culling_epsilon)
+    INTEGER_SETTING(culling_epsilon)
     BOOLEAN_SETTING(clear_before_rendering)
 
     BOOLEAN_SETTING(dbg_normal)

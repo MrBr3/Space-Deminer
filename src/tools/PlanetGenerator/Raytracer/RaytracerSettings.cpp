@@ -87,9 +87,9 @@ namespace Raytracer
     signal_culling_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
     append_boolean_widget(table_performance, n, "raytrace-culling", _("Culling"), _("If set, Tiles without content will be ignored."), X_GETTER_SETTER_SIGNAL(Settings, culling));
 
-    culling_epsilon  = 0.f;//0.05f; // TODO set again to 0.05f
+    culling_epsilon  = 1;//8; // TODO set again to 8
     signal_culling_epsilon_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
-    append_real_widget(table_performance, n, "raytrace-culling-epsilon", _("Culling ε"), _("The greater the value, the lesser the probability needed sections not to be rendered."), X_GETTER_SETTER_SIGNAL(Settings, culling_epsilon), 0.001f, 0.01f, 3);
+    append_int_widget(table_performance, n, "raytrace-culling-epsilon", _("Culling ε"), _("In order to speed up rendering, areas without planet/ring are culled. This value describes the distance to the visible shapes, the culled render tiles mast have.\n\nThe greater the value, the lesser the probability needed sections not to be rendered."), X_GETTER_SETTER_SIGNAL(Settings, culling_epsilon));
 
 
     //================
@@ -209,9 +209,9 @@ namespace Raytracer
     signal_culling_changed().emit();
   }
 
-  void Settings::set_culling_epsilon(gfloat n)
+  void Settings::set_culling_epsilon(int n)
   {
-    culling_epsilon = CLAMP(n, 0.f, 1.f);
+    culling_epsilon = CLAMP(n, 1, 32);
 
     signal_culling_epsilon_changed().emit();
   }
