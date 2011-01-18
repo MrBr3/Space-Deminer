@@ -31,7 +31,7 @@ ViewSettings::ViewSettings()
   _back_color_blue = 0.f;
 
   _n_sphere_segments  = 42;
-  _n_ring_segments  = 64;
+  _n_ring_segments  = 128;
 
   set_main_caption(_("View Settings"));
 
@@ -79,7 +79,7 @@ void ViewSettings::set_n_sphere_segments(int n)
 
 void ViewSettings::set_n_ring_segments(int n)
 {
-  _n_ring_segments  = CLAMP(n, 12, 256);
+  _n_ring_segments  = CLAMP(n, 12, 512);
 
   signal_n_ring_segments_changed().emit();
 }
