@@ -44,6 +44,11 @@ public:
 
   /** \brief Constructor setting all components to 0
    * */
+  operator Vector2()const
+  {
+    return Vector2(x, y);
+  }
+
   Vector3()throw()
   {
     x = 0.f;
