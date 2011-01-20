@@ -168,7 +168,7 @@ public:
    *
    * A vector without length won't be touched.
    * */
-  void normalize() throw()
+  Vector2& normalize() throw()
   {
     if(x!=0.f || y!=0.f)
     {
@@ -180,6 +180,7 @@ public:
       x *= tmp;
       y *= tmp;
     }
+    return *this;
   }
   //@}
 

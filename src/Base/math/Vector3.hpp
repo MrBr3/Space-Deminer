@@ -212,7 +212,7 @@ public:
    *
    * A vector without length won't be touched.
    * */
-  void normalize()throw()
+  Vector3& normalize()throw()
   {
     if(get_square_length()!=1.f && (x!=0.f || y!=0.f || z!=0.f))
     {
@@ -225,6 +225,7 @@ public:
       y *= tmp;
       z *= tmp;
     }
+    return *this;
   }
   //@}
 
