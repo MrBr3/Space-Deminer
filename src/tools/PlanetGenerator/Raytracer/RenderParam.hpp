@@ -61,7 +61,7 @@ namespace Raytracer
         y = pos.y;
       }
 
-      bool is_within_tile(int tile_x, int tile_y, int tile_w, int tile_h, gfloat epsilon)const
+      bool is_within_tile(int tile_x, int tile_y, int tile_w, int tile_h)const
       {
         bool intersect_h  = x>=tile_x && x<tile_x+tile_w;
         bool intersect_v = y>=tile_y && y<tile_y+tile_h;
@@ -70,12 +70,12 @@ namespace Raytracer
           return true;
 
         if(intersect_v)
-          return x_dist(tile_x) <= r+epsilon || x_dist(tile_x+tile_w) <= r+epsilon;
+          return x_dist(tile_x) <= r || x_dist(tile_x+tile_w) <= r;
 
         if(intersect_h)
-          return y_dist(tile_y) <= r+epsilon || y_dist(tile_y+tile_h) <= r+epsilon;
+          return y_dist(tile_y) <= r || y_dist(tile_y+tile_h) <= r;
 
-        gfloat rr = r*r+epsilon;
+        gfloat rr = r*r;
 
         return square_dist(tile_x, tile_y)<=rr ||
                square_dist(tile_x+tile_w, tile_y)<=rr ||

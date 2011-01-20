@@ -138,10 +138,15 @@ namespace Raytracer
     if(!culling)
       return true;
 
+    x-=culling_epsilon;
+    y-=culling_epsilon;
+    w+=culling_epsilon*2;
+    h+=culling_epsilon*2;
+
     bool visible_planet;
     bool visible_ring = false;
 
-    visible_planet = bounding_sphere.is_within_tile(x, y, w, h, culling_epsilon);
+    visible_planet = bounding_sphere.is_within_tile(x, y, w, h);
 
     if(ring.visible && !visible_planet)
     {
