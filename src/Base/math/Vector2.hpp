@@ -75,7 +75,7 @@ public:
   /**@name Sums
    * */
   //@{
-  Vector2 operator-(const Vector2& v)const throw(){return Vector2(x*-v.x, y-v.y);}
+  Vector2 operator-(const Vector2& v)const throw(){return Vector2(x-v.x, y-v.y);}
 
   /**@name Products & Quotients
    * */
