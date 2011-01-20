@@ -7,6 +7,8 @@ Der folgende Text zeug die Richtung, die gewünscht ist
 
 gewünscht ist brainstorming artiges verbessern (komplette neuvormuliereung mit eingeschlossen)
 
+Wir sollten uns überlegen, o wir auch eine englische Version machen sollen
+
 [Bild1: Kriegsszenario]
   Es sind bereits fünf Jahre vergangen, seit denen der große Krieg
   erloschen ist.
@@ -48,5 +50,5 @@ gewünscht ist brainstorming artiges verbessern (komplette neuvormuliereung mit 
   Solange diese Minen noch unschuldige Schiffe angreifen, kann in der 
   Galaxis keine Zeit des Friedens [kommen/herbeeilen/blabla]
 ----Kommentare----
-          Risiko: "unschuldige" könnte kitschig wirken
+  Robert: Risiko: "unschuldige" könnte kitschig wirken
 -------
