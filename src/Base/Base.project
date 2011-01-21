@@ -36,6 +36,7 @@
     <File Name="opengl.cpp"/>
     <File Name="macros.hpp"/>
     <File Name="vector_creators.hpp"/>
+    <File Name="geometry.cpp"/>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>
   <VirtualDirectory Name="external">

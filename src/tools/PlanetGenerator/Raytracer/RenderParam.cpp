@@ -74,8 +74,6 @@ namespace Raytracer
       sphere_middle.x = (sphere_middle.x+1.f) * 0.5f * img_width;
       sphere_middle.y =-(sphere_middle.y-1.f) * 0.5f * img_height;
 
-      std::cout<<"border.x "<<sphere_outest_point.x<<" border.y "<<sphere_outest_point.y<<"\n";
-
       bounding_sphere.r = ceil((sphere_outest_point-sphere_middle).get_length());
       bounding_sphere.x = sphere_middle.x;
       bounding_sphere.y = sphere_middle.y;
@@ -97,11 +95,10 @@ namespace Raytracer
         for(int i=0; i<8; ++i)
         {
           tmp[i]  = projection_matrix * view_matrix * ring_matrix * (tmp[i]*ring.outer_radius);
-          tmp[i].x  = (tmp[i].x+1.f)*0.5f;
-          tmp[i].y  = (tmp[i].y-1.f)*-0.5f;
-          tmp[i].x *= img_width;
-          tmp[i].y *= img_height;
-          bounding_ngon[i].set(Vector2(tmp[i]));
+          bounding_ngon[i].x  = (tmp[i].x+1.f)*0.5f;
+          bounding_ngon[i].y  = (tmp[i].y-1.f)*-0.5f;
+          bounding_ngon[i].x *= img_width;
+          bounding_ngon[i].y *= img_height;
         }
       }
     }
@@ -150,9 +147,36 @@ namespace Raytracer
 
     if(ring.visible && !visible_planet)
     {
-      visible_ring  = true;
+      for(int i=0; !visible_ring && i<8; ++i)
+      {
+        const Vector2& curr = bounding_ngon[i];
 
-      // TODO
+        visible_ring |= (curr.x>=x) && (curr.y>=y) && (curr.x<=x+w) && (curr.y<=y+h);
+      }
+
+      Vector2 a(x,y), b(x, y+h), c(x+w, y+h), d(x+w, y);
+
+      if(!visible_ring)
+      {
+        visible_ring |= within_ngon(a, bounding_ngon, 8);
+        visible_ring |= within_ngon(b, bounding_ngon, 8);
+        visible_ring |= within_ngon(c, bounding_ngon, 8);
+        visible_ring |= within_ngon(d, bounding_ngon, 8);
+      }
+
+      if(!visible_ring)
+      {
+        for(int i=0; !visible_ring && i<8; ++i)
+        {
+          const Vector2& curr = bounding_ngon[i];
+          const Vector2& next = bounding_ngon[(i+1)%8];
+
+          visible_ring |= line_cuts_hline(curr, next, a, w, false);
+          visible_ring |= line_cuts_hline(curr, next, b, w, false);
+          visible_ring |= line_cuts_vline(curr, next, a, h);
+          visible_ring |= line_cuts_vline(curr, next, d, h);
+        }
+      }
     }
 
     return visible_planet || visible_ring;

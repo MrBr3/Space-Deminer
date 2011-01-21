@@ -87,7 +87,7 @@ namespace Raytracer
     Planet planet;
     Ring ring;
     CullingCircle bounding_sphere;
-    CullingCircle bounding_ngon[8]; // bounding ngon for the planets ring
+    Vector2 bounding_ngon[8]; // bounding ngon for the planets ring
     const Matrix44& view_matrix;
     const Matrix44 projection_matrix;
     Matrix44 inv_view_matrix;

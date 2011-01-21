@@ -25,4 +25,25 @@ inline bool is_in_rectangle(int x, int y, const Gdk::Rectangle& rect)
   return x>=rect.get_x() && y>=rect.get_y() && x<rect.get_x()+rect.get_width() && y<rect.get_y()+rect.get_height();
 }
 
+/** \brief Gets whether a line cuts a vertical line
+ *
+ * \param a_from sets the beginning of the line
+ * \param a_to sets the end of the line
+ * \param b_from sets the beginning of the vertical line
+ * \param b_height sets the height of the vertical line (negative values mean the line to go to the oppostite direction of the y axis)
+ * */
+bool line_cuts_vline(const Vector2& a_from, const Vector2& a_to, const Vector2& b_from, gfloat b_height);
+
+/** \brief Gets whether a line cuts a horizontal line
+ *
+ * \param a_from sets the beginning of the line
+ * \param a_to sets the end of the line
+ * \param b_from sets the beginning of the horizontal line
+ * \param b_width sets the width of the horizontal line (negative values mean the line to go to the oppostite direction of the x axis)
+ * \param b_is_a_ray if set, line b starts at b_from and goes to infinity (direction specified, whether b_widthis positive or negative)
+ * */
+bool line_cuts_hline(const Vector2& a_from, const Vector2& a_to, const Vector2& b_from, gfloat b_width, bool b_is_a_ray);
+
+bool within_ngon(const Vector2& point, const Vector2* points, gsize n_points);
+
 #endif

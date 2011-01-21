@@ -63,8 +63,8 @@ void test_math()
     check_within(Vector2( 0.5f,-1.0f)*Vector2( 0.5f,-1.0f).rotate_90_ccw(), 0.f);
     check_within(Vector2( 0.5f,-1.0f)*Vector2( 0.5f,-1.0f).rotate_90_cw(),  0.f);
     check_within(Vector2( 0.5f,-1.0f).rotate_90_cw(),  Vector2(-1.f, -0.5));
-    check_within<Vector3>(cross(Vector2(0.5f,-1.0f), Vector3(0.f, 0.f, 1.f)), Vector2(-1.f, -0.5f));
-    check_within<Vector3>(cross(Vector2(0.5f,-1.0f), Vector3(0.f, 0.f,-1.f)), Vector2( 1.f,  0.5f));
+    check_within<Vector3>(cross(Vector2(0.5f,-1.0f), Vector3(0.f, 0.f, 1.f)), Vector3(-1.f, -0.5f, 0.f));
+    check_within<Vector3>(cross(Vector2(0.5f,-1.0f), Vector3(0.f, 0.f,-1.f)), Vector3( 1.f,  0.5f, 0.f));
     check_within(Vector3(0.5f,-1.0f, 0.f) * Vector3(0.f, 0.f,-1.f), 0.f);
     check_within(Vector2(INV_SQRT_2, INV_SQRT_2).get_length(), 1.f);
   }
@@ -104,5 +104,14 @@ void test_math()
     check_expect(plane1.check_sphere(sphere), Math::BACKSIDE);
     sphere.transformation.set_translate(-1.f, 5.f, 0.f);
     check_expect(plane1.check_sphere(sphere), Math::FORESIDE);
+  }
+  std::cout<<"---- Testing Line cuts ----\n";
+  {
+    check_expect(line_cuts_vline(Vector2(0.f, 0.f), Vector2(0.f, 1.f), Vector2(1.f, 0.f), 1.f), false);
+    check_expect(line_cuts_vline(Vector2(0.f, 0.f), Vector2(0.f, 1.f), Vector2(0.f, 0.f), 1.f), true);
+    check_expect(line_cuts_vline(Vector2(0.f, 0.f), Vector2(0.f, 1.f), Vector2(0.f, 1.1f), 1.f), false);
+    check_expect(line_cuts_vline(Vector2(0.f, 0.f), Vector2(2.f, 1.f), Vector2(1.f, 1.f), -1.f), true);
+    check_expect(line_cuts_vline(Vector2(0.f, 0.f), Vector2(2.f, 1.f), Vector2(0.f, 1.f), -1.f), true);
+    check_expect(line_cuts_vline(Vector2(0.f, 2.f), Vector2(2.f, 1.f), Vector2(0.f, 1.f), -1.f), false);
   }
 }

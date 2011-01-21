@@ -1071,3 +1071,9 @@
 /obj-d/planet-generator/Raytracer_Ring.o
 /obj-d/planet-generator/Raytracer_Ring.o.d
 /obj-d/planet-generator/core
+/obj-d/base/geometry.o
+/obj-d/base/geometry.o.d
+/obj-d/base/math_Geometry.o
+/obj-d/base/math_geometry.o
+/obj-d/base/math_Geometry.o.d
+/obj-d/base/math_geometry.o.d
