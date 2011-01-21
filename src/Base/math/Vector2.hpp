@@ -184,6 +184,20 @@ public:
   }
   //@}
 
+  /** \brief Returns the cos of the angle between two vectors
+   * */
+  friend gfloat cos_angle(const Vector2& a, const Vector2& b)
+  {
+    return CLAMP((a*b)/(a.get_length()*b.get_length()), -1.f, 1.f);
+  }
+
+  /** \brief Returns the angle between two vectors in radian
+   * */
+  friend gfloat angle(const Vector2& a, const Vector2& b)
+  {
+    return acos(cos_angle(a, b));
+  }
+
   /** @name Debugging
    * */
   //@{
