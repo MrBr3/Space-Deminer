@@ -25,7 +25,7 @@ inline bool is_in_rectangle(int x, int y, const Gdk::Rectangle& rect)
   return x>=rect.get_x() && y>=rect.get_y() && x<rect.get_x()+rect.get_width() && y<rect.get_y()+rect.get_height();
 }
 
-/** \brief Gets whether a line cuts a vertical line
+/** \brief Checks whether a line cuts a vertical line
  *
  * \param a_from sets the beginning of the line
  * \param a_to sets the end of the line
@@ -34,7 +34,7 @@ inline bool is_in_rectangle(int x, int y, const Gdk::Rectangle& rect)
  * */
 bool line_cuts_vline(const Vector2& a_from, const Vector2& a_to, const Vector2& b_from, gfloat b_height);
 
-/** \brief Gets whether a line cuts a horizontal line
+/** \brief Checks whether a line cuts a horizontal line
  *
  * \param a_from sets the beginning of the line
  * \param a_to sets the end of the line
@@ -44,6 +44,42 @@ bool line_cuts_vline(const Vector2& a_from, const Vector2& a_to, const Vector2& 
  * */
 bool line_cuts_hline(const Vector2& a_from, const Vector2& a_to, const Vector2& b_from, gfloat b_width, bool b_is_a_ray);
 
-bool within_ngon(const Vector2& point, const Vector2* points, gsize n_points);
+/** \brief Checks, wether a point is within an ngon.
+ *
+ * The algorithm check, whether there's a line of the ngon left and right of the point \c p
+ *
+ * \param p the point to check
+ * \param points the points describing the ngon. \c points[0] is thought to be connected to \c points[1], \c points[1] to \c points[2], ... \c points[n_points-1] to \c points[0].
+ * \param n_points the number of points stored in the \c points array.
+ * */
+bool within_ngon(const Vector2& p, const Vector2* points, gsize n_points);
+
+/** \brief Checks, whether \c x is within the interval described with \c a and \c b
+*
+* Returns the truth value of \f$x\in\left[min\{a,b\},\,max\{a,b\}\right]\f$
+*
+* The implementation:
+* \code
+return x>=MIN(a,b) && x<=MAX(a,b);
+* \endcode
+* */
+inline bool between(gfloat x, gfloat a, gfloat b)
+{
+  return x>=MIN(a,b) && x<=MAX(a,b);
+}
+
+/** \brief Checks, whether two intervalls are intersecting.
+*
+* Returns the truth value of \f$\{\}\;\neq\;\left[min\{a_1,a_2\},\,max\{a_1,a_2\}\right]\;\cap\;\left[min\{b_1,b2\},\,max\{b_1,b_2\}\right]\f$
+*
+* The implementation:
+* \code
+return between(a1, b1, b2) ||
+       between(a2, b1, b2) ||
+       between(b1, a1, a2) ||
+       between(b2, a1, a2);
+* \endcode
+* */
+bool intersection_1d(gfloat a1, gfloat a2, gfloat b1, gfloat b2);
 
 #endif

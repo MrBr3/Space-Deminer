@@ -19,11 +19,6 @@
 
 #include "./base.hpp"
 
-bool between(gfloat x, gfloat a, gfloat b)
-{
-  return x>=MIN(a,b) && x<=MAX(a,b);
-}
-
 bool intersection_1d(gfloat a1, gfloat a2, gfloat b1, gfloat b2)
 {
   return between(a1, b1, b2) ||
