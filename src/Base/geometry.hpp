@@ -44,9 +44,9 @@ bool line_cuts_vline(const Vector2& a_from, const Vector2& a_to, const Vector2& 
  * */
 bool line_cuts_hline(const Vector2& a_from, const Vector2& a_to, const Vector2& b_from, gfloat b_width, bool b_is_a_ray);
 
-/** \brief Checks, wether a point is within an ngon.
+/** \brief Checks, wether a point is within a convex ngon.
  *
- * The algorithm check, whether there's a line of the ngon left and right of the point \c p
+ * The algorithm check, whether there's a line of the convex ngon left and right of the point \c p
  *
  * \param p the point to check
  * \param points the points describing the ngon. \c points[0] is thought to be connected to \c points[1], \c points[1] to \c points[2], ... \c points[n_points-1] to \c points[0].
