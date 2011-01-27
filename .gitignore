@@ -1,3 +1,8 @@
+*.blend1
+*.blend2
+*.mk
+*.session
+*.tags
 /bin/
 /bin-d/
 /lib/
@@ -5,15 +10,3 @@
 /obj/
 /obj-d/
 /doc/
-/SpaceDeminer.tags
-/SpaceDeminer_wsp.mk
-/src/Base/Base.mk
-/src/SpaceDeminer/SpaceDeminer.mk
-/SpaceDeminer.workspace.session
-/art/scenes/only-space/mixed-scene.001.blend1
-/art/scenes/only-space/mixed-scene.001.blend2
-/art/models/space/asteorids-01.blend1
-/art/models/space/asteorids-01.blend2
-/art/models/space/asteorids-01-low.blend1
-/art/models/space/asteorids-01-low.blend2
-/src/tools/PlanetGenerator/PlanetGenerator.mk
