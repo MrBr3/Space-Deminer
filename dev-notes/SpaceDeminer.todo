@@ -23,6 +23,8 @@ Next Steps:
     [ ] on_memnotic_pushed
     [ ] on_memnotic_released
 [ ] neues UI Design einführen
+  [ ] Schriftart mit passender Lizenz in PNg Bild(er) umwandeln?
+    [ ] Linux Libertine? (http://de.wikipedia.org/wiki/Linux_Libertine)
   [ ] Buttons ohne Rahmen
     [ ] Zeichnen außerhalb der Widgets erlauben (extra pass)
 
