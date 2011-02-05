@@ -95,6 +95,10 @@ namespace Raytracer
     //================
     n=0;
 
+    dbg_culling  = false;
+    signal_dbg_culling_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
+    append_boolean_widget(table_debugging, n, "raytrace-dbg-culling", _("Culling"), _("If set, a it will be shown, which  render tiles are ignored"), X_GETTER_SETTER_SIGNAL(Settings, dbg_culling));
+
     dbg_normal  = false;
     signal_dbg_normal_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
     append_boolean_widget(table_debugging, n, "raytrace-dbg-normal", _("Normals"), _("If set, the normals will be shown"), X_GETTER_SETTER_SIGNAL(Settings, dbg_normal));
@@ -228,13 +232,24 @@ namespace Raytracer
     }
   }
 
+  void Settings::set_dbg_culling(bool o)
+  {
+    if(dbg_culling==o)
+      return;
+
+    no_debugging(o);
+    dbg_culling = o;
+
+    signal_dbg_normal_changed().emit();
+  }
+
   void Settings::set_dbg_normal(bool o)
   {
     if(dbg_normal==o)
       return;
 
     no_debugging(o);
-    dbg_normal = o; // TODO this value shouldn't be ignored
+    dbg_normal = o;
 
     signal_dbg_normal_changed().emit();
   }
@@ -246,7 +261,7 @@ namespace Raytracer
       return;
 
     no_debugging(o);
-    dbg_uv= o; // TODO this value shouldn't be ignored
+    dbg_uv= o;
 
     signal_dbg_uv_changed().emit();
   }
@@ -258,7 +273,7 @@ namespace Raytracer
       return;
 
     no_debugging(o);
-    dbg_unlit_base_texture= o; // TODO this value shouldn't be ignored
+    dbg_unlit_base_texture= o;
 
     signal_dbg_unlit_base_texture_changed().emit();
   }

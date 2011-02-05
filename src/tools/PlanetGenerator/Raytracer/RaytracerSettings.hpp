@@ -44,6 +44,7 @@ namespace Raytracer
     BOOLEAN_SETTING(dbg_normal)
     BOOLEAN_SETTING(dbg_uv)
     BOOLEAN_SETTING(dbg_unlit_base_texture)
+    BOOLEAN_SETTING(dbg_culling)
     /** \brief Deactivates all debugging Flags
      *
      * \param deactivate if false nothing will be done

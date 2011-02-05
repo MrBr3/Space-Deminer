@@ -20,7 +20,6 @@
 #include "./../MainWindow.hpp"
 
 //#define DEBUG_RENDER_THREAD
-#define MARK_ALL_IGNORED_TILES
 
 namespace Raytracer
 {
@@ -155,6 +154,8 @@ namespace Raytracer
       guint8* const all_pixels  = ri->get_pixbuf()->get_pixels();
       bool first_tile = true;
 
+      bool debug_culling = Manager::get_settings().get_dbg_culling();
+
     ri->_render_mutex.unlock();
 
     ColorRGBA col(DONT_INIT);
@@ -168,9 +169,11 @@ namespace Raytracer
 
       inline void clear()
       {
-        //if(!line)return;
-        //se.set(0.f, 0.f, 0.f, 0.f);
-        //memset(line, array_size*sizeof(ColorRGBA), 0);
+        if(!line)
+          return;
+        se.set(0.f, 0.f, 0.f, 0.f);
+        for(gsize i=0; i<array_size; ++i)
+          line[i].set(0.f, 0.f, 0.f, 0.f);
       }
 
       void init()
@@ -257,9 +260,7 @@ namespace Raytracer
               col.fill(px);
           }
         }
-      }
-#ifdef MARK_ALL_IGNORED_TILES
-      else
+      }else if(debug_culling)
       {
         col.set(1.f, 0.5f, 0.25f, 1.f);
         ColorRGBA border(1.f, 0.f, 0.f, 1.f);
@@ -275,7 +276,6 @@ namespace Raytracer
           }
         }
       }
-#endif
     }
 
     ri->_render_mutex.lock();
@@ -299,6 +299,8 @@ namespace Raytracer
     _ui_timer_ready = false;
     _aborted = false;
 
+    bool debug_culling = Manager::get_settings().get_dbg_culling();
+
     _render_mutex.unlock();
 
 #ifndef DEBUG_RENDER_THREAD
@@ -320,8 +322,7 @@ namespace Raytracer
 #ifndef DEBUG_RENDER_THREAD
     _waiting_for_finish.wait();
 #endif
-#ifdef MARK_ALL_IGNORED_TILES
-    if(_render_param->ring.visible)
+    if(debug_culling && _render_param->ring.visible)
     {
       draw_line(_render_param->bounding_ngon[0], _render_param->bounding_ngon[1], ColorRGBA(0.5f, 0.5f, 1.f, 1.f), DRC_ABS_SCREEN);
       draw_line(_render_param->bounding_ngon[1], _render_param->bounding_ngon[2], ColorRGBA(0.5f, 0.5f, 1.f, 1.f), DRC_ABS_SCREEN);
@@ -332,7 +333,6 @@ namespace Raytracer
       draw_line(_render_param->bounding_ngon[6], _render_param->bounding_ngon[7], ColorRGBA(0.5f, 0.5f, 1.f, 1.f), DRC_ABS_SCREEN);
       draw_line(_render_param->bounding_ngon[7], _render_param->bounding_ngon[0], ColorRGBA(0.5f, 0.5f, 1.f, 1.f), DRC_ABS_SCREEN);
     }
-#endif
 
     g_assert(_aborted || _rendering_threads==0);
 
