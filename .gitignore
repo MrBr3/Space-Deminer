@@ -3,10 +3,7 @@
 *.mk
 *.session
 *.tags
-/bin/
-/bin-d/
-/lib/
-/lib-d/
-/obj/
-/obj-d/
-/doc/
+/bin*/
+/lib*/
+/obj*/
+/doc*/
