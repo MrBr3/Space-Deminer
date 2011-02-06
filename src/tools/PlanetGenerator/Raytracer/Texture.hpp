@@ -40,8 +40,19 @@ namespace Raytracer
     bool load_small_version; // if load_small_version==true should_reload will be ignored
     bool visible;
 
+    ColorRGBA dummy_color;
+
   public:
-      const Glib::ustring& get_filename()const{return filename;}
+    enum WrapMode
+    {
+      WRAP_REPEAT,
+      WRAP_CLAMPED,
+      WRAP_TRANSPARENT,
+    };
+
+    const Glib::ustring& get_filename()const{return filename;}
+
+    void get_color(ColorRGBA& color, gfloat u, gfloat v, WrapMode u_mode, WrapMode v_mode)const;
 
   private:
     void init();

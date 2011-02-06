@@ -31,6 +31,8 @@ namespace Raytracer
     should_reload = true;
     load_small_version  = false;
     visible = true;
+
+    dummy_color.set(0.f, 0.f, 0.f, .0f);
   }
 
   Texture::~Texture()throw()
@@ -46,6 +48,76 @@ namespace Raytracer
     else g_assert_not_reached();
   }
 
+  void Texture::get_color(ColorRGBA& color, gfloat u, gfloat v, WrapMode u_mode, WrapMode v_mode)const
+  {
+    if(!this || !visible)
+    {
+      color = dummy_color;
+      return;
+    }
+    if(u_mode==WRAP_TRANSPARENT && !between(u, 0.f, 1.f))
+    {
+      color.set(0.f, 0.f, 0.f, 0.f);
+      return;
+    }
+    if(v_mode==WRAP_TRANSPARENT && !between(v, 0.f, 1.f))
+    {
+      color.set(0.f, 0.f, 0.f, 0.f);
+      return;
+    }
+    if(u_mode==WRAP_CLAMPED)
+      u = CLAMP(u, 0.f, 1.f);
+    if(v_mode==WRAP_CLAMPED)
+      v = CLAMP(v, 0.f, 1.f);
+
+    if(!pixbuf || !pixbuf->get_width() || !pixbuf->get_height() || !pixbuf->get_rowstride() || !pixbuf->get_pixels())
+    {
+      g_assert_not_reached();
+      color.set(0.f, 0.f, 0.f, 0.f);
+      return;
+    }
+
+    int w = pixbuf->get_width();
+    int h = pixbuf->get_height();
+    guint8* pixels  = pixbuf->get_pixels();
+    gsize rowstride = pixbuf->get_rowstride();
+    gsize n_channels  = pixbuf->get_n_channels();
+
+    u *= w;
+    v *= h;
+
+    gsize x_w  = floor(u);
+    gsize x_e  = ceil(u);
+    gsize y_n  = floor(v);
+    gsize y_s  = ceil(v);
+
+    if(u_mode==WRAP_REPEAT)
+    {
+      x_w %= w;
+      x_e %= w;
+    }
+    if(v_mode==WRAP_REPEAT)
+    {
+      y_n %= h;
+      y_s %= h;
+    }
+
+    g_assert(x_w>=0 && x_w<w);
+    g_assert(x_e>=0 && x_e<w);
+    g_assert(y_s>=0 && y_s<h);
+    g_assert(y_n>=0 && y_n<h);
+
+    ColorRGBA c1, c2, c3, c4;
+
+    c1.set(pixels+rowstride*y_n+n_channels*x_w, n_channels);
+    c2.set(pixels+rowstride*y_s+n_channels*x_w, n_channels);
+    c3.set(pixels+rowstride*y_s+n_channels*x_e, n_channels);
+    c4.set(pixels+rowstride*y_n+n_channels*x_e, n_channels);
+
+    c1.set_mix_of(c1, c2, 0.5f, 0.5f);
+    c2.set_mix_of(c2, c3, 0.5f, 0.5f);
+    color.set_mix_of(c1, c2, 0.5f, 0.5f);
+  }
 
   void Texture::reload_file()
   {

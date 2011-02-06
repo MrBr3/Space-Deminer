@@ -101,19 +101,20 @@ PlanetGenerator
           [ ] relative Pfadangaben
         [ ] Planetendaten aus Datei laden können
           [ ] relative Pfadangaben
-        [ ] Zulezt geöffnet Liste
+        [ ] "Zulezt geöffnet" Liste
       [ ] gucken, ob antialiasing wirklich funzt (auch bei 2x und 4x?)
       [ ] gucken, ob alles bei sehr kleinen Bildern funzt
         [ ] artefakte?
         [ ] ein Tile sollte nicht weniger als 8x8 px repräsentieren
-      [ ] Base Textur anzeigen
-        [ ] Farbe anhand UV herholen (ceil/floor könnte sehr praktisch sein)
-          [ ] für u/v werte außerhalb von intervall [0, 1] wählen können zwischen
-            [ ] Transparent
-            [ ] Textur wiederholt
-            [ ] CLAMPed
+      [X] Base Textur anzeigen
+        [X] Farbe anhand UV herholen (ceil/floor könnte sehr praktisch sein)
+          [X] für u/v werte außerhalb von intervall [0, 1] wählen können zwischen
+            [X] Transparent
+            [X] Textur wiederholt
+            [X] CLAMPed
       [ ] BaseTexture mit Wolken
       [ ] RingTextur
+      [ ] Filtering überarbeiten
       [ ] Atmosphären effekt
         [ ] Entfernung, mit der der Strahl an der Kugel vorbeifliegt bestimmen können
         [ ] Atmosphäre soll auch Ringe beeinflussen

@@ -103,7 +103,7 @@ namespace Raytracer
     signal_dbg_normal_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
     append_boolean_widget(table_debugging, n, "raytrace-dbg-normal", _("Normals"), _("If set, the normals will be shown"), X_GETTER_SETTER_SIGNAL(Settings, dbg_normal));
 
-    dbg_uv  = true;
+    dbg_uv  = false;
     signal_dbg_uv_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
     append_boolean_widget(table_debugging, n, "raytrace-dbg-uv", _("UV"), _("If set, the UV-Coordinates will be shown"), X_GETTER_SETTER_SIGNAL(Settings, dbg_uv));
 

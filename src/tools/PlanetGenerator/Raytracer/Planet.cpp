@@ -74,9 +74,6 @@ namespace Raytracer
 
   void Planet::shader(ColorRGBA& color, const Vector2& uv, const Vector3& normal)
   {
-    color.r = 0.f;
-    color.g = 0.f;
-    color.b = 1.f;
-    color.a = 1.f;
+    Texture::base_texture->get_color(color, uv.x, uv.y, Texture::WRAP_REPEAT, Texture::WRAP_CLAMPED);
   }
 }

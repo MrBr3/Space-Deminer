@@ -80,9 +80,51 @@ public:
     set(0.5f*dir.x+0.5f, 0.5f*dir.y+0.5f, 0.5f*dir.z+0.5f, 1.f);
   }
 
+  /** \brief Sets the color by a 32 Bit RGBA value
+   *
+   *
+   *
+   * \note the caller owns the four bytes and has to make sure they area valid
+   * */
+  void set(guint8* pixels, int n=4)
+  {
+    if(!pixels)
+      throw std::invalid_argument("**ColorRGBA::set** pixels");
+    if(n!=3 && n!=4)
+      throw std::invalid_argument("**ColorRGBA::set** n must be 3 or 4");
+
+    static const gfloat f = 1.f/255.f;
+
+    r = pixels[0]*f;
+    g = pixels[1]*f;
+    b = pixels[2]*f;
+    if(n==4)
+      a = pixels[3]*f;
+    else
+      a = 1.f;
+  }
+
   /** @name  Conversion
    * */
   //@{
+
+  void set_mix_of(const ColorRGBA& a, const ColorRGBA& b, gfloat p1, gfloat p2)
+  {
+    gfloat p  = p1+p2;
+
+    if(p<=0.f)
+    {
+      set(0.f, 0.f, 0.f, 0.f);
+      return;
+    }
+
+    gfloat inv_p  = 1.f/p;
+
+    this->r = (a.r*p1 + b.r*p2) * inv_p;
+    this->g = (a.g*p1 + b.g*p2) * inv_p;
+    this->b = (a.b*p1 + b.b*p2) * inv_p;
+    this->a = (a.a*p1 + b.a*p2) * inv_p;
+  }
 
   static guint8 convert_to_0_255(gfloat x){return round(CLAMP(x*255.f, 0.f, 255.f));}
   static gfloat clamp_to_0_1f(gfloat x){return CLAMP(x, 0.f, 1.f);}
