@@ -265,6 +265,54 @@ void start_gui_test() {
       check_expect<Glib::ustring>(str_copy_replace_last_with("~/Desktop/earth.day.svg", 0, ".png"), "~/Desktop/earth.day.svg.png");
       check_expect<Glib::ustring>(str_copy_replace_last_with("~/Desktop/Foo.svg", 'x', "-large."), "~/Desktop/Foo.svg");
     }
+    {
+      std::list<Glib::ustring> l;
+      l.push_back(":-)");
+      str_to_stringlist(l, "a,b,,c,hehe,", ',');
+
+      check_expect(l.size(), 6);
+      check_expect<Glib::ustring>(*l.begin(), ":-)");
+      l.pop_front();
+      check_expect(l.size(), 5);
+      check_expect<Glib::ustring>(*l.begin(), "a");
+      l.pop_front();
+      check_expect(l.size(), 4);
+      check_expect<Glib::ustring>(*l.begin(), "b");
+      l.pop_front();
+      check_expect(l.size(), 3);
+      check_expect<Glib::ustring>(*l.begin(), "");
+      l.pop_front();
+      check_expect(l.size(), 2);
+      check_expect<Glib::ustring>(*l.begin(), "c");
+      l.pop_front();
+      check_expect(l.size(), 1);
+      check_expect<Glib::ustring>(*l.begin(), "hehe");
+      l.pop_front();
+      check_expect(l.size(), 0);
+
+      l.push_front(":-)");
+      str_to_stringlist(l, "a,b,,c,hehe", ',');
+
+      check_expect(l.size(), 6);
+      check_expect<Glib::ustring>(*l.begin(), ":-)");
+      l.pop_front();
+      check_expect(l.size(), 5);
+      check_expect<Glib::ustring>(*l.begin(), "a");
+      l.pop_front();
+      check_expect(l.size(), 4);
+      check_expect<Glib::ustring>(*l.begin(), "b");
+      l.pop_front();
+      check_expect(l.size(), 3);
+      check_expect<Glib::ustring>(*l.begin(), "");
+      l.pop_front();
+      check_expect(l.size(), 2);
+      check_expect<Glib::ustring>(*l.begin(), "c");
+      l.pop_front();
+      check_expect(l.size(), 1);
+      check_expect<Glib::ustring>(*l.begin(), "hehe");
+      l.pop_front();
+      check_expect(l.size(), 0);
+    }
     test_math();
     test_matrix();
     std::cout<<"==== Testing GUI ====\n";

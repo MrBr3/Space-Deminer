@@ -178,3 +178,25 @@ void str_replace_all_with(Glib::ustring& str, const Glib::ustring::value_type& r
     }
   }
 }
+
+void str_to_stringlist(std::list<Glib::ustring>& list, const Glib::ustring& str, Glib::ustring::value_type seperator)
+{
+  Glib::ustring::const_iterator begin_iter = str.begin();
+
+  for(Glib::ustring::const_iterator s_iter=str.begin(); s_iter!=str.end(); ++s_iter)
+  {
+    if(*s_iter==seperator)
+    {
+      Glib::ustring::const_iterator& end_iter = s_iter;
+
+      list.push_back(Glib::ustring(begin_iter, end_iter));
+
+      begin_iter  = s_iter;
+      ++begin_iter;
+    }
+  }
+
+  Glib::ustring::const_iterator end_iter = str.end();
+  if(end_iter != begin_iter)
+    list.push_back(Glib::ustring(begin_iter, end_iter));
+}

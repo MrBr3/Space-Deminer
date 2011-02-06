@@ -133,4 +133,20 @@ inline Glib::ustring str_copy_replace_all_with(Glib::ustring str, const Glib::us
   return str;
 }
 
+/** \brief Splits a string into a stringlist using a seperator.
+ *
+ * Example:
+ * \code
+ * std::list<Glib::ustring> l;
+ * l.pack_start(":-)");
+ * str_to_stringlist(l, "a,b,,c,d,", ',');
+ * // Now the content of l is ":-)" "a" "b" "" "c" "d"
+ * \endcode
+ *
+ * \param list the list, the result weill be stored in
+ * \param str the string to split
+ * \param seperator the character which will be used to split the string
+ * */
+void str_to_stringlist(std::list<Glib::ustring>& list, const Glib::ustring& str, Glib::ustring::value_type seperator);
+
 #endif
