@@ -114,7 +114,8 @@ PlanetGenerator
             [X] CLAMPed
       [ ] BaseTexture mit Wolken
       [ ] RingTextur
-      [ ] Filtering überarbeiten
+      [X] Filtering überarbeiten
+        [X] Mit geeigneten Texturen Testen
       [ ] Atmosphären effekt
         [ ] Entfernung, mit der der Strahl an der Kugel vorbeifliegt bestimmen können
         [ ] Atmosphäre soll auch Ringe beeinflussen

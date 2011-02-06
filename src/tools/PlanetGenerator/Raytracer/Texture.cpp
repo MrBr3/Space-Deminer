@@ -114,9 +114,14 @@ namespace Raytracer
     c3.set(pixels+rowstride*y_s+n_channels*x_e, n_channels);
     c4.set(pixels+rowstride*y_n+n_channels*x_e, n_channels);
 
-    c1.set_mix_of(c1, c2, 0.5f, 0.5f);
-    c2.set_mix_of(c2, c3, 0.5f, 0.5f);
-    color.set_mix_of(c1, c2, 0.5f, 0.5f);
+    gfloat frac_part_u  = u-x_w;
+    gfloat one_minus_frac_part_u  = 1.f-frac_part_u;
+    gfloat frac_part_v  = v-y_n;
+    gfloat one_minus_frac_part_v  = 1.f-frac_part_v;
+
+    c1.set_mix_of(c1, c2, one_minus_frac_part_v, frac_part_v);
+    c2.set_mix_of(c4, c3, one_minus_frac_part_v, frac_part_v);
+    color.set_mix_of(c1, c2, one_minus_frac_part_u, frac_part_u);
   }
 
   void Texture::reload_file()

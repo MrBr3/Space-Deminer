@@ -113,6 +113,10 @@ namespace Raytracer
     night_texture.init();
     weight_map.init();
     cloud_layer.init();
+
+    base_texture.dummy_color.set(0.5f, 0.5f, 0.5f, 1.f);
+    night_texture.dummy_color.set(0.f, 0.f, 0.f, 1.f);
+    weight_map.dummy_color.set(0.f, 0.f, 0.f, 1.f);
   }
 
   Manager::~Manager()throw()
