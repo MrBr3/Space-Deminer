@@ -25,8 +25,6 @@ NightTextureLayer::NightTextureLayer() : ParentClass(_("Night Texture"), true)
   SettingsWidget* settings  = new SettingsWidget;
   prepare_settings("night-texture", settings);
   settings->append_imagefile_widget("night-texture-file", "File", "The File the Texture is created from", get_imagefile());
-
-  get_imagefile()->set_filename(apply_filename_macros("$(local-folder)/start-up-planet-images/sup-night.jpg")); // TODO you shouldn't need to use full path here
 }
 
 NightTextureLayer::~NightTextureLayer()throw()

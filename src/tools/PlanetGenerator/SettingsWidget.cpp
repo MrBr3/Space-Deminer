@@ -138,7 +138,8 @@ Gtk::Widget& SettingsWidget::append_color_widget(Gtk::Table& table, guint& n_ent
   sigc::slot<void, const Gdk::Color&> w_setter = sigc::mem_fun(*color_button, &Gtk::ColorButton::set_color);
 
   signal_changed.connect(Options::update_option_slot(name, getter));
-  w_setter(Options::get_color(name, getter()));
+  Gdk::Color default_value = getter();
+  w_setter(default_value);
 
   color_button->show();
   color_button->set_tooltip_text(tooltip);
@@ -149,6 +150,10 @@ Gtk::Widget& SettingsWidget::append_color_widget(Gtk::Table& table, guint& n_ent
   table.attach(*wlabel, 0, 1, n_entries, n_entries+1, Gtk::FILL, Gtk::FILL);
   table.attach(*color_button, 1, 2, n_entries, n_entries+1, Gtk::EXPAND|Gtk::FILL, Gtk::FILL);
   ++n_entries;
+
+  Gdk::Color loaded_value = Options::get_color(name, default_value);
+  if(loaded_value!=default_value)
+    setter(loaded_value);
 
   return *color_button;
 }
@@ -161,7 +166,8 @@ Gtk::Widget& SettingsWidget::append_boolean_widget(Gtk::Table& table, guint& n_e
   sigc::slot<void, bool> w_setter = sigc::mem_fun(*check_button, &Gtk::CheckButton::set_active);
 
   signal_changed.connect(Options::update_option_slot(name, getter));
-  w_setter(Options::get_boolean(name, getter()));
+  bool default_value = getter();
+  w_setter(default_value);
 
   check_button->show();
   check_button->set_label(label);
@@ -171,6 +177,10 @@ Gtk::Widget& SettingsWidget::append_boolean_widget(Gtk::Table& table, guint& n_e
 
   table.attach(*check_button, 0, 2, n_entries, n_entries+1, Gtk::EXPAND|Gtk::FILL, Gtk::FILL);
   ++n_entries;
+
+  bool loaded_value = Options::get_boolean(name, default_value);
+  if(loaded_value!=default_value)
+    setter(loaded_value);
 
   return *check_button;
 }
@@ -189,7 +199,8 @@ Gtk::Widget& SettingsWidget::append_int_widget(Gtk::Table& table, guint& n_entri
   spin_button->set_range(G_MININT, G_MAXINT);
 
   signal_changed.connect(Options::update_option_slot(name, getter));
-  w_setter(Options::get_integer(name, getter()));
+  int default_value = getter();
+  w_setter(default_value);
 
   spin_button->show();
   spin_button->set_tooltip_text(tooltip);
@@ -200,6 +211,10 @@ Gtk::Widget& SettingsWidget::append_int_widget(Gtk::Table& table, guint& n_entri
   table.attach(*wlabel, 0, 1, n_entries, n_entries+1, Gtk::FILL, Gtk::FILL);
   table.attach(*spin_button, 1, 2, n_entries, n_entries+1, Gtk::EXPAND|Gtk::FILL, Gtk::FILL);
   ++n_entries;
+
+  int loaded_value = Options::get_integer(name, default_value);
+  if(loaded_value!=default_value)
+    setter(loaded_value);
 
   return *spin_button;
 }
@@ -218,7 +233,8 @@ Gtk::Widget& SettingsWidget::append_real_widget(Gtk::Table& table, guint& n_entr
   spin_button->set_range(G_MININT, G_MAXINT);
 
   signal_changed.connect(Options::update_option_slot(name, getter));
-  w_setter(Options::get_real(name, getter()));
+  gfloat default_value  = getter();
+  w_setter(default_value);
 
   spin_button->show();
   spin_button->set_tooltip_text(tooltip);
@@ -230,6 +246,10 @@ Gtk::Widget& SettingsWidget::append_real_widget(Gtk::Table& table, guint& n_entr
   table.attach(*wlabel, 0, 1, n_entries, n_entries+1, Gtk::FILL, Gtk::FILL);
   table.attach(*spin_button, 1, 2, n_entries, n_entries+1, Gtk::EXPAND|Gtk::FILL, Gtk::FILL);
   ++n_entries;
+
+  gfloat loaded_value = Options::get_real(name, default_value);
+  if(loaded_value!=default_value)
+    setter(loaded_value);
 
   return *spin_button;
 }
@@ -311,7 +331,8 @@ Gtk::Widget& SettingsWidget::append_enum_widget(Gtk::Table& table, guint& n_entr
   }
 
   signal_changed.connect(Options::update_option_slot(name, getter));
-  w_setter(Options::get_integer(name, getter()));
+  int default_value = getter();
+  w_setter(default_value);
 
   cb_text->show();
   cb_text->set_tooltip_text(tooltip);
@@ -321,6 +342,10 @@ Gtk::Widget& SettingsWidget::append_enum_widget(Gtk::Table& table, guint& n_entr
   table.attach(*wlabel, 0, 1, n_entries, n_entries+1, Gtk::FILL, Gtk::FILL);
   table.attach(*cb_text, 1, 2, n_entries, n_entries+1, Gtk::EXPAND|Gtk::FILL, Gtk::FILL);
   ++n_entries;
+
+  int loaded_value = Options::get_integer(name, default_value);
+  if(loaded_value!=default_value)
+    setter(loaded_value);
 
   return *cb_text;
 }
@@ -345,7 +370,8 @@ Gtk::Widget& SettingsWidget::append_filename_widget(Gtk::Table& table, guint& n_
   sigc::slot<void, const Glib::ustring&> w_setter = sigc::hide_return(sigc::mem_fun(*filechooser, &Gtk::FileChooserButton::set_filename));
 
   signal_changed.connect(Options::update_option_slot(name, getter));
-  w_setter(Options::get_string(name, getter()));
+  Glib::ustring default_value = getter();
+  w_setter(default_value);
 
   filechooser->show();
   filechooser->add_filter(filter);
@@ -357,6 +383,10 @@ Gtk::Widget& SettingsWidget::append_filename_widget(Gtk::Table& table, guint& n_
 
   table.attach(*filechooser, 0, 2, n_entries, n_entries+1, Gtk::EXPAND|Gtk::FILL, Gtk::FILL);
   ++n_entries;
+
+  Glib::ustring loaded_value = Options::get_string(name, default_value);
+  if(loaded_value!=default_value)
+    setter(loaded_value);
 
   return *filechooser;
 }
@@ -373,7 +403,8 @@ Gtk::Widget& SettingsWidget::append_string_widget(Gtk::Table& table, guint& n_en
   sigc::slot<void, const Glib::ustring&> w_setter = sigc::mem_fun(*entry, &Gtk::Entry::set_text);
 
   signal_changed.connect(Options::update_option_slot(name, getter));
-  w_setter(Options::get_string(name, getter()));
+  Glib::ustring default_value = getter();
+  w_setter(default_value);
 
   entry->show();
   entry->set_tooltip_text(tooltip);
@@ -383,6 +414,10 @@ Gtk::Widget& SettingsWidget::append_string_widget(Gtk::Table& table, guint& n_en
   table.attach(*wlabel, 0, 1, n_entries, n_entries+1, Gtk::FILL, Gtk::FILL);
   table.attach(*entry, 1, 2, n_entries, n_entries+1, Gtk::EXPAND|Gtk::FILL, Gtk::FILL);
   ++n_entries;
+
+  Glib::ustring loaded_value = Options::get_string(name, default_value);
+  if(loaded_value!=default_value)
+    setter(loaded_value);
 
   return *entry;
 }

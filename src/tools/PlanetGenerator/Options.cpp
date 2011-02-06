@@ -136,12 +136,37 @@ Glib::RefPtr<Gio::File> Options::get_file()
   return Gio::File::create_for_path(Glib::filename_from_utf8(apply_filename_macros("$(local-folder)/config.xml")));
 }
 
-void Options::load_from_string(const Glib::RefPtr<Gio::InputStream>& os)
+void Options::load_from_stream(const Glib::RefPtr<Gio::InputStream>& os)
 {
   if(!os)
     throw std::invalid_argument("**Options::write_to_stream** needs a valid stream");
 
-  std::cout<<"Options loading\n";
+  std::list<Glib::ustring> options;
+  {
+    gchar stream[8192];
+
+    gsize n = os->read(stream, 8192);
+    if(n>=8192)
+    {
+      std::cout<<"Planet File too large!\n";
+      return;
+    }
+
+    stream[n] = 0;
+
+    str_to_stringlist(options, stream, '\n');
+  }
+
+  if(options.size()>1)
+    options.pop_front();
+
+  for(std::list<Glib::ustring>::iterator iter=options.begin(); iter!=options.end(); iter=options.erase(iter))
+  {
+    Glib::ustring left, right;
+    split_string(left, right, *iter, '=');
+
+    set_string(left, right);
+  }
 }
 
 void Options::write_to_stream(const Glib::RefPtr<Gio::OutputStream>& os)
@@ -149,13 +174,9 @@ void Options::write_to_stream(const Glib::RefPtr<Gio::OutputStream>& os)
   if(!os)
     throw std::invalid_argument("**Options::write_to_stream** needs a valid stream");
 
-  std::cout<<"Options saving\n";
-
-  os->write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n");
-  os->write("<config>\n");
+  os->write("First line is ignored. Whitespace is NOT ignored. Case sensitive\n");
   for(OptionMap::const_iterator i=_options.begin(); i!=_options.end(); ++i)
-    os->write(Glib::ustring::compose("  <%1 value=\"%2\">\n", i->first, i->second).c_str());
-  os->write("</config>");
+    os->write(Glib::ustring::compose("%1=%2\n", i->first, i->second).c_str());
 }
 
 void Options::load_options()
@@ -167,7 +188,7 @@ void Options::load_options()
     if(!file || !file->query_exists())
       return;
 
-    load_from_string(file->read());
+    load_from_stream(file->read());
   }CATCH_ALL("**Options::load_options** ", return;)
 }
 

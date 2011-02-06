@@ -94,7 +94,7 @@ public:
 
   static Glib::RefPtr<Gio::File> get_file();
 
-  void load_from_string(const Glib::RefPtr<Gio::InputStream>& os);
+  void load_from_stream(const Glib::RefPtr<Gio::InputStream>& os);
   void write_to_stream(const Glib::RefPtr<Gio::OutputStream>& os);
 
   void load_options();

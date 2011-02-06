@@ -23,6 +23,9 @@
 RingLayer::RingLayer() : ParentClass(_("Ring"), true)
 {
   SettingsWidget* settings  = new SettingsWidget;
+
+  set_visible(false);
+
   prepare_settings("ring-texture", settings);
 
   width  = 0.75f;
@@ -30,8 +33,6 @@ RingLayer::RingLayer() : ParentClass(_("Ring"), true)
 
   x_rotation = 0.f;
   z_rotation = 0.f;
-
-  set_visible(false);
 
   signal_x_rotation_changed().connect(sigc::mem_fun(_signal_rotation_changed, &sigc::signal<void>::emit));
   signal_z_rotation_changed().connect(sigc::mem_fun(_signal_rotation_changed, &sigc::signal<void>::emit));
