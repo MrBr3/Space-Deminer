@@ -46,8 +46,8 @@ public:
     x_rotation += a;
     _signal_rotation_changed.emit();
   }
-  void set_z_rotation(gfloat a){z_rotation = a;_signal_rotation_changed.emit();}
-  void set_x_rotation(gfloat a){x_rotation = a;_signal_rotation_changed.emit();}
+  void set_z_rotation(gfloat a){z_rotation = a;_signal_z_rotation_changed.emit();}
+  void set_x_rotation(gfloat a){x_rotation = a;_signal_x_rotation_changed.emit();}
   gfloat get_z_rotation()const{return z_rotation;}
   gfloat get_x_rotation()const{return x_rotation;}
   gfloat get_outer_radius()const{return outer_radius;}
@@ -55,9 +55,9 @@ public:
   gfloat get_inner_radius()const{return outer_radius + width - outer_radius*width;}
   void set_outer_radius(gfloat r){outer_radius=CLAMP(r, 1.f, 100.f);_signal_outer_radius_changed.emit();}
 
-  /** \brief S the width of the Ring.
+  /** \brief Sets the width of the Ring.
    *
-   * \param w the new with of the Ring (0 means the ring begins at the planets surface, 0.5 in the middle between outer radius and the planets surface)
+   * \param w the new width of the Ring (0 means the ring begins at the planets surface, 0.5 in the middle between outer radius and the planets surface)
    * */
   void set_width(gfloat w){width=CLAMP(w, 0.f, 1.f);_signal_width_changed.emit();}
 
