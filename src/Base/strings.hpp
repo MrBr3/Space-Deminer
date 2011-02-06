@@ -149,4 +149,21 @@ inline Glib::ustring str_copy_replace_all_with(Glib::ustring str, const Glib::us
  * */
 void str_to_stringlist(std::list<Glib::ustring>& list, const Glib::ustring& str, Glib::ustring::value_type seperator);
 
+/** \brief Splits a string into two string using a seperator.
+ *
+ * Example:
+ * \code
+ * Glib::ustring a, b;
+ * split_string(a, b, "hihi=blabla=hoho", '=');
+ * // Now a is "hihi"
+ * // Now b is "blabla=hoho"
+ * \endcode
+ *
+ * \param a the first part of the returned string (will be equal to \c str if \c seperator is not found)
+ * \param b the second part of the returned string (will empty if \c seperator is the last char or not found)
+ * \param str the string to split
+ * \param seperator the character which will be used to split the string
+ * */
+void split_string(Glib::ustring& a, Glib::ustring& b, const Glib::ustring& str, Glib::ustring::value_type seperator);
+
 #endif

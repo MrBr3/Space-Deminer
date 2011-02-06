@@ -312,6 +312,26 @@ void start_gui_test() {
       check_expect<Glib::ustring>(*l.begin(), "hehe");
       l.pop_front();
       check_expect(l.size(), 0);
+
+      Glib::ustring a, b;
+      split_string(a, b, "hihi=blabla=hoho", '=');
+      check_expect<Glib::ustring>(a, "hihi");
+      check_expect<Glib::ustring>(b, "blabla=hoho");
+      split_string(a, b, "hihi=", '=');
+      check_expect<Glib::ustring>(a, "hihi");
+      check_expect<Glib::ustring>(b, "");
+      split_string(a, b, "hihi", '=');
+      check_expect<Glib::ustring>(a, "hihi");
+      check_expect<Glib::ustring>(b, "");
+      split_string(a, b, "=", '=');
+      check_expect<Glib::ustring>(a, "");
+      check_expect<Glib::ustring>(b, "");
+      split_string(a, b, "", '=');
+      check_expect<Glib::ustring>(a, "");
+      check_expect<Glib::ustring>(b, "");
+      split_string(a, b, "=abc", '=');
+      check_expect<Glib::ustring>(a, "");
+      check_expect<Glib::ustring>(b, "abc");
     }
     test_math();
     test_matrix();

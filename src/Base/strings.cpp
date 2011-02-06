@@ -54,7 +54,7 @@ gfloat str_to_real(const Glib::ustring& num, gfloat defvalue, bool* successful)
 
       result = str_to_real(pStr, defvalue, successful);
 
-      if(!successful)
+      if(successful && !*successful)
       {
         g_warning("**str_to_double** problems parsing string! it worked neither with the decimal pont '.' nor with comma ','!\n");
         g_assert_not_reached();
@@ -199,4 +199,28 @@ void str_to_stringlist(std::list<Glib::ustring>& list, const Glib::ustring& str,
   Glib::ustring::const_iterator end_iter = str.end();
   if(end_iter != begin_iter)
     list.push_back(Glib::ustring(begin_iter, end_iter));
+}
+
+void split_string(Glib::ustring& a, Glib::ustring& b, const Glib::ustring& str, Glib::ustring::value_type seperator)
+{
+  Glib::ustring::const_iterator begin_iter = str.begin();
+
+  for(Glib::ustring::const_iterator s_iter=str.begin(); s_iter!=str.end(); ++s_iter)
+  {
+    if(*s_iter==seperator)
+    {
+      Glib::ustring::const_iterator end_iter = str.end();
+
+      a = Glib::ustring(begin_iter, s_iter);
+
+      begin_iter  = s_iter;
+      ++begin_iter;
+
+      b = Glib::ustring(begin_iter, end_iter);
+      return;
+    }
+  }
+
+  a = str;
+  b.clear();
 }
