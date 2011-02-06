@@ -23,6 +23,8 @@
 #include "./dependencies.hpp"
 #include <giomm.h>
 
+bool is_portable_version(bool check_again=false);
+
 bool exist_file_or_dir(const Glib::ustring& filename);
 bool exist_regular_file(const Glib::ustring& filename);
 bool exist_directory(const Glib::ustring& filename);

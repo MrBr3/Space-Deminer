@@ -17,7 +17,20 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "./files.hpp"
+#include <base.hpp>
+
+bool is_portable_version(bool test_again)
+{
+  static bool _portable = true;
+  static bool _known_whether_portable = false;
+
+  if(_known_whether_portable && !test_again)
+    return _portable;
+
+  _portable = exist_file_or_dir(apply_filename_macros("$(exe-share)/PORTABLE"));
+  _known_whether_portable = true;
+  return _portable;
+}
 
 bool exist_file_or_dir(const Glib::ustring& filename)
 {

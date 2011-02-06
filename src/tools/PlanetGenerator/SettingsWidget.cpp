@@ -129,7 +129,7 @@ void SettingsWidget::bring_to_front()
 Gtk::Widget& SettingsWidget::append_color_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<Gdk::Color>& getter, const sigc::slot<void, const Gdk::Color&>& setter, sigc::signal<void>& signal_changed)
 {
   Gtk::Label* wlabel  = Gtk::manage(new Gtk::Label(label));
-  Gtk::ColorButton* color_button  = Gtk::manage(new Gtk::ColorButton);
+  Gtk::ColorButton* color_button  = Gtk::manage(new Gtk::ColorButton); // TODO, use also Options
 
   wlabel->set_alignment(0., 0.5);
   wlabel->show();
@@ -137,7 +137,8 @@ Gtk::Widget& SettingsWidget::append_color_widget(Gtk::Table& table, guint& n_ent
   sigc::slot<Gdk::Color> w_getter = sigc::mem_fun(*color_button, &Gtk::ColorButton::get_color);
   sigc::slot<void, const Gdk::Color&> w_setter = sigc::mem_fun(*color_button, &Gtk::ColorButton::set_color);
 
-  w_setter(getter());
+  signal_changed.connect(Options::update_option_slot(name, getter));
+  w_setter(Options::get_color(name, getter()));
 
   color_button->show();
   color_button->set_tooltip_text(tooltip);
@@ -159,7 +160,8 @@ Gtk::Widget& SettingsWidget::append_boolean_widget(Gtk::Table& table, guint& n_e
   sigc::slot<bool> w_getter = sigc::mem_fun(*check_button, &Gtk::CheckButton::get_active);
   sigc::slot<void, bool> w_setter = sigc::mem_fun(*check_button, &Gtk::CheckButton::set_active);
 
-  w_setter(getter());
+  signal_changed.connect(Options::update_option_slot(name, getter));
+  w_setter(Options::get_boolean(name, getter()));
 
   check_button->show();
   check_button->set_label(label);
@@ -186,7 +188,8 @@ Gtk::Widget& SettingsWidget::append_int_widget(Gtk::Table& table, guint& n_entri
 
   spin_button->set_range(G_MININT, G_MAXINT);
 
-  w_setter(getter());
+  signal_changed.connect(Options::update_option_slot(name, getter));
+  w_setter(Options::get_integer(name, getter()));
 
   spin_button->show();
   spin_button->set_tooltip_text(tooltip);
@@ -214,7 +217,8 @@ Gtk::Widget& SettingsWidget::append_real_widget(Gtk::Table& table, guint& n_entr
 
   spin_button->set_range(G_MININT, G_MAXINT);
 
-  w_setter(getter());
+  signal_changed.connect(Options::update_option_slot(name, getter));
+  w_setter(Options::get_real(name, getter()));
 
   spin_button->show();
   spin_button->set_tooltip_text(tooltip);
@@ -306,7 +310,8 @@ Gtk::Widget& SettingsWidget::append_enum_widget(Gtk::Table& table, guint& n_entr
     cb_text->append_text(*i);
   }
 
-  w_setter(getter());
+  signal_changed.connect(Options::update_option_slot(name, getter));
+  w_setter(Options::get_integer(name, getter()));
 
   cb_text->show();
   cb_text->set_tooltip_text(tooltip);
@@ -339,7 +344,8 @@ Gtk::Widget& SettingsWidget::append_filename_widget(Gtk::Table& table, guint& n_
   sigc::slot<Glib::ustring> w_getter = sigc::mem_fun(*filechooser, &Gtk::FileChooserButton::get_filename);
   sigc::slot<void, const Glib::ustring&> w_setter = sigc::hide_return(sigc::mem_fun(*filechooser, &Gtk::FileChooserButton::set_filename));
 
-  w_setter(getter());
+  signal_changed.connect(Options::update_option_slot(name, getter));
+  w_setter(Options::get_string(name, getter()));
 
   filechooser->show();
   filechooser->add_filter(filter);
@@ -366,7 +372,8 @@ Gtk::Widget& SettingsWidget::append_string_widget(Gtk::Table& table, guint& n_en
   sigc::slot<Glib::ustring> w_getter = sigc::mem_fun(*entry, &Gtk::Entry::get_text);
   sigc::slot<void, const Glib::ustring&> w_setter = sigc::mem_fun(*entry, &Gtk::Entry::set_text);
 
-  w_setter(getter());
+  signal_changed.connect(Options::update_option_slot(name, getter));
+  w_setter(Options::get_string(name, getter()));
 
   entry->show();
   entry->set_tooltip_text(tooltip);

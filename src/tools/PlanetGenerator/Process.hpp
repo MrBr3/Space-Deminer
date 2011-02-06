@@ -55,7 +55,12 @@ private:
 
     bool _is_aborted;
 
-    void inc_step(){_n_done_steps++;}
+    void inc_step()
+    {
+      if(_n_done_steps > _n_total_steps)
+        g_warning("**Process::inc_step** called too often.");
+      _n_done_steps++;
+    }
     gsize curr_step()const{return _n_done_steps;}
 
     const Glib::ustring _what_doing;

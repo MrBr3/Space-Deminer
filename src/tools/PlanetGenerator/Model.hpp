@@ -21,6 +21,7 @@
 #include <gtkmm.h>
 #include "opengl.hpp"
 
+#include "./Options.hpp"
 #include "./Planet.hpp"
 #include "./ImageFile.hpp"
 #include "./Layer.hpp"

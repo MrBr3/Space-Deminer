@@ -41,11 +41,16 @@ int main(int argc, char **argv)
 
   init_paths("planet-generator");
 
+  Options options;
+
+  options.load_options();
   {
     MainWindow main_window;
 
     kit.run(main_window);
   }
+  if(!options.save_options())
+    g_warning("Couldn't write Config File");
 
 	return 0;
 }
