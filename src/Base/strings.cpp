@@ -36,6 +36,60 @@ Glib::ustring time_val_to_str_hms(Glib::TimeVal tv, gchar sep)
     return Glib::ustring::compose(_("%1h %2min %3sec"), hour, Glib::ustring::format(SET_FILL_0, std::setw(2), min), Glib::ustring::format(SET_FILL_0, std::setw(2), sec));
 }
 
+gfloat str_to_real(const Glib::ustring& num, gfloat defvalue, bool* successful)
+{
+  const char* pStr  = num.c_str();
+  char* pEnd;
+
+  gfloat result = strtod(pStr, &pEnd);
+
+  if(successful)
+    *successful  = true;
+
+  if(pEnd != pStr) // TODO TEST: && result!=G_MAXDOUBLE && result!=-G_MAXDOUBLE)
+  {
+    if(*pEnd=='.')  // because of a nother decimal point sign of another language the english decimal dot couldn't be interpreted
+    {
+      *pEnd  = ',';  // Quick'n Dirty Solution TODO: Find a better one
+
+      result = str_to_real(pStr, defvalue, successful);
+
+      if(!successful)
+      {
+        g_warning("**str_to_double** problems parsing string! it worked neither with the decimal pont '.' nor with comma ','!\n");
+        g_assert_not_reached();
+      }
+
+    }
+
+    return result;
+  }
+
+  if(successful)
+    *successful  = false;
+
+  return defvalue;
+}
+
+gint str_to_integer(const Glib::ustring& num, gint defvalue, gint base, bool* successful)
+{
+  const char* pStr  = num.c_str();
+  char* pEnd;
+
+  gint result = strtol(pStr, &pEnd, base);
+
+  if(successful)
+    *successful  = true;
+
+  if(pEnd != pStr)
+    return result;
+
+  if(successful)
+    *successful  = false;
+
+  return defvalue;
+}
+
 void str_replace_last_with(Glib::ustring& str, Glib::ustring::value_type replace, const Glib::ustring& with)
 {
   if(!replace)

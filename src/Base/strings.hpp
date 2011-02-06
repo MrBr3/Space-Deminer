@@ -30,6 +30,9 @@
 
 Glib::ustring time_val_to_str_hms(Glib::TimeVal tv, gchar sep=0);
 
+gfloat str_to_real(const Glib::ustring& num, gfloat defvalue=0.0f, bool* successful=nullptr);
+gint str_to_integer(const Glib::ustring& num, gint defvalue=0, gint base=10, bool* successful=nullptr);
+
 /** \brief Replaces the only last appereance of the character <tt>replace</tt> with the string <tt>width</tt>.
 *
 * \param str - the string where to replace (as this is a reference, this string string itself will store the result afterwards)
