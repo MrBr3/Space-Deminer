@@ -333,6 +333,8 @@ namespace Raytracer
       draw_line(_render_param->bounding_ngon[6], _render_param->bounding_ngon[7], ColorRGBA(0.5f, 0.5f, 1.f, 1.f), DRC_ABS_SCREEN);
       draw_line(_render_param->bounding_ngon[7], _render_param->bounding_ngon[0], ColorRGBA(0.5f, 0.5f, 1.f, 1.f), DRC_ABS_SCREEN);
     }
+    if(debug_culling)
+      draw_circle(_render_param->bounding_sphere.x, _render_param->bounding_sphere.y, _render_param->bounding_sphere.r, ColorRGBA(0.0f, 1.f, 1.f, 1.f), DRC_ABS_SCREEN);
 
     g_assert(_aborted || _rendering_threads==0);
 
@@ -405,6 +407,19 @@ namespace Raytracer
     g_assert(pb->get_n_channels()==4);
 
     color.fill(&all_pixels[x*4 + y*rowstride]);
+  }
+
+  void ResultingImage::draw_circle(gfloat x, gfloat y, gfloat r, const ColorRGBA& color, DebugRenderCoord drc)
+  {
+    gfloat step  = 1.f/512.f;
+    gfloat curr_step = 0.f;
+
+    for(int i=0; i<512; ++i)
+    {
+      draw_point(Vector3(x+cos(curr_step*PI2)*r, y+sin(curr_step*PI2)*r, 0.f), color, drc);
+
+      curr_step += step;
+    }
   }
 
   void ResultingImage::think_ui_timer()
