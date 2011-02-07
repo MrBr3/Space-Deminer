@@ -46,7 +46,7 @@ namespace Raytracer
 
     frame_dest_file.set_label(_("Dest. Image"));
     frame_performance.set_label(_("Performance"));
-    frame_debugging.set_label(_("Multi Pass"));
+    frame_debugging.set_label(_("Debugging"));
 
     width = 2048;
     signal_width_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
@@ -226,6 +226,7 @@ namespace Raytracer
   {
     if(deactivate)
     {
+      set_dbg_culling(false);
       set_dbg_normal(false);
       set_dbg_uv(false);
       set_dbg_unlit_base_texture(false);
@@ -240,7 +241,7 @@ namespace Raytracer
     no_debugging(o);
     dbg_culling = o;
 
-    signal_dbg_normal_changed().emit();
+    signal_dbg_culling_changed().emit();
   }
 
   void Settings::set_dbg_normal(bool o)
