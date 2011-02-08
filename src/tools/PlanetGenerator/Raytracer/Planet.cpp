@@ -55,7 +55,6 @@ namespace Raytracer
         resulting_color.set(uv.x, uv.y, 0.f, 1.f);
       }else
       {
-        //if(Manager::get_settings().get_dbg_unlit_base_texture())
         shader(resulting_color, uv, normal);
       }
     }
@@ -74,6 +73,24 @@ namespace Raytracer
 
   void Planet::shader(ColorRGBA& color, const Vector2& uv, const Vector3& normal)
   {
-    Texture::base_texture->get_color(color, uv.x, uv.y, Texture::WRAP_REPEAT, Texture::WRAP_CLAMPED);
+    ColorRGBA base, clouds;
+
+    Texture::base_texture->get_color(base, uv.x, uv.y, Texture::WRAP_REPEAT, Texture::WRAP_CLAMPED);
+    base.a = 1.f;
+    
+    if(Manager::get_settings().get_dbg_unlit_base_texture())
+    {
+      color = base;
+      return;
+    }
+    
+    Texture::cloud_layer->get_color(clouds, uv.x, uv.y, Texture::WRAP_REPEAT, Texture::WRAP_CLAMPED);
+
+    gfloat cloud_alpha  = clouds.a*(clouds.r+clouds.g+clouds.b)/3.f;
+
+    color.r = base.r*(1.f-cloud_alpha)+cloud_alpha;
+    color.g = base.g*(1.f-cloud_alpha)+cloud_alpha;
+    color.b = base.b*(1.f-cloud_alpha)+cloud_alpha;
+    color.a = 1.f;
   }
 }
