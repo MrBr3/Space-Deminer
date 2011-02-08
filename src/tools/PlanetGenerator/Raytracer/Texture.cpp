@@ -83,8 +83,8 @@ namespace Raytracer
     gsize rowstride = pixbuf->get_rowstride();
     gsize n_channels  = pixbuf->get_n_channels();
 
-    u *= w;
-    v *= h;
+    u *= (w-1);
+    v *= (h-1);
 
     gsize x_w  = floor(u);
     gsize x_e  = ceil(u);
