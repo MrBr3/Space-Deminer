@@ -46,6 +46,25 @@ public:
       first_intersection  = MIN(t1, t2);
     return true;
   }
+  
+  /** \brief Calculates the position of and a point in the circle, covering the sphere.
+   * 
+   * \param circle_center the world position of the center of the circle (previous value is ignored)
+   * \param circle_point a point on the circle (previous value is ignored)
+   * \param view_maxtrix the view matrix of the camera
+   */ 
+  void screen_circle_world(Vector3& circle_center, Vector3& circle_point, const Matrix44& view_maxtrix);
+  
+  /** \brief Calculates the position and radius of the circle, covering the sphere.
+   * 
+   * \param circle_center the screen position in pixels of the center of the circle (previous value is ignored)
+   * \param circle_radius the circle's radius on the screen (each component for each axis. 2 means full screen) (previous value is ignored)
+   * \param projection_maxtrix the projection matrix of the camera
+   * \param view_maxtrix the view matrix of the camera
+   * \param screen_width
+   * \param screen_height
+   */ 
+  void screen_circle_pixelscreen(Vector2& circle_center, gfloat& circle_radius, const Matrix44& projection_maxtrix, const Matrix44& view_maxtrix, gfloat screen_width, gfloat screen_height);
 
   Sphere()
   {

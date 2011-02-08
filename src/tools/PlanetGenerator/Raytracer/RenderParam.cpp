@@ -52,31 +52,13 @@ namespace Raytracer
 
       // Get the seeming radius of the planet
       {
-        Vector3 frustrum_top_left;
-        Vector3 frustrum_top_middle;
-        Vector3 frustrum_top_right;
-
-        get_ray_dir(frustrum_top_left, -1.f, 1.f);
-        get_ray_dir(frustrum_top_middle, 0.f, 1.f);
-        get_ray_dir(frustrum_top_right, 1.f, 1.f);
-
-        sphere_outest_point = cross(frustrum_top_middle, frustrum_top_left-frustrum_top_right);
-        sphere_outest_point.normalize();
-
-        sphere_outest_point *= 1.f; // TODO multiply in order to see also the atmosphere
+        Vector2 sphere_middle;
+        
+        planet.sphere.screen_circle_pixelscreen(sphere_middle, bounding_sphere.r, projection_matrix, view_matrix, img_width, img_height);
+        bounding_sphere.x = sphere_middle.x;
+        bounding_sphere.y = sphere_middle.y;
       }
-
-      sphere_outest_point = projection_matrix * view_matrix * sphere_outest_point;
-      sphere_middle = projection_matrix * view_matrix * Vector3(0.f, 0.f, 0.f);
-
-      sphere_outest_point.x = (sphere_outest_point.x+1.f) * 0.5f * img_width;
-      sphere_outest_point.y =-(sphere_outest_point.y-1.f) * 0.5f * img_height;
-      sphere_middle.x = (sphere_middle.x+1.f) * 0.5f * img_width;
-      sphere_middle.y =-(sphere_middle.y-1.f) * 0.5f * img_height;
-
-      bounding_sphere.r = ceil((sphere_outest_point-sphere_middle).get_length());
-      bounding_sphere.x = sphere_middle.x;
-      bounding_sphere.y = sphere_middle.y;
+      //----
 
       if(ring.visible)
       {
@@ -127,7 +109,7 @@ namespace Raytracer
 
   void RenderParam::get_camera_pos(Vector3& pos)const
   {
-    pos = inv_view_matrix * Vector3(0.f, 0.f, 0.f);
+    pos = inv_view_matrix * Vector3(0.f, 0.f, 0.f); // use get_column4() instead
   }
 
   bool RenderParam::is_something_visible_within(int x, int y, int w, int h)const

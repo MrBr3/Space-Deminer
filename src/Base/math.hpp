@@ -31,6 +31,15 @@
 
 const gfloat degree = G_PI/180.f;
 
+template<class T>
+inline T abs(const T& t)
+{
+  if(t<T(0))
+    return -t;
+  else
+    return t;
+}
+
 /** Gets the integer parte of the binear logarithm of n.
  * */
 inline guint blog_int(guint n)

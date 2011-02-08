@@ -178,6 +178,32 @@ public:
      v.set_cross(b);
      return v;
    }
+   
+   /** \brief Gets some Vector which is orthogonal to this Vector.
+    * 
+    * \note throws an assertion, if this Vector is a Nullvector
+    * 
+    * \return The resulting vector (can be not normalized)
+    * */
+  Vector3 get_ortho()const
+  {
+    if(get_square_length()==0.f)
+      throw std::invalid_argument("**Vector3::get_ortho** there's no othogonal vector of a nullvector.");
+    
+    Vector3 a;
+    gfloat x  = abs(Vector3(1.f, 0.f, 0.f) * *this);
+    gfloat y  = abs(Vector3(0.f, 1.f, 0.f) * *this);
+    gfloat z  = abs(Vector3(0.f, 0.f, 1.f) * *this);
+    
+    if(x<=y && x<=z)
+      a = Vector3(1.f, 0.f, 0.f);
+    else if(y<=x && y<=z)
+      a = Vector3(0.f, 1.f, 0.f);
+    else
+      a = Vector3(0.f, 0.f, 1.f);
+    
+    return cross(a);
+  }
 
   /** \brief Calcs a vector representing the cross product with another vector
    * */
