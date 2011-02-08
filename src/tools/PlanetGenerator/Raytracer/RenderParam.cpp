@@ -109,7 +109,7 @@ namespace Raytracer
 
   void RenderParam::get_camera_pos(Vector3& pos)const
   {
-    pos = inv_view_matrix * Vector3(0.f, 0.f, 0.f); // use get_column4() instead
+    pos = inv_view_matrix * Vector3(0.f, 0.f, 0.f);
   }
 
   bool RenderParam::is_something_visible_within(int x, int y, int w, int h)const
