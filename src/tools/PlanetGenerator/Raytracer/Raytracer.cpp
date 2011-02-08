@@ -23,14 +23,16 @@ namespace Raytracer
 {
   namespace Private
   {
-    const int BIG_SIZE = 16;
-    const int MAX_SIZE = 32;
+    int BIG_SIZE = 0;
     const int MEGA = (1<<20);
 
     class TextureFileChecker : public Refable
     {
       TextureFileChecker(Texture& tex, std::list<Glib::ustring>& warnings) : texture(tex)
       {
+        if(BIG_SIZE<=0)
+          BIG_SIZE = 8*get_n_cores(); // TODO use something like RAM*4MB
+		  
         size  = 0;
 
         if(!tex.visible)
@@ -69,11 +71,7 @@ namespace Raytracer
             {
               size  = info->get_size();
               gfloat file_size_rounded  = 0.1f*round(int((100*size)/MEGA)*0.1f);
-              if(size > MAX_SIZE*MEGA)
-              {
-                warnings.push_back(Glib::ustring::compose(_("<b>Can't load</b> File &lt;%1&gt;  with %2MB &gt; %3MB<b> too large</b>"), full_filename, file_size_rounded, MAX_SIZE));
-                texture.load_small_version  = true;
-              }else if(size > BIG_SIZE*MEGA)
+              if(size > BIG_SIZE*MEGA)
                 warnings.push_back(Glib::ustring::compose(_("<b>Warning:</b> File &lt;%1&gt;  %2MB <b>&gt; %3MB</b>"), full_filename, file_size_rounded, BIG_SIZE));
             }
           }
