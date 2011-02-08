@@ -90,7 +90,7 @@
       <Compiler Options="$$(pkg-config --cflags gtkmm-2.4 --cflags gtkglextmm-1.2) -std=c++0x" C_Options="$$(pkg-config --cflags gtkmm-2.4 --cflags gtkglextmm-1.2)">
         <IncludePath Value="./../../include"/>
       </Compiler>
-      <Linker Options="$$(pkg-config --libs gtkmm-2.4 gtkglextmm-1.2 glew boost-1.42) -lbase">
+      <Linker Options="$$(pkg-config --libs gtkmm-2.4 gtkglextmm-1.2 glew) -lbase -lboost_thread">
         <LibraryPath Value="."/>
       </Linker>
       <ResourceCompiler Options=""/>
