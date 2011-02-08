@@ -125,7 +125,7 @@ namespace Raytracer
     bool visible_planet;
     bool visible_ring = false;
 
-    visible_planet = bounding_sphere.is_within_tile(x, y, w, h);
+    visible_planet = bounding_sphere.is_within_tile(x, y, w, h, culling_epsilon);
 
     if(ring.visible && !visible_planet)
     {
