@@ -46,17 +46,17 @@ namespace Raytracer
     switch(render_param.rays_per_pixel)
     {
     case 8:
-      Ray(pos_x+qw, pos_y+qh, render_param).get_color(tmp[7]);
-      Ray(pos_x-qw, pos_y+qh, render_param).get_color(tmp[6]);
-      Ray(pos_x-qw, pos_y-qh, render_param).get_color(tmp[5]);
-      Ray(pos_x+qw, pos_y-qh, render_param).get_color(tmp[4]);
+      Ray(pos_x+qw, pos_y+qh).get_color(tmp[7]);
+      Ray(pos_x-qw, pos_y+qh).get_color(tmp[6]);
+      Ray(pos_x-qw, pos_y-qh).get_color(tmp[5]);
+      Ray(pos_x+qw, pos_y-qh).get_color(tmp[4]);
     case 4:
-      Ray(pos_x+hw, pos_y, render_param).get_color(tmp[3]);
-      Ray(pos_x, pos_y+hh, render_param).get_color(tmp[2]);
+      Ray(pos_x+hw, pos_y).get_color(tmp[3]);
+      Ray(pos_x, pos_y+hh).get_color(tmp[2]);
     case 2:
-      Ray(pos_x+hw, pos_y+hh, render_param).get_color(tmp[1]);
+      Ray(pos_x+hw, pos_y+hh).get_color(tmp[1]);
     case 1:
-      Ray(pos_x, pos_y, render_param).get_color(tmp[0]);
+      Ray(pos_x, pos_y).get_color(tmp[0]);
       break;
     default:
       g_assert_not_reached();

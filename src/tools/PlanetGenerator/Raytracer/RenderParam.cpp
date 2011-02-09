@@ -21,6 +21,8 @@
 
 namespace Raytracer
 {
+  RenderParam* RenderParam::_singleton = nullptr;
+  
   RenderParam::RenderParam(const Matrix44& ring_matrix, const Matrix44& planet_matrix,  const Matrix44& view_matrix_, const Matrix44& projection_matrix_,
                            int img_width_, int img_height_, int antialiasing) :
                            planet(planet_matrix, 1.f), ring(planet_matrix, ring_matrix),
@@ -28,6 +30,8 @@ namespace Raytracer
                            inv_view_matrix(view_matrix_), inv_projection_matrix(projection_matrix_),
                            img_width(img_width_), img_height(img_height_)
   {
+    g_assert(!_singleton);
+    _singleton  = this;
     g_assert(img_width>0);
     g_assert(img_height>0);
     g_assert(antialiasing>=0 && antialiasing<4);
@@ -85,6 +89,12 @@ namespace Raytracer
       }
     }
   }
+  
+  RenderParam::~RenderParam()throw()
+  {
+    g_assert(_singleton);
+    _singleton = nullptr;
+  }
 
   Glib::RefPtr<RenderParam> RenderParam::create(int img_width, int img_height)
   {
@@ -100,20 +110,25 @@ namespace Raytracer
     return RenderParam::create(view3d.ring_model_matrix, view3d.planet_model_matrix, view3d.view_matrix, m, img_width, img_height, settings.get_antialiasing());
   }
 
-  void RenderParam::get_ray_dir(Vector3& dir, gfloat x, gfloat y)const
+  void RenderParam::get_ray_dir(Vector3& dir, gfloat x, gfloat y)
   {
-    dir = inv_projection_matrix * Vector3(x, y, 0.f);
-    dir = inv_view_matrix * Vector4(dir, 0.f);
+    dir = singletonA()->inv_projection_matrix * Vector3(x, y, 0.f);
+    dir = singletonA()->inv_view_matrix * Vector4(dir, 0.f);
     dir.normalize();
   }
 
-  void RenderParam::get_camera_pos(Vector3& pos)const
+  void RenderParam::get_camera_pos(Vector3& pos)
   {
-    pos = inv_view_matrix * Vector3(0.f, 0.f, 0.f);
+    pos = singletonA()->inv_view_matrix * Vector3(0.f, 0.f, 0.f);
   }
 
-  bool RenderParam::is_something_visible_within(int x, int y, int w, int h)const
+  bool RenderParam::is_something_visible_within(int x, int y, int w, int h)
   {
+    bool& culling = singletonA()->culling;
+    gfloat& culling_epsilon = singletonA()->culling_epsilon;
+    CullingCircle& bounding_sphere = singletonA()->bounding_sphere;
+    Vector2* bounding_ngon = singletonA()->bounding_ngon;
+    
     if(!culling)
       return true;
 
@@ -127,7 +142,7 @@ namespace Raytracer
 
     visible_planet = bounding_sphere.is_within_tile(x, y, w, h, culling_epsilon);
 
-    if(ring.visible && !visible_planet)
+    if(get_ring().visible && !visible_planet)
     {
       for(int i=0; !visible_ring && i<8; ++i)
       {

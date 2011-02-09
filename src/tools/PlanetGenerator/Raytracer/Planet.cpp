@@ -75,7 +75,7 @@ namespace Raytracer
   {
     ColorRGBA base, clouds;
 
-    Texture::base_texture->get_color(base, uv.x, uv.y, Texture::WRAP_REPEAT, Texture::WRAP_CLAMPED);
+    RenderParam::get_planet_texture_color(*Texture::base_texture, base, uv.x, uv.y);
     base.a = 1.f;
     
     if(Manager::get_settings().get_dbg_unlit_base_texture())
@@ -84,7 +84,7 @@ namespace Raytracer
       return;
     }
     
-    Texture::cloud_layer->get_color(clouds, uv.x, uv.y, Texture::WRAP_REPEAT, Texture::WRAP_CLAMPED);
+    RenderParam::get_planet_texture_color(*Texture::cloud_layer, clouds, uv.x, uv.y);
 
     gfloat cloud_alpha  = clouds.a*(clouds.r+clouds.g+clouds.b)/3.f;
 

@@ -25,9 +25,7 @@ namespace Raytracer
   public:
     /** \brief Constructer making the Ray to represent a Ray sent by the camera
      * */
-    Ray(gfloat x, gfloat y, const RenderParam& render_param_);
-
-    const RenderParam& render_param;
+    Ray(gfloat x, gfloat y);
 
     void get_color(ColorRGBA& resulting_color);
   };

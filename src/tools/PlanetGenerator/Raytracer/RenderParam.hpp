@@ -23,7 +23,12 @@ namespace Raytracer
   {
     //gfloat _sphere_center_x, _sphere_center_y;
     //gfloat _inv_sphere_radius_y_dir;
+    
+    static RenderParam* _singleton;
   public:
+    static RenderParam* singleton(){return _singleton;}
+    static RenderParam* singletonA(){g_assert(_singleton);return _singleton;}
+  
     struct CullingCircle
     {
       gfloat r;
@@ -92,8 +97,18 @@ namespace Raytracer
     const Matrix44 projection_matrix;
     Matrix44 inv_view_matrix;
     Matrix44 inv_projection_matrix;
+    
+    static Planet& get_planet()
+    {
+      return singletonA()->planet;
+    }
+    
+    static Ring& get_ring()
+    {
+      return singletonA()->ring;
+    }
 
-    bool is_something_visible_within(int x, int y, int w, int h)const;
+    static bool is_something_visible_within(int x, int y, int w, int h);
 
     const int img_width, img_height;
     gfloat inv_img_width, inv_img_height;
@@ -104,8 +119,8 @@ namespace Raytracer
     bool culling;
     gfloat culling_epsilon;
 
-    void get_ray_dir(Vector3& dir, gfloat x, gfloat y)const;
-    void get_camera_pos(Vector3& dir)const;
+    static void get_ray_dir(Vector3& dir, gfloat x, gfloat y);
+    static void get_camera_pos(Vector3& dir);
 
     /* TODO uncomment * \brief Gets the relative
      * */
@@ -125,5 +140,6 @@ namespace Raytracer
 private:
     RenderParam(const Matrix44& ring_matrix, const Matrix44& planet_matrix,  const Matrix44& view_matrix_, const Matrix44& projection_matrix_,
                 int img_width_, int img_height_, int antialiasing);
+    ~RenderParam()throw();
   };
 }
