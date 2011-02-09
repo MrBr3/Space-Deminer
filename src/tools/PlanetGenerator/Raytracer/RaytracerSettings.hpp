@@ -34,6 +34,11 @@ namespace Raytracer
     BOOLEAN_SETTING(dithering)
     STRING_SETTING(dest_file)
     BOOLEAN_SETTING(overwrite)
+    
+    REAL_SETTING(texture_filtering_radius);
+    INTEGER_SETTING(texture_filtering_n_samples);
+    BOOLEAN_SETTING(texture_filtering_in_planet);
+    BOOLEAN_SETTING(texture_filtering_in_ring);
 
     INTEGER_SETTING(n_render_tiles)
     INTEGER_SETTING(antialiasing)
@@ -59,6 +64,9 @@ namespace Raytracer
 
     Gtk::Frame frame_dest_file;
     Gtk::Table table_dest_file;
+
+    Gtk::Frame frame_tex_filtering;
+    Gtk::Table table_tex_filtering;
 
     Gtk::Frame frame_performance;
     Gtk::Table table_performance;

@@ -26,25 +26,30 @@ namespace Raytracer
     guint n=0;
 
     attach_full_line(frame_dest_file);
+    attach_full_line(frame_tex_filtering);
     attach_full_line(frame_performance);
     attach_full_line(frame_debugging);
     attach_full_line(frame_textures);
 
     frame_dest_file.add(table_dest_file);
+    frame_tex_filtering.add(table_tex_filtering);
     frame_performance.add(table_performance);
     frame_debugging.add(table_debugging);
     frame_textures.add(table_textures);
 
     table_dest_file.set_spacings(LENGTH_SMALLSPACE);
+    table_tex_filtering.set_spacings(LENGTH_SMALLSPACE);
     table_performance.set_spacings(LENGTH_SMALLSPACE);
     table_debugging.set_spacings(LENGTH_SMALLSPACE);
     table_textures.set_spacings(LENGTH_SMALLSPACE);
     table_dest_file.set_border_width(LENGTH_SMALLSPACE);
+    table_tex_filtering.set_border_width(LENGTH_SMALLSPACE);
     table_performance.set_border_width(LENGTH_SMALLSPACE);
     table_debugging.set_border_width(LENGTH_SMALLSPACE);
     table_textures.set_border_width(LENGTH_SMALLSPACE);
 
     frame_dest_file.set_label(_("Dest. Image"));
+    frame_tex_filtering.set_label(_("Texture Filtering"));
     frame_performance.set_label(_("Performance"));
     frame_debugging.set_label(_("Debugging"));
 
@@ -72,6 +77,25 @@ namespace Raytracer
     signal_clear_before_rendering_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
     append_boolean_widget(table_dest_file, n, "raytrace-clear-before-rendering", _("ClearBeforeRendering"), _("If not set you can see how the old image disappears behind the new one.\nThis option has no influence on the result."), X_GETTER_SETTER_SIGNAL(Settings, clear_before_rendering));
 
+    //================
+    n=0;
+
+    texture_filtering_radius  = 8.f;
+    signal_texture_filtering_radius_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
+    append_real_widget(table_tex_filtering, n, "texture-filtering-radius", _("Radius"), _("In Order to avoid artefacts when looking at flat angles, textures can be blured.\n(unit is % of the image size (= MAX(width, height)))"), X_GETTER_SETTER_SIGNAL(Settings, texture_filtering_radius));
+
+    texture_filtering_n_samples  = 16;
+    signal_texture_filtering_n_samples_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
+    append_int_widget(table_tex_filtering, n, "texture-filtering-n-samples", _("n Samples"), _("The number of samples user (higher values means better quality and worser performance)"), X_GETTER_SETTER_SIGNAL(Settings, texture_filtering_n_samples));
+    
+    texture_filtering_in_planet = false;
+    signal_texture_filtering_in_planet_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
+    append_boolean_widget(table_tex_filtering, n, "texture-filtering-filter-planet?", _("filter Planet"), _("whether to Filter the Planets Texture"), X_GETTER_SETTER_SIGNAL(Settings, texture_filtering_in_planet));
+    
+    texture_filtering_in_ring = true;
+    signal_texture_filtering_in_ring_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
+    append_boolean_widget(table_tex_filtering, n, "texture-filtering-filter-ring?", _("filter Ring"), _("whether to Filter the Rings Texture"), X_GETTER_SETTER_SIGNAL(Settings, texture_filtering_in_ring));
+    
     //================
     n=0;
 
@@ -181,6 +205,36 @@ namespace Raytracer
     overwrite = true; // TODO this value shouldn't be ignored
 
     signal_overwrite_changed().emit();
+  }
+
+  //============
+  
+  void Settings::set_texture_filtering_radius(gfloat o)
+  {
+    texture_filtering_radius  = CLAMP(o, 0.f, 100.f);
+    
+    signal_texture_filtering_radius_changed().emit();
+  }
+
+  void Settings::set_texture_filtering_n_samples(int n)
+  {
+    texture_filtering_n_samples = CLAMP(n, 1, 64);
+
+    signal_texture_filtering_n_samples_changed().emit();
+  }
+
+  void Settings::set_texture_filtering_in_planet(bool o)
+  {
+    texture_filtering_in_planet = o;
+
+    signal_texture_filtering_in_planet_changed().emit();
+  }
+
+  void Settings::set_texture_filtering_in_ring(bool o)
+  {
+    texture_filtering_in_ring = o;
+
+    signal_texture_filtering_in_ring_changed().emit();
   }
 
   //============
