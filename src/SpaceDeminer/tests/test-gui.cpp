@@ -201,6 +201,7 @@ void check_within(const Plane& result, const Plane& reference, gfloat epsilon=1.
 
 #include "./test-matrix.hpp"
 #include "./test-math.hpp"
+#include "./mouse-tests.hpp"
 
 void start_gui_test() {
   try {
@@ -801,6 +802,7 @@ void start_gui_test() {
       gui_test.show_all_children();
       gui_test.compare("label-001");
     }
+    mouse_tests();
     std::cout<<"==== All Tests Passed :) ====\n";
   } catch(GUITest::AbortTests at) {
     switch(at) {

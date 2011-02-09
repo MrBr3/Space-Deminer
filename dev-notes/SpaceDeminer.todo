@@ -2,7 +2,6 @@ Next Steps:
 [X] Mausinteraktion
   [X] Events mask
 [X] MainMenu wieder zum laufen bringen
-[ ] CheckExpects
 [ ] Testen, wie on_mouse_move sich verhält, wenn das widget mit event plötzlich verschwindet
   [ ] Mausbewegung
   [ ] Maustaste runter
