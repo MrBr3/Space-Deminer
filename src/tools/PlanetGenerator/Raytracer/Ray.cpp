@@ -42,7 +42,7 @@ namespace Raytracer
     {
       if(ring_hit && ring_distance<=planet_distance)
       {
-        resulting_color = ring_color;
+        resulting_color = overlay(ring_color, planet_color);
       }else
       {
         resulting_color = planet_color;

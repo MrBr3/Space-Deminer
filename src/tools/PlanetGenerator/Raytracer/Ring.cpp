@@ -84,7 +84,7 @@ namespace Raytracer
   {
     ColorRGBA base;
 
-    Texture::ring_texture->get_color(base, uv.x, uv.y, Texture::WRAP_CLAMPED, Texture::WRAP_CLAMPED);
+    Texture::ring_texture->get_color(base, uv.x, uv.y, Texture::WRAP_TRANSPARENT, Texture::WRAP_CLAMPED);
     
     if(Manager::get_settings().get_dbg_unlit_base_texture())
     {
