@@ -25,6 +25,7 @@ namespace Raytracer
   Texture* Texture::night_texture = nullptr;
   Texture* Texture::weight_map = nullptr;
   Texture* Texture::cloud_layer = nullptr;
+  Texture* Texture::ring_texture = nullptr;
 
   Texture::Texture()
   {
@@ -45,6 +46,8 @@ namespace Raytracer
       weight_map = nullptr;
     else if(cloud_layer==this)
       cloud_layer = nullptr;
+    else if(ring_texture==this)
+      ring_texture = nullptr;
     else g_assert_not_reached();
   }
 
@@ -204,6 +207,12 @@ namespace Raytracer
     reset_any_filename(CloudTextureLayer::get_imagefile()->get_filename());
   }
 
+  void Texture::reset_ring_filename()
+  {
+    visible = RingLayer::get_singleton()->get_visible();
+    reset_any_filename(RingLayer::get_imagefile()->get_filename());
+  }
+
   void Texture::init()
   {
     if(&Manager::get_singletonA()->base_texture == this)
@@ -226,6 +235,11 @@ namespace Raytracer
       cloud_layer  = this;
       reset_filename  = sigc::mem_fun(*this, &Texture::reset_cloud_filename);
       texture_name  = _("Cloud Layer");
-    }
+    }else if(&Manager::get_singletonA()->ring_texture == this)
+    {
+      ring_texture  = this;
+      reset_filename  = sigc::mem_fun(*this, &Texture::reset_ring_filename);
+      texture_name  = _("Ring Texture");
+    }else g_assert_not_reached();
   }
 }

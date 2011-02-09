@@ -44,6 +44,7 @@ namespace Raytracer
     Texture night_texture;
     Texture weight_map;
     Texture cloud_layer;
+    Texture ring_texture;
 
     ResultingImage resulting_image;
 

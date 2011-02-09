@@ -63,6 +63,7 @@ namespace Raytracer
     void reset_night_filename();
     void reset_weight_filename();
     void reset_cloud_filename();
+    void reset_ring_filename();
 
     void reload_file();
 
@@ -71,5 +72,6 @@ namespace Raytracer
     static Texture* night_texture;
     static Texture* weight_map;
     static Texture* cloud_layer;
+    static Texture* ring_texture;
   };
 }

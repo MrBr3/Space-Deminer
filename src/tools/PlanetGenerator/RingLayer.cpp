@@ -45,8 +45,6 @@ RingLayer::RingLayer() : ParentClass(_("Ring"), true)
   settings->append_real_widget("ring-texture-y-rotation", _("z Rotation"), _("The Rotation along the z axis"), X_GETTER_SETTER_SIGNAL(RingLayer, z_rotation));
   settings->append_real_widget("ring-texture-width", _("width"), _("The width of the ring. 1 means it will fill the whole space between the planets surface and the outer ring"), X_GETTER_SETTER_SIGNAL(RingLayer, width), 0.025, 0.1);
   settings->append_real_widget("ring-texture-outer-radius", _("outer Radius"), _("The outer radius of the rings"), X_GETTER_SETTER_SIGNAL(RingLayer, outer_radius), 0.1, 0.5);
-
-  get_imagefile()->set_filename(apply_filename_macros("$(local-folder)/start-up-planet-images/sup-ring.png")); // TODO you shouldn't need to use full path here
 }
 
 RingLayer::~RingLayer()throw()

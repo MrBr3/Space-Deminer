@@ -73,7 +73,6 @@ namespace Raytracer
         color.set(uv.x, uv.y, 0.f, 1.f);
       }else
       {
-        //if(Manager::get_settings().get_dbg_unlit_base_texture())
         shader(color, uv, n);
       }
     }
@@ -83,6 +82,16 @@ namespace Raytracer
 
   void Ring::shader(ColorRGBA& color, const Vector2& uv, const Vector3& normal)
   {
-    color.set(1.f, 0.5f, 0.f, 1.f);
+    ColorRGBA base;
+
+    Texture::ring_texture->get_color(base, uv.x, uv.y, Texture::WRAP_CLAMPED, Texture::WRAP_CLAMPED);
+    
+    if(Manager::get_settings().get_dbg_unlit_base_texture())
+    {
+      color = base;
+      return;
+    }
+    
+    color = base;
   }
 }

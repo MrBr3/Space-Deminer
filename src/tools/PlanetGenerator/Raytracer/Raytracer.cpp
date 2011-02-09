@@ -111,10 +111,12 @@ namespace Raytracer
     night_texture.init();
     weight_map.init();
     cloud_layer.init();
+    ring_texture.init();
 
     base_texture.dummy_color.set(0.5f, 0.5f, 0.5f, 1.f);
     night_texture.dummy_color.set(0.f, 0.f, 0.f, 1.f);
     weight_map.dummy_color.set(0.f, 0.f, 0.f, 1.f);
+    ring_texture.dummy_color.set(0.f, 0.f, 0.f, 0.f);
   }
 
   Manager::~Manager()throw()
@@ -143,11 +145,13 @@ namespace Raytracer
     get_singletonA()->night_texture.reset_filename();
     get_singletonA()->weight_map.reset_filename();
     get_singletonA()->cloud_layer.reset_filename();
+    get_singletonA()->ring_texture.reset_filename();
 
     files.push_back(TextureFileChecker::create(get_singletonA()->base_texture, warnings));
     files.push_back(TextureFileChecker::create(get_singletonA()->night_texture, warnings));
     files.push_back(TextureFileChecker::create(get_singletonA()->weight_map, warnings));
     files.push_back(TextureFileChecker::create(get_singletonA()->cloud_layer, warnings));
+    files.push_back(TextureFileChecker::create(get_singletonA()->ring_texture, warnings));
 
     for(FileList::iterator i = files.begin(); i!=files.end();)
     {
