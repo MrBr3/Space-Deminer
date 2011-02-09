@@ -126,6 +126,12 @@ public:
     this->a = (a.a*p1 + b.a*p2) * inv_p;
   }
   
+  /** \brief Mixes two colors in a way, like Gimp would do it using "Normal" Layer Mode.
+   *
+   * \param above represents the aboves "Layers color"
+   * \param below represents the belows "Layers color"
+   * \param above_transparency transparency value multiplied with above.a
+   * */
   friend ColorRGBA overlay(const ColorRGBA& above, const ColorRGBA& below, gfloat above_transparency=1.f)
   {
     gfloat a  = CLAMP(CLAMP(above_transparency, 0.f, 1.f)*above.a, 0.f, 1.f);
