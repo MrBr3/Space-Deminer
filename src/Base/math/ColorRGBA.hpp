@@ -125,6 +125,27 @@ public:
     this->b = (a.b*p1 + b.b*p2) * inv_p;
     this->a = (a.a*p1 + b.a*p2) * inv_p;
   }
+  
+  friend ColorRGBA overlay(const ColorRGBA& above, const ColorRGBA& below, gfloat above_transparency=1.f)
+  {
+    gfloat a  = CLAMP(CLAMP(above_transparency, 0.f, 1.f)*above.a, 0.f, 1.f);
+    ColorRGBA result;
+    
+    result.a = (a+below.a)*0.5f;
+    if(result.a<=0.f)
+    {
+      result.r = result.g = result.b = 0.f;
+      return result;
+    }
+    
+    gfloat inv_asum = 1.f/(a+below.a);
+    
+    result.r = (a*above.r + below.a*below.r)*inv_asum;
+    result.g = (a*above.g + below.a*below.g)*inv_asum;
+    result.b = (a*above.b + below.a*below.b)*inv_asum;
+    
+    return result;
+  }
 
   static guint8 convert_to_0_255(gfloat x){return round(CLAMP(x*255.f, 0.f, 255.f));}
   static gfloat clamp_to_0_1f(gfloat x){return CLAMP(x, 0.f, 1.f);}
