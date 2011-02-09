@@ -113,8 +113,8 @@ PlanetGenerator
             [X] Transparent
             [X] Textur wiederholt
             [X] CLAMPed
-      [ ] BaseTexture mit Wolken
-      [ ] RingTextur
+      [X] BaseTexture mit Wolken
+      [X] RingTextur
       [X] Filtering überarbeiten
         [X] Mit geeigneten Texturen Testen
       [ ] Atmosphären effekt
