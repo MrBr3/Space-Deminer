@@ -205,7 +205,7 @@ namespace Framework
   {
     g_assert(this);
     if(!get_theme())
-      set_theme(DummyTheme::create());
+      set_theme(Theme::create_default_theme());
     g_assert(get_theme());
 
     try

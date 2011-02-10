@@ -59,9 +59,6 @@ bool MainWindow::on_key_release_event(GdkEventKey* e)
   case GDK_F2:
     gl_drawing_area.switch_debug_ui_mode();
     return true;
-  case GDK_F3:
-    gl_drawing_area.window_manager->set_theme( (gl_drawing_area.window_manager->get_theme()==gl_drawing_area.get_dummy_theme()) ? gl_drawing_area.get_dark_theme() : gl_drawing_area.get_dummy_theme());
-    return true;
   }
   return Window::on_key_release_event(e);
 }

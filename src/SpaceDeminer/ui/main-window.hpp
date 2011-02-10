@@ -38,13 +38,13 @@ public:
   {
     bool _gl_initialized;
 
-    Glib::RefPtr<Framework::Theme> _dark_theme, _dummy_theme;
+    Glib::RefPtr<Framework::Theme> _dark_theme;
   public:
     Framework::ResourceManager resource_manager;
     Glib::RefPtr<Framework::WindowManager> window_manager;
 
     const Glib::RefPtr<Framework::Theme>& get_dark_theme(){return _dark_theme;}
-    const Glib::RefPtr<Framework::Theme>& get_dummy_theme(){return _dummy_theme;}
+    const Glib::RefPtr<Framework::Theme>& get_default_theme(){return get_dark_theme();}
 
     void switch_debug_ui_mode();
 

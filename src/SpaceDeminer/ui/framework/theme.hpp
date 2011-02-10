@@ -48,29 +48,12 @@ namespace Framework
 
     virtual void on_init()=0;
     virtual void on_deinit()=0;
+    
+    static Glib::RefPtr<Theme> create_default_theme();
 
   protected:
     Theme(){}
     ~Theme()throw(){}
-  };
-
-  class DummyTheme : public Theme
-  {
-  public:
-    void draw(PaintTool& ee, const Glib::ustring& what, DrawPass pass, guint32 param, const Gdk::Rectangle& where)const;
-    void get_metrics(const Glib::ustring& what, Metrics& metrics)const;
-    ResPtr<Font> create_font(const Glib::ustring& what)const;
-
-    void on_init();
-    void on_deinit();
-
-    static Glib::RefPtr<DummyTheme> create(){return Glib::RefPtr<DummyTheme>(new DummyTheme());}
-
-  protected:
-    Glib::RefPtr<Font> default_font;
-
-    DummyTheme();
-    ~DummyTheme()throw();
   };
 }
 

@@ -24,6 +24,7 @@
 
 class DarkTheme : public Framework::Theme
 {
+  static DarkTheme* _singleton;
 public:
   void draw(Framework::PaintTool& ee, const Glib::ustring& what, Framework::DrawPass pass, guint32 param, const Gdk::Rectangle& where)const;
   void get_metrics(const Glib::ustring& what, Metrics& metrics)const;
@@ -32,7 +33,13 @@ public:
   void on_init();
   void on_deinit();
 
-  static Glib::RefPtr<DarkTheme> create(){return Glib::RefPtr<DarkTheme>(new DarkTheme());}
+  static Glib::RefPtr<DarkTheme> create()
+  {
+    if(!_singleton)
+      return Glib::RefPtr<DarkTheme>(new DarkTheme());
+    _singleton->reference();
+    return Glib::RefPtr<DarkTheme>(_singleton);
+  }
 
 protected:
   Glib::RefPtr<Framework::Font> default_font;

@@ -43,7 +43,6 @@ void MainWindow::GtkGlDrawingArea::deinit()
   window_manager.reset();
 
   _dark_theme.reset();
-  _dummy_theme.reset();
 
   if(_gl_initialized)
   {
@@ -77,7 +76,6 @@ void MainWindow::GtkGlDrawingArea::on_realize()
   _gl_initialized = true;
 
   _dark_theme = DarkTheme::create();
-  _dummy_theme  = Framework::DummyTheme::create();
 
   window_manager->set_theme(_dark_theme);
 

@@ -22,8 +22,19 @@
 
 using namespace Framework;
 
+Glib::RefPtr<Theme> Theme::create_default_theme()
+{
+  g_assert_not_reached();
+  return DarkTheme::create();
+}
+
+DarkTheme* DarkTheme::_singleton = nullptr;
+
 DarkTheme::DarkTheme()
 {
+  g_assert(!_singleton);
+  _singleton  = this;
+  
   default_font  = Font::create("sans", 12, false, false, true, 0.6f, 0.6f, 0.6f);
 
   button_normal_simg =    SegmentedImage9::create_from_file(apply_filename_macros("$(exe-share)/ui/themes/dark-theme/button-01.png"),  0, 25, 25, 25, 3, 3, 3, 3);
@@ -34,6 +45,8 @@ DarkTheme::DarkTheme()
 
 DarkTheme::~DarkTheme()throw()
 {
+  g_assert(_singleton==this);
+  _singleton  = nullptr;
 }
 
 void DarkTheme::draw(Framework::PaintTool& ee, const Glib::ustring& what, Framework::DrawPass pass, guint32 param, const Gdk::Rectangle& where)const

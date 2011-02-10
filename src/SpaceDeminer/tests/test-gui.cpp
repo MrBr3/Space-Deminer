@@ -231,7 +231,7 @@ void start_gui_test() {
 
     g_assert(main_window);
     GUITest gui_test;
-    gui_test.set_theme(main_window->gl_drawing_area.get_dummy_theme());
+    gui_test.set_theme(main_window->gl_drawing_area.get_default_theme());
     gui_test.set_size(800, 600);
     MainWindow::get_window_manager()->register_window(0xffff, gui_test);
     gui_test.show();

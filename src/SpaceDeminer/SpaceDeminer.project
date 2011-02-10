@@ -87,7 +87,6 @@
         <File Name="ui/framework/engine.cpp"/>
         <File Name="ui/framework/window.cpp"/>
         <File Name="ui/framework/font.hpp"/>
-        <File Name="ui/framework/dummy-theme.cpp"/>
         <File Name="ui/framework/theme.cpp"/>
         <File Name="ui/framework/font.cpp"/>
         <File Name="ui/framework/segmentedimage.hpp"/>
