@@ -98,6 +98,12 @@ namespace Raytracer
     Matrix44 inv_view_matrix;
     Matrix44 inv_projection_matrix;
     
+    bool filter_ring_textures;
+    gfloat texture_filter_coefficients[max_texture_filtering_samples];
+    Vector2 texture_filter_coordinates[max_texture_filtering_samples];
+    gsize n_texture_filter_samples;
+    gfloat texture_filter_radius;
+    
     static Planet& get_planet()
     {
       return singletonA()->planet;
@@ -106,6 +112,21 @@ namespace Raytracer
     static Ring& get_ring()
     {
       return singletonA()->ring;
+    }
+    
+    void get_filtered_texture_color(const Texture& tex, ColorRGBA& color, gfloat u, gfloat v, gfloat blur_amount, Texture::WrapMode u_mode, Texture::WrapMode v_mode);
+    
+    static void get_planet_texture_color(const Texture& tex, ColorRGBA& color, gfloat u, gfloat v, Texture::WrapMode u_mode=Texture::WRAP_REPEAT, Texture::WrapMode v_mode=Texture::WRAP_CLAMPED)
+    {
+      tex.get_color(color, u, v, u_mode, v_mode);
+    }
+    
+    static void get_ring_texture_color(const Texture& tex, ColorRGBA& color, gfloat u, gfloat v, gfloat blur_amount, Texture::WrapMode u_mode=Texture::WRAP_TRANSPARENT, Texture::WrapMode v_mode=Texture::WRAP_CLAMPED)
+    {
+      if(singletonA()->filter_ring_textures)
+        singletonA()->get_filtered_texture_color(tex, color, u, v, blur_amount, u_mode, v_mode);
+      else
+        tex.get_color(color, u, v, u_mode, v_mode);
     }
 
     static bool is_something_visible_within(int x, int y, int w, int h);

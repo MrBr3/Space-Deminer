@@ -84,15 +84,11 @@ namespace Raytracer
     signal_texture_filtering_radius_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
     append_real_widget(table_tex_filtering, n, "texture-filtering-radius", _("Radius"), _("In Order to avoid artefacts when looking at flat angles, textures can be blured.\n(unit is % of the image size (= MAX(width, height)))"), X_GETTER_SETTER_SIGNAL(Settings, texture_filtering_radius));
 
-    texture_filtering_n_samples  = 16;
+    texture_filtering_n_samples  = max_texture_filtering_samples;
     signal_texture_filtering_n_samples_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
     append_int_widget(table_tex_filtering, n, "texture-filtering-n-samples", _("n Samples"), _("The number of samples user (higher values means better quality and worser performance)"), X_GETTER_SETTER_SIGNAL(Settings, texture_filtering_n_samples));
     
-    texture_filtering_in_planet = false;
-    signal_texture_filtering_in_planet_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
-    append_boolean_widget(table_tex_filtering, n, "texture-filtering-filter-planet?", _("filter Planet"), _("whether to Filter the Planets Texture"), X_GETTER_SETTER_SIGNAL(Settings, texture_filtering_in_planet));
-    
-    texture_filtering_in_ring = true;
+    texture_filtering_in_ring = false;
     signal_texture_filtering_in_ring_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
     append_boolean_widget(table_tex_filtering, n, "texture-filtering-filter-ring?", _("filter Ring"), _("whether to Filter the Rings Texture"), X_GETTER_SETTER_SIGNAL(Settings, texture_filtering_in_ring));
     
@@ -103,15 +99,15 @@ namespace Raytracer
     signal_n_render_tiles_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
     append_int_widget(table_performance, n, "raytrace-render-tiles", _("RenderTiles"), _("The number of render-tiles along one axis used in order to use mutltithreading to fasten redering"), X_GETTER_SETTER_SIGNAL(Settings, n_render_tiles));
 
-    antialiasing  = 3;
+    antialiasing  = 6;
     signal_antialiasing_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
-    append_enum_widget(table_performance, n, "raytrace-antialiasing", _("Antialiasing"), _("The amount of Antialiasing"), create_vector<Glib::ustring>("No Antialiasing", "2 Rays per Pixel", "4 Rays per Pixel", "8 Rays per Pixel"), X_GETTER_SETTER_SIGNAL(Settings, antialiasing));
+    append_enum_widget(table_performance, n, "raytrace-antialiasing", _("Antialiasing"), _("The amount of Antialiasing"), create_vector<Glib::ustring>("No Antialiasing", "2 Rays per Pixel", "4 Rays per Pixel", "8 Rays per Pixel", "16 Rays per Pixel", "32 Rays per Pixel", "64 Rays per Pixel"), X_GETTER_SETTER_SIGNAL(Settings, antialiasing));
 
     culling = true;
     signal_culling_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
     append_boolean_widget(table_performance, n, "raytrace-culling", _("Culling"), _("If set, Tiles without content will be ignored."), X_GETTER_SETTER_SIGNAL(Settings, culling));
 
-    culling_epsilon  = 1;//8; // TODO set again to 8
+    culling_epsilon  = 4;
     signal_culling_epsilon_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
     append_int_widget(table_performance, n, "raytrace-culling-epsilon", _("Culling ε"), _("In order to speed up rendering, areas without planet/ring are culled. This value describes the distance to the visible shapes, the culled render tiles mast have.\n\nThe greater the value, the lesser the probability needed sections not to be rendered."), X_GETTER_SETTER_SIGNAL(Settings, culling_epsilon));
 
@@ -211,25 +207,18 @@ namespace Raytracer
   
   void Settings::set_texture_filtering_radius(gfloat o)
   {
-    texture_filtering_radius  = CLAMP(o, 0.f, 100.f);
+    texture_filtering_radius  = CLAMP(o, 0.f, 25.f);
     
     signal_texture_filtering_radius_changed().emit();
   }
 
   void Settings::set_texture_filtering_n_samples(int n)
   {
-    texture_filtering_n_samples = CLAMP(n, 1, 64);
+    texture_filtering_n_samples = CLAMP(n, 0, max_texture_filtering_samples);
 
     signal_texture_filtering_n_samples_changed().emit();
   }
-
-  void Settings::set_texture_filtering_in_planet(bool o)
-  {
-    texture_filtering_in_planet = o;
-
-    signal_texture_filtering_in_planet_changed().emit();
-  }
-
+  
   void Settings::set_texture_filtering_in_ring(bool o)
   {
     texture_filtering_in_ring = o;

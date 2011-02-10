@@ -41,6 +41,20 @@ namespace Raytracer
     bool visible;
 
     ColorRGBA dummy_color;
+    
+    int get_width()const
+    {
+      if(!pixbuf)
+        return 0;
+      return pixbuf->get_width();
+    }
+    
+    int get_height()const
+    {
+      if(!pixbuf)
+        return 0;
+      return pixbuf->get_height();
+    }
 
   public:
     enum WrapMode

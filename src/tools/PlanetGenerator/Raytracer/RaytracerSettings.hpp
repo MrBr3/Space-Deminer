@@ -22,6 +22,8 @@
 namespace Raytracer
 {
   const int max_image_size  = 4096;
+  
+  const gsize max_texture_filtering_samples = 256;
 
   class Settings : public SettingsWidget
   {
@@ -37,7 +39,6 @@ namespace Raytracer
     
     REAL_SETTING(texture_filtering_radius);
     INTEGER_SETTING(texture_filtering_n_samples);
-    BOOLEAN_SETTING(texture_filtering_in_planet);
     BOOLEAN_SETTING(texture_filtering_in_ring);
 
     INTEGER_SETTING(n_render_tiles)

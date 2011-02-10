@@ -55,7 +55,7 @@ namespace Raytracer
         resulting_color.set(uv.x, uv.y, 0.f, 1.f);
       }else
       {
-        shader(resulting_color, uv, normal);
+        shader(resulting_color, uv, normal, ray);
       }
     }
 
@@ -71,7 +71,7 @@ namespace Raytracer
     uv.y  = acos(CLAMP(n.z, -1.f, 1.f))/G_PI;
   }
 
-  void Planet::shader(ColorRGBA& color, const Vector2& uv, const Vector3& normal)
+  void Planet::shader(ColorRGBA& color, const Vector2& uv, const Vector3& normal, const Math::Ray& ray)
   {
     ColorRGBA base, clouds;
 

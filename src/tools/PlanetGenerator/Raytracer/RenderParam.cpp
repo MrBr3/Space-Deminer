@@ -20,7 +20,7 @@
 #include "./../MainWindow.hpp"
 
 namespace Raytracer
-{
+{  
   RenderParam* RenderParam::_singleton = nullptr;
   
   RenderParam::RenderParam(const Matrix44& ring_matrix, const Matrix44& planet_matrix,  const Matrix44& view_matrix_, const Matrix44& projection_matrix_,
@@ -34,7 +34,47 @@ namespace Raytracer
     _singleton  = this;
     g_assert(img_width>0);
     g_assert(img_height>0);
-    g_assert(antialiasing>=0 && antialiasing<4);
+    g_assert(antialiasing>=0 && antialiasing<7);
+    
+    // Prepare Texture Filtering
+    {
+      n_texture_filter_samples  = Manager::get_settings().get_texture_filtering_n_samples();
+      filter_ring_textures  = Manager::get_settings().get_texture_filtering_in_ring() && n_texture_filter_samples>0;
+      texture_filter_radius  = Manager::get_settings().get_texture_filtering_radius();
+      
+      if(!filter_ring_textures)
+        n_texture_filter_samples = 0;
+        
+      g_assert(n_texture_filter_samples>=0 && n_texture_filter_samples<=max_texture_filtering_samples);
+      
+      if(n_texture_filter_samples>0)
+      {      
+        gdouble inv_2pi = 1.f/(PI2);
+        gdouble tmp;
+        gdouble f=0.;
+          
+        for(gsize i=0; i<n_texture_filter_samples; ++i)
+        {          
+          if(i==0)
+            texture_filter_coordinates[i].set(0.f, 0.f);
+          else
+            texture_filter_coordinates[i].set(2.f*frand()-1.f, 2.f*frand()-1.f);
+          
+          gdouble x = texture_filter_coordinates[i].x*3.;
+          gdouble y = texture_filter_coordinates[i].y*3.;
+          
+          texture_filter_coefficients[i] = tmp = inv_2pi * exp(-(x*x+y*y)*0.5);
+          f += tmp;
+        }
+        g_assert(f>0.);
+        f = 1./f;
+        
+        for(gsize i=0; i<n_texture_filter_samples; ++i)
+        {
+          texture_filter_coefficients[i] *=f;
+        }
+      }
+    }
 
     culling = Manager::get_settings().get_culling();
     culling_epsilon = Manager::get_settings().get_culling_epsilon();
@@ -47,7 +87,7 @@ namespace Raytracer
     inv_aspect  = 1.f/aspect;
 
     rays_per_pixel  = 1<<antialiasing;
-    g_assert(rays_per_pixel==1 || rays_per_pixel==2 || rays_per_pixel==4 || rays_per_pixel==8);
+    g_assert(rays_per_pixel==1 || rays_per_pixel==2 || rays_per_pixel==4 || rays_per_pixel==8 || rays_per_pixel==16 || rays_per_pixel==32 || rays_per_pixel==64);
 
     if(culling)
     {
@@ -94,6 +134,44 @@ namespace Raytracer
   {
     g_assert(_singleton);
     _singleton = nullptr;
+  }
+  
+  void RenderParam::get_filtered_texture_color(const Texture& tex, ColorRGBA& color, gfloat u, gfloat v, gfloat blur_amount, Texture::WrapMode u_mode, Texture::WrapMode v_mode)
+  {
+    /*blur_amount = 1.f-blur_amount;
+    blur_amount = 1.f-blur_amount*blur_amount;
+    blur_amount = 1.f;*/
+    gfloat biger_len = 0.5f/MAX(1.f, MAX(tex.get_height(), tex.get_width()));
+  
+    gfloat r = biger_len+CLAMP(blur_amount, 0.f, 1.f)*MAX(texture_filter_radius-biger_len, 0.f)*0.01f; // TODO 
+    
+    color.set(0.f, 0.f, 0.f, 0.f);
+    
+    ColorRGBA tmp;
+    
+    for(gsize i=0; i<n_texture_filter_samples; ++i)
+    {
+      gfloat coeff = texture_filter_coefficients[i];
+      Vector2 coord = texture_filter_coordinates[i];
+      
+      tex.get_color(tmp, u+coord.x*r, v+coord.y*r, u_mode, v_mode);
+      
+      color.a += tmp.a*coeff;
+      color.r += tmp.r*tmp.a*coeff;
+      color.g += tmp.g*tmp.a*coeff;
+      color.b += tmp.b*tmp.a*coeff;
+    }
+    
+    if(color.a==0.f)
+    {
+      color.set(0.f, 0.f, 0.f, 0.f);
+      return;
+    }
+    
+    gfloat inv_a  = 1.f/color.a;
+    color.r *= inv_a;
+    color.g *= inv_a;
+    color.b *= inv_a;
   }
 
   Glib::RefPtr<RenderParam> RenderParam::create(int img_width, int img_height)
