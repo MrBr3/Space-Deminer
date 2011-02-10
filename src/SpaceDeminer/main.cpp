@@ -31,15 +31,6 @@ int main(int argc, char **argv)
   {
     init_paths("space-deminer");
 
-    //----Load the correct Gtk-Theme--------
-    {
-      std::vector<Glib::ustring> v;
-
-      v.push_back(apply_filename_macros("$(exe-share)/themes/Clearlooks-0x333333/gtk-2.0/gtkrc")); // used for the test cases
-
-      Gtk::RC::set_default_files(v);
-    }
-
     Gtk::Main kit(argc, argv);
     Gtk::GL::init(argc, argv);
 
