@@ -31,8 +31,7 @@
 class MainWindow : public StaticManager<MainWindow, Gtk::Window>
 {
 public:
-  Glib::RefPtr<MenuAlignment> menu_alignment;
-  Glib::RefPtr<Menu> menu;
+  Glib::RefPtr<MenuBack> menu_back;
 
   class GtkGlDrawingArea : public Gtk::GL::DrawingArea
   {

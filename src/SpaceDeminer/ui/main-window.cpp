@@ -38,8 +38,7 @@ MainWindow::MainWindow()
 
 MainWindow::~MainWindow()throw()
 {
-  menu.reset();
-  menu_alignment.reset();
+  menu_back.reset();
 
   gl_drawing_area.deinit();
 
@@ -68,13 +67,13 @@ void MainWindow::on_show()
   Gtk::Window::on_show();
 
   if(Options::get_bool(OPTION_VIDEO_FULLSCREEN, false))
+  {
     fullscreen();
+  }
 }
 
 void MainWindow::on_hide()
 {
-  Menu::activate_menu_page(MENU_PAGE_INVALID);
-
   unfullscreen();
 
   Gtk::Window::on_hide();

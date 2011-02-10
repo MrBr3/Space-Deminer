@@ -17,8 +17,7 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "./menu-back.hpp"
-#include "./menu-alignment.hpp"
+#include "./../menu.hpp"
 
 const gdouble reloading_timeout = 1.0;
 
@@ -28,20 +27,22 @@ MenuBack::MenuBack()
 
   //load_random_image();
   load_image("$(exe-share)/ui/background-images/scrap-001.png");  // TODO put this into an init() function?
+  
+  show();
 }
 
 MenuBack::~MenuBack()throw()
 {
 }
 
-void MenuBack::expose(Framework::Widget::EventExpose& ee, const Framework::Widget::Allocation& allocation)
+void MenuBack::on_expose(Framework::Widget::EventExpose& ee)
 {
   g_assert(&ee);
 
   Glib::Mutex::Lock _lock(_using_tex_mutex);
 
   if(_curr_back_image)
-    ee.draw_resized_image(_curr_back_image, 0., 0., allocation.get_width(), allocation.get_height(), Options::get_bool(OPTION_UI_TRUNK_BACK_IMAGE, true));
+    ee.draw_resized_image(_curr_back_image, 0., 0., get_width(), get_height(), Options::get_bool(OPTION_UI_TRUNK_BACK_IMAGE, true));
 }
 
 void MenuBack::reload_image()
@@ -53,11 +54,13 @@ void MenuBack::reload_image()
 
     _curr_back_image  = new_img;
   }
-  MenuAlignment::get_singleton()->invalidate();
+  invalidate();
 }
 
-void MenuBack::resolution_changed()
+void MenuBack::on_size_allocate()
 {
+  FullscreenWindow::on_size_allocate();
+  
   Glib::signal_timeout().connect_once(sigc::mem_fun(*this, &MenuBack::reload_image), reloading_timeout*1000.);
 }
 
@@ -68,8 +71,8 @@ Glib::RefPtr<Gdk::Pixbuf> MenuBack::load_image_()
   if(!pb)
     return pb;
 
-  int dest_width  = MenuAlignment::get_singleton()->get_width();
-  int dest_height = MenuAlignment::get_singleton()->get_height();
+  int dest_width  = get_width();
+  int dest_height = get_height();
 
   if(dest_width==0)
     return pb;

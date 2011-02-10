@@ -26,8 +26,9 @@ class GUITest : public Framework::Window {
 public:
   enum AbortTests {ABORT_TESTS, USER_ABORTS_TESTS};
 
-  void on_expose(EventExpose& paint_tool) {
-    paint_tool.draw_color_rect(0.f, 0.f, 800.f, 600.f, MenuFrame::get_back_color_r(), MenuFrame::get_back_color_g(), MenuFrame::get_back_color_b());
+  void on_expose(EventExpose& paint_tool)
+  {
+    paint_tool.draw_widget_back("Window/Back", 0, *this);
 
     Framework::Window::on_expose(paint_tool);
   }
@@ -206,15 +207,21 @@ void check_within(const Plane& result, const Plane& reference, gfloat epsilon=1.
 void start_gui_test() {
   try {
     {
+      g_assert(MainWindow::get_singleton());
+      
+      Glib::RefPtr<MenuBack> menu_back = MainWindow::get_singleton()->menu_back;
+      g_assert(menu_back);
+      
       int w=0, h=0;
       bool need_to_resize = false;
+      
       MainWindow::get_singleton()->get_size(w, h);
-      if(MenuAlignment::get_singleton()->get_width()<800) {
+      if(menu_back->get_width()<800) {
         need_to_resize  = true;
-        w  += 800-MenuAlignment::get_singleton()->get_width();
+        w  += 800-menu_back->get_width();
       }
-      if(MenuAlignment::get_singleton()->get_height()<600) {
-        h  += 600-MenuAlignment::get_singleton()->get_height();
+      if(menu_back->get_height()<600) {
+        h  += 600-menu_back->get_height();
         need_to_resize  = true;
       }
 
@@ -233,7 +240,7 @@ void start_gui_test() {
     GUITest gui_test;
     gui_test.set_theme(main_window->gl_drawing_area.get_default_theme());
     gui_test.set_size(800, 600);
-    MainWindow::get_window_manager()->register_window(0xffff, gui_test);
+    MainWindow::get_window_manager()->register_window(0xfffc, gui_test);
     gui_test.show();
 
     std::cout<<"==== initialising Tests ====\n";
@@ -931,8 +938,8 @@ void GUITest::compare(const Glib::ustring& test_name) {
         compare_dlg.set_deletable(false);
         compare_dlg.get_vbox()->pack_start(vbox, true, true);
         vbox.show();
-        vbox.set_border_width(SPACING_NORMAL);
-        vbox.set_spacing(SPACING_NORMAL);
+        vbox.set_border_width(Framework::Theme::SPACING_NORMAL);
+        vbox.set_spacing(Framework::Theme::SPACING_NORMAL);
         vbox.pack_start(bb_choose_old_new_display, false, false);
         bb_choose_old_new_display.show();
         bb_choose_old_new_display.set_layout(Gtk::BUTTONBOX_CENTER);

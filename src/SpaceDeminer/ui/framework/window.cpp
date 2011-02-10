@@ -78,8 +78,11 @@ namespace Framework
   {
     Bin::on_visibility_changed();
 
-    Gdk::Region region(get_allocation());
-    get_window_manager()->invalidate(region);
+    if(get_window_manager())
+    {
+      Gdk::Region region(get_allocation());
+      get_window_manager()->invalidate(region);
+    }
   }
 
   void Window::on_invalidate(Gdk::Region& region)

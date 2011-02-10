@@ -66,12 +66,8 @@ void MainWindow::GtkGlDrawingArea::on_realize()
 
   MainWindow::get_singleton()->_engine = Framework::Engine::create_gl_engine(get_gl_context());
 
-  MainWindow::get_singleton()->menu  = Glib::RefPtr<Menu>(new Menu());
-  MainWindow::get_singleton()->menu_alignment  = Glib::RefPtr<MenuAlignment>(new MenuAlignment());
-
-  MainWindow::get_singleton()->menu->menu_window.add(*MainWindow::get_singleton()->menu_alignment.operator->());
-
-  Menu::activate_menu_page(MENU_PAGE_MAIN);
+  MainWindow::get_singleton()->menu_back  = Glib::RefPtr<MenuBack>(new MenuBack());
+  window_manager->register_window(10, *MainWindow::get_singleton()->menu_back.operator->());
 
   _gl_initialized = true;
 

@@ -37,6 +37,15 @@ namespace Framework
 
       void set(gint x)throw(){x1=x2=y1=y2=x;}
     };
+    
+    enum Spacing
+    {
+      SPACING_SMALL,
+      SPACING_NORMAL,
+      SPACING_LARGE
+    };
+    
+    virtual int get_spacing(Spacing spacing)const=0;
 
     virtual void draw(PaintTool& ee, const Glib::ustring& what, DrawPass pass, guint32 param, const Gdk::Rectangle& where)const=0;
 

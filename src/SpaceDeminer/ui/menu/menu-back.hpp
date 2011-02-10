@@ -17,32 +17,33 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "./../menu.hpp"
-#include "./../../game/difficulty.hpp"
+#ifndef _SPACE_DEMINER_MENU_BACK_H_
+#define _SPACE_DEMINER_MENU_BACK_H_
 
-class MenuPage_Highscore : public MenuPage
+#include "./../framework.hpp"
+
+class MenuBack : public Framework::FullscreenWindow
 {
+  Glib::Mutex _using_tex_mutex;
+  Glib::ustring _current_filename;
+
+  Glib::RefPtr<Gdk::Pixbuf> load_image_();
+  void reload_image();
 public:
-  Framework::Notebook notebook;
+  MenuBack();
+  ~MenuBack()throw();
 
-  MenuPage_Highscore()
-  {
-    parent_page_id  = MENU_PAGE_MAIN;
+  void on_expose(Framework::Widget::EventExpose& ee);
 
-    set_align_size_x(0.2);
-    set_align_size_y(0.5);
+  void load_image(const Glib::ustring& filename);
+  //void load_random_image();
 
-    set_main_widget(&notebook);
-    set_icon(Framework::Image::create_from_file("$(ui-menu-icon-path)/games-highscores.png"));
+  void on_size_allocate();
 
-    notebook.show();
-  }
-  ~MenuPage_Highscore()throw()
-  {
-  }
+public:
+  /*std::list<Glib::ustring> _background_folders;
+  std::list<Glib::ustring> _files;*/
+  Framework::ResPtr<Framework::Image> _curr_back_image;
 };
 
-void register_menu_page_highscore()
-{
-  Menu::register_menu_page(_("Highscore"), MENU_PAGE_HIGHSCORE, new MenuPage_Highscore);
-}
+#endif

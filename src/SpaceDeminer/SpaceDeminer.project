@@ -5,23 +5,7 @@
   <VirtualDirectory Name="src">
     <VirtualDirectory Name="ui">
       <File Name="ui/main-window.hpp"/>
-      <File Name="ui/menu-alignment.cpp"/>
-      <File Name="ui/menu-alignment.hpp"/>
-      <File Name="ui/menu-frame.hpp"/>
-      <File Name="ui/menu-page.hpp"/>
       <File Name="ui/main-window.cpp"/>
-      <File Name="ui/menu-back.cpp"/>
-      <File Name="ui/menu-back.hpp"/>
-      <File Name="ui/menu-frame.cpp"/>
-      <File Name="ui/menu-page.cpp"/>
-      <File Name="ui/menu.hpp"/>
-      <File Name="ui/menu.cpp"/>
-      <VirtualDirectory Name="menu-pages">
-        <File Name="ui/menu-pages/highscore-page.cpp"/>
-        <File Name="ui/menu-pages/main-page.cpp"/>
-        <File Name="ui/menu-pages/quit-page.cpp"/>
-        <File Name="ui/menu-pages/options-page.cpp"/>
-      </VirtualDirectory>
       <VirtualDirectory Name="framework">
         <File Name="ui/framework.hpp"/>
         <File Name="ui/framework/engine.hpp"/>
@@ -96,6 +80,11 @@
       <File Name="ui/dark-theme.hpp"/>
       <File Name="ui/dark-theme.cpp"/>
       <File Name="main.cpp"/>
+      <File Name="ui/menu.hpp"/>
+      <VirtualDirectory Name="menu">
+        <File Name="ui/menu/menu-back.cpp"/>
+        <File Name="ui/menu/menu-back.hpp"/>
+      </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="game">
       <File Name="game/difficulty.hpp"/>

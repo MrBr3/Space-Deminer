@@ -49,6 +49,21 @@ DarkTheme::~DarkTheme()throw()
   _singleton  = nullptr;
 }
 
+int DarkTheme::get_spacing(Spacing s)const
+{
+  switch(s)
+  {
+  case SPACING_SMALL:
+    return 2;
+  case SPACING_NORMAL:
+  case SPACING_LARGE:
+    return 4;
+  default:
+    g_assert_not_reached();
+    return 0;
+  }
+}
+
 void DarkTheme::draw(Framework::PaintTool& ee, const Glib::ustring& what, Framework::DrawPass pass, guint32 param, const Gdk::Rectangle& where)const
 {
   int x = where.get_x();
@@ -98,6 +113,9 @@ void DarkTheme::draw(Framework::PaintTool& ee, const Glib::ustring& what, Framew
         button_normal_simg->draw(ee, where);
       }
     }
+  }else if(is_ment(what, "Window/Back"))
+  {
+    ee.draw_color_rect(x, y, w, h, back_color_r, back_color_g, back_color_b);
   }
 }
 
