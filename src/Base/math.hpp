@@ -122,6 +122,18 @@ inline gdouble get_frac_part(gdouble n){gdouble dummy; return modf(n, &dummy);}
 
 inline bool XOR(bool a, bool b){return a!=b;}
 
+namespace Private
+{
+  const gdouble inv_rand_max = 1.f/gfloat(RAND_MAX);
+}
+
+/** \brief returns a random real number within the interval [0, 1]
+ * */
+inline gfloat frand()
+{
+  return CLAMP(gdouble(rand())*Private::inv_rand_max, 0.f, 1.f);
+}
+
 namespace Math
 {
   enum Overlap

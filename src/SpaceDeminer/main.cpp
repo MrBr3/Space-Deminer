@@ -26,6 +26,7 @@ const int error_code_exception  = 256;
 
 int main(int argc, char **argv)
 {
+  srand(time(0));
   try
   {
     init_paths("space-deminer");
