@@ -66,7 +66,7 @@ void MainWindow::on_show()
 {
   Gtk::Window::on_show();
 
-  if(Options::get_bool(OPTION_VIDEO_FULLSCREEN, false))
+  if(Options::get_bool(OPTION_VIDEO_FULLSCREEN, true))
   {
     fullscreen();
   }
