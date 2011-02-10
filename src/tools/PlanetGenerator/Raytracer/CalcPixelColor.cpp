@@ -41,10 +41,12 @@ namespace Raytracer
     gfloat qw = render_param.inv_img_width * 0.5f;
     gfloat qh = render_param.inv_img_height * 0.5f;
 
-    ColorRGBA tmp[64];
+    ColorRGBA tmp[256];
 
     switch(render_param.rays_per_pixel)
     {
+    case 256:
+    case 128:
     case 64:
     case 32:
     case 16:

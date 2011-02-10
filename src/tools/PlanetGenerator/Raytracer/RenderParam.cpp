@@ -34,7 +34,7 @@ namespace Raytracer
     _singleton  = this;
     g_assert(img_width>0);
     g_assert(img_height>0);
-    g_assert(antialiasing>=0 && antialiasing<7);
+    g_assert(antialiasing>=0 && antialiasing<9);
     
     // Prepare Texture Filtering
     {
@@ -87,7 +87,7 @@ namespace Raytracer
     inv_aspect  = 1.f/aspect;
 
     rays_per_pixel  = 1<<antialiasing;
-    g_assert(rays_per_pixel==1 || rays_per_pixel==2 || rays_per_pixel==4 || rays_per_pixel==8 || rays_per_pixel==16 || rays_per_pixel==32 || rays_per_pixel==64);
+    g_assert(rays_per_pixel==1 || rays_per_pixel==2 || rays_per_pixel==4 || rays_per_pixel==8 || rays_per_pixel==16 || rays_per_pixel==32 || rays_per_pixel==64 || rays_per_pixel==128 || rays_per_pixel==256);
 
     if(culling)
     {

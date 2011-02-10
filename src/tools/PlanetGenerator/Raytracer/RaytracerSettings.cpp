@@ -99,9 +99,9 @@ namespace Raytracer
     signal_n_render_tiles_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
     append_int_widget(table_performance, n, "raytrace-render-tiles", _("RenderTiles"), _("The number of render-tiles along one axis used in order to use mutltithreading to fasten redering"), X_GETTER_SETTER_SIGNAL(Settings, n_render_tiles));
 
-    antialiasing  = 6;
+    antialiasing  = 3;
     signal_antialiasing_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
-    append_enum_widget(table_performance, n, "raytrace-antialiasing", _("Antialiasing"), _("The amount of Antialiasing"), create_vector<Glib::ustring>("No Antialiasing", "2 Rays per Pixel", "4 Rays per Pixel", "8 Rays per Pixel", "16 Rays per Pixel", "32 Rays per Pixel", "64 Rays per Pixel"), X_GETTER_SETTER_SIGNAL(Settings, antialiasing));
+    append_enum_widget(table_performance, n, "raytrace-antialiasing", _("Antialiasing"), _("The amount of Antialiasing"), create_vector<Glib::ustring>("No Antialiasing", "2 Rays per Pixel", "4 Rays per Pixel", "8 Rays per Pixel", "16 Rays per Pixel", "32 Rays per Pixel", "64 Rays per Pixel", "128 Rays per Pixel", "256 Rays per Pixel"), X_GETTER_SETTER_SIGNAL(Settings, antialiasing));
 
     culling = true;
     signal_culling_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
