@@ -709,42 +709,57 @@ namespace Framework
 
   bool WindowManager::on_mouse_move(Widget::MouseEvent& mouse_event)
   {
-    g_assert(mouse_state_machine.get_active_state());
-    if(!mouse_state_machine.get_active_state())
-      return false;
-    return mouse_state_machine.get_active_state()->on_mouse_move(mouse_event);
+    try
+    {
+      g_assert(mouse_state_machine.get_active_state());
+      if(!mouse_state_machine.get_active_state())
+        return false;
+      return mouse_state_machine.get_active_state()->on_mouse_move(mouse_event);
+    }CATCH_ALL("**WindowManager::on_mouse_move**", return false;)
   }
 
   bool WindowManager::on_mouse_enter(Widget::MouseEvent& mouse_event)
   {
-    g_assert(mouse_state_machine.get_active_state());
-    if(!mouse_state_machine.get_active_state())
-      return false;
-    return mouse_state_machine.get_active_state()->on_mouse_enter(mouse_event);
+    try
+    {
+      g_assert(mouse_state_machine.get_active_state());
+      if(!mouse_state_machine.get_active_state())
+        return false;
+      return mouse_state_machine.get_active_state()->on_mouse_enter(mouse_event);
+    }CATCH_ALL("**WindowManager::on_mouse_enter**", return false;)
   }
 
   bool WindowManager::on_mouse_leave(Widget::MouseEvent& mouse_event)
   {
-    g_assert(mouse_state_machine.get_active_state());
-    if(!mouse_state_machine.get_active_state())
-      return false;
-    return mouse_state_machine.get_active_state()->on_mouse_leave(mouse_event);
+    try
+    {
+      g_assert(mouse_state_machine.get_active_state());
+      if(!mouse_state_machine.get_active_state())
+        return false;
+      return mouse_state_machine.get_active_state()->on_mouse_leave(mouse_event);
+    }CATCH_ALL("**WindowManager::on_mouse_leave**", return false;)
   }
 
   bool WindowManager::on_button_press(Widget::MouseButtonEvent& mouse_event)
   {
-    g_assert(mouse_state_machine.get_active_state());
-    if(!mouse_state_machine.get_active_state())
-      return false;
-    return mouse_state_machine.get_active_state()->on_button_press(mouse_event);
+    try
+    {
+      g_assert(mouse_state_machine.get_active_state());
+      if(!mouse_state_machine.get_active_state())
+        return false;
+      return mouse_state_machine.get_active_state()->on_button_press(mouse_event);
+    }CATCH_ALL("**WindowManager::on_button_press**", return false;)
   }
 
   bool WindowManager::on_button_release(Widget::MouseButtonEvent& mouse_event)
   {
-    g_assert(mouse_state_machine.get_active_state());
-    if(!mouse_state_machine.get_active_state())
-      return false;
-    return mouse_state_machine.get_active_state()->on_button_release(mouse_event);
+    try
+    {
+      g_assert(mouse_state_machine.get_active_state());
+      if(!mouse_state_machine.get_active_state())
+        return false;
+      return mouse_state_machine.get_active_state()->on_button_release(mouse_event);
+    }CATCH_ALL("**WindowManager::on_button_release**", return false;)
   }
 
   bool WindowManager::handle_gtk_motion_notify_event(GdkEventMotion* e)
