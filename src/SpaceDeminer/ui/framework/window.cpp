@@ -121,15 +121,28 @@ namespace Framework
 
   void Window::set_size(int w, int h)
   {
+    w = MAX(w, 64);
+    h = MAX(h, 1);
+    
     if(get_allocation().get_width()==w && get_allocation().get_height()==h)
       return;
       
-    get_allocation().set_width(MAX(get_size_request_width(), MAX(w, 64)));
+#ifdef NDEBUG
+    static gsize stack_depth_counter=0;
+    stack_depth_counter++;
+    g_assert(stack_depth_counter<1024);
+#endif
+      
+    get_allocation().set_width(MAX(get_size_request_width(), w));
     get_allocation().set_height(MAX(get_size_request_height(), h));
     
     on_size_manually_changed();
 
     on_size_allocate();
+      
+#ifdef NDEBUG
+    stack_depth_counter--;
+#endif
   }
 
   void Window::set_pos(int x, int y)

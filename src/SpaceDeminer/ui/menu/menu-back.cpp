@@ -74,7 +74,9 @@ Glib::RefPtr<Gdk::Pixbuf> MenuBack::load_image_()
   int dest_width  = get_width();
   int dest_height = get_height();
 
-  if(dest_width==0)
+  if(dest_width<=0 || pb->get_width()<=0)
+    return pb;
+  if(dest_height<=0)
     return pb;
 
   g_assert(pb->get_width()>0);
