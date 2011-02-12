@@ -29,17 +29,23 @@ namespace Framework
   {
   public:
     friend class WindowManager;
+    
+  protected:
+    virtual void on_pos_manually_changed(){}
+    virtual void on_size_manually_changed(){}
 
   public:
     virtual void on_register_window(int layer);
 
     void set_size(int w, int h);
+    void set_pos(int x, int y);
 
     WindowManager* get_window_manager(){return _window_manager;}
     const WindowManager* get_window_manager()const{return _window_manager;}
 
     Widget::Allocation& get_allocation()throw(){g_assert(this);return const_cast<Widget::Allocation&>(Widget::get_allocation());}
     void on_size_request(int& w, int& h);
+    void on_size_request_changed();
     void on_invalidate(Gdk::Region& region);
 
     void on_visibility_changed();
@@ -61,8 +67,23 @@ namespace Framework
   {
   public:
     void on_register_window(int layer);
+    
+    void on_pos_manually_changed();
+    void on_size_manually_changed();
 
     ~FullscreenWindow()throw();
+  };
+
+  class CenteredWindow : public Window
+  {
+  public:
+    void on_register_window(int layer);
+    void center();
+    
+    void on_pos_manually_changed();
+    void on_size_manually_changed();
+
+    ~CenteredWindow()throw();
   };
 
   class WindowManager : public Refable

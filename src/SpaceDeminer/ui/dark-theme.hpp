@@ -46,6 +46,7 @@ public:
 protected:
   Glib::RefPtr<Framework::Font> default_font;
   Framework::ResPtr<Framework::SegmentedImage9> button_normal_simg, button_mouseover_simg, button_pushed_simg, button_focused_simg;
+  Framework::ResPtr<Framework::SegmentedImage9> window_frame_simg;
 
 
   DarkTheme();

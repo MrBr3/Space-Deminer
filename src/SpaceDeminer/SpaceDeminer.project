@@ -60,6 +60,8 @@
           <File Name="ui/framework/widgets/dummy-widget.hpp"/>
           <File Name="ui/framework/widgets/layout.cpp"/>
           <File Name="ui/framework/widgets/layout.hpp"/>
+          <File Name="ui/framework/widgets/windowframe.cpp"/>
+          <File Name="ui/framework/widgets/windowframe.hpp"/>
         </VirtualDirectory>
         <File Name="ui/framework/window.hpp"/>
         <File Name="ui/framework/enums.hpp"/>
@@ -84,6 +86,8 @@
       <VirtualDirectory Name="menu">
         <File Name="ui/menu/menu-back.cpp"/>
         <File Name="ui/menu/menu-back.hpp"/>
+        <File Name="ui/menu/main-menu.hpp"/>
+        <File Name="ui/menu/main-menu.cpp"/>
       </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="game">

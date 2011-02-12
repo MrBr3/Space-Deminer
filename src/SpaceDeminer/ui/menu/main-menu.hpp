@@ -16,7 +16,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
- 
- #include "./menu/menu-back.hpp"
- #include "./menu/main-menu.hpp"
- #include "./../options.hpp"
+
+#ifndef _SPACEDEMINER_UI_FRAMEWORK_MAINMENU_H_
+#define _SPACEDEMINER_UI_FRAMEWORK_MAINMENU_H_
+
+class MainMenuWindow : public Framework::CenteredWindow
+{
+public:
+  Framework::VBox vbox;
+  Framework::HBox hbox;
+  Framework::Label l_caption;
+  //Framework::HSeparator sep1, sep2;
+  //Framework::VSeparator vsep;
+  Framework::Button btn_about, btn_options;
+  
+  void set(const Glib::ustring& caption, Widget& child)
+  {
+    l_caption.set_label(caption);
+    vbox.pack_start(child);
+  }
+  
+  MainMenuWindow();
+  ~MainMenuWindow()throw();
+};
+
+class MainMenu : public MainMenuWindow
+{
+public:
+  Framework::VBox vbox;
+  Framework::Button btn_run, btn_highscore, btn_quit;
+  
+  MainMenu();
+  ~MainMenu()throw();
+};
+
+#endif

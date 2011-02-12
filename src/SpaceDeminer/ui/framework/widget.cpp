@@ -194,9 +194,11 @@ namespace Framework
     _size_request_width  = MAX(0, _size_request_width);
     _size_request_height = MAX(0, _size_request_height);
 
-    if((old_sr_w!=_size_request_width || old_sr_h!=_custom_size_request_height) && get_parent())
+    if((old_sr_w!=_size_request_width || old_sr_h!=_custom_size_request_height))
     {
-      get_parent()->on_child_size_request_changed(*this);
+      if(get_parent())
+        get_parent()->on_child_size_request_changed(*this);
+      on_size_request_changed();
       invalidate();
     }
   }
@@ -232,9 +234,11 @@ namespace Framework
 
     if(recalc)
       recalc_size_request();
-    else if(something_changed && get_parent())
+    else if(something_changed)
     {
-      get_parent()->on_child_size_request_changed(*this);
+      if(get_parent())
+        get_parent()->on_child_size_request_changed(*this);
+      on_size_request_changed();
       invalidate();
     }
   }

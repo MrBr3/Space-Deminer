@@ -101,6 +101,12 @@ namespace Framework
       h+=get_child()->get_size_request_height();
     }
   }
+  
+  void Window::on_size_request_changed()
+  {
+    set_size(MAX(get_width(), get_size_request_width()),
+             MAX(get_height(), get_size_request_height()));
+  }
 
   void Window::v_rearrange_children()
   {
@@ -115,10 +121,26 @@ namespace Framework
 
   void Window::set_size(int w, int h)
   {
-    get_allocation().set_width(w);
-    get_allocation().set_height(h);
+    if(get_allocation().get_width()==w && get_allocation().get_height()==h)
+      return;
+      
+    get_allocation().set_width(MAX(get_size_request_width(), MAX(w, 64)));
+    get_allocation().set_height(MAX(get_size_request_height(), h));
+    
+    on_size_manually_changed();
 
     on_size_allocate();
+  }
+
+  void Window::set_pos(int x, int y)
+  {
+    if(get_allocation().get_x()==x && get_allocation().get_y()==y)
+      return;
+    
+    get_allocation().set_x(x);
+    get_allocation().set_y(y);
+    
+    on_pos_manually_changed();
   }
 
   void Window::on_register_window(int layer)
@@ -136,11 +158,56 @@ namespace Framework
 
     get_window_manager()->signal_size_changed().connect(sigc::mem_fun(*this, &Window::set_size));
 
-    Window::set_size(MAX(get_size_request_width(), get_window_manager()->get_width()), MAX(get_size_request_height(), get_window_manager()->get_height()));
+    on_pos_manually_changed();
+    on_size_manually_changed();
   }
 
   FullscreenWindow::~FullscreenWindow()throw()
   {
+  }
+  
+  void FullscreenWindow::on_pos_manually_changed()
+  {
+    set_pos(0, 0);
+  }
+
+  void FullscreenWindow::on_size_manually_changed()
+  {
+    Window::set_size(MAX(get_size_request_width(), get_window_manager()->get_width()), MAX(get_size_request_height(), get_window_manager()->get_height()));
+  }
+
+  //----CenteredWindow----
+
+  void CenteredWindow::on_register_window(int layer)
+  {
+    set_name("centered-window");
+
+    Window::on_register_window(layer);
+
+    get_window_manager()->signal_size_changed().connect(sigc::hide(sigc::hide(sigc::mem_fun(*this, &CenteredWindow::center))));
+  }
+
+  CenteredWindow::~CenteredWindow()throw()
+  {
+  }
+  
+  void CenteredWindow::center()
+  {
+    if(!get_window_manager())
+      return;
+      
+    set_pos((get_window_manager()->get_width() - get_width())>>1,
+            (get_window_manager()->get_height()- get_height())>>1);
+  }
+  
+  void CenteredWindow::on_pos_manually_changed()
+  {
+    center();
+  }
+
+  void CenteredWindow::on_size_manually_changed()
+  {
+    center();
   }
 
   //----WindowManager----

@@ -32,6 +32,7 @@ class MainWindow : public StaticManager<MainWindow, Gtk::Window>
 {
 public:
   Glib::RefPtr<MenuBack> menu_back;
+  MainMenuWindow main_menu_window;
 
   class GtkGlDrawingArea : public Gtk::GL::DrawingArea
   {
@@ -58,6 +59,8 @@ public:
   }gl_drawing_area;
 
   static const Glib::RefPtr<Framework::WindowManager>& get_window_manager(){return get_singleton()->gl_drawing_area.window_manager;}
+    
+  void init_ui();
 
 public:
   void on_size_allocate(Gtk::Allocation& allocation);

@@ -23,7 +23,7 @@ const gdouble reloading_timeout = 1.0;
 
 MenuBack::MenuBack()
 {
-  g_assert(Framework::ResourceManager::get_n_resources()==0);
+  //g_assert(Framework::ResourceManager::get_n_resources()==0);
 
   //load_random_image();
   load_image("$(exe-share)/ui/background-images/scrap-001.png");  // TODO put this into an init() function?

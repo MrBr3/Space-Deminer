@@ -41,6 +41,8 @@ DarkTheme::DarkTheme()
   button_mouseover_simg = SegmentedImage9::create_from_file(apply_filename_macros("$(exe-share)/ui/themes/dark-theme/button-01.png"), 25, 25, 25, 25, 3, 3, 3, 3);
   button_pushed_simg =    SegmentedImage9::create_from_file(apply_filename_macros("$(exe-share)/ui/themes/dark-theme/button-01.png"), 25,  0, 25, 25, 3, 3, 3, 3);
   button_focused_simg =   SegmentedImage9::create_from_file(apply_filename_macros("$(exe-share)/ui/themes/dark-theme/button-01.png"),  0,  0, 25, 25, 3, 3, 3, 3);
+  
+  window_frame_simg =   SegmentedImage9::create_from_file(apply_filename_macros("$(exe-share)/ui/themes/dark-theme/window-frame.png"),  0,  0, 64, 25, 10, 10, 10, 0);
 }
 
 DarkTheme::~DarkTheme()throw()
@@ -116,6 +118,10 @@ void DarkTheme::draw(Framework::PaintTool& ee, const Glib::ustring& what, Framew
   }else if(is_ment(what, "Window/Back"))
   {
     ee.draw_color_rect(x, y, w, h, back_color_r, back_color_g, back_color_b);
+  }else if(is_ment(what, "Window/Frame"))
+  {
+    button_pushed_simg->draw(ee, x, y, w, 25);
+    ee.draw_color_rect(x, y+25, w, MAX(0, h-25), back_color_r, back_color_g, back_color_b);
   }
 }
 
@@ -128,6 +134,12 @@ void DarkTheme::get_metrics(const Glib::ustring& what, Metrics& metrics)const
   }else if(is_ment(what, "child-dist/SHADOW_IN"))
   {
     metrics.set(1);
+  }else if(is_ment(what, "child-dist/Window/Frame"))
+  {
+    metrics.x1 = 0;
+    metrics.x2 = 0;
+    metrics.y1 = 25;
+    metrics.y2 = 0;
   }
 }
 

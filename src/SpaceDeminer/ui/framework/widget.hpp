@@ -161,6 +161,7 @@ namespace Framework
      * \note &w!=&h otherwise the behavior is undefined
      * */
     virtual void on_size_request(int& w, int& h){g_assert(&w!=&h);w=0;h=0;}
+    virtual void on_size_request_changed(){}
 
     virtual void on_size_allocate(){}
 

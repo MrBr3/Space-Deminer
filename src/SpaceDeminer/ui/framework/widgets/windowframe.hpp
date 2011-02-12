@@ -16,7 +16,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
- 
- #include "./menu/menu-back.hpp"
- #include "./menu/main-menu.hpp"
- #include "./../options.hpp"
+
+#ifndef _SPACEDEMINER_UI_FRAMEWORK_WINDOW_FRAME_H_
+#define _SPACEDEMINER_UI_FRAMEWORK_WINDOW_FRAME_H_
+
+#include "./bin.hpp"
+
+namespace Framework
+{
+  class WindowFrame : public Bin
+  {
+    typedef Bin ParentClass;
+  public:
+
+    void set_theme(const Glib::RefPtr<Theme>& theme);
+
+    WindowFrame();
+    ~WindowFrame()throw();
+
+    void on_size_request(int& w, int& h);
+
+    void on_expose(EventExpose& paint_tool);
+    void v_rearrange_children();
+
+  protected:
+    Theme::Metrics child_dist;
+  };
+}
+
+#endif

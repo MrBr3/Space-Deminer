@@ -49,5 +49,6 @@
 #include "./framework/widgets/spinbutton.hpp"
 #include "./framework/widgets/treeview.hpp"
 #include "./framework/widgets/viewport.hpp"
+#include "./framework/widgets/windowframe.hpp"
 
 #endif

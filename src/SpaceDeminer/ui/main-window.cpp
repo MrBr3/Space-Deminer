@@ -48,6 +48,15 @@ MainWindow::~MainWindow()throw()
   main_window = nullptr;
 }
 
+void MainWindow::init_ui()
+{
+  menu_back  = Glib::RefPtr<MenuBack>(new MenuBack());
+  get_window_manager()->register_window(10, *menu_back.operator->());
+
+  get_window_manager()->register_window(11, main_menu_window);
+  main_menu_window.show();
+}
+
 bool MainWindow::on_key_release_event(GdkEventKey* e)
 {
   switch(e->keyval)

@@ -66,14 +66,11 @@ void MainWindow::GtkGlDrawingArea::on_realize()
 
   MainWindow::get_singleton()->_engine = Framework::Engine::create_gl_engine(get_gl_context());
 
-  MainWindow::get_singleton()->menu_back  = Glib::RefPtr<MenuBack>(new MenuBack());
-  window_manager->register_window(10, *MainWindow::get_singleton()->menu_back.operator->());
-
   _gl_initialized = true;
-
+  
   _dark_theme = DarkTheme::create();
-
-  window_manager->set_theme(_dark_theme);
+  get_window_manager()->set_theme(_dark_theme);
+  MainWindow::get_singleton()->init_ui();
 
   Glib::RefPtr<Gdk::Window> window = get_window();
 
