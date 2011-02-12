@@ -17,23 +17,26 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SPACE_DEMINER_BASE_H_
-#define _SPACE_DEMINER_BASE_H_
+#ifndef _SPACE_DEMINER_BASE_DEBUGGING_H_
+#define _SPACE_DEMINER_BASE_DEBUGGING_H_
 
-#include "./dependencies.hpp"
-#include "./debugging.hpp"
-#include "./macros.hpp"
-#include "./refable.hpp"
-#include "./static-manager.hpp"
-#include "./obslink.hpp"
-#include "./math.hpp"
-#include "./files.hpp"
-#include "./strings.hpp"
-#include "./paths.hpp"
-#include "./templates.hpp"
-#include "./geometry.hpp"
-#include "./state-machine.hpp"
-#include "./cairo-stuff.hpp"
-#include "./opengl.hpp"
+namespace Debugging
+{
+  class CBlockMotionDetector
+  {
+    Glib::ustring leave_str;
+  public:
+    CBlockMotionDetector(const Glib::ustring& enter_str="{\n", const Glib::ustring& leave_str="}\n")
+    {
+      this->leave_str = leave_str;
+      std::cout<<enter_str.c_str();
+    }
+    
+    ~CBlockMotionDetector()
+    {
+      std::cout<<leave_str.c_str();
+    }
+  };
+}
 
 #endif

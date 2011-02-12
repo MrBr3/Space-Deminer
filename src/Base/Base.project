@@ -38,6 +38,7 @@
     <File Name="macros.hpp"/>
     <File Name="vector_creators.hpp"/>
     <File Name="geometry.cpp"/>
+    <File Name="debugging.hpp"/>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>
   <VirtualDirectory Name="external">
