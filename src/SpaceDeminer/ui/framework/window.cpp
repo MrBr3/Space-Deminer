@@ -106,6 +106,8 @@ namespace Framework
   {
     set_size(MAX(get_width(), get_size_request_width()),
              MAX(get_height(), get_size_request_height()));
+             
+    ParentClass::on_size_request_changed();
   }
 
   void Window::v_rearrange_children()

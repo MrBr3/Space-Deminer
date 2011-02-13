@@ -161,7 +161,7 @@ namespace Framework
      * \note &w!=&h otherwise the behavior is undefined
      * */
     virtual void on_size_request(int& w, int& h){g_assert(&w!=&h);w=0;h=0;}
-    virtual void on_size_request_changed(){}
+    virtual void on_size_request_changed(){signal_size_request_changed().emit();}
 
     virtual void on_size_allocate(){}
 
@@ -185,12 +185,16 @@ namespace Framework
     const Allocation& get_allocation()const throw(){g_assert(this);return _allocation;}
 
     bool is_custom_size_request()const throw(){return _custom_size_request_width&&_custom_size_request_height;}
+    
+    sigc::signal<void>& signal_size_request_changed(){return _signal_size_request_changed;}
 
   private:
     int _size_request_width, _size_request_height;
     bool _custom_size_request_width, _custom_size_request_height;
 
     Allocation _allocation;
+    
+    sigc::signal<void> _signal_size_request_changed;
 
   //----Events----
   public:
