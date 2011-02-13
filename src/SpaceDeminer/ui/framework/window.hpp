@@ -30,6 +30,8 @@ namespace Framework
   public:
     friend class WindowManager;
     
+    typedef Bin ParentClass;
+    
   protected:
     virtual void on_pos_manually_changed(){}
     virtual void on_size_manually_changed(){}

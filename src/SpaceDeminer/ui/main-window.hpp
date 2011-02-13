@@ -32,7 +32,7 @@ class MainWindow : public StaticManager<MainWindow, Gtk::Window>
 {
 public:
   Glib::RefPtr<MenuBack> menu_back;
-  MainMenuWindow main_menu_window;
+  MainMenu main_menu_window;
 
   class GtkGlDrawingArea : public Gtk::GL::DrawingArea
   {
