@@ -188,7 +188,8 @@ namespace Framework
 
   void FullscreenWindow::on_size_manually_changed()
   {
-    Window::set_size(MAX(get_size_request_width(), get_window_manager()->get_width()), MAX(get_size_request_height(), get_window_manager()->get_height()));
+    if(get_window_manager())
+      Window::set_size(MAX(get_size_request_width(), get_window_manager()->get_width()), MAX(get_size_request_height(), get_window_manager()->get_height()));
   }
 
   //----CenteredWindow----
