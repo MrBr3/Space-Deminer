@@ -40,7 +40,7 @@ namespace Framework
     Misc::set_theme(theme);
 
     if(theme)
-      _font = theme->create_font("Label/Label");
+      _font = theme->create_font("Label/Label/"+get_name());
 
     if(!theme)
       _font.reset();

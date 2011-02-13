@@ -26,6 +26,9 @@ namespace Framework
     a = a.lowercase();
     b = b.lowercase();
 
+    str_replace_all_with(a, '_', '-');
+    str_replace_all_with(b, '_', '-');
+
     if(a.length()==b.length())
       return a==b;
     if(a.length()>b.length())

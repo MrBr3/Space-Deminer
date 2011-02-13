@@ -36,7 +36,7 @@ namespace Framework
   {
     Bin::set_theme(theme);
     if(theme)
-      theme->get_metrics("child-dist/Window/Frame", child_dist);
+      theme->get_metrics("child-dist/Window/Frame/"+get_name(), child_dist);
   }
 
   void WindowFrame::on_size_request(int& w, int& h)

@@ -53,7 +53,7 @@ namespace Framework
   {
     Bin::set_theme(theme);
     if(theme)
-      theme->get_metrics("child-dist/Button/Button", child_dist);
+      theme->get_metrics("child-dist/Button/Button/"+get_name(), child_dist);
   }
 
   void Button::set_relief(ReliefType rt)
@@ -161,6 +161,6 @@ namespace Framework
   void ToggleButton::set_theme(const Glib::RefPtr<Theme>& theme)
   {
     Bin::set_theme(theme);
-    theme->get_metrics("child-dist/Button/ToggleButton", child_dist);
+    theme->get_metrics("child-dist/Button/ToggleButton/"+get_name(), child_dist);
   }
 }

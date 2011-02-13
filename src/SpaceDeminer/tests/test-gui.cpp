@@ -28,7 +28,7 @@ public:
 
   void on_expose(EventExpose& paint_tool)
   {
-    paint_tool.draw_widget_back("Window/Back", 0, *this);
+    paint_tool.draw_widget_back("Window/Back/"+get_name(), 0, *this);
 
     Framework::Window::on_expose(paint_tool);
   }
@@ -208,13 +208,13 @@ void start_gui_test() {
   try {
     {
       g_assert(MainWindow::get_singleton());
-      
+
       Glib::RefPtr<MenuBack> menu_back = MainWindow::get_singleton()->menu_back;
       g_assert(menu_back);
-      
+
       int w=0, h=0;
       bool need_to_resize = false;
-      
+
       MainWindow::get_singleton()->get_size(w, h);
       if(menu_back->get_width()<800) {
         need_to_resize  = true;

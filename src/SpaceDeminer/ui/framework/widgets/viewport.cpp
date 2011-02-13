@@ -35,7 +35,7 @@ namespace Framework
   {
     Bin::set_theme(theme);
     if(theme)
-      theme->get_metrics("child-dist/SHADOW_IN/Viewport", shadow_child_dist);
+      theme->get_metrics("child-dist/SHADOW_IN/Viewport/"+get_name(), shadow_child_dist);
   }
 
   void Viewport::add(Widget& widget)
