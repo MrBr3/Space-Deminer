@@ -51,8 +51,20 @@ namespace Framework
     int w = get_width()-left_padding-right_padding;
     int h = get_height()-top_padding-bottom_padding;
 
-    int child_width  = round((w-get_child()->get_size_request_width()) *_xscale) + get_child()->get_size_request_width();
-    int child_height = round((h-get_child()->get_size_request_height())*_yscale) + get_child()->get_size_request_height();
+    int child_width, child_height;
+    
+    if(_amount_expands)
+    {
+      child_width  = round((w-get_child()->get_size_request_width()) *_xscale) + get_child()->get_size_request_width();
+      child_height = round((h-get_child()->get_size_request_height())*_yscale) + get_child()->get_size_request_height();
+    }else
+    {
+      child_width  = round(_xscale*w);
+      child_height = round(_yscale*h);
+    }
+    
+    child_width  = CLAMP(child_width,  get_child()->get_size_request_width(),  w);
+    child_height = CLAMP(child_height, get_child()->get_size_request_height(), h);
 
     set_child_allocation(*get_child(),
       left_padding + round((w-child_width) *_xalign),

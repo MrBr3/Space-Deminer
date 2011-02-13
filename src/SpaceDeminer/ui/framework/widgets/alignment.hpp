@@ -30,16 +30,20 @@ namespace Framework
     /**
      * \param xalign the x position relative to it's parents client area, from  to 1 (0 means leftmost 1 means rightmost)
      * \param yalign the y position relative to it's parents client area (0 means bottommost 1 means topmost)
-     * \param xscale the amount, the widget expands to use the unused horizontal space
-     * \param yscale the amount, the widget expands to use the unused vertical space
+     * \param xscale
+     * \param yscale
+     * \param amount_expands
+     *        \li if true (default) <tt>x/yscale</tt> will be interpreted as the amount, the unused (width or height minus size_request) horizontal/vetical space will be used to enlarge the widget.
+     *        \li if false <tt>x/yscale</tt> will be interpreted as the amount, the full horizontal/vetical space will for the widget.
      * */
-    void set(Real xalign, Real yalign, Real xscale, Real yscale)
+    void set(Real xalign, Real yalign, Real xscale, Real yscale, bool amount_expands=true)
     {
       _xalign = xalign;
       _yalign = yalign;
-      _xscale = xscale;
-      _yscale = yscale;
-      invalidate();
+      _xscale = CLAMP(xscale, 0.f, 1.f);
+      _yscale = CLAMP(yscale, 0.f, 1.f);
+      _amount_expands = amount_expands;
+      invalidate(); // TODO TEST, whether to use rearrange_children here?
     }
 
     void set_padding(int padding_top, int padding_bottom, int padding_left, int padding_right)
@@ -48,7 +52,7 @@ namespace Framework
       _padding_bottom = padding_bottom;
       _padding_left  = padding_left;
       _padding_right = padding_right;
-      recalc_size_request();
+      recalc_size_request(); // TODO TEST, whether to use rearrange_children here?
     }
 
     void on_size_request(int& w, int& h);
@@ -65,6 +69,7 @@ namespace Framework
   private:
     Real _xalign, _yalign, _xscale, _yscale;
     int _padding_top, _padding_bottom, _padding_left, _padding_right;
+    bool _amount_expands;
   };
 }
 
