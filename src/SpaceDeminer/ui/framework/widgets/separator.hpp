@@ -30,6 +30,20 @@ namespace Framework
     Separator();
     ~Separator()throw();
   };
+
+  class HSeparator : public Separator
+  {
+  public:
+    HSeparator();
+    ~HSeparator()throw();
+  };
+
+  class VSeparator : public Separator
+  {
+  public:
+    VSeparator();
+    ~VSeparator()throw();
+  };
 }
 
 #endif

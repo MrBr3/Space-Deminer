@@ -29,4 +29,27 @@ namespace Framework
   Separator::~Separator()throw()
   {
   }
+  
+// ========
+
+  HSeparator::HSeparator()
+  {
+    set_name("hseparator");
+  }
+
+  HSeparator::~HSeparator()throw()
+  {
+  }
+  
+// ========
+
+  VSeparator::VSeparator()
+  {
+    set_name("vseparator");
+  }
+
+  VSeparator::~VSeparator()throw()
+  {
+  }
+
 }
