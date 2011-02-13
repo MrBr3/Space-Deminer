@@ -34,14 +34,14 @@ DarkTheme::DarkTheme()
 {
   g_assert(!_singleton);
   _singleton  = this;
-  
+
   default_font  = Font::create("sans", 12, false, false, true, 0.6f, 0.6f, 0.6f);
 
   button_normal_simg =    SegmentedImage9::create_from_file(apply_filename_macros("$(exe-share)/ui/themes/dark-theme/button-01.png"),  0, 25, 25, 25, 3, 3, 3, 3);
   button_mouseover_simg = SegmentedImage9::create_from_file(apply_filename_macros("$(exe-share)/ui/themes/dark-theme/button-01.png"), 25, 25, 25, 25, 3, 3, 3, 3);
   button_pushed_simg =    SegmentedImage9::create_from_file(apply_filename_macros("$(exe-share)/ui/themes/dark-theme/button-01.png"), 25,  0, 25, 25, 3, 3, 3, 3);
   button_focused_simg =   SegmentedImage9::create_from_file(apply_filename_macros("$(exe-share)/ui/themes/dark-theme/button-01.png"),  0,  0, 25, 25, 3, 3, 3, 3);
-  
+
   window_frame_simg =   SegmentedImage9::create_from_file(apply_filename_macros("$(exe-share)/ui/themes/dark-theme/window-frame.png"),  0,  0, 64, 25, 10, 10, 10, 0);
 }
 
@@ -85,11 +85,6 @@ void DarkTheme::draw(Framework::PaintTool& ee, const Glib::ustring& what, Framew
   gdouble shadow_color_g = 0.0;
   gdouble shadow_color_b = 0.0;
   gdouble shadow_color_a = 0.3;
-
-  back_color_r = 0.0;
-  back_color_g = 0.2;
-  back_color_b = 0.0;
-  back_color_a = 1.0;
 
   if(is_ment(what, "Button/Dummy"))
   {
