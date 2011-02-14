@@ -22,10 +22,15 @@ Next Steps:
     [ ] on_memnotic_pushed
     [ ] on_memnotic_released
 [ ] neues UI Design einführen
-  [ ] Schriftart mit passender Lizenz in PNg Bild(er) umwandeln?
+  [ ] Schriftart mit passender Lizenz in PNG Bild(er) umwandeln?
     [ ] Linux Libertine? (http://de.wikipedia.org/wiki/Linux_Libertine)
-  [ ] Buttons ohne Rahmen
-    [ ] Zeichnen außerhalb der Widgets erlauben (extra pass)
+  [ ] Extra Hauptmenü Theme
+    [ ] HSeparator
+    [ ] VSeparator
+    [ ] Hintergrund
+    [ ] Weichgezeichnete schrift
+    [ ] Schriften kombinieren können
+    [ ] Bild auf mit Alpha von schrift zeichnen können?
 
 Base
   [ ] Interoperabilität
