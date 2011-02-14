@@ -21,23 +21,41 @@
 
 MainMenuWindow::MainMenuWindow()
 {
+  Glib::RefPtr<Framework::Theme> theme = get_menu_main_theme();
+  int small_sep_width, big_sep_height;
+
+  {
+    Framework::Theme::Metrics m;
+    theme->get_metrics("width/Separator/VSeparator/small", m);
+    small_sep_width = abs(m.x2-m.x1);
+
+    theme->get_metrics("width/Separator/HSeparator/big", m);
+    big_sep_height = abs(m.y2-m.y1);
+  }
+
+  hsep1.set_name("big");
+  hsep2.set_name("big");
+  vsep.set_name("small");
+
+  l_caption.set_alignment(0.f);
+
   add(alignment);
   alignment.add(vbox);
   alignment.set(0.5f, 0.8f, 0.52f, 0.4444f, false);
 
   vbox.pack_start(l_caption, false, false);
-  vbox.pack_start(hsep1, false, false, vsep.get_size_request_height());
-  vbox.pack_end(hsep2, false, false, vsep.get_size_request_height());
+  vbox.pack_start(hsep1, false, false, big_sep_height);
   vbox.pack_end(hbox, false, false);
+  vbox.pack_end(hsep2, false, false, big_sep_height);
 
   hbox.pack_start(sep1);
   hbox.pack_start(btn_options, false, false);
-  hbox.pack_start(vsep, false, false, vsep.get_size_request_width());
+  hbox.pack_start(vsep, false, false, small_sep_width);
   hbox.pack_start(btn_about, false, false);
   hbox.pack_start(sep2);
 
-  btn_options.set_label(_("_Options"));
-  btn_about.set_label(_("_About"));
+  btn_options.set_label(_("Options"));
+  btn_about.set_label(_("About"));
 
   show_all_children();
 }

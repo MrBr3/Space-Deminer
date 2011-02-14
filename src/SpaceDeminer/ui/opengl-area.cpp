@@ -67,8 +67,9 @@ void MainWindow::GtkGlDrawingArea::on_realize()
   MainWindow::get_singleton()->_engine = Framework::Engine::create_gl_engine(get_gl_context());
 
   _gl_initialized = true;
-  
+
   _dark_theme = DarkTheme::create();
+  _dark_theme->init();
   get_window_manager()->set_theme(_dark_theme);
   MainWindow::get_singleton()->init_ui();
 

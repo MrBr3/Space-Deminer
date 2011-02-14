@@ -20,6 +20,8 @@
 #ifndef _SPACEDEMINER_UI_FRAMEWORK_MAINMENU_H_
 #define _SPACEDEMINER_UI_FRAMEWORK_MAINMENU_H_
 
+Glib::RefPtr<Framework::Theme> get_menu_main_theme();
+
 class MainMenuWindow : public Framework::FullscreenWindow
 {
 public:
@@ -31,9 +33,9 @@ public:
   Framework::VSeparator vsep;
   Framework::Separator sep1, sep2;
   Framework::Button btn_about, btn_options;
-  
+
   void set(const Glib::ustring& caption, Widget& child);
-  
+
   MainMenuWindow();
   ~MainMenuWindow()throw();
 };
@@ -43,7 +45,7 @@ class MainMenu : public MainMenuWindow
 public:
   Framework::VButtonBox vbox;
   Framework::Button btn_run, btn_highscore, btn_quit;
-  
+
   MainMenu();
   ~MainMenu()throw();
 };
