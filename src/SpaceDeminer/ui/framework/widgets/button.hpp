@@ -26,9 +26,10 @@ namespace Framework
 {
   class Button : public Bin
   {
-    typedef Bin ParentClass;
   public:
+    typedef Bin ParentClass;
 
+  public:
     enum DrawParam
     {
       DRAW_PARAM_RELIEF_NORMAL,
@@ -77,6 +78,9 @@ namespace Framework
 
   class ToggleButton : public Button
   {
+  public:
+    typedef Button ParentClass;
+
   public:
     void set_theme(const Glib::RefPtr<Theme>& theme);
 

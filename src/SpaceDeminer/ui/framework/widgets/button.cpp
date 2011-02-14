@@ -51,7 +51,7 @@ namespace Framework
 
   void Button::set_theme(const Glib::RefPtr<Theme>& theme)
   {
-    Bin::set_theme(theme);
+    ParentClass::set_theme(theme);
     if(theme)
       theme->get_metrics("child-dist/Button/Button/"+get_name(), child_dist);
   }
@@ -83,7 +83,7 @@ namespace Framework
   {
     if(get_relief()!=RELIEF_NEVER)
     {
-      paint_tool.draw_widget_back("Button/Button", _state, *this);
+      paint_tool.draw_widget_back("Button/Button/"+get_name(), _state, *this);
     }
 
     if(get_state()==DRAW_PARAM_RELIEF_PUSHED)
@@ -160,7 +160,7 @@ namespace Framework
 
   void ToggleButton::set_theme(const Glib::RefPtr<Theme>& theme)
   {
-    Bin::set_theme(theme);
+    Button::ParentClass::set_theme(theme);
     theme->get_metrics("child-dist/Button/ToggleButton/"+get_name(), child_dist);
   }
 }

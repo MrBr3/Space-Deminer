@@ -123,24 +123,54 @@ void DarkTheme::draw(Framework::PaintTool& ee, const Glib::ustring& what, Framew
   {
     button_pushed_simg->draw(ee, x, y, w, 25);
     ee.draw_color_rect(x, y+25, w, MAX(0, h-25), back_color_r, back_color_g, back_color_b);
+  }else if(is_ment(what, "Separator/HSeparator"))
+  {
+    y = y+((1+h)>>1);
+
+    ee.draw_color_rect(x, y, w, 1, light_color_r, light_color_g, light_color_b, light_color_a);
+    ee.draw_color_rect(x, y-1, w, 1, shadow_color_r, shadow_color_g, shadow_color_b, shadow_color_a);
+  }else if(is_ment(what, "Separator/VSeparator"))
+  {
+    x = x+((1+w)>>1);
+
+    ee.draw_color_rect(x, y, 1, h, light_color_r, light_color_g, light_color_b, light_color_a);
+    ee.draw_color_rect(x-1, y, 1, h, shadow_color_r, shadow_color_g, shadow_color_b, shadow_color_a);
   }
 }
 
 void DarkTheme::get_metrics(const Glib::ustring& what, Metrics& metrics)const
 {
   metrics.set(0);
-  if(is_ment(what, "child-dist/Button"))
+  if(is_ment(what, "child_dist"))
   {
-    metrics.set(6);
-  }else if(is_ment(what, "child-dist/SHADOW_IN"))
+    if(is_ment(what, "child-dist/Button"))
+    {
+      metrics.set(6);
+    }else if(is_ment(what, "child-dist/SHADOW_IN"))
+    {
+      metrics.set(1);
+    }else if(is_ment(what, "child-dist/Window/Frame"))
+    {
+      metrics.x1 = 0;
+      metrics.x2 = 0;
+      metrics.y1 = 25;
+      metrics.y2 = 0;
+    }
+  }else if(is_ment(what, "width"))
   {
-    metrics.set(1);
-  }else if(is_ment(what, "child-dist/Window/Frame"))
-  {
-    metrics.x1 = 0;
-    metrics.x2 = 0;
-    metrics.y1 = 25;
-    metrics.y2 = 0;
+    if(is_ment(what, "width/Separator/VSeparator"))
+    {
+      metrics.x1 = 0;
+      metrics.x2 = 2;
+      metrics.y1 = 0;
+      metrics.y2 = 0;
+    }else if(is_ment(what, "width/Separator/HSeparator"))
+    {
+      metrics.x1 = 0;
+      metrics.x2 = 0;
+      metrics.y1 = 0;
+      metrics.y2 = 2;
+    }
   }
 }
 

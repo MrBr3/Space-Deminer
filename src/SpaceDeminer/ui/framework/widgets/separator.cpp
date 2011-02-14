@@ -24,12 +24,14 @@ namespace Framework
   Separator::Separator()
   {
     set_name("separator");
+
+    _width  = 0;
   }
 
   Separator::~Separator()throw()
   {
   }
-  
+
 // ========
 
   HSeparator::HSeparator()
@@ -40,7 +42,30 @@ namespace Framework
   HSeparator::~HSeparator()throw()
   {
   }
-  
+
+  void HSeparator::set_theme(const Glib::RefPtr<Theme>& theme)
+  {
+    ParentClass::set_theme(theme);
+
+    Theme::Metrics width;
+
+    if(theme)
+      theme->get_metrics("width/Separator/HSeparator/"+get_name(), width);
+
+    this->_width = abs(width.y2-width.y1);
+  }
+
+  void HSeparator::on_size_request(int& w, int& h)
+  {
+    w = 0;
+    h = this->_width;
+  }
+
+  void HSeparator::on_expose(EventExpose& paint_tool)
+  {
+    paint_tool.draw_widget_back("Separator/HSeparator/"+get_name(), 0, *this);
+  }
+
 // ========
 
   VSeparator::VSeparator()
@@ -52,4 +77,26 @@ namespace Framework
   {
   }
 
+  void VSeparator::set_theme(const Glib::RefPtr<Theme>& theme)
+  {
+    ParentClass::set_theme(theme);
+
+    Theme::Metrics width;
+
+    if(theme)
+      theme->get_metrics("width/Separator/VSeparator/"+get_name(), width);
+
+    this->_width = abs(width.x2-width.x1);
+  }
+
+  void VSeparator::on_size_request(int& w, int& h)
+  {
+    w = this->_width;
+    h = 0;
+  }
+
+  void VSeparator::on_expose(EventExpose& paint_tool)
+  {
+    paint_tool.draw_widget_back("Separator/VSeparator/"+get_name(), 0, *this);
+  }
 }

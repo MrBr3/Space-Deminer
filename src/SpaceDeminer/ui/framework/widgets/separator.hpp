@@ -27,6 +27,12 @@ namespace Framework
   class Separator : public Widget
   {
   public:
+    typedef Widget ParentClass;
+
+  protected:
+    int _width;
+
+  public:
     Separator();
     ~Separator()throw();
   };
@@ -34,15 +40,29 @@ namespace Framework
   class HSeparator : public Separator
   {
   public:
+    typedef Separator ParentClass;
+
+  public:
     HSeparator();
     ~HSeparator()throw();
+
+    void set_theme(const Glib::RefPtr<Theme>& theme);
+    void on_size_request(int& w, int& h);
+    void on_expose(EventExpose& paint_tool);
   };
 
   class VSeparator : public Separator
   {
   public:
+    typedef Separator ParentClass;
+
+  public:
     VSeparator();
     ~VSeparator()throw();
+
+    void set_theme(const Glib::RefPtr<Theme>& theme);
+    void on_size_request(int& w, int& h);
+    void on_expose(EventExpose& paint_tool);
   };
 }
 

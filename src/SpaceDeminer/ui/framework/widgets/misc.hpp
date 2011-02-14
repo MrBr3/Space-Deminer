@@ -27,7 +27,7 @@ namespace Framework
   class Misc : public Widget
   {
   public:
-    void set_alignment(Real xalign=0.f, Real yalign=0.5f);
+    void set_alignment(Real xalign, Real yalign=0.5f);
     void get_alignment(Real& xalign, Real& yalign)const throw()
     {
       xalign = _xalign;
