@@ -2,13 +2,14 @@ Next Steps:
 [X] Mausinteraktion
   [X] Events mask
 [X] MainMenu wieder zum laufen bringen
-[ ] Testen, wie on_mouse_move sich verhält, wenn das widget mit event plötzlich verschwindet
-  [ ] Mausbewegung
-  [ ] Maustaste runter
-  [ ] Mausbewegung mit Maustaste runter
-  [ ] Maustaste hoch
-  [ ] Widget betreten
-  [ ] Widget verlassen
+[X] Testen, wie on_mouse_move sich verhält, wenn das widget mit event plötzlich verschwindet
+  [X] Mausbewegung
+  [X] Maustaste runter
+  [X] Mausbewegung mit Maustaste runter
+  [X] Maustaste hoch
+[ ] Dialog
+  [ ] modal
+  [ ] MessageBox
 [ ] per Tasten navigieren können
   [ ] Fokus
     [ ] Maske anpassen
