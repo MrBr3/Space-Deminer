@@ -227,7 +227,7 @@ namespace Framework
     if(get_theme() && !child.get_theme())
       child.set_theme(get_theme());
 
-    child._window_manager = _window_manager;
+    child.set_window_manager(&*_window_manager);
 
     child.remove_any_focus();
 

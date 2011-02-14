@@ -62,6 +62,7 @@ namespace Framework
 
   void Widget::set_window_manager(WindowManager* wm)
   {
+    g_assert(this);
     Container* container  = dynamic_cast<Container*>(this);
 
     _window_manager = wm;

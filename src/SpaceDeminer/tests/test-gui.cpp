@@ -809,7 +809,7 @@ void start_gui_test() {
       gui_test.show_all_children();
       gui_test.compare("label-001");
     }
-    mouse_tests();
+    mouse_tests(gui_test);
     std::cout<<"==== All Tests Passed :) ====\n";
   } catch(GUITest::AbortTests at) {
     switch(at) {
