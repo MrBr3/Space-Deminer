@@ -40,6 +40,8 @@ int main(int argc, char **argv)
     MainWindow window;
 
     kit.run(window);
+
+    Framework::Theme::can_destroy_now();
   }CATCH_ALL("**main** ", return 42;)
 
 	return 0;

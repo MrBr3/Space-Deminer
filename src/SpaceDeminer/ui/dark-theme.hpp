@@ -32,7 +32,7 @@ public:
 
   void on_init();
   void on_deinit();
-  
+
   int get_spacing(Spacing spacing)const;
 
   static Glib::RefPtr<DarkTheme> create()

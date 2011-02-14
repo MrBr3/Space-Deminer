@@ -30,6 +30,10 @@ namespace Framework
   class PaintTool;
   class Theme : public Refable
   {
+  private:
+    static bool dont_destroy;
+    static sigc::signal<void> signal_can_destroy_now;
+
   public:
     struct Metrics
     {
@@ -37,32 +41,47 @@ namespace Framework
 
       void set(gint x)throw(){x1=x2=y1=y2=x;}
     };
-    
+
     enum Spacing
     {
       SPACING_SMALL,
       SPACING_NORMAL,
       SPACING_LARGE
     };
-    
+
+    /** \brief
+    *
+    * \note \c get_spacing and \c get_metrics are the only methods whitch don't need init to be called before.
+    */
     virtual int get_spacing(Spacing spacing)const=0;
 
     virtual void draw(PaintTool& ee, const Glib::ustring& what, DrawPass pass, guint32 param, const Gdk::Rectangle& where)const=0;
 
+    /** \brief
+    *
+    * \note \c get_spacing and \c get_metrics are the only methods whitch don't need init to be called before.
+    */
     virtual void get_metrics(const Glib::ustring& what, Metrics& metrics)const=0;
 
     virtual ResPtr<Font> create_font(const Glib::ustring& what)const=0;
 
     static bool is_ment(Glib::ustring a, Glib::ustring b);
 
-    virtual void on_init()=0;
-    virtual void on_deinit()=0;
-    
     static Glib::RefPtr<Theme> create_default_theme();
 
+    static void can_destroy_now();
+
+    void init()
+    {
+      on_init();
+    }
+
   protected:
-    Theme(){}
-    ~Theme()throw(){}
+    Theme();
+    ~Theme()throw();
+
+    virtual void on_init()=0;
+    virtual void on_deinit()=0;
   };
 }
 

@@ -34,7 +34,16 @@ DarkTheme::DarkTheme()
 {
   g_assert(!_singleton);
   _singleton  = this;
+}
 
+DarkTheme::~DarkTheme()throw()
+{
+  g_assert(_singleton==this);
+  _singleton  = nullptr;
+}
+
+void DarkTheme::on_init()
+{
   default_font  = Font::create("sans", 12, false, false, true, 0.6f, 0.6f, 0.6f);
 
   button_normal_simg =    SegmentedImage9::create_from_file(apply_filename_macros("$(exe-share)/ui/themes/dark-theme/button-01.png"),  0, 25, 25, 25, 3, 3, 3, 3);
@@ -45,10 +54,8 @@ DarkTheme::DarkTheme()
   window_frame_simg =   SegmentedImage9::create_from_file(apply_filename_macros("$(exe-share)/ui/themes/dark-theme/window-frame.png"),  0,  0, 64, 25, 10, 10, 10, 0);
 }
 
-DarkTheme::~DarkTheme()throw()
+void DarkTheme::on_deinit()
 {
-  g_assert(_singleton==this);
-  _singleton  = nullptr;
 }
 
 int DarkTheme::get_spacing(Spacing s)const
@@ -85,11 +92,10 @@ void DarkTheme::draw(Framework::PaintTool& ee, const Glib::ustring& what, Framew
   gdouble shadow_color_g = 0.0;
   gdouble shadow_color_b = 0.0;
   gdouble shadow_color_a = 0.3;
-
-  if(is_ment(what, "Button/Dummy"))
-  {
-    g_assert_not_reached();
-  }
+  gdouble light_color_r = 1.0;
+  gdouble light_color_g = 1.0;
+  gdouble light_color_b = 1.0;
+  gdouble light_color_a = 0.3;
 
   if(is_ment(what, "Button"))
   {
@@ -143,10 +149,7 @@ Framework::ResPtr<Framework::Font> DarkTheme::create_font(const Glib::ustring& w
   return default_font;
 }
 
-void DarkTheme::on_init()
+Glib::RefPtr<Framework::Theme> get_menu_main_theme()
 {
-}
-
-void DarkTheme::on_deinit()
-{
+  return DarkTheme::create();
 }

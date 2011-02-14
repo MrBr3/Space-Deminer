@@ -21,6 +21,28 @@
 
 namespace Framework
 {
+  bool Theme::dont_destroy = true;
+  sigc::signal<void> Theme::signal_can_destroy_now;
+
+  Theme::Theme()
+  {
+    if(dont_destroy)
+    {
+      reference();
+      signal_can_destroy_now.connect(sigc::mem_fun(*this, &Theme::unreference));
+    }
+  }
+  Theme::~Theme()throw()
+  {
+  }
+
+  void Theme::can_destroy_now()
+  {
+    if(dont_destroy)
+      signal_can_destroy_now.emit();
+    dont_destroy = false;
+  }
+
   bool Theme::is_ment(Glib::ustring a, Glib::ustring b)
   {
     a = a.lowercase();
