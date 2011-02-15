@@ -32,6 +32,22 @@ Space-Deminer:
     [ ] Weichgezeichnete schrift
     [ ] Schriften kombinieren können
     [ ] Bild auf mit Alpha von schrift zeichnen können?
+[ ] Ingame
+  [ ] Scene
+    [ ] Time Variablen hinzufügen
+      [ ] Zeitlupe, wenn Spieler nur noch ganz wenig Leben hat
+      [ ] Optinal: Zeitlupe bei Finalen schuss + gefährliche Situation
+    [ ] Thinkable
+      [ ] WeaponType
+        [ ] muss auf Scene Zugriff haben
+      [ ] Objects2D
+        [ ] Decorations
+          [ ] anstatt never_show_again nur ObsLinks darauf verweisen und destroy prozedur verwenden?
+          [ ] Zeichnen des Raumschiffs selber als Decoration
+          [ ] Partikeleffekte
+            [ ] Explosionen
+            [ ] Schild
+            [ ] Antrieb
 
 Base
   [ ] Interoperabilität
