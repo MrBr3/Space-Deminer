@@ -92,6 +92,37 @@
     </VirtualDirectory>
     <VirtualDirectory Name="game">
       <File Name="game/difficulty.hpp"/>
+      <VirtualDirectory Name="ingame">
+        <File Name="game/ingame/collision.cpp"/>
+        <File Name="game/ingame/collision.hpp"/>
+        <File Name="game/ingame/defenseslot.cpp"/>
+        <File Name="game/ingame/defenseslot.hpp"/>
+        <File Name="game/ingame/energyslot.cpp"/>
+        <File Name="game/ingame/energyslot.hpp"/>
+        <File Name="game/ingame/mine.cpp"/>
+        <File Name="game/ingame/mine.hpp"/>
+        <File Name="game/ingame/object2d.cpp"/>
+        <File Name="game/ingame/object2d.hpp"/>
+        <File Name="game/ingame/player.cpp"/>
+        <File Name="game/ingame/player.hpp"/>
+        <File Name="game/ingame/scene.cpp"/>
+        <File Name="game/ingame/scene.hpp"/>
+        <File Name="game/ingame/ship.cpp"/>
+        <File Name="game/ingame/ship.hpp"/>
+        <File Name="game/ingame/shoot.cpp"/>
+        <File Name="game/ingame/shoot.hpp"/>
+        <File Name="game/ingame/slot.cpp"/>
+        <File Name="game/ingame/slot.hpp"/>
+        <File Name="game/ingame/thinkable.cpp"/>
+        <File Name="game/ingame/thinkable.hpp"/>
+        <File Name="game/ingame/weaponslot.cpp"/>
+        <File Name="game/ingame/weaponslot.hpp"/>
+        <File Name="game/ingame/weapontype.cpp"/>
+        <File Name="game/ingame/weapontype.hpp"/>
+        <File Name="game/ingame/ingame.hpp"/>
+        <File Name="game/ingame/decoration2d.cpp"/>
+        <File Name="game/ingame/decoration2d.hpp"/>
+      </VirtualDirectory>
     </VirtualDirectory>
     <File Name="options.hpp"/>
     <File Name="options.cpp"/>

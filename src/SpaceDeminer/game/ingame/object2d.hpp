@@ -1,0 +1,54 @@
+/* Space Deminer is a small 2D Arcade Game. Your task ist to eliminate
+ * intelligent Mines created in the past galactic war.
+ *
+ * Copyright (C) 2010 the Space Deminer Development Team
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 3
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
+*/
+
+#ifndef _SPACE_DEMINER_INGAME_OBJECT2D_H_
+#define _SPACE_DEMINER_INGAME_OBJECT2D_H_
+
+#include "./ingame.hpp"
+
+namespace InGame
+{
+  class Decoration;
+  class Object2D : public Thinkable
+  {
+  public:
+    std::list<Glib::RefPtr<Decoration> > decorations;
+
+    /*void render() Pseudocode
+    {
+      for(...::iterator iter = decorations.begin(); iter = decorations.end(); )
+      {
+        if(iter->never_show_again) // if never mind is set, it wont be shown ever again and should be shown again
+        {
+          iter = decorations.erase(iter);
+        }else
+        {
+          if(iter->visible)
+          {
+            iter->render();
+          }
+
+          ++iter;
+        }
+      }
+    }*/
+  };
+}
+
+#endif
