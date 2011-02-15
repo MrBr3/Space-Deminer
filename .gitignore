@@ -3,7 +3,9 @@
 *.mk
 *.session
 *.tags
+*.*~
 /bin*/
 /lib*/
 /obj*/
 /doc*/
+/dev-notes/engineering/*.svg
