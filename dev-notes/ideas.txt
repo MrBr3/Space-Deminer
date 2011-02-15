@@ -17,7 +17,8 @@ Gameplay:
     Levelgruppe:
       > ein nichtschießender Gegner
       > ein schießender Gegner
-      > mehrere schießende Gegner > Geld
+      > mehrere schießende Gegner
+      > Geld
     Neue Waffen + Defensivding
       > ganz viele schießende genger
       > ein paar zielende + schießende Gegner
