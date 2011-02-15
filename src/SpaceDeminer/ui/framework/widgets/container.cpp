@@ -38,6 +38,9 @@ namespace Framework
       g_assert(child.get_parent()==this);
 
       child._parent = nullptr;
+
+      if(child.get_is_managed())
+        delete &child;
     }
   }
 

@@ -76,7 +76,7 @@ namespace Framework
 
   void Window::on_visibility_changed()
   {
-    Bin::on_visibility_changed();
+    ParentClass::on_visibility_changed();
 
     if(get_window_manager())
     {
@@ -101,12 +101,12 @@ namespace Framework
       h+=get_child()->get_size_request_height();
     }
   }
-  
+
   void Window::on_size_request_changed()
   {
     set_size(MAX(get_width(), get_size_request_width()),
              MAX(get_height(), get_size_request_height()));
-             
+
     ParentClass::on_size_request_changed();
   }
 
@@ -125,23 +125,23 @@ namespace Framework
   {
     w = MAX(w, 64);
     h = MAX(h, 1);
-    
+
     if(get_allocation().get_width()==w && get_allocation().get_height()==h)
       return;
-      
+
 #ifdef NDEBUG
     static gsize stack_depth_counter=0;
     stack_depth_counter++;
     g_assert(stack_depth_counter<1024);
 #endif
-      
+
     get_allocation().set_width(MAX(get_size_request_width(), w));
     get_allocation().set_height(MAX(get_size_request_height(), h));
-    
+
     on_size_manually_changed();
 
     on_size_allocate();
-      
+
 #ifdef NDEBUG
     stack_depth_counter--;
 #endif
@@ -151,10 +151,10 @@ namespace Framework
   {
     if(get_allocation().get_x()==x && get_allocation().get_y()==y)
       return;
-    
+
     get_allocation().set_x(x);
     get_allocation().set_y(y);
-    
+
     on_pos_manually_changed();
   }
 
@@ -180,7 +180,7 @@ namespace Framework
   FullscreenWindow::~FullscreenWindow()throw()
   {
   }
-  
+
   void FullscreenWindow::on_pos_manually_changed()
   {
     set_pos(0, 0);
@@ -206,16 +206,16 @@ namespace Framework
   CenteredWindow::~CenteredWindow()throw()
   {
   }
-  
+
   void CenteredWindow::center()
   {
     if(!get_window_manager())
       return;
-      
+
     set_pos((get_window_manager()->get_width() - get_width())>>1,
             (get_window_manager()->get_height()- get_height())>>1);
   }
-  
+
   void CenteredWindow::on_pos_manually_changed()
   {
     center();

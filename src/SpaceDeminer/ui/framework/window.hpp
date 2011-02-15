@@ -69,7 +69,7 @@ namespace Framework
   {
   public:
     void on_register_window(int layer);
-    
+
     void on_pos_manually_changed();
     void on_size_manually_changed();
 
@@ -81,7 +81,7 @@ namespace Framework
   public:
     void on_register_window(int layer);
     void center();
-    
+
     void on_pos_manually_changed();
     void on_size_manually_changed();
 

@@ -68,7 +68,16 @@ namespace Framework
     Glib::ustring::value_type get_memnotic()const throw(){return _memnotic;}
 
 
-    virtual void on_visibility_changed(){}
+    virtual void on_visibility_changed()
+    {
+      if(is_visible())
+        on_show();
+      else
+        on_hide();
+    }
+
+    virtual void on_show(){}
+    virtual void on_hide(){}
 
   private:
     Glib::ustring _tooltip_text, _name;
@@ -185,7 +194,7 @@ namespace Framework
     const Allocation& get_allocation()const throw(){g_assert(this);return _allocation;}
 
     bool is_custom_size_request()const throw(){return _custom_size_request_width&&_custom_size_request_height;}
-    
+
     sigc::signal<void>& signal_size_request_changed(){return _signal_size_request_changed;}
 
   private:
@@ -193,7 +202,7 @@ namespace Framework
     bool _custom_size_request_width, _custom_size_request_height;
 
     Allocation _allocation;
-    
+
     sigc::signal<void> _signal_size_request_changed;
 
   //----Events----
