@@ -21,4 +21,11 @@
 
 namespace InGame
 {
+  Object2D::Object2D()
+  {
+  }
+
+  Object2D::~Object2D()throw()
+  {
+  }
 }

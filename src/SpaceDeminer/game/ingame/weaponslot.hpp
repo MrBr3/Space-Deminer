@@ -27,9 +27,9 @@ namespace InGame
   class WeaponSlot : public Slot
   {
   public:
-
     void on_hit(Shoot& shoot){}
 
+  protected:
     WeaponSlot();
     ~WeaponSlot()throw();
   };

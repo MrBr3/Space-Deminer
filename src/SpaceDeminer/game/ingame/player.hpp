@@ -24,7 +24,7 @@
 
 namespace InGame
 {
-  class Player
+  class Player : public Ship
   {
   public:
     Player();

@@ -40,4 +40,7 @@
 #include "./decoration2d.hpp"
 #include "./shoot.hpp"
 
+#include "./object3d.hpp"
+#include "./particleeffect.hpp"
+
 #endif

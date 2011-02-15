@@ -21,4 +21,13 @@
 
 namespace InGame
 {
+  Shoot::Shoot()
+  {
+    strength  = 1.f;
+    shield_level_done  = G_MAXUINT;
+  }
+
+  Shoot::~Shoot()throw()
+  {
+  }
 }

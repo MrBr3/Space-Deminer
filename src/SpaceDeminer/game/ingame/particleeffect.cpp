@@ -21,11 +21,11 @@
 
 namespace InGame
 {
-  Mine::Mine()
+  ParticleEffect::ParticleEffect()
   {
   }
 
-  Mine::~Mine()throw()
+  ParticleEffect::~ParticleEffect()throw()
   {
   }
 }

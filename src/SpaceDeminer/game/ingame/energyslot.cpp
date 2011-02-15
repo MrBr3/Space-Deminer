@@ -21,4 +21,11 @@
 
 namespace InGame
 {
+  EnergySlot::EnergySlot()
+  {
+  }
+
+  EnergySlot::~EnergySlot()throw()
+  {
+  }
 }

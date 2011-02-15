@@ -29,7 +29,9 @@ namespace InGame
   {
   public:
     std::list<Glib::RefPtr<Slot> > slots;
+    bool players_fraction; ///> If true, this shiop is on the players fraction
 
+  protected:
     Ship();
     ~Ship()throw();
   };

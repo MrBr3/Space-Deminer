@@ -21,11 +21,11 @@
 
 namespace InGame
 {
-  Mine::Mine()
+  Object3D::Object3D()
   {
   }
 
-  Mine::~Mine()throw()
+  Object3D::~Object3D()throw()
   {
   }
 }

@@ -21,4 +21,14 @@
 
 namespace InGame
 {
+  Decoration2D::Decoration2D()
+  {
+    render_order = 0;
+    visible = true;
+    never_show_again  = false;
+  }
+
+  Decoration2D::~Decoration2D()throw()
+  {
+  }
 }

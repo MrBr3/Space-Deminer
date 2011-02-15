@@ -17,15 +17,19 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef _SPACE_DEMINER_INGAME_PARTICLEEFFECT_H_
+#define _SPACE_DEMINER_INGAME_PARTICLEEFFECT_H_
+
 #include "./ingame.hpp"
 
 namespace InGame
 {
-  Mine::Mine()
+  class ParticleEffect : public Object3D
   {
-  }
-
-  Mine::~Mine()throw()
-  {
-  }
+  protected:
+    ParticleEffect();
+    ~ParticleEffect()throw();
+  };
 }
+
+#endif

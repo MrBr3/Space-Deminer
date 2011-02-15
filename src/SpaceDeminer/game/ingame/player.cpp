@@ -21,4 +21,12 @@
 
 namespace InGame
 {
+  Player::Player()
+  {
+    players_fraction  = true;
+  }
+
+  Player::~Player()throw()
+  {
+  }
 }

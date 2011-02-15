@@ -122,6 +122,10 @@
         <File Name="game/ingame/ingame.hpp"/>
         <File Name="game/ingame/decoration2d.cpp"/>
         <File Name="game/ingame/decoration2d.hpp"/>
+        <File Name="game/ingame/object3d.cpp"/>
+        <File Name="game/ingame/object3d.hpp"/>
+        <File Name="game/ingame/particleeffect.cpp"/>
+        <File Name="game/ingame/particleeffect.hpp"/>
       </VirtualDirectory>
     </VirtualDirectory>
     <File Name="options.hpp"/>

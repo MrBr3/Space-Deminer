@@ -21,4 +21,11 @@
 
 namespace InGame
 {
+  Thinkable::Thinkable()
+  {
+  }
+
+  Thinkable::~Thinkable()throw()
+  {
+  }
 }

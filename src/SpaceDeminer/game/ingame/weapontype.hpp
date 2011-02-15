@@ -24,12 +24,13 @@
 
 namespace InGame
 {
-  class Shot;
+  class Shoot;
   class WeaponType : public Thinkable
   {
   public:
-    std::list<Glib::RefPtr<Shot> > shots;
+    std::list<Glib::RefPtr<Shoot> > shoots;
 
+  protected:
     WeaponType();
     ~WeaponType()throw();
   };

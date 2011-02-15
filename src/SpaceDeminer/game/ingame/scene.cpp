@@ -21,4 +21,11 @@
 
 namespace InGame
 {
+  Scene::Scene()
+  {
+  }
+
+  Scene::~Scene()throw()
+  {
+  }
 }

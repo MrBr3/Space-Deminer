@@ -24,11 +24,11 @@
 
 namespace InGame
 {
-  class Decoration;
+  class Decoration2D;
   class Object2D : public Thinkable
   {
   public:
-    std::list<Glib::RefPtr<Decoration> > decorations;
+    std::list<Glib::RefPtr<Decoration2D> > decorations;
 
     /*void render() Pseudocode
     {
@@ -48,6 +48,10 @@ namespace InGame
         }
       }
     }*/
+
+  protected:
+    Object2D();
+    ~Object2D()throw();
   };
 }
 

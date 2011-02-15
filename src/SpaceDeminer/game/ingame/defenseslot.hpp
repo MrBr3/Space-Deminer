@@ -32,6 +32,7 @@ namespace InGame
     */
     gint shield_level;
 
+  protected:
     DefenseSlot();
     ~DefenseSlot()throw();
   };

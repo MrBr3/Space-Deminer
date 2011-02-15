@@ -26,8 +26,7 @@ namespace InGame
 {
   class Mine: public Ship
   {
-  public:
-
+  protected:
     Mine();
     ~Mine()throw();
   };

@@ -17,15 +17,23 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef _SPACE_DEMINER_INGAME_OBJECT3D_H_
+#define _SPACE_DEMINER_INGAME_OBJECT3D_H_
+
 #include "./ingame.hpp"
 
 namespace InGame
 {
-  Mine::Mine()
+  class Object3D : public Thinkable
   {
-  }
+  public:
+    Matrix44 trans;
+    Matrix44 rotation_speed;
 
-  Mine::~Mine()throw()
-  {
-  }
+  protected:
+    Object3D();
+    ~Object3D()throw();
+  };
 }
+
+#endif

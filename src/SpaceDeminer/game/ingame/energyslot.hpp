@@ -27,9 +27,9 @@ namespace InGame
   class EnergySlot : public Slot
   {
   public:
-
     void on_hit(Shoot& shoot){}
 
+  protected:
     EnergySlot();
     ~EnergySlot()throw();
   };

@@ -21,4 +21,11 @@
 
 namespace InGame
 {
+  WeaponType::WeaponType()
+  {
+  }
+
+  WeaponType::~WeaponType()throw()
+  {
+  }
 }

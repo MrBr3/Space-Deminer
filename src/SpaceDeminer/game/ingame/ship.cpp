@@ -21,4 +21,12 @@
 
 namespace InGame
 {
+  Ship::Ship()
+  {
+    players_fraction = false;
+  }
+
+  Ship::~Ship()throw()
+  {
+  }
 }

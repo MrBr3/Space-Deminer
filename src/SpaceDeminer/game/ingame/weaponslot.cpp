@@ -21,4 +21,11 @@
 
 namespace InGame
 {
+  WeaponSlot::WeaponSlot()
+  {
+  }
+
+  WeaponSlot::~WeaponSlot()throw()
+  {
+  }
 }
