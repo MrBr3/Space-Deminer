@@ -56,6 +56,8 @@ namespace Framework
       dlg_vbox.remove(separator);
       dlg_vbox.pack_end(actionarea, false, false, theme->get_spacing(Theme::SPACING_NORMAL));
       dlg_vbox.pack_end(separator, false, false);
+      dlg_vbox.set_border_width(theme->get_spacing(Theme::SPACING_LARGE));
+      actionarea.set_spacing(theme->get_spacing(Theme::SPACING_NORMAL));
     }
   }
 

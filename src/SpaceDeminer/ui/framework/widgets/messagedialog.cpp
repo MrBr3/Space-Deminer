@@ -29,6 +29,7 @@ namespace Framework
     _hbox.pack_start(_img, false, false);
     _hbox.pack_start(_text);
     _text.set_alignment(0.f, 0.f);
+    _text.show();
   }
 
   MessageDialog::MessageDialog()
@@ -39,6 +40,7 @@ namespace Framework
     _hbox.pack_start(_img, false, false);
     _hbox.pack_start(_text);
     _text.set_alignment(0.f, 0.f);
+    _text.show();
   }
 
   MessageDialog::MessageDialog(const Framework::ResPtr<Framework::Image>& image, const Glib::ustring& text, bool use_memnotics) : _img(image), _text(text, use_memnotics)
@@ -51,6 +53,7 @@ namespace Framework
     _hbox.pack_start(_img, false, false);
     _hbox.pack_start(_text);
     _text.set_alignment(0.f, 0.f);
+    _text.show();
   }
 
   MessageDialog::~MessageDialog()throw()

@@ -7,9 +7,8 @@ Space-Deminer:
   [X] Maustaste runter
   [X] Mausbewegung mit Maustaste runter
   [X] Maustaste hoch
-[ ] Dialog
-  [ ] modal
-  [ ] MessageBox
+[X] Dialog
+  [X] MessageBox
 [ ] per Tasten navigieren können
   [ ] Fokus
     [ ] Maske anpassen
