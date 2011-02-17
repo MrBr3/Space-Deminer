@@ -87,7 +87,7 @@ namespace Framework
     int iw = image->get_width(), ih = image->get_height();
 
     ee.draw_image(image, x+frame_w, y+frame_n, w-frame_w-frame_e, h-frame_n-frame_s , frame_w, frame_n, iw-frame_w-frame_e, ih-frame_n-frame_s); // center
-    ee.draw_image(image, x+frame_w, y, w-frame_w-frame_e, frame_n                   , frame_w, 0, iw-frame_w-frame_s, frame_n); // N
+    ee.draw_image(image, x+frame_w, y, w-frame_w-frame_e, frame_n                   , frame_w, 0, iw-frame_w-frame_e, frame_n); // N
     ee.draw_image(image, x+frame_w, y+h-frame_s, w-frame_w-frame_e, frame_s         , frame_w, ih-frame_s, iw-frame_w-frame_s, frame_s); //S
     ee.draw_image(image, x, y, frame_w, frame_n                                     , 0, 0, frame_w, frame_n); // NW
     ee.draw_image(image, x+w-frame_e, y, frame_e, frame_n                           , iw-frame_e, 0, frame_e, frame_n); // NE
