@@ -27,6 +27,8 @@ namespace Framework
   class ButtonBox : public Box
   {
   public:
+    typedef Box ParentClass;
+
     void set_layout(ButtonBoxStyle layout);
     ButtonBoxStyle get_layout()const throw(){return _layout;}
 
@@ -39,11 +41,13 @@ namespace Framework
 
     void v_rearrange_children();
 
+    void set_theme(const Glib::RefPtr<Theme>& theme);
+
   private:
     ButtonBoxStyle _layout;
 
-    int _max_child_width;
-    int _max_child_height;
+    int _max_child_width, _max_child_height;
+    int _min_max_child_width, _min_max_child_height;
     int _n_visible_children;
   };
 

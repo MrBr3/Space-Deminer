@@ -171,6 +171,23 @@ void DarkTheme::get_metrics(const Glib::ustring& what, Metrics& metrics)const
       metrics.y1 = 0;
       metrics.y2 = 2;
     }
+  }else if(is_ment(what, "min-size"))
+  {
+    if(is_ment(what, "min-size/Dialog/MessageDialog"))
+    {
+      metrics.x1 = 0;
+      metrics.x2 = 256;
+      metrics.y1 = 0;
+      metrics.y2 = 128;
+    }else if(is_ment(what, "min-size/ButtonBox/Button/just-for-test"))
+    {
+    }else if(is_ment(what, "min-size/ButtonBox/Button"))
+    {
+      metrics.x1 = 0;
+      metrics.x2 = 75;
+      metrics.y1 = 0;
+      metrics.y2 = 25;
+    }
   }
 }
 

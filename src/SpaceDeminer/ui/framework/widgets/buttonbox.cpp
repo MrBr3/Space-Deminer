@@ -24,6 +24,9 @@ namespace Framework
   ButtonBox::ButtonBox(bool h) : Box(h, true)
   {
     set_name("buttonbox");
+
+    _min_max_child_width  = 0;
+    _min_max_child_height  = 0;
   }
 
   ButtonBox::~ButtonBox()throw()
@@ -34,6 +37,27 @@ namespace Framework
   {
     _layout = layout;
     invalidate();
+  }
+
+  void ButtonBox::set_theme(const Glib::RefPtr<Theme>& theme)
+  {
+    ParentClass::set_theme(theme);
+
+    if(theme)
+    {
+      Theme::Metrics m;
+
+      theme->get_metrics("min-size/ButtonBox/Button/"+get_name(), m);
+      _min_max_child_width = abs(m.x1-m.x2);
+      _min_max_child_height = abs(m.y1-m.y2);
+
+    }else
+    {
+      _min_max_child_width = 0;
+      _min_max_child_height = 0;
+    }
+
+    recalc_size_request();
   }
 
   void ButtonBox::on_size_request(int& w_, int& h_)
@@ -53,7 +77,11 @@ namespace Framework
 
     _n_visible_children=0;
 
-    _max_child_width=_max_child_height=0;
+    _max_child_width  = _min_max_child_width;
+    _max_child_height = _min_max_child_height;
+
+    if(get_is_horizontal())
+      exchange(_max_child_width, _max_child_height);
 
     for(BoxChildContainerList::iterator iter = _start_children.begin(); iter!=_end_children.end();)
     {
@@ -123,12 +151,12 @@ namespace Framework
 
     if(get_is_horizontal())
     {
-      max_child_w = MAX(16, _max_child_height);
-      max_child_h = MAX(16, _max_child_width);
+      max_child_w = MAX(_max_child_height, _max_child_height);
+      max_child_h = MAX(_max_child_width, _max_child_width);
     }else
     {
-      max_child_w = MAX(16, _max_child_width);
-      max_child_h = MAX(16, _max_child_height);
+      max_child_w = MAX(_max_child_width, _max_child_width);
+      max_child_h = MAX(_max_child_height, _max_child_height);
     }
 
     Real cursor  = get_border_width();

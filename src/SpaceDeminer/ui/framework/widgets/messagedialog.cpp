@@ -25,6 +25,8 @@ namespace Framework
   {
     dlg_vbox.pack_start(_hbox);
 
+    set_name("messagedialog");
+
     _hbox.show();
     _hbox.pack_start(_img, false, false);
     _hbox.pack_start(_text);
@@ -80,7 +82,13 @@ namespace Framework
     ParentClass::set_theme(theme);
 
     if(theme)
+    {
+      Theme::Metrics m;
       _hbox.set_spacing(theme->get_spacing(Theme::SPACING_NORMAL));
+
+      theme->get_metrics("min-size/Dialog/MessageDialog/"+get_name(), m);
+      dlg_vbox.set_min_size_request(abs(m.x1-m.x2), abs(m.y1-m.y2));
+    }
   }
 
   void MessageDialog::setup_ok(const Framework::ResPtr<Framework::Image>& image, const Glib::ustring& text, bool use_memnotics)
