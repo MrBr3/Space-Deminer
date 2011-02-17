@@ -40,6 +40,8 @@ namespace Framework
 
     _size_request_width = 0;
     _size_request_height = 0;
+    _min_size_request_width = 0;
+    _min_size_request_height = 0;
     _custom_size_request_width  = false;
     _custom_size_request_height = false;
 
@@ -176,6 +178,13 @@ namespace Framework
     return w ? w : this;
   }
 
+  void Widget::set_min_size_request(int w, int h)
+  {
+    _min_size_request_width = MAX(0, w);
+    _min_size_request_height = MAX(0, h);
+    recalc_size_request();
+  }
+
   void Widget::recalc_size_request()
   {
     if(is_custom_size_request())
@@ -192,8 +201,8 @@ namespace Framework
     if(!_custom_size_request_height && _size_request_height!=h)
       _size_request_height  = h;
 
-    _size_request_width  = MAX(0, _size_request_width);
-    _size_request_height = MAX(0, _size_request_height);
+    _size_request_width  = MAX(_min_size_request_width, _size_request_width);
+    _size_request_height = MAX(_min_size_request_height, _size_request_height);
 
     if((old_sr_w!=_size_request_width || old_sr_h!=_custom_size_request_height))
     {

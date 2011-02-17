@@ -197,8 +197,15 @@ namespace Framework
 
     sigc::signal<void>& signal_size_request_changed(){return _signal_size_request_changed;}
 
+    int get_min_size_request_width()const{return _min_size_request_width;}
+    int get_min_size_request_height()const{return _min_size_request_height;}
+    void set_min_size_request_width(int w){set_min_size_request(w, _min_size_request_height);}
+    void set_min_size_request_height(int h){set_min_size_request( _min_size_request_height, h);}
+    void set_min_size_request(int w, int h);
+
   private:
     int _size_request_width, _size_request_height;
+    int _min_size_request_width, _min_size_request_height;
     bool _custom_size_request_width, _custom_size_request_height;
 
     Allocation _allocation;
