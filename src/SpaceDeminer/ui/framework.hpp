@@ -50,5 +50,7 @@
 #include "./framework/widgets/treeview.hpp"
 #include "./framework/widgets/viewport.hpp"
 #include "./framework/widgets/windowframe.hpp"
+#include "./framework/widgets/dialog.hpp"
+#include "./framework/widgets/messagedialog.hpp"
 
 #endif

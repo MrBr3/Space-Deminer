@@ -46,6 +46,8 @@ public:
   Framework::VButtonBox vbox;
   Framework::Button btn_run, btn_highscore, btn_quit;
 
+  static void quit();
+
   MainMenu();
   ~MainMenu()throw();
 };

@@ -62,6 +62,10 @@
           <File Name="ui/framework/widgets/layout.hpp"/>
           <File Name="ui/framework/widgets/windowframe.cpp"/>
           <File Name="ui/framework/widgets/windowframe.hpp"/>
+          <File Name="ui/framework/widgets/dialog.cpp"/>
+          <File Name="ui/framework/widgets/dialog.hpp"/>
+          <File Name="ui/framework/widgets/messagedialog.cpp"/>
+          <File Name="ui/framework/widgets/messagedialog.hpp"/>
         </VirtualDirectory>
         <File Name="ui/framework/window.hpp"/>
         <File Name="ui/framework/enums.hpp"/>

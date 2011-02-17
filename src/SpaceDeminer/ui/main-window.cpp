@@ -18,6 +18,7 @@
  */
 
 #include "./ui/main-window.hpp"
+#include <gtkmm/main.h>
 #include <gdk/gdkkeysyms.h>
 
 MainWindow* main_window  = nullptr;
@@ -55,6 +56,10 @@ void MainWindow::init_ui()
 
   main_menu_window.register_window(Framework::WINDOW_LAYER_MENU_BACK);
   main_menu_window.show();
+
+  sure_to_quit_dlg.setup_yes_no(_("Are you sure you wan't to quitSpace-Deminer?"));
+  sure_to_quit_dlg.register_window(Framework::WINDOW_LAYER_DIALOGS);
+  sure_to_quit_dlg.signal_certain_response(Framework::Dialog::RESPONSE_YES).connect(sigc::ptr_fun(&Gtk::Main::quit));
 }
 
 bool MainWindow::on_key_release_event(GdkEventKey* e)

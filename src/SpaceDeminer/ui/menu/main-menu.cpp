@@ -84,10 +84,17 @@ MainMenu::MainMenu()
   btn_highscore.set_label(_("Show Highscore"));
   btn_quit.set_label(_("Quit Game"));
 
+  btn_quit.signal_clicked().connect(sigc::ptr_fun(&MainMenu::quit));
+
   vbox.show();
   vbox.show_all_children();
 }
 
 MainMenu::~MainMenu()throw()
 {
+}
+
+void MainMenu::quit()
+{
+  main_window->sure_to_quit_dlg.run();
 }

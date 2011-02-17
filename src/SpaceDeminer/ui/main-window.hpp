@@ -25,14 +25,14 @@
 #include <gtkmm/window.h>
 #include <gtkglmm.h>
 
-#include "./framework/window.hpp"
-#include "./framework/engine.hpp"
+#include "./framework.hpp"
 
 class MainWindow : public StaticManager<MainWindow, Gtk::Window>
 {
 public:
   Glib::RefPtr<MenuBack> menu_back;
   MainMenu main_menu_window;
+  Framework::MessageDialog sure_to_quit_dlg;
 
   class GtkGlDrawingArea : public Gtk::GL::DrawingArea
   {
@@ -59,7 +59,7 @@ public:
   }gl_drawing_area;
 
   static const Glib::RefPtr<Framework::WindowManager>& get_window_manager(){return get_singleton()->gl_drawing_area.window_manager;}
-    
+
   void init_ui();
 
 public:
