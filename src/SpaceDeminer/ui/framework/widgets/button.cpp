@@ -32,7 +32,7 @@ namespace Framework
     can_process_mouse_move_events = true;
   }
 
-  Button::Button(Glib::ustring& label, bool use_memnotic)
+  Button::Button(const Glib::ustring& label, bool use_memnotic)
   {
     _relief_type  = RELIEF_ALWAYS;
     _state  = DRAW_PARAM_RELIEF_NORMAL;

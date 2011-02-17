@@ -33,6 +33,9 @@ namespace Framework
     ImageWidget(const Framework::ResPtr<Framework::Image>& image);
 
   public:
+
+    const Framework::ResPtr<Framework::Image>& get()const{return _image;}
+
     void set(const Framework::ResPtr<Framework::Image>& image);
     void clear();
 

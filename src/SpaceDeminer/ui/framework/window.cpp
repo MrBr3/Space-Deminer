@@ -23,6 +23,8 @@
 
 namespace Framework
 {
+  WindowManager* Window::default_window_manager = nullptr;
+
   Window::Window()
   {
     _window_manager = nullptr;
@@ -163,6 +165,13 @@ namespace Framework
     invalidate();
   }
 
+  void Window::register_window(int layer)
+  {
+    if(!default_window_manager)
+      throw std::logic_error("**Window::register_window** no default_window_manager specified.");
+    Window::default_window_manager->register_window(layer, *this);
+  }
+
   //----FullscreenWindow----
 
   void FullscreenWindow::on_register_window(int layer)
@@ -242,6 +251,9 @@ namespace Framework
 
   WindowManager::~WindowManager()throw()
   {
+    if(Window::default_window_manager == this)
+      Window::default_window_manager = nullptr;
+
     for(WindowManager::WindowMap::iterator iter=_windows.begin(); iter!=_windows.end(); )
     {
       g_assert(iter->second);
@@ -274,8 +286,13 @@ namespace Framework
 
     w._window_manager = this;
 
-    if(_windows.find(layer)!=_windows.end())
-      throw LayerAlreadyInUse();
+    while(_windows.find(layer)!=_windows.end())
+    {
+      if(layer==G_MAXINT)
+        throw std::runtime_error("**WindowManager::register_window** no free layer found!");
+
+      ++layer;
+    }
 
     _windows[layer] = &w;
 

@@ -51,9 +51,9 @@ MainWindow::~MainWindow()throw()
 void MainWindow::init_ui()
 {
   menu_back  = Glib::RefPtr<MenuBack>(new MenuBack());
-  get_window_manager()->register_window(10, *menu_back.operator->());
+  menu_back->register_window(Framework::WINDOW_LAYER_MENU_BACK);
 
-  get_window_manager()->register_window(11, main_menu_window);
+  main_menu_window.register_window(Framework::WINDOW_LAYER_MENU_BACK);
   main_menu_window.show();
 }
 

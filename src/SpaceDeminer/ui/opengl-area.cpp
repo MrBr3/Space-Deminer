@@ -22,6 +22,8 @@
 
 MainWindow::GtkGlDrawingArea::GtkGlDrawingArea() : Gtk::GL::DrawingArea(Gdk::GL::Config::create(Gdk::GL::MODE_DEPTH|Gdk::GL::MODE_RGBA|Gdk::GL::MODE_DOUBLE|Gdk::GL::MODE_ALPHA|Gdk::GL::MODE_STENCIL)), window_manager(new Framework::WindowManager)
 {
+  Framework::Window::default_window_manager = window_manager.operator->();
+
   add_events(Gdk::BUTTON_PRESS_MASK|Gdk::BUTTON_RELEASE_MASK|Gdk::POINTER_MOTION_MASK|Gdk::LEAVE_NOTIFY_MASK|Gdk::ENTER_NOTIFY_MASK);
 
   _gl_initialized = false;

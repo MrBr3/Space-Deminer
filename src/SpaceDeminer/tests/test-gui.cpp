@@ -240,7 +240,7 @@ void start_gui_test() {
     GUITest gui_test;
     gui_test.set_theme(main_window->gl_drawing_area.get_default_theme());
     gui_test.set_size(800, 600);
-    MainWindow::get_window_manager()->register_window(0xfffc, gui_test);
+    gui_test.register_window(Framework::WINDOW_LAYER_TESTS);
     gui_test.show();
 
     std::cout<<"==== initialising Tests ====\n";

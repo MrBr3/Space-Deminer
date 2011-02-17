@@ -24,14 +24,18 @@
 
 namespace Framework
 {
+  const gint WINDOW_LAYER_MENU_BACK = 0x10;
+  const gint WINDOW_LAYER_DIALOGS = 0xffff;
+  const gint WINDOW_LAYER_TESTS = 0xfffc;
+
   class WindowManager;
   class Window : public Bin
   {
   public:
     friend class WindowManager;
-    
+
     typedef Bin ParentClass;
-    
+
   protected:
     virtual void on_pos_manually_changed(){}
     virtual void on_size_manually_changed(){}
@@ -60,6 +64,24 @@ namespace Framework
     void v_rearrange_children();
 
     bool is_registered()const throw(){g_assert(this);return _window_manager;}
+
+    /** \brief Provides an easy way to use the same WindowManager for Dialogs.
+     *
+     * \see MessageDialog::ok
+     * \see MessageDialog::yes_no
+     * */
+    static WindowManager* default_window_manager;
+
+    /** \brief Registers the Window in \c default_window_manager
+     *
+     * calls internal
+     * \code
+     * Window::default_window_manager->register_window(layer,*this)
+     * \endcode
+     *
+     * So \c default_window_manager has to be set to a valid value.
+     * */
+    void register_window(int layer);
 
   private:
     WindowManager* _window_manager;

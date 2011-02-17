@@ -45,7 +45,7 @@ namespace Framework
     void set_image_widget(Framework::Widget& w){add(w);}
 
     Button();
-    Button(Glib::ustring& label, bool use_memnotic=true);
+    Button(const Glib::ustring& label, bool use_memnotic=true);
     ~Button()throw();
 
           sigc::signal<void>& signal_clicked()      throw(){return _signal_clicked;}
