@@ -716,6 +716,7 @@ void start_gui_test() {
         hbtnbox[j].pack_end(dummy[3+j*6], true, false, 1);
         hbtnbox[j].pack_end(dummy[4+j*6], false, false);
         hbtnbox[j].pack_end(dummy[5+j*6], true, true, 1);
+        hbtnbox[j].set_name("just-for-test");
       }
 
       hbtnbox[0].set_layout(Framework::BUTTONBOX_SPREAD);

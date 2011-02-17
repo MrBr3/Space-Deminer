@@ -27,6 +27,8 @@ namespace Framework
     _response = NO_RESPONSE;
     _fade_other_out = true;
 
+    set_name("dialog");
+
     add(alignment);
 
     alignment.add(windowframe);
@@ -109,10 +111,5 @@ namespace Framework
       paint_tool.draw_color_rect(0, 0, get_width(), get_height(), 0.f, 0.f, 0.f, 0.5f);
 
     ParentClass::on_expose(paint_tool);
-  }
-
-  void Dialog::set_default_size(int w, int h)
-  {
-    windowframe.set_size_request(w, h);
   }
 }

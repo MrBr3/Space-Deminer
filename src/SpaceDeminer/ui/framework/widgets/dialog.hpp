@@ -64,8 +64,6 @@ namespace Framework
 
     void run();
 
-    void set_default_size(int w, int h);
-
     sigc::signal<void, gint>& signal_response(){return _signal_response;}
     sigc::signal<void>& signal_certain_response(gint response_id){return _signal_certain_response[response_id];}
 

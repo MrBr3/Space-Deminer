@@ -102,6 +102,8 @@ namespace Framework
 
   void Container::on_size_allocate()
   {
+    ParentClass::on_size_allocate();
+
     rearrange_children();
   }
 

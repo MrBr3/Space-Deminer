@@ -31,6 +31,8 @@ namespace Framework
   class Container : public Widget
   {
   public:
+    typedef Widget ParentClass;
+
     class WidgetHasAlreadyParent : public Glib::Exception
     {
     public:
