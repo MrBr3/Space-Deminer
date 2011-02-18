@@ -17,13 +17,24 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <base.hpp>
-#include <gtkmm.h>
-#include "opengl.hpp"
+#define X_SETTING(x, xet_x, sn)\
+private:\
+x sn;\
+sigc::signal<void> _signal_##sn##_changed;\
+\
+public:\
+xet_x get_##sn()const{return sn;}\
+void set_##sn(xet_x new_value);\
+sigc::signal<void>& signal_##sn##_changed(){return _signal_##sn##_changed;}
 
-#include "./Gradient.hpp"
-#include "./ModelSettings.hpp"
-#include "./Options.hpp"
-#include "./Planet.hpp"
-#include "./ImageFile.hpp"
-#include "./Layer.hpp"
+#define REAL_SETTING(sn) X_SETTING(gfloat, gfloat, sn)
+#define INTEGER_SETTING(sn) X_SETTING(int, int, sn)
+#define BOOLEAN_SETTING(sn) X_SETTING(bool, bool, sn)
+#define STRING_SETTING(sn) X_SETTING(Glib::ustring, const Glib::ustring&, sn)
+#define COLOR_SETTING(sn) X_SETTING(Gdk::Color, const Gdk::Color&, sn)
+#define GRADIENT_SETTING(sn) X_SETTING(Gradient, const Gradient&, sn)
+
+#define X_GETTER_SETTER_SIGNAL(c, sn)\
+sigc::mem_fun(*this, &c::get_##sn), sigc::mem_fun(*this, &c::set_##sn), signal_##sn##_changed()
+
+class SettingsWidget;

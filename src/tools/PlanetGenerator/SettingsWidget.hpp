@@ -151,21 +151,3 @@ public:
     return updater->update_slot();
   }
 };
-
-#define X_SETTING(get_x, set_x, sn)\
-private:\
-get_x sn;\
-sigc::signal<void> _signal_##sn##_changed;\
-\
-public:\
-get_x get_##sn()const{return sn;}\
-void set_##sn(set_x new_value);\
-sigc::signal<void>& signal_##sn##_changed(){return _signal_##sn##_changed;}
-
-#define REAL_SETTING(sn) X_SETTING(gfloat, gfloat, sn)
-#define INTEGER_SETTING(sn) X_SETTING(int, int, sn)
-#define BOOLEAN_SETTING(sn) X_SETTING(bool, bool, sn)
-#define STRING_SETTING(sn) X_SETTING(Glib::ustring, const Glib::ustring&, sn)
-
-#define X_GETTER_SETTER_SIGNAL(c, sn)\
-sigc::mem_fun(*this, &c::get_##sn), sigc::mem_fun(*this, &c::set_##sn), signal_##sn##_changed()

@@ -146,6 +146,8 @@ Gtk::Widget& SettingsWidget::append_color_widget(Gtk::Table& table, guint& n_ent
   color_button->set_use_alpha(false);
   color_button->signal_color_set().connect(create_updater(w_getter, setter));
   signal_changed.connect(create_updater(getter, w_setter));
+  color_button->signal_hide().connect(sigc::mem_fun(*wlabel, &Gtk::Widget::hide));
+  color_button->signal_show().connect(sigc::mem_fun(*wlabel, &Gtk::Widget::show));
 
   table.attach(*wlabel, 0, 1, n_entries, n_entries+1, Gtk::FILL, Gtk::FILL);
   table.attach(*color_button, 1, 2, n_entries, n_entries+1, Gtk::EXPAND|Gtk::FILL, Gtk::FILL);
@@ -207,6 +209,8 @@ Gtk::Widget& SettingsWidget::append_int_widget(Gtk::Table& table, guint& n_entri
   spin_button->set_increments(1, 5);
   spin_button->signal_value_changed().connect(create_updater(w_getter, setter));
   signal_changed.connect(create_updater(getter, w_setter));
+  spin_button->signal_hide().connect(sigc::mem_fun(*wlabel, &Gtk::Widget::hide));
+  spin_button->signal_show().connect(sigc::mem_fun(*wlabel, &Gtk::Widget::show));
 
   table.attach(*wlabel, 0, 1, n_entries, n_entries+1, Gtk::FILL, Gtk::FILL);
   table.attach(*spin_button, 1, 2, n_entries, n_entries+1, Gtk::EXPAND|Gtk::FILL, Gtk::FILL);
@@ -242,6 +246,8 @@ Gtk::Widget& SettingsWidget::append_real_widget(Gtk::Table& table, guint& n_entr
   spin_button->set_digits(n_digits);
   spin_button->signal_value_changed().connect(create_updater(w_getter, setter));
   signal_changed.connect(create_updater(getter, w_setter));
+  spin_button->signal_hide().connect(sigc::mem_fun(*wlabel, &Gtk::Widget::hide));
+  spin_button->signal_show().connect(sigc::mem_fun(*wlabel, &Gtk::Widget::show));
 
   table.attach(*wlabel, 0, 1, n_entries, n_entries+1, Gtk::FILL, Gtk::FILL);
   table.attach(*spin_button, 1, 2, n_entries, n_entries+1, Gtk::EXPAND|Gtk::FILL, Gtk::FILL);
@@ -338,6 +344,8 @@ Gtk::Widget& SettingsWidget::append_enum_widget(Gtk::Table& table, guint& n_entr
   cb_text->set_tooltip_text(tooltip);
   cb_text->signal_changed().connect(create_updater(w_getter, setter));
   signal_changed.connect(create_updater(getter, w_setter));
+  cb_text->signal_hide().connect(sigc::mem_fun(*wlabel, &Gtk::Widget::hide));
+  cb_text->signal_show().connect(sigc::mem_fun(*wlabel, &Gtk::Widget::show));
 
   table.attach(*wlabel, 0, 1, n_entries, n_entries+1, Gtk::FILL, Gtk::FILL);
   table.attach(*cb_text, 1, 2, n_entries, n_entries+1, Gtk::EXPAND|Gtk::FILL, Gtk::FILL);
@@ -410,6 +418,8 @@ Gtk::Widget& SettingsWidget::append_string_widget(Gtk::Table& table, guint& n_en
   entry->set_tooltip_text(tooltip);
   entry->signal_changed().connect(create_updater(w_getter, setter));
   signal_changed.connect(create_updater(getter, w_setter));
+  entry->signal_hide().connect(sigc::mem_fun(*wlabel, &Gtk::Widget::hide));
+  entry->signal_show().connect(sigc::mem_fun(*wlabel, &Gtk::Widget::show));
 
   table.attach(*wlabel, 0, 1, n_entries, n_entries+1, Gtk::FILL, Gtk::FILL);
   table.attach(*entry, 1, 2, n_entries, n_entries+1, Gtk::EXPAND|Gtk::FILL, Gtk::FILL);
