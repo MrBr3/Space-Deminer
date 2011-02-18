@@ -50,6 +50,8 @@
       <File Name="Process.hpp"/>
       <File Name="RingLayer.hpp"/>
       <File Name="RingLayer.cpp"/>
+      <File Name="LightLayer.cpp"/>
+      <File Name="LightLayer.hpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Both">
       <File Name="Options.cpp"/>
