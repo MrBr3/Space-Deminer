@@ -40,6 +40,11 @@ LayerModel::LayerModel()
   register_weight_texture_layer();
   register_cloud_texture_layer();
   register_ring_layer();
+  //register_atmosphere_layer();//TODO
+  register_light_layer(0);
+  register_light_layer(1);
+  register_light_layer(2);
+  register_light_layer(3);
 }
 
 LayerModel::~LayerModel()throw()

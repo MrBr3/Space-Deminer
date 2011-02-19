@@ -17,6 +17,17 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "./Model.hpp"
+class GradientButton : public Gtk::Button
+{
+  Gradient _gradient;
+  sigc::signal<void> _signal_changed;
 
-Gradient black2white;
+public:
+  void set_gradient(const Gradient& g);
+  const Gradient& get_gradient()const{return _gradient;}
+
+  sigc::signal<void>& signal_changed(){return _signal_changed;}
+
+  GradientButton();
+  ~GradientButton()throw();
+};

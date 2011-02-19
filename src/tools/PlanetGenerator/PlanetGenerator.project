@@ -30,6 +30,8 @@
       <File Name="WarningListDialog.cpp"/>
       <File Name="RingMesh.hpp"/>
       <File Name="RingMesh.cpp"/>
+      <File Name="GradientButton.cpp"/>
+      <File Name="GradientButton.hpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Model">
       <File Name="Model.hpp"/>
@@ -52,6 +54,9 @@
       <File Name="RingLayer.cpp"/>
       <File Name="LightLayer.cpp"/>
       <File Name="LightLayer.hpp"/>
+      <File Name="ModelSettings.hpp"/>
+      <File Name="Gradient.cpp"/>
+      <File Name="Gradient.hpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Both">
       <File Name="Options.cpp"/>

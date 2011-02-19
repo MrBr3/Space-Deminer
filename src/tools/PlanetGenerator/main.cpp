@@ -36,7 +36,7 @@ guint get_n_cores()
 int main(int argc, char **argv)
 {
   srand(time(0));
-  
+
   Gtk::Main kit(argc, argv);
 
   init_opengl_stuff(argc, argv);

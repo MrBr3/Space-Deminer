@@ -35,6 +35,7 @@ using TriangleVersion::SphereMesh;
 #include "ViewSettings.hpp"
 #include "LayerView.hpp"
 #include "UVMeshExporter.hpp"
+#include "GradientButton.hpp"
 
 const gint LENGTH_BORDER_WIDTH = 4;
 const gint LENGTH_SMALLSPACE = 3;

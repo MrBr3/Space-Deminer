@@ -133,6 +133,49 @@ T_layer* SingletonLayer<T_layer>::_singleton = nullptr;
 //====
 
 /**
+ * \note T_layer must be a child class of MultiLayer<T_layer>
+ * */
+template<class T_layer>
+class MultiLayer : public Layer
+{
+public:
+  typedef Layer ParentClass;
+
+private:
+  typedef typename std::vector<T_layer*>::iterator VecIter;
+
+  static std::vector<T_layer*> _singletons;
+
+public:
+  static T_layer* get_singleton(gsize i){return _singletons[i];}
+  static T_layer* get_singletonA(gsize i){g_assert(i<_singletons.size());return _singletons[i];}
+
+  MultiLayer(const Glib::ustring& name, bool visible) : ParentClass(name, visible)
+  {
+    _singletons.push_back((T_layer*)this);
+  }
+
+  ~MultiLayer()throw()
+  {
+    for(VecIter iter=_singletons.begin(); iter!=_singletons.end(); ++iter)
+    {
+      if(*iter == this)
+      {
+        iter = _singletons.erase(iter);
+        return;
+      }
+
+      g_assert_not_reached();
+    }
+  }
+};
+
+template<class T_layer>
+std::vector<T_layer*> MultiLayer<T_layer>::_singletons;
+
+//====
+
+/**
  * \note T_layer must be a child class of ImageLayer<T_layer>
  * */
 template<class T_layer>
@@ -174,3 +217,4 @@ void register_base_texture_layer();
 #include "WeightTextureLayer.hpp"
 
 #include "RingLayer.hpp"
+#include "LightLayer.hpp"

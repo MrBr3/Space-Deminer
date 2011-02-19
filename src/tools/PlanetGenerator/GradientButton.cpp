@@ -17,6 +17,19 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "./Model.hpp"
+#include "./MainWindow.hpp"
 
-Gradient black2white;
+GradientButton::GradientButton()
+{
+}
+
+GradientButton::~GradientButton()throw()
+{
+}
+
+void GradientButton::set_gradient(const Gradient& g)
+{
+  _gradient = g;
+
+  signal_changed().emit();
+}

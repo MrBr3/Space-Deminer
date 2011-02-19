@@ -39,12 +39,12 @@ public:
   void rotate_z(gfloat a)
   {
     z_rotation += a;
-    _signal_rotation_changed.emit();
+    _signal_x_rotation_changed.emit();
   }
   void rotate_x(gfloat a)
   {
     x_rotation += a;
-    _signal_rotation_changed.emit();
+    _signal_z_rotation_changed.emit();
   }
   void set_z_rotation(gfloat a){z_rotation = a;_signal_z_rotation_changed.emit();}
   void set_x_rotation(gfloat a){x_rotation = a;_signal_x_rotation_changed.emit();}

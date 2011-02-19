@@ -17,6 +17,18 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-class Gradient : public sigc::trackable
+ #ifndef TOOLS_MODEL_GRADIENT_HPP_
+ #define TOOLS_MODEL_GRADIENT_HPP_
+
+class Gradient : public Refable
 {
+public:
+  bool operator==(const Gradient& g)const{return true;/*TODO implement*/}
+  bool operator!=(const Gradient& g)const
+  {
+    return !(*this==g);
+  }
 };
+
+extern Gradient black2white;
+#endif

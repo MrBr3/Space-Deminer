@@ -20,11 +20,9 @@
 #include "Model.hpp"
 #include "SettingsWidget.hpp"
 
-RingLayer::RingLayer() : ParentClass(_("Ring"), true)
+RingLayer::RingLayer() : ParentClass(_("Ring"), false)
 {
   SettingsWidget* settings  = new SettingsWidget;
-
-  set_visible(false);
 
   prepare_settings("ring-texture", settings);
 

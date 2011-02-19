@@ -126,9 +126,19 @@ Gdk::Color Options::get_color(const Glib::ustring& name, const Gdk::Color& def_v
 void Options::set_color(const Glib::ustring& name, const Gdk::Color& value)
 {
   set_string(name, Glib::ustring::compose("%1%2%3",
-                                          Glib::ustring::format(SET_FILL_0, std::setw(2), CLAMP(round(value.get_red_p()*255.), 0, 255)),
-                                          Glib::ustring::format(SET_FILL_0, std::setw(2), CLAMP(round(value.get_green_p()*255.), 0, 255)),
-                                          Glib::ustring::format(SET_FILL_0, std::setw(2), CLAMP(round(value.get_blue_p()*255.), 0, 255))));
+                                          Glib::ustring::format(std::setw(2), SET_FILL_0, std::hex, CLAMP(int(round(value.get_red_p()*255.)), 0, 255)),
+                                          Glib::ustring::format(SET_FILL_0, std::hex, std::setw(2), CLAMP(int(round(value.get_green_p()*255.)), 0, 255)),
+                                          Glib::ustring::format(std::hex, SET_FILL_0, std::setw(2), CLAMP(int(round(value.get_blue_p()*255.)), 0, 255))));
+}
+
+Gradient Options::get_gradient(const Glib::ustring& name, const Gradient& def_value)
+{//TODO
+  return black2white;
+}
+
+void Options::set_gradient(const Glib::ustring& name, const Gradient& value)
+{
+  //TODO
 }
 
 Glib::RefPtr<Gio::File> Options::get_file()
