@@ -37,6 +37,8 @@ using TriangleVersion::SphereMesh;
 #include "UVMeshExporter.hpp"
 #include "GradientButton.hpp"
 
+void invalidate(Gtk::Widget* w);
+
 const gint LENGTH_BORDER_WIDTH = 4;
 const gint LENGTH_SMALLSPACE = 3;
 

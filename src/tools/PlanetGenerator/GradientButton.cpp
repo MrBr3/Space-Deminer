@@ -19,17 +19,64 @@
 
 #include "./MainWindow.hpp"
 
+GradientPreview::GradientPreview()
+{
+  _gradient = Gradient::create_black2white();
+}
+
+GradientPreview::~GradientPreview()throw()
+{
+}
+
+void GradientPreview::set_gradient(const GradientPtr& g)
+{
+  _gradient = g;
+  _gradient->require_puffer(256);
+  invalidate(this);
+}
+
+bool GradientPreview::on_expose_event(GdkEventExpose* ee)
+{
+  return true;
+}
+
+void GradientPreview::on_size_request(Gtk::Requisition* r)
+{
+  if(r)
+  {
+    r->width = 35;
+    r->height = 15;
+  }
+}
+
+// ------------
+
+
+// ------------
+
 GradientButton::GradientButton()
 {
+  _gradient = Gradient::create_black2white();
+
+  preview_.show();
+  preview_.set_gradient(_gradient);
+  frame_.add(preview_);
+
+  frame_.show();
+  frame_.unset_label();
+  frame_.set_shadow_type(Gtk::SHADOW_ETCHED_OUT);
+
+  add(frame_);
 }
 
 GradientButton::~GradientButton()throw()
 {
 }
 
-void GradientButton::set_gradient(const Gradient& g)
+void GradientButton::set_gradient(const GradientPtr& g)
 {
   _gradient = g;
 
+  preview_.set_gradient(_gradient);
   signal_changed().emit();
 }

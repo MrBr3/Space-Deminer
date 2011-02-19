@@ -46,6 +46,11 @@ LightLayer::LightLayer(guint id) : MultiLayer<LightLayer>(Glib::ustring::compose
   signal_##c_name##_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));\
   last_set_proprty_widget = &settings.append_##t##_widget(TABLE, n, prefix+"-"#c_name, _(name), _(description), X_GETTER_SETTER_SIGNAL(SETTINGS, c_name));
 
+#define INIT_GRADIENT_PROPERTY(t, c_name, def, name, description)\
+  c_name = def;\
+  signal_##c_name##_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));\
+  last_set_proprty_widget = &settings.append_##t##_widget(TABLE, n, prefix+"-"#c_name, _(name), _(description), def);
+
 #define INIT_ENUM_PROPERTY(c_name, def, name, description, e)\
   c_name = def;\
   signal_##c_name##_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));\
@@ -93,7 +98,7 @@ LightLayer::LightLayer(guint id) : MultiLayer<LightLayer>(Glib::ustring::compose
   w_area_diameter = last_set_proprty_widget;
   INIT_PROPERTY(color, light_color, light_color_def_value, "Color", "The color of the light emitted by this source.");
   INIT_REAL_PROPERTY(light_intensity, 0.5f, "Intensity", "The Intensity of the light emitted by this source.", 0.1, 1., 3);
-  INIT_REAL_PROPERTY(light_on_planet, 1.0f, "PlanetIntensity", "The amount of the light which is calculated on the planet's surface.", 0.1, 0.2, 3);
+  INIT_REAL_PROPERTY(light_on_planet, 1.0f, "PlanetIntensity", "The amount of the light which is calculated on the planet's surface.\nThis value doesn't influence the gradient settings.", 0.1, 0.2, 3);
   INIT_REAL_PROPERTY(light_on_ring, 1.0f, "RingIntensity", "The amount of the light which is calculated on the ring's surface.", 0.1, 0.2, 3);
   INIT_REAL_PROPERTY(specular_factor, 1.0f, "Specular", "The amount of the light which is calculated for specular lightning.", 0.1, 0.2, 3);
   INIT_REAL_PROPERTY(ring_shadow, 1.0f, "RingShadow", "The strength of the ring's shadow.", 0.1, 0.2, 3);
@@ -230,7 +235,7 @@ void LightLayer::GradientSetting::init_widgets(guint light_id, int id, SettingsW
   INIT_REAL_PROPERTY(inside_planet, 1.0f, "InsidePlanet", "Visibility inside the planet", 0.1, 0.2, 3);
   INIT_REAL_PROPERTY(outside_planet, 0.0f, "OutsidePlanet", "Visibility inside the planet", 0.1, 0.2, 3);
   INIT_ENUM_PROPERTY(modulate_type, GRADIENT_MODULATE_ADD, "ModulateType", "The Type of the Modulation of th gradient", enum_modulate_type);
-  INIT_PROPERTY(gradient, light_gradient, black2white, "LightGradient", "The Color Gradient of the Light");
+  INIT_GRADIENT_PROPERTY(gradient, light_gradient, Gradient::create_black2white(), "LightGradient", "The Color Gradient of the Light");
 
   settings.attach_full_line(w_expand);
 }
@@ -274,9 +279,9 @@ void LightLayer::GradientSetting::set_modulate_type(int x)
   signal_modulate_type_changed().emit();
 }
 
-void LightLayer::GradientSetting::set_light_gradient(const Gradient& x)
+void LightLayer::GradientSetting::set_light_gradient(const GradientPtr& x)
 {
-  light_gradient = x;
+  *light_gradient.operator->() = *x.operator->();
   signal_light_gradient_changed().emit();
 }
 

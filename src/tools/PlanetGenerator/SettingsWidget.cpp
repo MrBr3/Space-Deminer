@@ -432,35 +432,26 @@ Gtk::Widget& SettingsWidget::append_string_widget(Gtk::Table& table, guint& n_en
   return *entry;
 }
 
-Gtk::Widget& SettingsWidget::append_gradient_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<Gradient>& getter, const sigc::slot<void, const Gradient&>& setter, sigc::signal<void>& signal_changed)
+Gtk::Widget& SettingsWidget::append_gradient_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const GradientPtr& gradient)
 {
   Gtk::Label* wlabel  = Gtk::manage(new Gtk::Label(label));
   GradientButton* entry  = Gtk::manage(new GradientButton);
 
+  Options::get_gradient(name, gradient);
+
+  entry->set_gradient(gradient);
+
   wlabel->set_alignment(0., 0.5);
   wlabel->show();
 
-  sigc::slot<Gradient> w_getter = sigc::mem_fun(*entry, &GradientButton::get_gradient);
-  sigc::slot<void, const Gradient&> w_setter = sigc::mem_fun(*entry, &GradientButton::set_gradient);
-
-  signal_changed.connect(Options::update_option_slot(name, getter));
-  Gradient default_value = getter();
-  w_setter(default_value);
-
   entry->show();
   entry->set_tooltip_text(tooltip);
-  entry->signal_changed().connect(create_updater(w_getter, setter));
-  signal_changed.connect(create_updater(getter, w_setter));
   entry->signal_hide().connect(sigc::mem_fun(*wlabel, &Gtk::Widget::hide));
   entry->signal_show().connect(sigc::mem_fun(*wlabel, &Gtk::Widget::show));
 
   table.attach(*wlabel, 0, 1, n_entries, n_entries+1, Gtk::FILL, Gtk::FILL);
   table.attach(*entry, 1, 2, n_entries, n_entries+1, Gtk::EXPAND|Gtk::FILL, Gtk::FILL);
   ++n_entries;
-
-  Gradient loaded_value = Options::get_gradient(name, default_value);
-  if(loaded_value!=default_value)
-    setter(loaded_value);
 
   return *entry;
 }

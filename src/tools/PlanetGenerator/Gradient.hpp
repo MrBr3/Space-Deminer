@@ -23,12 +23,25 @@
 class Gradient : public Refable
 {
 public:
+  typedef Glib::RefPtr<Gradient> GradientPtr;
+  typedef Glib::RefPtr<const Gradient> ConstGradientPtr;
+
   bool operator==(const Gradient& g)const{return true;/*TODO implement*/}
   bool operator!=(const Gradient& g)const
   {
     return !(*this==g);
   }
+
+  void require_puffer(gsize s){/*TODO*/}
+  void clear_puffer(){/*TODO*/}
+
+  static GradientPtr create_black2white(){return GradientPtr(new Gradient());}
+
+private:
+  Gradient();
+  ~Gradient()throw();
 };
 
-extern Gradient black2white;
+typedef Gradient::GradientPtr GradientPtr;
+typedef Gradient::ConstGradientPtr ConstGradientPtr;
 #endif

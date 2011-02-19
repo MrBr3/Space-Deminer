@@ -21,6 +21,17 @@
 
 MainWindow* main_window  = nullptr;
 
+void invalidate(Gtk::Widget* w)
+{
+  if(!w)
+    return;
+
+  Glib::RefPtr<Gdk::Window> window = w->get_window();
+
+  if(window)
+    window->invalidate(true);
+}
+
 bool negate(const sigc::slot<bool>& fun)
 {
   return !fun();

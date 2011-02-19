@@ -131,12 +131,11 @@ void Options::set_color(const Glib::ustring& name, const Gdk::Color& value)
                                           Glib::ustring::format(std::hex, SET_FILL_0, std::setw(2), CLAMP(int(round(value.get_blue_p()*255.)), 0, 255))));
 }
 
-Gradient Options::get_gradient(const Glib::ustring& name, const Gradient& def_value)
+void Options::get_gradient(const Glib::ustring& name, const GradientPtr& gradient)
 {//TODO
-  return black2white;
 }
 
-void Options::set_gradient(const Glib::ustring& name, const Gradient& value)
+void Options::set_gradient(const Glib::ustring& name, const ConstGradientPtr& value)
 {
   //TODO
 }
@@ -153,10 +152,11 @@ void Options::load_from_stream(const Glib::RefPtr<Gio::InputStream>& os)
 
   std::list<Glib::ustring> options;
   {
-    gchar stream[8192];
+#define MAX_SIZE 1024*128
+    gchar stream[MAX_SIZE];
 
-    gsize n = os->read(stream, 8192);
-    if(n>=8192)
+    gsize n = os->read(stream, MAX_SIZE);
+    if(n>=MAX_SIZE)
     {
       std::cout<<"Planet File too large!\n";
       return;

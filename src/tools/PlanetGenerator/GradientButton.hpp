@@ -17,14 +17,39 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-class GradientButton : public Gtk::Button
+ #include <gtkmm/frame.h>
+
+class GradientPreview : public Gtk::DrawingArea
 {
-  Gradient _gradient;
-  sigc::signal<void> _signal_changed;
+  GradientPtr _gradient;
 
 public:
-  void set_gradient(const Gradient& g);
-  const Gradient& get_gradient()const{return _gradient;}
+  const GradientPtr& get_gradient()const{return _gradient;}
+  void set_gradient(const GradientPtr& g);
+
+  bool on_expose_event(GdkEventExpose* ee);
+  void on_size_request(Gtk::Requisition* r);
+
+  GradientPreview();
+  ~GradientPreview()throw();
+};
+
+class GradientDialog : public Gtk::Dialog
+{
+public:
+};
+
+class GradientButton : public Gtk::Button
+{
+  GradientPtr _gradient;
+  sigc::signal<void> _signal_changed;
+
+  GradientPreview preview_;
+  Gtk::Frame frame_;
+
+public:
+  void set_gradient(const GradientPtr& g);
+  const GradientPtr& get_gradient()const{return _gradient;}
 
   sigc::signal<void>& signal_changed(){return _signal_changed;}
 

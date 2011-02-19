@@ -19,4 +19,10 @@
 
 #include "./Model.hpp"
 
-Gradient black2white;
+Gradient::Gradient()
+{
+}
+
+Gradient::~Gradient()throw()
+{
+}

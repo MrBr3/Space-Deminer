@@ -51,8 +51,8 @@ public:
   static void set_real(const Glib::ustring& name, gfloat value);
   static Gdk::Color get_color(const Glib::ustring& name, const Gdk::Color& def_value);
   static void set_color(const Glib::ustring& name, const Gdk::Color&  value);
-  static Gradient get_gradient(const Glib::ustring& name, const Gradient& def_value);
-  static void set_gradient(const Glib::ustring& name, const Gradient&  value);
+  static void get_gradient(const Glib::ustring& name, const GradientPtr& gradient);
+  static void set_gradient(const Glib::ustring& name, const ConstGradientPtr&  value);
 
   template<typename T=Glib::ustring>
   static void set(const Glib::ustring& name, const Glib::ustring& value)
@@ -82,12 +82,6 @@ public:
   static void set(const Glib::ustring& name, const Gdk::Color& value)
   {
     set_color(name, value);
-  }
-
-  template<typename T=Gradient>
-  static void set(const Glib::ustring& name, const Gradient& value)
-  {
-    set_gradient(name, value);
   }
 
   template<typename T>

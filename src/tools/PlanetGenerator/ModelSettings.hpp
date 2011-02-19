@@ -32,7 +32,7 @@ sigc::signal<void>& signal_##sn##_changed(){return _signal_##sn##_changed;}
 #define BOOLEAN_SETTING(sn) X_SETTING(bool, bool, sn)
 #define STRING_SETTING(sn) X_SETTING(Glib::ustring, const Glib::ustring&, sn)
 #define COLOR_SETTING(sn) X_SETTING(Gdk::Color, const Gdk::Color&, sn)
-#define GRADIENT_SETTING(sn) X_SETTING(Gradient, const Gradient&, sn)
+#define GRADIENT_SETTING(sn) X_SETTING(GradientPtr, const GradientPtr&, sn)
 
 #define X_GETTER_SETTER_SIGNAL(c, sn)\
 sigc::mem_fun(*this, &c::get_##sn), sigc::mem_fun(*this, &c::set_##sn), signal_##sn##_changed()
