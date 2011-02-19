@@ -36,7 +36,23 @@ public:
 
 class GradientDialog : public Gtk::Dialog
 {
+  GradientPtr _private_gradient;
+
+  Gtk::Table table_;
+  Gtk::ColorButton def_color;
+  Gtk::ColorButton color1, color2, color3, color4;
+  Gtk::ColorButton curve1, curve2, curve3, curve4;//TODO replace with CurveButton
+  GradientPreview preview_;
+  Gtk::Frame preview_frame_;
+  Gtk::Label label[5];
+  Gtk::CheckButton use_alpha_;
+
 public:
+  void set_gradient(const GradientPtr& g);
+  const GradientPtr& get_gradient()const{return _private_gradient;}
+
+  GradientDialog();
+  ~GradientDialog()throw();
 };
 
 class GradientButton : public Gtk::Button
@@ -50,6 +66,8 @@ class GradientButton : public Gtk::Button
 public:
   void set_gradient(const GradientPtr& g);
   const GradientPtr& get_gradient()const{return _gradient;}
+
+  void on_clicked();
 
   sigc::signal<void>& signal_changed(){return _signal_changed;}
 

@@ -35,6 +35,8 @@ public:
   void require_puffer(gsize s){/*TODO*/}
   void clear_puffer(){/*TODO*/}
 
+  void set(GradientPtr g){/*TODO*/}
+
   static GradientPtr create_black2white(){return GradientPtr(new Gradient());}
 
 private:
