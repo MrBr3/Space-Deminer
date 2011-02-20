@@ -32,6 +32,8 @@
       <File Name="RingMesh.cpp"/>
       <File Name="GradientButton.cpp"/>
       <File Name="GradientButton.hpp"/>
+      <File Name="CurveButton.cpp"/>
+      <File Name="CurveButton.hpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Model">
       <File Name="Model.hpp"/>
@@ -57,6 +59,8 @@
       <File Name="ModelSettings.hpp"/>
       <File Name="Gradient.cpp"/>
       <File Name="Gradient.hpp"/>
+      <File Name="Curve.cpp"/>
+      <File Name="Curve.hpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Both">
       <File Name="Options.cpp"/>
