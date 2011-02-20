@@ -105,6 +105,9 @@ class MainWindow : public Gtk::Window
     MyCheckMenuItem menu_view_show_sidebar;
     MyCheckMenuItem menu_view_wireframed;
     MyMenuItem menu_view_settings;
+  MyMenuItem menu_info;
+  Gtk::Menu  menu_info_menu;
+    MyMenuItem menu_info_about;
 
   Gtk::VBox _vbox;
     Gtk::MenuBar _menu_bar;

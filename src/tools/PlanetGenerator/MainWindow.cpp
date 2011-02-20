@@ -37,6 +37,48 @@ bool negate(const sigc::slot<bool>& fun)
   return !fun();
 }
 
+void about_dlg()
+{
+  Gtk::AboutDialog dlg;
+  Gtk::ScrolledWindow sw;
+  Gtk::Label external;
+
+  dlg.set_program_name("Planet Generator");
+  dlg.set_name("Planet Generator");
+  dlg.set_copyright("Copyright (C) 2010 the Space Deminer Development Team");
+  dlg.set_license("This program is free software; you can redistribute it and/or\n"
+                  "modify it under the terms of the GNU General Public License\n"
+                  "as published by the Free Software Foundation; either version 3\n"
+                  "of the License, or (at your option) any later version.\n"
+                  "\n"
+                  "This program is distributed in the hope that it will be useful,\n"
+                  "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+                  "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU\n"
+                  "General Public License for more details.\n"
+                  "\n"
+                  "You should have received a copy of the GNU General Public License\n"
+                  "along with this program; if not, see <http://www.gnu.org/licenses/>.");
+
+  g_assert(dlg.get_vbox());
+  dlg.get_vbox()->pack_start(sw);
+  sw.show();
+  sw.add(external);
+  sw.set_policy(Gtk::POLICY_NEVER, Gtk::POLICY_ALWAYS);
+  sw.set_size_request(-1, 128);
+  external.show();
+  external.set_markup("The Planet Generator uses also source from\nother OpenSource Projects:\n\n"
+                      "<b>The GIMP</b>\n"
+                      "  We are using a part the GIMP's Curve Widget\n"
+                      "  see www.gimp.org\n"
+                      "    <i>(last visited 2011-02-20)</i>"
+                      "\n\n"
+                      "<b>binreloc</b>\n"
+                      "  see http://autopackage.org/docs/binreloc/\n"
+                      "  <i>(last visited 2011-02-20)</i>");
+
+  dlg.run();
+}
+
 MainWindow::MainWindow()
 {
   g_assert(!main_window);
@@ -185,6 +227,14 @@ MainWindow::MainWindow()
         menu_view_settings.set_label(_("View _Settings"));
         menu_view_settings.set_use_underline();
         menu_view_settings.signal_activate().connect(sigc::mem_fun(*view_settings, &SettingsWidget::bring_to_front));
+  _menu_bar.append(menu_info);
+    menu_info.set_label(_("_Info"));
+    menu_info.set_use_underline();
+    menu_info.set_submenu(menu_info_menu);
+    menu_info_menu.append(menu_info_about);
+      menu_info_about.set_label(_("_About"));
+      menu_info_about.set_use_underline();
+      menu_info_about.signal_activate().connect(sigc::ptr_fun(about_dlg));
   _menu_bar.show_all_children();
 
   set_title(_("Planet Generator"));
