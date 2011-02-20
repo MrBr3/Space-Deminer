@@ -22,6 +22,7 @@
 GradientPreview::GradientPreview()
 {
   _gradient = Gradient::create_black2white();
+  _gradient->require_cairo_gradient(2);
 }
 
 GradientPreview::~GradientPreview()throw()
@@ -30,8 +31,9 @@ GradientPreview::~GradientPreview()throw()
 
 void GradientPreview::set_gradient(const GradientPtr& g)
 {
+  _gradient->clear_cairo_gradient();
   _gradient = g;
-  _gradient->require_puffer(256);
+  _gradient->require_cairo_gradient(256);
   invalidate(this);
 
   //TODO when the Gradient has changed the Widget should be redrawn
@@ -39,6 +41,26 @@ void GradientPreview::set_gradient(const GradientPtr& g)
 
 bool GradientPreview::on_expose_event(GdkEventExpose* ee)
 {
+  Glib::RefPtr<Gdk::Window> w = get_window();
+
+  if(!w || get_width()<=0)
+    return false;
+
+  Cairo::RefPtr<Cairo::Context> cc = w->create_cairo_context();
+
+  if(!cc)
+    return false;
+
+  Cairo::RefPtr<Cairo::Gradient> cg = _gradient->get_cairo_gradient();
+
+  if(!cg)
+    return false;
+
+  // TODO handle alpha
+
+  cc->scale(get_width(), 1.);
+  cc->set_source(cg);
+  cc->paint();
   return true;
 }
 
@@ -143,10 +165,84 @@ GradientButton::GradientButton()
   frame_.set_shadow_type(Gtk::SHADOW_ETCHED_OUT);
 
   add(frame_);
+
+
+  context_menu.append(_flip_h);
+    _flip_h.set_label(_("Flip _Horizontal"));
+    _flip_h.set_use_underline(true);
+    _flip_h.signal_activate().connect(sigc::mem_fun(*this, &GradientButton::flip_h));
+  context_menu.append(sep);
+  context_menu.append(_load_present);
+    _load_present.set_label(_("Load _Present"));
+    _load_present.set_use_underline(true);
+    _load_present.set_submenu(load_present_menu);
+    load_present_menu.append(load_present_black2white);
+      load_present_black2white.set_label("_Black -> White");
+      load_present_black2white.set_use_underline(true);
+      load_present_black2white.signal_activate().connect(sigc::bind(sigc::mem_fun(*this, &GradientButton::load_present), Gradient::PRESENT_BLACK_2_WHITE));
+    load_present_menu.append(load_present_transparent2white);
+      load_present_transparent2white.set_label("_Transparent -> White");
+      load_present_transparent2white.set_use_underline(true);
+      load_present_transparent2white.signal_activate().connect(sigc::bind(sigc::mem_fun(*this, &GradientButton::load_present), Gradient::PRESENT_TRANSPARENT_2_WHITE));
+  context_menu.append(_load_slot);
+    _load_slot.set_label(_("_Load From Slot"));
+    _load_slot.set_use_underline(true);
+    _load_slot.set_submenu(load_slot_menu);
+    load_slot_menu.append(load_slot0);
+      load_slot0.set_label("Slot_0");
+      load_slot0.set_use_underline(true);
+      load_slot0.signal_activate().connect(sigc::bind(sigc::mem_fun(*this, &GradientButton::load_slot), 0));
+    load_slot_menu.append(load_slot1);
+      load_slot1.set_label("Slot_1");
+      load_slot1.set_use_underline(true);
+      load_slot1.signal_activate().connect(sigc::bind(sigc::mem_fun(*this, &GradientButton::load_slot), 1));
+    load_slot_menu.append(load_slot2);
+      load_slot2.set_label("Slot_2");
+      load_slot2.set_use_underline(true);
+      load_slot2.signal_activate().connect(sigc::bind(sigc::mem_fun(*this, &GradientButton::load_slot), 2));
+    load_slot_menu.append(load_slot3);
+      load_slot3.set_label("Slot_3");
+      load_slot3.set_use_underline(true);
+      load_slot3.signal_activate().connect(sigc::bind(sigc::mem_fun(*this, &GradientButton::load_slot), 3));
+  context_menu.append(_save_slot);
+    _save_slot.set_label(_("_Save to Slot"));
+    _save_slot.set_use_underline(true);
+    _save_slot.set_submenu(save_slot_menu);
+    save_slot_menu.append(save_slot0);
+      save_slot0.set_label("Slot_0");
+      save_slot0.set_use_underline(true);
+      save_slot0.signal_activate().connect(sigc::bind(sigc::mem_fun(*this, &GradientButton::save_slot), 0));
+    save_slot_menu.append(save_slot1);
+      save_slot1.set_label("Slot_1");
+      save_slot1.set_use_underline(true);
+      save_slot1.signal_activate().connect(sigc::bind(sigc::mem_fun(*this, &GradientButton::save_slot), 1));
+    save_slot_menu.append(save_slot2);
+      save_slot2.set_label("Slot_2");
+      save_slot2.set_use_underline(true);
+      save_slot2.signal_activate().connect(sigc::bind(sigc::mem_fun(*this, &GradientButton::save_slot), 2));
+    save_slot_menu.append(save_slot3);
+      save_slot3.set_label("Slot_3");
+      save_slot3.set_use_underline(true);
+      save_slot3.signal_activate().connect(sigc::bind(sigc::mem_fun(*this, &GradientButton::save_slot), 3));
+
+  context_menu.show_all_children();
+  context_menu.show();
 }
 
 GradientButton::~GradientButton()throw()
 {
+}
+
+bool GradientButton::on_button_press_event(GdkEventButton* eb)
+{
+  g_assert(eb);
+  if(eb->button==3)
+  {
+    context_menu.popup(eb->button, eb->time);
+    return true;
+  }
+
+  return ParentClass::on_button_press_event(eb);
 }
 
 void GradientButton::set_gradient(const GradientPtr& g)

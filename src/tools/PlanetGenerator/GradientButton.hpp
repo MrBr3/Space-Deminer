@@ -19,6 +19,8 @@
 
  #include <gtkmm/frame.h>
 
+ #include "./CurveButton.hpp"
+
 class GradientPreview : public Gtk::DrawingArea
 {
   GradientPtr _gradient;
@@ -41,7 +43,7 @@ class GradientDialog : public Gtk::Dialog
   Gtk::Table table_;
   Gtk::ColorButton def_color;
   Gtk::ColorButton color1, color2, color3, color4;
-  Gtk::ColorButton curve1, curve2, curve3, curve4;//TODO replace with CurveButton
+  CurveButton curve1, curve2, curve3, curve4;
   GradientPreview preview_;
   Gtk::Frame preview_frame_;
   Gtk::Label label[5];
@@ -63,7 +65,36 @@ class GradientButton : public Gtk::Button
   GradientPreview preview_;
   Gtk::Frame frame_;
 
+  Gtk::Menu context_menu;
+    Gtk::MenuItem _flip_h;
+    Gtk::SeparatorMenuItem sep;
+    Gtk::MenuItem _load_present;
+      Gtk::Menu load_present_menu;
+      Gtk::MenuItem load_present_black2white;
+      Gtk::MenuItem load_present_transparent2white;
+    Gtk::MenuItem _load_slot;
+      Gtk::Menu load_slot_menu;
+      Gtk::MenuItem load_slot0;
+      Gtk::MenuItem load_slot1;
+      Gtk::MenuItem load_slot2;
+      Gtk::MenuItem load_slot3;
+    Gtk::MenuItem _save_slot;
+      Gtk::Menu save_slot_menu;
+      Gtk::MenuItem save_slot0;
+      Gtk::MenuItem save_slot1;
+      Gtk::MenuItem save_slot2;
+      Gtk::MenuItem save_slot3;
+
+  void flip_h(){g_assert(_gradient);_gradient->flip_h();}
+  void load_present(Gradient::Present p){g_assert(_gradient);_gradient->load_present(p);}
+  void load_slot(guint i){g_assert(_gradient);_gradient->load_slot(i);}
+  void save_slot(guint i){g_assert(_gradient);_gradient->save_slot(i);}
+
+  bool on_button_press_event(GdkEventButton* eb);
+
 public:
+  typedef Gtk::Button ParentClass;
+
   void set_gradient(const GradientPtr& g);
   const GradientPtr& get_gradient()const{return _gradient;}
 

@@ -20,11 +20,20 @@
  #ifndef TOOLS_MODEL_GRADIENT_HPP_
  #define TOOLS_MODEL_GRADIENT_HPP_
 
+ #include "./Curve.hpp"
+
 class Gradient : public Refable
 {
+  sigc::signal<void> _signal_changed;
 public:
   typedef Glib::RefPtr<Gradient> GradientPtr;
   typedef Glib::RefPtr<const Gradient> ConstGradientPtr;
+
+  enum Present
+  {
+    PRESENT_BLACK_2_WHITE,
+    PRESENT_TRANSPARENT_2_WHITE,
+  };
 
   bool operator==(const Gradient& g)const{return true;/*TODO implement*/}
   bool operator!=(const Gradient& g)const
@@ -32,12 +41,40 @@ public:
     return !(*this==g);
   }
 
-  void require_puffer(gsize s){/*TODO*/}
-  void clear_puffer(){/*TODO*/}
+  void flip_h(){std::cout<<"Gradient::flip_h\n";}
+  void load_present(Present p){std::cout<<"Gradient::load_present("<<p<<")\n";}
+  void save_slot(guint i){std::cout<<"Gradient::save_slot("<<i<<")\n";}
+  void load_slot(guint i){std::cout<<"Gradient::load_slot("<<i<<")\n";}
 
-  void set(GradientPtr g){/*TODO*/}
+  void set(GradientPtr g){std::cout<<"Gradient::set\n";}
 
   static GradientPtr create_black2white(){return GradientPtr(new Gradient());}
+
+  sigc::signal<void>& signal_changed(){return _signal_changed;}
+
+///@{
+///@name Puffer Stuff
+private:
+  ColorRGBA* _puffer;
+  gsize _puffer_size;
+  gsize _n_gradients_needed;
+  Cairo::RefPtr<Cairo::Gradient> _cairo_gradient;
+
+  void invalidate_cairo_gradient();
+
+public:
+  gsize get_puffer_size()const{return _puffer_size;}
+  void require_puffer_size(gsize s);
+  void clear_puffer();
+
+  const ColorRGBA* get_puffer()const{return _puffer;}
+  const Cairo::RefPtr<Cairo::Gradient>& get_cairo_gradient()const{return _cairo_gradient;}
+
+  void require_cairo_gradient(gsize s);
+  void clear_cairo_gradient();
+
+  void invalidate();
+///@}
 
 private:
   Gradient();
