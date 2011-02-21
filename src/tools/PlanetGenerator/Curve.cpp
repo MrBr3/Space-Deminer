@@ -23,14 +23,14 @@ Curve::Curve()
 {
   points = new Point[1];
   n_points = 1;
-  n_samples = 2;
-  samples = new gdouble[2];
+  n_samples = 0;
+  samples = nullptr;
   _interpolare_linear = false;
 
   points[0].x = 0.;
   points[0].y = 0.;
-  samples[0] = 0.;
-  samples[1] = 0.;
+
+  set_n_samples(256);
 }
 
 Curve::~Curve()throw()
@@ -154,6 +154,8 @@ void Curve::remove_point(gsize i)
   }
 
   --n_points;
+
+  update_all_samples();
 }
 
 bool Curve::move_point(gsize i, gdouble x, gdouble y)
@@ -196,20 +198,22 @@ void Curve::update_all_samples()
   for(gsize i=last_interval_sample; i<n_samples; ++i) // TODO genau Testen
     samples[i] = points[get_n_points()-1].y;
 
-  const gsize max_i = get_n_points()-1;
-
   if(get_n_points()<=1)
     return;
+
+  const gsize max_i = get_n_points()-1;
+
+  /*
   if(get_n_points()==2)
     gimp_curve_plot(this, 0, 0, 1, 1);
   if(get_n_points()==3)
+  {
     gimp_curve_plot(this, 0, 0, 1, 2);
+    gimp_curve_plot(this, 0, 1, 2, 2);
+  }*/
 
-  /*for(gsize i=0; i<max_i; i+=2)
-    if(i+1==max_i)
-      gimp_curve_plot(this, i, i, max_i, max_i);
-    else
-      gimp_curve_plot(this, i, i+1), MIN(max_i, i+2), MIN(max_i, i+3));*/
+  for(gsize i=0; i<max_i; i+=1)
+    gimp_curve_plot(this, MAX(1, i)-1, i, MIN(i+1, max_i), MIN(i+2, max_i));
 
   signal_changed().emit();
 }

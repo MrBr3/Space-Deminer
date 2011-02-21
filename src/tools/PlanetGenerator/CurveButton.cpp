@@ -48,6 +48,8 @@ bool CurvePreview::on_expose_event(GdkEventExpose* ee)
   if(!cc)
     return false;
 
+  cc->set_line_width(1.);
+
   if(get_curve()->get_n_samples()>0)
   {
     gdouble w = get_width();
@@ -107,6 +109,8 @@ bool CurveEditView::on_expose_event(GdkEventExpose* ee)
   gdouble w = get_width();
   gdouble h = get_height();
 
+  cc->set_line_width(1.);
+
   cc->set_source_rgba(0., 0., 0., 0.25); // TODO: use TextColor
 
   cc->rectangle(0.5, 0.5, w-1., h-1.);
@@ -145,7 +149,7 @@ bool CurveEditView::on_expose_event(GdkEventExpose* ee)
       cc->set_source_rgb(0., 0., 0.); // TODO: use TextColor
 
     cc->arc(p.x*w, h-p.y*h, 4., 0., PI2);
-    cc->fill();
+    cc->stroke();
   }
 
   return CurvePreview::on_expose_event(ee);
@@ -223,7 +227,7 @@ bool CurveEditView::on_button_press_event(GdkEventButton* eb)
     {
       focused_point = get_curve()->add_point(eb->x*inv_w, 1.-eb->y*inv_h);
 
-      set_state(STATE_POINTING);
+      set_state(STATE_MOVING);
       invalidate(this);
     }
     break;
@@ -354,6 +358,8 @@ bool CurveEditView::on_motion_notify_event(GdkEventMotion* eb)
       get_curve()->remove_point(focused_point);
     else if(move)
       removed = !get_curve()->move_point(focused_point, x, y);
+    else
+      get_curve()->update_all_samples();
 
     if(removed)
       set_state_pointing_or_creating(w_x, w_y);
