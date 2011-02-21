@@ -25,6 +25,8 @@ class GradientPreview : public Gtk::DrawingArea
 {
   GradientPtr _gradient;
 
+  sigc::signal<void>::iterator gradient_changed_signal_iter;
+
 public:
   const GradientPtr& get_gradient()const{return _gradient;}
   void set_gradient(const GradientPtr& g);

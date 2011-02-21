@@ -37,21 +37,31 @@ public:
     gdouble x, y;
   };
 
-  void flip_h(){std::cout<<"Curve::flip_h\n";}
-  void flip_v(){std::cout<<"Curve::flip_v\n";}
-  void load_present(Present p){std::cout<<"Curve::load_present("<<p<<")\n";}
+  void flip_h();
+  void flip_v();
+  void load_present(Present p);
   void save_slot(guint i){std::cout<<"Curve::save_slot("<<i<<")\n";}
   void load_slot(guint i){std::cout<<"Curve::load_slot("<<i<<")\n";}
 
-  void set(const CurvePtr& c){std::cout<<"Curve::set()\n";}
+  void set(const ConstCurvePtr& c);
 
-  bool get_interpolare_linear()const;
-  void set_interpolare_linear(bool linear=true);
+  bool get_interpolate_linear()const{return _interpolate_linear;}
+  void set_interpolate_linear(bool linear=true);
 
   sigc::signal<void> signal_changed(){return _signal_changed;}
 
+  void invalidate()
+  {
+    _invalidated = true;
+  }
+
+  //static init_slots();
+
 private:
-  bool _interpolare_linear;
+  bool _interpolate_linear;
+  bool _invalidated;
+
+  //static CurvePtr slots[4];
 
   sigc::signal<void> _signal_changed;
 

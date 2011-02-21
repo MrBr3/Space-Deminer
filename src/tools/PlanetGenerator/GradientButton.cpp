@@ -21,22 +21,27 @@
 
 GradientPreview::GradientPreview()
 {
-  _gradient = Gradient::create_black2white();
-  _gradient->require_cairo_gradient(2);
+  set_gradient(Gradient::create_black2white());
 }
 
 GradientPreview::~GradientPreview()throw()
 {
+  _gradient->signal_changed().slots().erase(gradient_changed_signal_iter);
 }
 
 void GradientPreview::set_gradient(const GradientPtr& g)
 {
-  _gradient->clear_cairo_gradient();
+  if(_gradient)
+  {
+    _gradient->signal_changed().slots().erase(gradient_changed_signal_iter);
+    _gradient->clear_cairo_gradient();
+  }
+
   _gradient = g;
   _gradient->require_cairo_gradient(256);
   invalidate(this);
 
-  //TODO when the Gradient has changed the Widget should be redrawn
+  gradient_changed_signal_iter = _gradient->signal_changed().connect(sigc::bind(sigc::ptr_fun(::invalidate), this));
 }
 
 bool GradientPreview::on_expose_event(GdkEventExpose* ee)

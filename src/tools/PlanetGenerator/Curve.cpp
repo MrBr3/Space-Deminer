@@ -23,13 +23,14 @@ Curve::Curve()
 {
   points = new Point[1];
   n_points = 1;
-  n_samples = 0;
-  samples = nullptr;
-  _interpolare_linear = false;
+  _interpolate_linear = false;
+  _invalidated = false;
 
   points[0].x = 0.;
   points[0].y = 0.;
 
+  n_samples = 0;
+  samples = nullptr;
   set_n_samples(256);
 }
 
@@ -37,6 +38,104 @@ Curve::~Curve()throw()
 {
   delete[] points;
   delete[] samples;
+}
+
+void Curve::set(const ConstCurvePtr& c)
+{
+  const Curve& other_c = *c.operator->();
+
+  if(!c || &other_c==this)
+    return;
+
+  set_n_points(other_c.get_n_points());
+
+  for(gsize i=0; i<get_n_points(); ++i)
+    points[i] = other_c.points[i];
+
+  invalidate();
+
+  set_n_samples(other_c.get_n_samples());
+  update_all_samples();
+}
+
+void Curve::load_present(Present p)
+{
+  switch(p)
+  {
+  case PRESENT_FULL:
+    {
+      set_n_points(1);
+      points[0].x = 0.5;
+      points[0].y = 1.0;
+
+      invalidate();
+      update_all_samples();
+    }
+    break;
+  case PRESENT_LINEAR:
+    {
+      set_n_points(2);
+      points[0].x = 0.0;
+      points[0].y = 0.0;
+      points[1].x = 1.0;
+      points[1].y = 1.0;
+
+      invalidate();
+      update_all_samples();
+    }
+    break;
+  default:
+    throw std::invalid_argument("**Curve::load_present** illegal argument");
+  }
+}
+
+void Curve::flip_h()
+{
+  update_all_samples();
+
+  for(gsize i=0, j=get_n_points()-1; i<j; ++i, --j)
+  {
+    exchange(points[i], points[j]);
+    points[i].x = 1.-points[i].x;
+    points[j].x = 1.-points[j].x;
+  }
+
+  if(get_n_points()%2)
+  {
+    gsize m = get_n_points()>>1;
+    points[m].x = 1.-points[m].x;
+  }
+
+  for(gsize i=0, j=get_n_samples()-1; i<j; ++i, --j)
+    exchange(samples[i], samples[j]);
+
+  _invalidated = false;
+
+  signal_changed().emit();
+}
+
+void Curve::flip_v()
+{
+  update_all_samples();
+
+  for(gsize i=0; i<get_n_points(); ++i)
+    points[i].y = 1.-points[i].y;
+
+  for(gsize i=0; i<n_samples; ++i)
+    samples[i] = 1.-samples[i];
+
+  _invalidated = false;
+
+  signal_changed().emit();
+}
+
+void Curve::set_interpolate_linear(bool linear)
+{
+  if(_interpolate_linear==linear)
+    return;
+  _interpolate_linear = linear;
+  invalidate();
+  update_all_samples();
 }
 
 void Curve::set_n_samples(gsize n)
@@ -50,6 +149,7 @@ void Curve::set_n_samples(gsize n)
   n_samples = n;
   samples = new gdouble[n_samples];
 
+  invalidate();
   update_all_samples();
 }
 
@@ -133,6 +233,7 @@ gsize Curve::add_point(gdouble x, gdouble y) // TODO genau Testen
 
   points = new_points;
 
+  invalidate();
   update_all_samples();
 
   return new_index;
@@ -155,6 +256,7 @@ void Curve::remove_point(gsize i)
 
   --n_points;
 
+  invalidate();
   update_all_samples();
 }
 
@@ -182,6 +284,8 @@ bool Curve::move_point(gsize i, gdouble x, gdouble y)
     points[i].y = y;
   }
 
+  invalidate();
+
   update_all_samples();
 
   return !remove;
@@ -189,6 +293,9 @@ bool Curve::move_point(gsize i, gdouble x, gdouble y)
 
 void Curve::update_all_samples()
 {
+  if(!_invalidated)
+    return;
+
   g_assert(get_n_points()>0);
 
   gsize first_interval_sample = round(points[0].x*(n_samples-1));
@@ -198,13 +305,19 @@ void Curve::update_all_samples()
   for(gsize i=last_interval_sample; i<n_samples; ++i)
     samples[i] = points[get_n_points()-1].y;
 
-  if(get_n_points()<=1)
-    return;
+  if(get_n_points()>1)
+  {
+    const gsize max_i = get_n_points()-1;
 
-  const gsize max_i = get_n_points()-1;
+    if(get_interpolate_linear())
+      for(gsize i=0; i<max_i; i+=1)
+        gimp_curve_plot(this, i, i, MIN(i+1, max_i), MIN(i+1, max_i));
+    else
+      for(gsize i=0; i<max_i; i+=1)
+        gimp_curve_plot(this, MAX(1, i)-1, i, MIN(i+1, max_i), MIN(i+2, max_i));
+  }
 
-  for(gsize i=0; i<max_i; i+=1)
-    gimp_curve_plot(this, MAX(1, i)-1, i, MIN(i+1, max_i), MIN(i+2, max_i));
+  _invalidated = false;
 
   signal_changed().emit();
 }

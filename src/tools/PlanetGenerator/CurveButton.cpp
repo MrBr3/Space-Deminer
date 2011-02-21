@@ -21,19 +21,23 @@
 
 CurvePreview::CurvePreview()
 {
-  _curve = Curve::create();
+  set_curve(Curve::create());
 }
 
 CurvePreview::~CurvePreview()throw()
 {
+  _curve->signal_changed().slots().erase(curve_changed_signal_iter);
 }
 
 void CurvePreview::set_curve(const CurvePtr& g)
 {
+  if(_curve)
+    _curve->signal_changed().slots().erase(curve_changed_signal_iter);
+
   _curve = g;
   invalidate(this);
 
-  //TODO when the Gradient has changed the Widget should be redrawn
+  curve_changed_signal_iter = _curve->signal_changed().connect(sigc::bind(sigc::ptr_fun(::invalidate), this));
 }
 
 bool CurvePreview::on_expose_event(GdkEventExpose* ee)
@@ -328,6 +332,7 @@ bool CurveEditView::on_motion_notify_event(GdkEventMotion* eb)
       p.y = y;
       if(allow_to_move)
         p.x = CLAMP(x, 0., 1.);
+      get_curve()->invalidate();
       get_curve()->update_all_samples();
     }
 
@@ -437,6 +442,8 @@ CurveDialog::CurveDialog()
 {
   _curve = Curve::create();
 
+  view.set_curve(_curve);
+
   set_title(_("EditCurve"));
 
   Gtk::VBox& dlg_vbox = *get_vbox();
@@ -451,6 +458,7 @@ CurveDialog::CurveDialog()
 
   cbtn.set_label(_("_Linear-Interpolation"));
   cbtn.set_use_underline(true);
+  cbtn.signal_toggled().connect(sigc::mem_fun(*this, &CurveDialog::set_linear));
 
   dlg_vbox.pack_start(vbox);
   dlg_vbox.show_all_children();
@@ -465,7 +473,14 @@ CurveDialog::CurveDialog()
 
 void CurveDialog::set_curve(const CurvePtr& c)
 {
-  _curve->set(c);
+  _curve = c;
+  view.set_curve(_curve);
+}
+
+void CurveDialog::set_linear()
+{
+  if(_curve)
+    _curve->set_interpolate_linear(cbtn.get_active());
 }
 
 // ------------
@@ -577,9 +592,12 @@ void CurveButton::set_curve(const CurvePtr& c)
 void CurveButton::on_clicked()
 {
   CurveDialog dlg;
+  CurvePtr tmp_curve = dlg.get_curve();
 
   dlg.set_curve(get_curve());
 
-  if(dlg.run()==Gtk::RESPONSE_OK)
-    _curve->set(dlg.get_curve());
+  tmp_curve->set(get_curve());
+
+  if(dlg.run()==Gtk::RESPONSE_CANCEL)
+    _curve->set(tmp_curve);
 }

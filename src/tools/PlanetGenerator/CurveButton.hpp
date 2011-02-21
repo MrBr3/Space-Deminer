@@ -22,6 +22,8 @@ class CurvePreview : public Gtk::DrawingArea
 protected:
   CurvePtr _curve;
 
+  sigc::signal<void>::iterator curve_changed_signal_iter;
+
 public:
   const CurvePtr& get_curve()const{return _curve;}
   void set_curve(const CurvePtr& g);
@@ -78,6 +80,8 @@ class CurveDialog : public Gtk::Dialog
   CurveEditView view;
   Gtk::CheckButton cbtn;
 
+  void set_linear();
+
 public:
   void set_curve(const CurvePtr& c);
   const CurvePtr& get_curve()const{return _curve;}
@@ -115,7 +119,7 @@ class CurveButton : public Gtk::Button
       Gtk::MenuItem save_slot3;
 
   void flip_h(){g_assert(_curve);_curve->flip_h();}
-  void flip_v(){g_assert(_curve);_curve->flip_h();}
+  void flip_v(){g_assert(_curve);_curve->flip_v();}
   void load_present(Curve::Present p){g_assert(_curve);_curve->load_present(p);}
   void load_slot(guint i){g_assert(_curve);_curve->load_slot(i);}
   void save_slot(guint i){g_assert(_curve);_curve->save_slot(i);}
