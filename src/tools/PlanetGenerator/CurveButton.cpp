@@ -322,7 +322,35 @@ bool CurveEditView::on_motion_notify_event(GdkEventMotion* eb)
       }
     }
 
-    if(removed)
+    if(focused_point==get_curve()->get_n_points()-1)
+    {
+      if(x>1.)
+      {
+        if(w_x-w > dx)
+          removed = true;
+        else
+        {
+          p.y = y;
+          move = false;
+        }
+      }
+    }else
+    {
+      const Curve::Point& next_p = get_curve()->get_point(focused_point+1);
+
+      if(x >= next_p.x)
+      {
+        if(w_x-dx >  next_p.x*w)
+          removed = true;
+        else
+        {
+          p.y = y;
+          move = false;
+        }
+      }
+    }
+
+    if(removed && get_curve()->get_n_points()>1)
       get_curve()->remove_point(focused_point);
     else if(move)
       removed = !get_curve()->move_point(focused_point, x, y);
