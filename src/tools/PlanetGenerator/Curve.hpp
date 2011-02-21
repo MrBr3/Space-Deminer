@@ -95,6 +95,15 @@ public:
   void remove_point(gsize i);
   gsize find_point(gdouble x, gdouble y, gdouble max_diff);
 
+  gdouble snap_to_samples(gdouble x)const
+  {
+    if(n_samples==0)
+      throw std::out_of_range("Curve::snap_to_samples: bad number of samples");
+    if(n_samples<16)
+      return x;
+    return round(x*n_samples-1)/(n_samples-1);
+  }
+
   /**
    *
    * \return true if the point still exists after the moving operation

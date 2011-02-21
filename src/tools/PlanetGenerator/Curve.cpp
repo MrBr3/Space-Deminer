@@ -191,26 +191,17 @@ void Curve::update_all_samples()
 {
   g_assert(get_n_points()>0);
 
-  gsize first_interval_sample = round(points[0].x*(n_samples-1)); // TODO genau Testen
-  gsize last_interval_sample = round(points[get_n_points()-1].x*(n_samples-1)); // TODO genau Testen
-  for(gsize i=0; i<first_interval_sample; ++i) // TODO genau Testen
+  gsize first_interval_sample = round(points[0].x*(n_samples-1));
+  gsize last_interval_sample = round(points[get_n_points()-1].x*(n_samples-1));
+  for(gsize i=0; i<first_interval_sample; ++i)
     samples[i] = points[0].y;
-  for(gsize i=last_interval_sample; i<n_samples; ++i) // TODO genau Testen
+  for(gsize i=last_interval_sample; i<n_samples; ++i)
     samples[i] = points[get_n_points()-1].y;
 
   if(get_n_points()<=1)
     return;
 
   const gsize max_i = get_n_points()-1;
-
-  /*
-  if(get_n_points()==2)
-    gimp_curve_plot(this, 0, 0, 1, 1);
-  if(get_n_points()==3)
-  {
-    gimp_curve_plot(this, 0, 0, 1, 2);
-    gimp_curve_plot(this, 0, 1, 2, 2);
-  }*/
 
   for(gsize i=0; i<max_i; i+=1)
     gimp_curve_plot(this, MAX(1, i)-1, i, MIN(i+1, max_i), MIN(i+2, max_i));

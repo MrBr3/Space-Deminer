@@ -235,7 +235,7 @@ bool CurveEditView::on_button_press_event(GdkEventButton* eb)
   case STATE_CREATING:
     if(eb->button==1)
     {
-      focused_point = get_curve()->add_point(eb->x*inv_w, 1.-eb->y*inv_h);
+      focused_point = get_curve()->add_point(get_curve()->snap_to_samples(eb->x*inv_w), 1.-eb->y*inv_h);
 
       set_state(STATE_MOVING);
       invalidate(this);
@@ -308,7 +308,7 @@ bool CurveEditView::on_motion_notify_event(GdkEventMotion* eb)
   {
     int w_x = eb->x;
     int w_y = eb->y;
-    gdouble x = w_x*inv_w;
+    gdouble x = get_curve()->snap_to_samples(w_x*inv_w);
     gdouble y = CLAMP(1.-w_y*inv_h, 0., 1.);
     bool should_remove;
     bool allow_to_move;
@@ -338,7 +338,7 @@ bool CurveEditView::on_motion_notify_event(GdkEventMotion* eb)
   {
     int w_x = eb->x;
     int w_y = eb->y;
-    gdouble x = w_x*inv_w;
+    gdouble x = get_curve()->snap_to_samples(w_x*inv_w);
     gdouble y = CLAMP(1.-w_y*inv_h, 0., 1.);
     bool should_remove;
     bool allow_to_move;
@@ -424,7 +424,7 @@ void CurveEditView::set_state_pointing_or_creating(int x, int y)
   gdouble inv_w = 1./get_width();
   gdouble inv_h = 1./get_height();
 
-  focused_point = get_curve()->find_point(x*inv_w, 1.-y*inv_h, 8.*.5*(inv_w+inv_h));
+  focused_point = get_curve()->find_point(get_curve()->snap_to_samples(x*inv_w), 1.-y*inv_h, 16.*.5*(inv_w+inv_h));
   if(focused_point>=get_curve()->get_n_points())
     set_state(STATE_CREATING);
   else
