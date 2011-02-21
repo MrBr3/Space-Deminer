@@ -76,14 +76,14 @@ void Curve::init_slots()
 
   for(gsize i=0; i<4; ++i)
   {
-    //TODO Load value from options
+    Options::get_curve(Glib::ustring::compose("slot%1", i),  slots[i]);
     slots[i]->signal_changed().connect(sigc::bind(sigc::ptr_fun(slot_changed), i));
   }
 }
 
 void Curve::slot_changed(gsize i)
 {
-  //TODO save to options
+  Options::set_curve(Glib::ustring::compose("slot%1", i), slots[i]);
 }
 
 void Curve::set(const Curve& other_c)
@@ -182,11 +182,91 @@ void Curve::flip_v()
 
 void Curve::throw_parser_error(const std::string& s)
 {
-  throw std::runtime_error("error while parsing: \""+s+"\"");
+  throw std::runtime_error("Curve: error while parsing: \""+s+"\"");
 }
 
-void Curve::load_from_string(Glib::ustring::const_iterator begin, Glib::ustring::const_iterator end)
+void Curve::throw_point_parser_error(const std::string& s)
 {
+  throw std::runtime_error("Curve-Point: error while parsing: \""+s+"\"");
+}
+
+void Curve::load_from_string(Glib::ustring::const_iterator& begin, Glib::ustring::const_iterator end)
+{
+  if(!compare(begin, end, "(curve "))
+    throw_parser_error("missing beginning '(curve '");
+
+  if(*begin!='(')
+    throw_parser_error("empty curves not allowed");
+
+  std::list<Point> points;
+
+  while(*begin!=')')
+  {
+    Point pt;
+
+    load_point_from_string(pt, begin, end);
+
+    points.push_back(pt);
+
+    if(begin==end)
+      throw_parser_error("missing ')'");
+    if(*begin==')')
+      break;
+    if(*begin==' ')
+      ++begin;
+  }
+
+  set_n_points(points.size());
+
+  gsize i=0;
+  for(std::list<Point>::const_iterator iter=points.begin(); iter!=points.end(); ++iter)
+  {
+    this->points[i] = *iter;
+    ++i;
+  }
+
+  invalidate();
+  update_all_samples();
+}
+
+void Curve::load_point_from_string(Point& pt, Glib::ustring::const_iterator& begin, Glib::ustring::const_iterator end)
+{
+  if(!compare(begin, end, "(pt "))
+    throw_parser_error("missing beginning '(pt '");
+
+  Glib::ustring::const_iterator tmp = begin;
+  while(begin!=end)
+  {
+    if(*begin==' ')
+      break;
+  }
+  if(begin==end)
+    throw_parser_error("(pt ... ...) needs two real numbers!");
+
+  bool success;
+  pt.x = str_to_real(Glib::ustring(tmp, begin), 0., &success);
+  if(!success)
+    throw_parser_error("(pt ... ...) needs two real numbers!");
+
+  if(*begin != ' ')
+    throw_parser_error("(pt ... ...) needs two real numbers divided by a space character");
+
+  ++begin;
+  tmp = begin;
+  while(begin!=end)
+  {
+    if(*begin==' ')
+      break;
+  }
+  if(begin==end)
+    throw_parser_error("(pt ... ...) needs two real numbers!");
+
+  pt.y = str_to_real(Glib::ustring(tmp, begin), 0., &success);
+  if(!success)
+    throw_parser_error("(pt ... ...) needs two real numbers!");
+
+  if(*begin != ')')
+    throw_parser_error("missing ')'");
 }
 
 Glib::ustring Curve::save_to_string()const
@@ -196,7 +276,7 @@ Glib::ustring Curve::save_to_string()const
   for(gsize i=0; i<get_n_points(); ++i)
     str += "(pt "+Options::real2string(points[i].x)+" "+Options::real2string(points[i].x)+")";
 
-  return "(curve "+boolean2string(get_interpolate_linear())+" "+str+")";
+  return "(curve "+Options::boolean2string(get_interpolate_linear())+" "+str+")";
 }
 
 void Curve::set_interpolate_linear(bool linear)

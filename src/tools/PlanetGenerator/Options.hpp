@@ -53,10 +53,15 @@ public:
   static void set_color(const Glib::ustring& name, const Gdk::Color&  value);
   static void get_gradient(const Glib::ustring& name, const GradientPtr& gradient);
   static void set_gradient(const Glib::ustring& name, const ConstGradientPtr&  value);
+  static void get_curve(const Glib::ustring& name, const CurvePtr& curve);
+  static void set_curve(const Glib::ustring& name, const ConstCurvePtr& value);
 
+  static Glib::ustring integer2string(gint value){return Glib::ustring::compose("%1", value);}
+  static Glib::ustring integer2string(guint value){return Glib::ustring::compose("%1", value);}
+  static Glib::ustring size2string(gsize value){return Glib::ustring::compose("%1", value);}
   static Glib::ustring real2string(gdouble value){return Glib::ustring::format(std::scientific, std::setprecision(32), value);}
   static Glib::ustring real2string(gfloat value){return Glib::ustring::format(std::scientific, std::setprecision(32), value);}
-  static Glib::ustring boolean2string(bool value){return value ? "1" : "0"}
+  static Glib::ustring boolean2string(bool value){return value ? "1" : "0";}
 
   template<typename T=Glib::ustring>
   static void set(const Glib::ustring& name, const Glib::ustring& value)

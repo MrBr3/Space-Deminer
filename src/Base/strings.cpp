@@ -19,6 +19,23 @@
 
 #include "./base.hpp"
 
+bool compare(Glib::ustring::const_iterator& begin, Glib::ustring::const_iterator end, const Glib::ustring& what)
+{
+  Glib::ustring::const_iterator what_begin = what.begin();
+
+  while(what_begin!=what.end())
+  {
+    if(begin==end)
+      return false;
+    if(*what_begin != *begin)
+      return false;
+    ++begin;
+    ++what_begin;
+  }
+
+  return what_begin==what.end();
+}
+
 Glib::ustring time_val_to_str_hms(Glib::TimeVal tv, gchar sep)
 {
   GTimeVal& time_val  = *((GTimeVal*)&tv);
@@ -36,12 +53,12 @@ Glib::ustring time_val_to_str_hms(Glib::TimeVal tv, gchar sep)
     return Glib::ustring::compose(_("%1h %2min %3sec"), hour, Glib::ustring::format(SET_FILL_0, std::setw(2), min), Glib::ustring::format(SET_FILL_0, std::setw(2), sec));
 }
 
-gfloat str_to_real(const Glib::ustring& num, gfloat defvalue, bool* successful)
+gdouble str_to_real_d(const Glib::ustring& num, gdouble defvalue, bool* successful)
 {
   const char* pStr  = num.c_str();
   char* pEnd;
 
-  gfloat result = strtod(pStr, &pEnd);
+  gdouble result = strtod(pStr, &pEnd);
 
   if(successful)
     *successful  = true;
@@ -69,6 +86,16 @@ gfloat str_to_real(const Glib::ustring& num, gfloat defvalue, bool* successful)
     *successful  = false;
 
   return defvalue;
+}
+
+gfloat str_to_real(const Glib::ustring& num, gfloat defvalue, bool* successful)
+{
+  return str_to_real_d(num, defvalue, successful);
+}
+
+gdouble str_to_real(const Glib::ustring& num, gdouble defvalue, bool* successful)
+{
+  return str_to_real_d(num, defvalue, successful);
 }
 
 gint str_to_integer(const Glib::ustring& num, gint defvalue, gint base, bool* successful)

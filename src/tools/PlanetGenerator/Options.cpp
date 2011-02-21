@@ -140,6 +140,37 @@ void Options::set_gradient(const Glib::ustring& name, const ConstGradientPtr& va
   //TODO
 }
 
+void Options::get_curve(const Glib::ustring& name, const CurvePtr& curve)
+{
+  if(!option_exists(name))
+  {
+    set_curve(name, curve);
+    return;
+  }
+
+  CurvePtr tmp = Curve::create();
+
+  try
+  {
+    Glib::ustring str = get_string(name, "");
+
+    Glib::ustring::const_iterator b = str.begin();
+    tmp->load_from_string(b, str.end());
+    if(b!=str.end())
+      throw 0;
+  }catch(...)
+  {
+    return;
+  }
+
+  curve->set(tmp);
+}
+
+void Options::set_curve(const Glib::ustring& name, const ConstCurvePtr& value)
+{
+  set_string(name, value->save_to_string());
+}
+
 Glib::RefPtr<Gio::File> Options::get_file()
 {
   return Gio::File::create_for_path(Glib::filename_from_utf8(apply_filename_macros("$(local-folder)/config.xml")));

@@ -81,11 +81,13 @@ private:
 
 // ---- Parsing stuff----
 public:
-  void Curve::load_from_string(Glib::ustring::const_iterator begin, Glib::ustring::const_iterator end);
+  void load_from_string(Glib::ustring::const_iterator& begin, Glib::ustring::const_iterator end);
   Glib::ustring save_to_string()const;
 
 private:
+  void load_point_from_string(Point& pt, Glib::ustring::const_iterator& begin, Glib::ustring::const_iterator end);
   void throw_parser_error(const std::string& s);
+  void throw_point_parser_error(const std::string& s);
 
 // ----Sample/Point stuff----
 private:

@@ -46,6 +46,7 @@ int main(int argc, char **argv)
   Options options;
 
   options.load_options();
+  Curve::init_slots();
   {
     MainWindow main_window;
 
