@@ -41,8 +41,6 @@ public:
   void flip_h();
   void flip_v();
   void load_present(Present p);
-  void save_slot(guint i);
-  void load_slot(guint i);
 
   void set(const ConstCurvePtr& c);
   void set(const Curve& c);
@@ -62,20 +60,34 @@ public:
     _invalidated = true;
   }
 
-  static void init_slots();
-
 private:
   bool _interpolate_linear;
   bool _invalidated;
-
-  static CurvePtr slots[4];
-  static void slot_changed(gsize i);
 
   sigc::signal<void> _signal_changed;
 
 public:
   static CurvePtr create(){return CurvePtr(new Curve);}
 
+// ---- Slot stuff ----
+public:
+  static void init_slots();
+  void save_slot(guint i);
+  void load_slot(guint i);
+
+private:
+  static CurvePtr slots[4];
+  static void slot_changed(gsize i);
+
+// ---- Parsing stuff----
+public:
+  void Curve::load_from_string(Glib::ustring::const_iterator begin, Glib::ustring::const_iterator end);
+  Glib::ustring save_to_string()const;
+
+private:
+  void throw_parser_error(const std::string& s);
+
+// ----Sample/Point stuff----
 private:
   Curve();
   ~Curve()throw();

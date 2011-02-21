@@ -54,12 +54,12 @@ void Options::set_string(const Glib::ustring& name, const Glib::ustring& value)
 
 bool Options::get_boolean(const Glib::ustring& name, bool def_value)
 {
-  return get_string(name, def_value ? "1" : "0")=="1";
+  return get_string(name, boolean2string(def_value))=="1";
 }
 
 void Options::set_boolean(const Glib::ustring& name, bool value)
 {
-  set_string(name, value ? "1" : "0");
+  set_string(name, boolean2string(value));
 }
 
 gint Options::get_integer(const Glib::ustring& name, gint def_value)
@@ -95,7 +95,7 @@ gfloat Options::get_real(const Glib::ustring& name, gfloat def_value)
 
 void Options::set_real(const Glib::ustring& name, gfloat value)
 {
-  set_string(name, Glib::ustring::format(std::scientific, std::setprecision(32), value));
+  set_string(name, real2string(value));
 }
 
 Gdk::Color Options::get_color(const Glib::ustring& name, const Gdk::Color& def_value)

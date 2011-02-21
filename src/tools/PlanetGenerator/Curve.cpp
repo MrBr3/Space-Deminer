@@ -180,6 +180,25 @@ void Curve::flip_v()
   signal_changed().emit();
 }
 
+void Curve::throw_parser_error(const std::string& s)
+{
+  throw std::runtime_error("error while parsing: \""+s+"\"");
+}
+
+void Curve::load_from_string(Glib::ustring::const_iterator begin, Glib::ustring::const_iterator end)
+{
+}
+
+Glib::ustring Curve::save_to_string()const
+{
+  Glib::ustring str;
+
+  for(gsize i=0; i<get_n_points(); ++i)
+    str += "(pt "+Options::real2string(points[i].x)+" "+Options::real2string(points[i].x)+")";
+
+  return "(curve "+boolean2string(get_interpolate_linear())+" "+str+")";
+}
+
 void Curve::set_interpolate_linear(bool linear)
 {
   if(_interpolate_linear==linear)

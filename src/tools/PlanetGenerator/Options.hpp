@@ -54,6 +54,10 @@ public:
   static void get_gradient(const Glib::ustring& name, const GradientPtr& gradient);
   static void set_gradient(const Glib::ustring& name, const ConstGradientPtr&  value);
 
+  static Glib::ustring real2string(gdouble value){return Glib::ustring::format(std::scientific, std::setprecision(32), value);}
+  static Glib::ustring real2string(gfloat value){return Glib::ustring::format(std::scientific, std::setprecision(32), value);}
+  static Glib::ustring boolean2string(bool value){return value ? "1" : "0"}
+
   template<typename T=Glib::ustring>
   static void set(const Glib::ustring& name, const Glib::ustring& value)
   {
