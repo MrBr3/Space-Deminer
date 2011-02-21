@@ -36,7 +36,7 @@ public:
 class CurveEditView : public CurvePreview
 {
   gsize focused_point;
-  Curve::Point removed_point;
+  gdouble removed_point_last_x;
 
   enum State
   {
@@ -52,6 +52,8 @@ class CurveEditView : public CurvePreview
   void set_state(State state);
 
   void set_state_pointing_or_creating(int x, int y);
+
+  void delete_or_move_point(gsize i, gdouble old_x, int widget_space_new_x, gdouble new_x, bool& allow_to_move, bool& should_remove);
 
 public:
   bool on_expose_event(GdkEventExpose* ee);

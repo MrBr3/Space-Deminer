@@ -253,6 +253,7 @@ bool CurveEditView::on_button_release_event(GdkEventButton* eb)
   switch(state)
   {
   case STATE_MOVING:
+  case STATE_MOVING_REMOVING:
     if(eb->button==1)
     {
       set_state_pointing_or_creating(eb->x, eb->y);
@@ -288,81 +289,28 @@ bool CurveEditView::on_motion_notify_event(GdkEventMotion* eb)
   }
   case STATE_MOVING:
   {
-    int dx=32;
     int w_x = eb->x;
     int w_y = eb->y;
     gdouble x = w_x*inv_w;
     gdouble y = CLAMP(1.-w_y*inv_h, 0., 1.);
-    bool removed = false;
-    bool move = true;
+    bool should_remove;
+    bool allow_to_move;
 
     Curve::Point& p = get_curve()->get_point(focused_point);
 
-    if(focused_point==0)
-    {
-      if(w_x<0)
-      {
-        if(w_x < -dx)
-          removed = true;
-        else
-        {
-          p.y = y;
-          move = false;
-        }
-      }
-    }else
-    {
-      const Curve::Point& prev_p = get_curve()->get_point(focused_point-1);
+    delete_or_move_point(focused_point, p.x, w_x, x, allow_to_move, should_remove);
 
-      if(x <= prev_p.x)
-      {
-        if(w_x+dx < prev_p.x*w)
-          removed = true;
-        else
-        {
-          p.y = y;
-          move = false;
-        }
-      }
-    }
-
-    if(focused_point==get_curve()->get_n_points()-1)
+    if(should_remove && get_curve()->get_n_points()>1)
     {
-      if(x>1.)
-      {
-        if(w_x-w > dx)
-          removed = true;
-        else
-        {
-          p.y = y;
-          move = false;
-        }
-      }
-    }else
-    {
-      const Curve::Point& next_p = get_curve()->get_point(focused_point+1);
-
-      if(x >= next_p.x)
-      {
-        if(w_x-dx >  next_p.x*w)
-          removed = true;
-        else
-        {
-          p.y = y;
-          move = false;
-        }
-      }
-    }
-
-    if(removed && get_curve()->get_n_points()>1)
       get_curve()->remove_point(focused_point);
-    else if(move)
-      removed = !get_curve()->move_point(focused_point, x, y);
-    else
-      get_curve()->update_all_samples();
-
-    if(removed)
       set_state_pointing_or_creating(w_x, w_y);
+    }else
+    {
+      p.y = y;
+      if(allow_to_move)
+        p.x = CLAMP(x, 0., 1.);
+      get_curve()->update_all_samples();
+    }
 
     invalidate(this);
     break;
@@ -370,6 +318,63 @@ bool CurveEditView::on_motion_notify_event(GdkEventMotion* eb)
   }
 
   return true;
+}
+
+void CurveEditView::delete_or_move_point(gsize i, gdouble old_x, int widget_space_new_x, gdouble new_x, bool& allow_to_move, bool& should_remove)
+{
+  int dx=64;
+  int w_x = widget_space_new_x;
+  int w = get_width();
+  gdouble x = new_x;
+
+  Curve::Point& p = get_curve()->get_point(focused_point);
+
+  should_remove = false;
+  allow_to_move = true;
+
+  if(i==0)
+  {
+    if(w_x<0)
+    {
+      if(w_x < -dx)
+        should_remove = true;
+      else
+        allow_to_move = false;
+    }
+  }else
+  {
+    const Curve::Point& prev_p = get_curve()->get_point(i-1);
+
+    if(x <= prev_p.x)
+    {
+      if(w_x+dx < prev_p.x*w)
+        should_remove = true;
+      else
+        allow_to_move = false;
+    }
+  }
+
+  if(i==get_curve()->get_n_points()-1)
+  {
+    if(x>1.)
+    {
+      if(w_x-w > dx)
+        should_remove = true;
+      else
+        allow_to_move = false;
+    }
+  }else
+  {
+    const Curve::Point& next_p = get_curve()->get_point(i+1);
+
+    if(x >= next_p.x)
+    {
+      if(w_x-dx >  next_p.x*w)
+        should_remove = true;
+      else
+        allow_to_move = false;
+    }
+  }
 }
 
 void CurveEditView::set_state_pointing_or_creating(int x, int y)
