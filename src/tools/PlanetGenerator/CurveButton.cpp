@@ -261,11 +261,14 @@ bool CurveEditView::on_button_release_event(GdkEventButton* eb)
 
 bool CurveEditView::on_motion_notify_event(GdkEventMotion* eb)
 {
+  g_assert(eb);
   if(!get_width()||!get_height())
     return false;
 
-  gdouble inv_w = 1./get_width();
-  gdouble inv_h = 1./get_height();
+  gdouble w = get_width();
+  gdouble h = get_height();
+  gdouble inv_w = 1./w;
+  gdouble inv_h = 1./h;
 
   switch(state)
   {
@@ -280,10 +283,56 @@ bool CurveEditView::on_motion_notify_event(GdkEventMotion* eb)
     break;
   }
   case STATE_MOVING:
-    if(!get_curve()->move_point(focused_point, eb->x*inv_w, 1.-eb->y*inv_h))
-      set_state_pointing_or_creating(eb->x, eb->y);
+  {
+    int dx=32;
+    int w_x = eb->x;
+    int w_y = eb->y;
+    gdouble x = w_x*inv_w;
+    gdouble y = CLAMP(1.-w_y*inv_h, 0., 1.);
+    bool removed = false;
+    bool move = true;
+
+    Curve::Point& p = get_curve()->get_point(focused_point);
+
+    if(focused_point==0)
+    {
+      if(w_x<0)
+      {
+        if(w_x < -dx)
+          removed = true;
+        else
+        {
+          p.y = y;
+          move = false;
+        }
+      }
+    }else
+    {
+      const Curve::Point& prev_p = get_curve()->get_point(focused_point-1);
+
+      if(x <= prev_p.x)
+      {
+        if(w_x+dx < prev_p.x*w)
+          removed = true;
+        else
+        {
+          p.y = y;
+          move = false;
+        }
+      }
+    }
+
+    if(removed)
+      get_curve()->remove_point(focused_point);
+    else if(move)
+      removed = !get_curve()->move_point(focused_point, x, y);
+
+    if(removed)
+      set_state_pointing_or_creating(w_x, w_y);
+
     invalidate(this);
     break;
+  }
   }
 
   return true;

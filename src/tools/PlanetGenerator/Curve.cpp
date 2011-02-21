@@ -179,6 +179,9 @@ bool Curve::move_point(gsize i, gdouble x, gdouble y)
     points[i].x = x;
     points[i].y = y;
   }
+
+  update_all_samples();
+
   return !remove;
 }
 
@@ -194,6 +197,13 @@ void Curve::update_all_samples()
     samples[i] = points[get_n_points()-1].y;
 
   const gsize max_i = get_n_points()-1;
+
+  if(get_n_points()<=1)
+    return;
+  if(get_n_points()==2)
+    gimp_curve_plot(this, 0, 0, 1, 1);
+  if(get_n_points()==3)
+    gimp_curve_plot(this, 0, 0, 1, 2);
 
   /*for(gsize i=0; i<max_i; i+=2)
     if(i+1==max_i)
