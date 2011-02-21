@@ -189,6 +189,7 @@ bool CurveEditView::on_enter_notify_event(GdkEventCrossing* eb)
 {
   switch(state)
   {
+  case STATE_MOVING_REMOVING:
   case STATE_MOVING:
     break;
   case STATE_NONE:
