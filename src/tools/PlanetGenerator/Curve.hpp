@@ -32,11 +32,28 @@ public:
     PRESENT_LINEAR,
   };
 
+  struct Point
+  {
+    gdouble x, y;
+  };
+
   void flip_h(){std::cout<<"Curve::flip_h\n";}
   void flip_v(){std::cout<<"Curve::flip_v\n";}
   void load_present(Present p){std::cout<<"Curve::load_present("<<p<<")\n";}
   void save_slot(guint i){std::cout<<"Curve::save_slot("<<i<<")\n";}
   void load_slot(guint i){std::cout<<"Curve::load_slot("<<i<<")\n";}
+
+  void set(const CurvePtr& c){std::cout<<"Curve::set()\n";}
+
+  bool get_interpolare_linear()const;
+  void set_interpolare_linear(bool linear=true);
+
+  sigc::signal<void> signal_changed(){return _signal_changed;}
+
+private:
+  bool _interpolare_linear;
+
+  sigc::signal<void> _signal_changed;
 
 public:
   static CurvePtr create(){return CurvePtr(new Curve);}
@@ -44,6 +61,42 @@ public:
 private:
   Curve();
   ~Curve()throw();
+
+public:
+  void set_n_samples(gsize n);
+  gsize get_n_samples()const{return n_samples;}
+  const gdouble* get_samples()const{return samples;}
+  void update_all_samples();
+  const gdouble& get_sample(gsize i)const
+  {
+    if(i>=get_n_samples())
+      throw std::out_of_range("Curve::get_sample");
+    return get_samples()[i];
+  }
+
+  const Point* get_points()const{return points;}
+  Point* get_points(){return points;}
+  gsize get_n_points()const{return n_points;}
+  void set_n_points(gsize n);
+
+  void add_point(gdouble x, gdouble y);
+  void remove_point(gsize i);
+  gsize find_point(gdouble x, gdouble y, gdouble max_diff);
+
+  /**
+   *
+   * \return true if the point still exists after the moving operation
+   **/
+  bool move_point(gsize i, gdouble x, gdouble y);
+
+private:
+  // The following names and types are chosen for compatibility with the gimp_curve_plot procedure in gimpcurve.cpp
+  static void gimp_curve_plot(Curve*, gsize, gsize, gsize, gsize);
+
+  Point* points;
+  gsize n_points;
+  gsize n_samples;
+  gdouble* samples;
 };
 
 

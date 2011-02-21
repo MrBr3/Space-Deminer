@@ -89,6 +89,11 @@
       <File Name="Raytracer/Ring.hpp"/>
       <File Name="Raytracer/Ring.cpp"/>
     </VirtualDirectory>
+    <VirtualDirectory Name="extern">
+      <VirtualDirectory Name="gimp">
+        <File Name="../../extern/gimp/gimpcurve.cpp"/>
+      </VirtualDirectory>
+    </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug">
     <Project Name="Base"/>

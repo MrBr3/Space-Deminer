@@ -33,6 +33,32 @@ public:
   ~CurvePreview()throw();
 };
 
+class CurveEditView : public CurvePreview
+{
+public:
+  //bool on_expose_event(GdkEventExpose* ee);
+  void on_size_request(Gtk::Requisition* r);
+
+  CurveEditView();
+  ~CurveEditView()throw();
+};
+
+class CurveDialog : public Gtk::Dialog
+{
+  CurvePtr _curve;
+
+  Gtk::VBox vbox;
+  Gtk::Frame _frame;
+  CurveEditView view;
+  Gtk::CheckButton cbtn;
+
+public:
+  void set_curve(const CurvePtr& c);
+  const CurvePtr& get_curve()const{return _curve;}
+
+  CurveDialog();
+};
+
 class CurveButton : public Gtk::Button
 {
   CurvePtr _curve;

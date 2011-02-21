@@ -79,7 +79,9 @@ GradientDialog::GradientDialog()
 {
   _private_gradient = Gradient::create_black2white();
 
-  set_default_size(480, 320);
+  set_default_size(300, -1);
+
+  set_title(_("EditGradient"));
 
   g_assert(get_vbox());
   get_vbox()->pack_start(table_);
@@ -89,18 +91,23 @@ GradientDialog::GradientDialog()
     table_.attach(label[0], 0, 1, 0, 1, Gtk::SHRINK, Gtk::SHRINK);
       label[0].show();
       label[0].set_label(_("DefaultColor"));
+      label[0].set_alignment(0.f, 0.5f);
     table_.attach(label[1], 0, 1, 1, 2, Gtk::SHRINK, Gtk::SHRINK);
       label[1].show();
       label[1].set_label(_("Color1"));
+      label[1].set_alignment(0.f, 0.5f);
     table_.attach(label[2], 0, 1, 2, 3, Gtk::SHRINK, Gtk::SHRINK);
       label[2].show();
       label[2].set_label(_("Color2"));
+      label[2].set_alignment(0.f, 0.5f);
     table_.attach(label[3], 0, 1, 3, 4, Gtk::SHRINK, Gtk::SHRINK);
       label[3].show();
       label[3].set_label(_("Color3"));
+      label[3].set_alignment(0.f, 0.5f);
     table_.attach(label[4], 0, 1, 4, 5, Gtk::SHRINK, Gtk::SHRINK);
       label[4].show();
       label[4].set_label(_("Color4"));
+      label[4].set_alignment(0.f, 0.5f);
     table_.attach(def_color, 1, 2, 0, 1, Gtk::SHRINK, Gtk::SHRINK);
       def_color.show();
     table_.attach(color1, 1, 2, 1, 2, Gtk::SHRINK, Gtk::SHRINK);

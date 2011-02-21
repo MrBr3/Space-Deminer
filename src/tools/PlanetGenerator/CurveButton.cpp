@@ -48,7 +48,23 @@ bool CurvePreview::on_expose_event(GdkEventExpose* ee)
   if(!cc)
     return false;
 
-  //TODO
+  if(get_curve()->get_n_samples()>0)
+  {
+    gdouble w = get_width();
+    gdouble h = get_height();
+
+    gdouble x = 0.;
+    gdouble dx = 1./MAX(1., get_curve()->get_n_samples()-1);
+
+    cc->move_to(0., h-get_curve()->get_sample(0)*h);
+    for(gsize i=1; i<get_curve()->get_n_samples(); ++i)
+    {
+      x+=dx;
+      cc->line_to(w*x, h-get_curve()->get_sample(i)*h);
+    }
+
+    cc->stroke();
+  }
   return true;
 }
 
@@ -59,6 +75,62 @@ void CurvePreview::on_size_request(Gtk::Requisition* r)
     r->width = 35;
     r->height = 15;
   }
+}
+
+// ------------
+
+CurveEditView::CurveEditView()
+{
+}
+
+CurveEditView::~CurveEditView()throw()
+{
+}
+
+void CurveEditView::on_size_request(Gtk::Requisition* r)
+{
+  if(r)
+  {
+    r->width = 256;
+    r->height = 256;
+  }
+}
+
+// ------------
+
+CurveDialog::CurveDialog()
+{
+  _curve = Curve::create();
+
+  set_title(_("EditCurve"));
+
+  Gtk::VBox& dlg_vbox = *get_vbox();
+  g_assert(&dlg_vbox);
+
+  vbox.set_border_width(LENGTH_SMALLSPACE);
+  vbox.set_spacing(LENGTH_SMALLSPACE);
+  vbox.pack_start(_frame);
+  vbox.pack_start(cbtn, false, false);
+
+  _frame.add(view);
+
+  cbtn.set_label(_("_Cubic-Spline-Interpolation"));
+  cbtn.set_use_underline(true);
+
+  dlg_vbox.pack_start(vbox);
+  dlg_vbox.show_all_children();
+  dlg_vbox.set_spacing(LENGTH_SMALLSPACE);
+
+  set_has_separator(true);
+  set_default_response(Gtk::RESPONSE_OK);
+
+  add_button(Gtk::Stock::OK, Gtk::RESPONSE_OK);
+  add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
+}
+
+void CurveDialog::set_curve(const CurvePtr& c)
+{
+  _curve->set(c);
 }
 
 // ------------
@@ -169,5 +241,10 @@ void CurveButton::set_curve(const CurvePtr& c)
 
 void CurveButton::on_clicked()
 {
-  std::cout<<"CurveButton::on_clicked\n";
+  CurveDialog dlg;
+
+  dlg.set_curve(get_curve());
+
+  if(dlg.run()==Gtk::RESPONSE_OK)
+    _curve->set(dlg.get_curve());
 }
