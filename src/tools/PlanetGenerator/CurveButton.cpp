@@ -79,12 +79,76 @@ void CurvePreview::on_size_request(Gtk::Requisition* r)
 
 // ------------
 
-CurveEditView::CurveEditView()
+CurveEditView::CurveEditView() : cursor_creating(Gdk::CROSSHAIR), cursor_moving(Gdk::HAND1)
 {
+  focused_point = G_MAXSIZE;
+
+  state = STATE_NONE;
+
+  add_events(Gdk::BUTTON_PRESS_MASK|Gdk::BUTTON_RELEASE_MASK|Gdk::POINTER_MOTION_MASK|Gdk::LEAVE_NOTIFY_MASK|Gdk::ENTER_NOTIFY_MASK);
 }
 
 CurveEditView::~CurveEditView()throw()
 {
+}
+
+bool CurveEditView::on_expose_event(GdkEventExpose* ee)
+{
+  Glib::RefPtr<Gdk::Window> win = get_window();
+
+  if(!win)
+    return false;
+
+  Cairo::RefPtr<Cairo::Context> cc = win->create_cairo_context();
+
+  if(!cc)
+    return false;
+
+  gdouble w = get_width();
+  gdouble h = get_height();
+
+  cc->set_source_rgba(0., 0., 0., 0.25); // TODO: use TextColor
+
+  cc->rectangle(0.5, 0.5, w-1., h-1.);
+  cc->move_to(1.5,   0.50*h);
+  cc->line_to(w-1.5, 0.50*h);
+
+  cc->move_to(0.5*w,  1.5);
+  cc->line_to(0.5*w,  h-1.5);
+
+  cc->stroke();
+
+  cc->set_source_rgba(0., 0., 0., 0.125); // TODO: use TextColor
+
+  cc->move_to(1.5,   0.25*h);
+  cc->line_to(w-1.5, 0.25*h);
+  cc->move_to(1.5,   0.75*h);
+  cc->line_to(w-1.5, 0.75*h);
+
+  cc->move_to(0.75*w, 1.5);
+  cc->line_to(0.75*w, h-1.5);
+  cc->move_to(0.25*w, 1.5);
+  cc->line_to(0.25*w, h-1.5);
+
+  cc->stroke();
+
+  cc->set_source_rgb(0., 0., 0.);
+
+  for(gsize i=0; i<get_curve()->get_n_points(); ++i)
+  {
+    const Curve::Point& p = get_curve()->get_point(i);
+
+    if(i==focused_point && (state==STATE_POINTING||state==STATE_MOVING))
+    {
+      cc->set_source_rgb(1.0, 0.5, 0.); // TODO: use Highlight Color
+    }else
+      cc->set_source_rgb(0., 0., 0.); // TODO: use TextColor
+
+    cc->arc(p.x*w, h-p.y*h, 4., 0., PI2);
+    cc->fill();
+  }
+
+  return CurvePreview::on_expose_event(ee);
 }
 
 void CurveEditView::on_size_request(Gtk::Requisition* r)
@@ -94,6 +158,150 @@ void CurveEditView::on_size_request(Gtk::Requisition* r)
     r->width = 256;
     r->height = 256;
   }
+}
+
+void CurveEditView::set_state(State state)
+{
+  Glib::RefPtr<Gdk::Window> win = get_window();
+
+  this->state = state;
+
+  if(!win)
+    return;
+
+  switch(state)
+  {
+  case STATE_CREATING:
+    win->set_cursor(cursor_creating);
+    break;
+  case STATE_MOVING:
+  case STATE_POINTING:
+    win->set_cursor(cursor_moving);
+    break;
+  }
+}
+
+bool CurveEditView::on_enter_notify_event(GdkEventCrossing* eb)
+{
+  switch(state)
+  {
+  case STATE_MOVING:
+    break;
+  case STATE_NONE:
+  default:
+    set_state(STATE_CREATING);
+  }
+
+  return true;
+}
+
+bool CurveEditView::on_leave_notify_event(GdkEventCrossing* eb)
+{
+  switch(state)
+  {
+  case STATE_POINTING:
+  case STATE_CREATING:
+    state = STATE_NONE;
+  default:
+    break;
+  }
+  return true;
+}
+
+bool CurveEditView::on_button_press_event(GdkEventButton* eb)
+{
+  if(!get_width()||!get_height())
+    return false;
+
+  gdouble inv_w = 1./get_width();
+  gdouble inv_h = 1./get_height();
+
+  switch(state)
+  {
+  case STATE_CREATING:
+    if(eb->button==1)
+    {
+      focused_point = get_curve()->add_point(eb->x*inv_w, 1.-eb->y*inv_h);
+
+      set_state(STATE_POINTING);
+      invalidate(this);
+    }
+    break;
+  case STATE_POINTING:
+    if(eb->button==1)
+    {
+      set_state(STATE_MOVING);
+    }
+    break;
+  }
+
+  return true;
+}
+
+bool CurveEditView::on_button_release_event(GdkEventButton* eb)
+{
+  if(!get_width()||!get_height())
+    return false;
+
+  gdouble inv_w = 1./get_width();
+  gdouble inv_h = 1./get_height();
+
+  switch(state)
+  {
+  case STATE_MOVING:
+    if(eb->button==1)
+    {
+      set_state_pointing_or_creating(eb->x, eb->y);
+      invalidate(this);
+    }
+    break;
+  }
+  return true;
+}
+
+bool CurveEditView::on_motion_notify_event(GdkEventMotion* eb)
+{
+  if(!get_width()||!get_height())
+    return false;
+
+  gdouble inv_w = 1./get_width();
+  gdouble inv_h = 1./get_height();
+
+  switch(state)
+  {
+  case STATE_CREATING:
+  case STATE_POINTING:
+  {
+    gsize old_focused_point = focused_point;
+    set_state_pointing_or_creating(eb->x, eb->y);
+
+    if(focused_point!=old_focused_point || state==STATE_CREATING)
+      invalidate(this);
+    break;
+  }
+  case STATE_MOVING:
+    if(!get_curve()->move_point(focused_point, eb->x*inv_w, 1.-eb->y*inv_h))
+      set_state_pointing_or_creating(eb->x, eb->y);
+    invalidate(this);
+    break;
+  }
+
+  return true;
+}
+
+void CurveEditView::set_state_pointing_or_creating(int x, int y)
+{
+  if(!get_width()||!get_height())
+    return;
+
+  gdouble inv_w = 1./get_width();
+  gdouble inv_h = 1./get_height();
+
+  focused_point = get_curve()->find_point(x*inv_w, 1.-y*inv_h, 8.*.5*(inv_w+inv_h));
+  if(focused_point>=get_curve()->get_n_points())
+    set_state(STATE_CREATING);
+  else
+    set_state(STATE_POINTING);
 }
 
 // ------------

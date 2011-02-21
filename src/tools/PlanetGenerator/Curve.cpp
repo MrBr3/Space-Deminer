@@ -76,7 +76,7 @@ gsize Curve::find_point(gdouble x, gdouble y, gdouble max_diff)
   {
     gdouble sdist = square(points[i].x-x)+square(points[i].y-y);
 
-    if(max_diff<=sdist && found_sdist>sdist)
+    if(max_diff>=sdist && found_sdist>sdist)
     {
       found_sdist = sdist;
       found = i;
@@ -86,12 +86,28 @@ gsize Curve::find_point(gdouble x, gdouble y, gdouble max_diff)
   return found;
 }
 
-void Curve::add_point(gdouble x, gdouble y) // TODO genau Testen
+gsize Curve::add_point(gdouble x, gdouble y) // TODO genau Testen
 {
+  gsize new_index=G_MAXSIZE;
+
+  x = CLAMP(x, 0., 1.);
+  y = CLAMP(y, 0., 1.);
+
   n_points++;
   Point* new_points = new Point[n_points];
 
   bool found = false;
+
+  for(gsize i=0; i<get_n_points(); ++i)
+  {
+    Point& p = points[i];
+
+    if(p.x==x)
+    {
+      p.y = y;
+      return i;
+    }
+  }
 
   gsize j=0;
   for(gsize i=0; i<get_n_points(); ++i)
@@ -108,6 +124,7 @@ void Curve::add_point(gdouble x, gdouble y) // TODO genau Testen
       found = true;
       new_points[i].x=x;
       new_points[i].y=y;
+      new_index = i;
     }else
       ++j;
   }
@@ -117,14 +134,14 @@ void Curve::add_point(gdouble x, gdouble y) // TODO genau Testen
   points = new_points;
 
   update_all_samples();
+
+  return new_index;
 }
 
 void Curve::remove_point(gsize i)
 {
   if(i>=n_points)
     throw std::out_of_range("**Curve::remove_point** i is out of range");
-
-  --n_points;
 
   for(gsize j=0, k=0; j<n_points; ++j)
   {
@@ -135,6 +152,8 @@ void Curve::remove_point(gsize i)
       ++k;
     }
   }
+
+  --n_points;
 }
 
 bool Curve::move_point(gsize i, gdouble x, gdouble y)
@@ -176,8 +195,11 @@ void Curve::update_all_samples()
 
   const gsize max_i = get_n_points()-1;
 
-  for(gsize i=0; i<max_i; i+=3)
-    gimp_curve_plot(this, i, MIN(max_i, i+1), MIN(max_i, i+2), MIN(max_i, i+3));
+  /*for(gsize i=0; i<max_i; i+=2)
+    if(i+1==max_i)
+      gimp_curve_plot(this, i, i, max_i, max_i);
+    else
+      gimp_curve_plot(this, i, i+1), MIN(max_i, i+2), MIN(max_i, i+3));*/
 
   signal_changed().emit();
 }

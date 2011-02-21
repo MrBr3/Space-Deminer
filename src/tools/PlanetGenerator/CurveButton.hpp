@@ -35,9 +35,31 @@ public:
 
 class CurveEditView : public CurvePreview
 {
+  gsize focused_point;
+
+  enum State
+  {
+    STATE_NONE,
+    STATE_CREATING,
+    STATE_POINTING,
+    STATE_MOVING,
+  }state;
+
+  Gdk::Cursor cursor_creating, cursor_moving;
+
+  void set_state(State state);
+
+  void set_state_pointing_or_creating(int x, int y);
+
 public:
-  //bool on_expose_event(GdkEventExpose* ee);
+  bool on_expose_event(GdkEventExpose* ee);
   void on_size_request(Gtk::Requisition* r);
+
+  bool on_enter_notify_event(GdkEventCrossing* eb);
+  bool on_leave_notify_event(GdkEventCrossing* eb);
+  bool on_button_press_event(GdkEventButton* eb);
+  bool on_button_release_event(GdkEventButton* eb);
+  bool on_motion_notify_event(GdkEventMotion* eb);
 
   CurveEditView();
   ~CurveEditView()throw();

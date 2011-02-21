@@ -76,10 +76,16 @@ public:
 
   const Point* get_points()const{return points;}
   Point* get_points(){return points;}
+  const Point& get_point(gsize i)const
+  {
+    if(i>=get_n_points())
+      throw std::out_of_range("Curve::get_point");
+    return get_points()[i];
+  }
   gsize get_n_points()const{return n_points;}
   void set_n_points(gsize n);
 
-  void add_point(gdouble x, gdouble y);
+  gsize add_point(gdouble x, gdouble y);
   void remove_point(gsize i);
   gsize find_point(gdouble x, gdouble y, gdouble max_diff);
 
