@@ -136,7 +136,20 @@ PlanetGenerator
       [X] RingTextur
       [X] Filtering überarbeiten
         [X] Mit geeigneten Texturen Testen
+      [ ] LightLayer
+        [ ] Material implementieren
+        [ ] Farbverlauf implementieren
+          [ ] Farbverlauf Dialog
+            [X] Remap
+            [X] anzahl Samples
+            [ ] KurvenDialog
+              [ ] Puinkte wieder reinziehen können
+              [ ] Fehler bei Endknoten bei vollbild und 256 Samples finden
+              [ ] Linear Checkbox sollte tun
+            [ ] Kurven sollten Werte in String exportieren können
+            [ ] Kurven sollten Werte aus String importieren können
       [ ] Atmosphären effekt
+        [ ] Farbverlauf soll Material beeinflussen
         [ ] Entfernung, mit der der Strahl an der Kugel vorbeifliegt bestimmen können
         [ ] Atmosphäre soll auch Ringe beeinflussen
   [ ] Shader

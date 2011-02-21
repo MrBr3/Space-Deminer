@@ -38,6 +38,7 @@ using TriangleVersion::SphereMesh;
 #include "GradientButton.hpp"
 
 void invalidate(Gtk::Widget* w);
+void set_unit(Gtk::SpinButton& sb, const Glib::ustring& str);
 
 const gint LENGTH_BORDER_WIDTH = 4;
 const gint LENGTH_SMALLSPACE = 3;

@@ -36,6 +36,7 @@ public:
 class CurveEditView : public CurvePreview
 {
   gsize focused_point;
+  Curve::Point removed_point;
 
   enum State
   {
@@ -43,6 +44,7 @@ class CurveEditView : public CurvePreview
     STATE_CREATING,
     STATE_POINTING,
     STATE_MOVING,
+    STATE_MOVING_REMOVING,
   }state;
 
   Gdk::Cursor cursor_creating, cursor_moving;

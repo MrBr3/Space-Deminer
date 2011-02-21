@@ -32,6 +32,22 @@ void invalidate(Gtk::Widget* w)
     window->invalidate(true);
 }
 
+namespace Private
+{
+  bool add_unit_to_spinbutton(Gtk::SpinButton* sb, const Glib::ustring& str)
+  {
+    sb->set_text(Glib::ustring::compose("%1%2",
+                                        Glib::ustring::format(std::fixed, std::setprecision(sb->get_digits()), sb->get_value()),
+                                        str));
+    return true;
+  }
+}
+
+void set_unit(Gtk::SpinButton& sb, const Glib::ustring& str)
+{
+  sb.signal_output().connect(sigc::bind(sigc::ptr_fun(Private::add_unit_to_spinbutton), &sb, str));
+}
+
 bool negate(const sigc::slot<bool>& fun)
 {
   return !fun();

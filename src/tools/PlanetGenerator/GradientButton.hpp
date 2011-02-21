@@ -40,13 +40,14 @@ class GradientDialog : public Gtk::Dialog
 {
   GradientPtr _private_gradient;
 
-  Gtk::Table table_;
+  Gtk::Table table_, table2_;
   Gtk::ColorButton def_color;
   Gtk::ColorButton color1, color2, color3, color4;
   CurveButton curve1, curve2, curve3, curve4;
   GradientPreview preview_;
   Gtk::Frame preview_frame_;
-  Gtk::Label label[5];
+  Gtk::Label label[7];
+  Gtk::SpinButton remap_a, remap_b, n_samples;
   Gtk::CheckButton use_alpha_;
 
 public:

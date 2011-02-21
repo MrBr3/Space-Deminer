@@ -405,7 +405,7 @@ CurveDialog::CurveDialog()
 
   _frame.add(view);
 
-  cbtn.set_label(_("_Cubic-Spline-Interpolation"));
+  cbtn.set_label(_("_Linear-Interpolation"));
   cbtn.set_use_underline(true);
 
   dlg_vbox.pack_start(vbox);
