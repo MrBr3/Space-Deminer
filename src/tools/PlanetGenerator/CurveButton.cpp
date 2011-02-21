@@ -187,6 +187,8 @@ void CurveEditView::set_state(State state)
 
 bool CurveEditView::on_enter_notify_event(GdkEventCrossing* eb)
 {
+  try
+  {
   switch(state)
   {
   case STATE_MOVING_REMOVING:
@@ -196,12 +198,15 @@ bool CurveEditView::on_enter_notify_event(GdkEventCrossing* eb)
   default:
     set_state(STATE_CREATING);
   }
+  }CATCH_ALL("**CurveEditView::on_enter_notify_event**", set_state(STATE_NONE);return false;);
 
   return true;
 }
 
 bool CurveEditView::on_leave_notify_event(GdkEventCrossing* eb)
 {
+  try
+  {
   switch(state)
   {
   case STATE_POINTING:
@@ -210,11 +215,15 @@ bool CurveEditView::on_leave_notify_event(GdkEventCrossing* eb)
   default:
     break;
   }
+  }CATCH_ALL("**CurveEditView::on_leave_notify_event**", set_state(STATE_NONE);return false;);
+
   return true;
 }
 
 bool CurveEditView::on_button_press_event(GdkEventButton* eb)
 {
+  try
+  {
   if(!get_width()||!get_height())
     return false;
 
@@ -239,12 +248,15 @@ bool CurveEditView::on_button_press_event(GdkEventButton* eb)
     }
     break;
   }
+  }CATCH_ALL("**CurveEditView::on_button_press_event**", set_state(STATE_NONE);return false;);
 
   return true;
 }
 
 bool CurveEditView::on_button_release_event(GdkEventButton* eb)
 {
+  try
+  {
   if(!get_width()||!get_height())
     return false;
 
@@ -262,11 +274,15 @@ bool CurveEditView::on_button_release_event(GdkEventButton* eb)
     }
     break;
   }
+  }CATCH_ALL("**CurveEditView::on_button_release_event**", set_state(STATE_NONE);return false;);
+
   return true;
 }
 
 bool CurveEditView::on_motion_notify_event(GdkEventMotion* eb)
 {
+  try
+  {
   g_assert(eb);
   if(!get_width()||!get_height())
     return false;
@@ -339,6 +355,8 @@ bool CurveEditView::on_motion_notify_event(GdkEventMotion* eb)
     }
   }
   }
+
+  }CATCH_ALL("**CurveEditView::on_motion_notify_event**", set_state(STATE_NONE);return false;);
 
   return true;
 }

@@ -70,7 +70,7 @@ public:
   const gdouble& get_sample(gsize i)const
   {
     if(i>=get_n_samples())
-      throw std::out_of_range("Curve::get_sample");
+      throw std::out_of_range("Curve::get_sample: bad index");
     return get_samples()[i];
   }
 
@@ -79,13 +79,13 @@ public:
   const Point& get_point(gsize i)const
   {
     if(i>=get_n_points())
-      throw std::out_of_range("Curve::get_point");
+      throw std::out_of_range("Curve::get_point: bad index");
     return get_points()[i];
   }
   Point& get_point(gsize i)
   {
     if(i>=get_n_points())
-      throw std::out_of_range("Curve::get_point");
+      throw std::out_of_range("Curve::get_point: bad index");
     return points[i];
   }
   gsize get_n_points()const{return n_points;}
