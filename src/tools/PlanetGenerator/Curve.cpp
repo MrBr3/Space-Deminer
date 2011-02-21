@@ -19,15 +19,19 @@
 
 #include "./Model.hpp"
 
+CurvePtr Curve::slots[4];
+
 Curve::Curve()
 {
-  points = new Point[1];
-  n_points = 1;
+  points = new Point[2];
+  n_points = 2;
   _interpolate_linear = false;
   _invalidated = false;
 
   points[0].x = 0.;
   points[0].y = 0.;
+  points[1].x = 1.;
+  points[1].y = 1.;
 
   n_samples = 0;
   samples = nullptr;
@@ -40,11 +44,51 @@ Curve::~Curve()throw()
   delete[] samples;
 }
 
-void Curve::set(const ConstCurvePtr& c)
+void Curve::save_slot(guint i)
 {
-  const Curve& other_c = *c.operator->();
+  if(i>=4)
+    throw std::invalid_argument("Curve::load_slot: rule 0<=i<4 hurt");
 
-  if(!c || &other_c==this)
+  init_slots();
+
+  slots[i]->set(*this);
+}
+
+void Curve::load_slot(guint i)
+{
+  if(i>=4)
+    throw std::invalid_argument("Curve::load_slot: rule 0<=i<4 hurt");
+
+  init_slots();
+
+  set(slots[i]);
+}
+
+void Curve::init_slots()
+{
+  if(slots[0])
+    return;
+
+  slots[0] = Curve::create();
+  slots[1] = Curve::create();
+  slots[2] = Curve::create();
+  slots[3] = Curve::create();
+
+  for(gsize i=0; i<4; ++i)
+  {
+    //TODO Load value from options
+    slots[i]->signal_changed().connect(sigc::bind(sigc::ptr_fun(slot_changed), i));
+  }
+}
+
+void Curve::slot_changed(gsize i)
+{
+  //TODO save to options
+}
+
+void Curve::set(const Curve& other_c)
+{
+  if(!&other_c || &other_c==this)
     return;
 
   set_n_points(other_c.get_n_points());
@@ -56,6 +100,13 @@ void Curve::set(const ConstCurvePtr& c)
 
   set_n_samples(other_c.get_n_samples());
   update_all_samples();
+}
+
+void Curve::set(const ConstCurvePtr& c)
+{
+  const Curve& other_c = *c.operator->();
+
+  set(other_c);
 }
 
 void Curve::load_present(Present p)

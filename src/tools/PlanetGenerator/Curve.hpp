@@ -22,6 +22,7 @@
 
 class Curve : public Refable
 {
+  Curve(const Curve&);
 public:
   typedef Glib::RefPtr<Curve> CurvePtr;
   typedef Glib::RefPtr<const Curve> ConstCurvePtr;
@@ -40,10 +41,16 @@ public:
   void flip_h();
   void flip_v();
   void load_present(Present p);
-  void save_slot(guint i){std::cout<<"Curve::save_slot("<<i<<")\n";}
-  void load_slot(guint i){std::cout<<"Curve::load_slot("<<i<<")\n";}
+  void save_slot(guint i);
+  void load_slot(guint i);
 
   void set(const ConstCurvePtr& c);
+  void set(const Curve& c);
+  Curve& operator=(const Curve& c)
+  {
+    set(c);
+    return *this;
+  }
 
   bool get_interpolate_linear()const{return _interpolate_linear;}
   void set_interpolate_linear(bool linear=true);
@@ -55,13 +62,14 @@ public:
     _invalidated = true;
   }
 
-  //static init_slots();
+  static void init_slots();
 
 private:
   bool _interpolate_linear;
   bool _invalidated;
 
-  //static CurvePtr slots[4];
+  static CurvePtr slots[4];
+  static void slot_changed(gsize i);
 
   sigc::signal<void> _signal_changed;
 
