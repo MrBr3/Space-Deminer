@@ -298,12 +298,14 @@ bool CurveEditView::on_motion_notify_event(GdkEventMotion* eb)
 
     Curve::Point& p = get_curve()->get_point(focused_point);
 
-    delete_or_move_point(focused_point, p.x, w_x, x, allow_to_move, should_remove);
+    delete_or_move_point(focused_point-1, focused_point+1, p.x, w_x, x, allow_to_move, should_remove);
 
     if(should_remove && get_curve()->get_n_points()>1)
     {
+      removed_point_last_x = p.x;
+
       get_curve()->remove_point(focused_point);
-      set_state_pointing_or_creating(w_x, w_y);
+      set_state(STATE_MOVING_REMOVING);
     }else
     {
       p.y = y;
@@ -315,24 +317,42 @@ bool CurveEditView::on_motion_notify_event(GdkEventMotion* eb)
     invalidate(this);
     break;
   }
+  case STATE_MOVING_REMOVING:
+  {
+    int w_x = eb->x;
+    int w_y = eb->y;
+    gdouble x = w_x*inv_w;
+    gdouble y = CLAMP(1.-w_y*inv_h, 0., 1.);
+    bool should_remove;
+    bool allow_to_move;
+
+    delete_or_move_point(focused_point-1, focused_point, removed_point_last_x, w_x, x, allow_to_move, should_remove);
+
+    if(!should_remove)
+    {
+      if(!allow_to_move)
+        x = removed_point_last_x;
+
+      get_curve()->add_point(x, y);
+      set_state(STATE_MOVING);
+    }
+  }
   }
 
   return true;
 }
 
-void CurveEditView::delete_or_move_point(gsize i, gdouble old_x, int widget_space_new_x, gdouble new_x, bool& allow_to_move, bool& should_remove)
+void CurveEditView::delete_or_move_point(gsize i_prev, gsize i_next, gdouble old_x, int widget_space_new_x, gdouble new_x, bool& allow_to_move, bool& should_remove)
 {
   int dx=64;
   int w_x = widget_space_new_x;
   int w = get_width();
   gdouble x = new_x;
 
-  Curve::Point& p = get_curve()->get_point(focused_point);
-
   should_remove = false;
   allow_to_move = true;
 
-  if(i==0)
+  if(i_prev<0 || i_prev>=get_curve()->get_n_points())
   {
     if(w_x<0)
     {
@@ -343,7 +363,7 @@ void CurveEditView::delete_or_move_point(gsize i, gdouble old_x, int widget_spac
     }
   }else
   {
-    const Curve::Point& prev_p = get_curve()->get_point(i-1);
+    const Curve::Point& prev_p = get_curve()->get_point(i_prev);
 
     if(x <= prev_p.x)
     {
@@ -354,7 +374,7 @@ void CurveEditView::delete_or_move_point(gsize i, gdouble old_x, int widget_spac
     }
   }
 
-  if(i==get_curve()->get_n_points()-1)
+  if(i_next<0 || i_next>=get_curve()->get_n_points())
   {
     if(x>1.)
     {
@@ -365,7 +385,7 @@ void CurveEditView::delete_or_move_point(gsize i, gdouble old_x, int widget_spac
     }
   }else
   {
-    const Curve::Point& next_p = get_curve()->get_point(i+1);
+    const Curve::Point& next_p = get_curve()->get_point(i_next);
 
     if(x >= next_p.x)
     {

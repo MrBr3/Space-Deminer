@@ -53,7 +53,7 @@ class CurveEditView : public CurvePreview
 
   void set_state_pointing_or_creating(int x, int y);
 
-  void delete_or_move_point(gsize i, gdouble old_x, int widget_space_new_x, gdouble new_x, bool& allow_to_move, bool& should_remove);
+  void delete_or_move_point(gsize i_prev, gsize i_next, gdouble old_x, int widget_space_new_x, gdouble new_x, bool& allow_to_move, bool& should_remove);
 
 public:
   bool on_expose_event(GdkEventExpose* ee);
