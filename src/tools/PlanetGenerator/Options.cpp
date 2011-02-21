@@ -157,9 +157,17 @@ void Options::get_curve(const Glib::ustring& name, const CurvePtr& curve)
     Glib::ustring::const_iterator b = str.begin();
     tmp->load_from_string(b, str.end());
     if(b!=str.end())
-      throw 0;
+    {
+      std::cout<<"**Options::get_curve** couldn't parse the whole line\n";
+      return;
+    }
+  }catch(const std::exception& e)
+  {
+    std::cout<<"**Options::get_curve** error while Parsing: '"<<e.what()<<"'\n";
+    return;
   }catch(...)
   {
+    std::cout<<"**Options::get_curve** unknown error while Parsing\n";
     return;
   }
 

@@ -142,12 +142,13 @@ PlanetGenerator
           [ ] Farbverlauf Dialog
             [X] Remap
             [X] anzahl Samples
-            [ ] KurvenDialog
+            [X] KurvenDialog
               [X] Puinkte wieder reinziehen können
-              [ ] Fehler bei Endknoten bei vollbild und 256 Samples finden
-              [ ] Linear Checkbox sollte tun
-            [ ] Kurven sollten Werte in String exportieren können
-            [ ] Kurven sollten Werte aus String importieren können
+              [X] Fehler bei Endknoten bei vollbild und 256 Samples finden
+              [X] Linear Checkbox sollte tun
+            [X] Kurven sollten Werte in String exportieren können
+            [X] Kurven sollten Werte aus String importieren können
+      [ ] Graditionskurve für Texture Layer
       [ ] Atmosphären effekt
         [ ] Farbverlauf soll Material beeinflussen
         [ ] Entfernung, mit der der Strahl an der Kugel vorbeifliegt bestimmen können

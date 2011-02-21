@@ -195,6 +195,22 @@ void Curve::load_from_string(Glib::ustring::const_iterator& begin, Glib::ustring
   if(!compare(begin, end, "(curve "))
     throw_parser_error("missing beginning '(curve '");
 
+  if(begin==end)
+    throw_parser_error("expected '0' or '1'");
+
+  if(*begin!='1' && *begin!='0')
+    throw_parser_error("expected '0' or '1'");
+
+  _interpolate_linear = *begin=='1';
+  ++begin;
+
+  if(begin==end)
+    throw_parser_error("expected ' ' after boolean value and points");
+
+  if(*begin!=' ')
+    throw_parser_error("expected ' ' after boolean value and points");
+  ++begin;
+
   if(*begin!='(')
     throw_parser_error("empty curves not allowed");
 
@@ -211,8 +227,11 @@ void Curve::load_from_string(Glib::ustring::const_iterator& begin, Glib::ustring
     if(begin==end)
       throw_parser_error("missing ')'");
     if(*begin==')')
+    {
+      ++begin;
       break;
-    if(*begin==' ')
+    }
+    while(*begin==' ')
       ++begin;
   }
 
@@ -232,41 +251,44 @@ void Curve::load_from_string(Glib::ustring::const_iterator& begin, Glib::ustring
 void Curve::load_point_from_string(Point& pt, Glib::ustring::const_iterator& begin, Glib::ustring::const_iterator end)
 {
   if(!compare(begin, end, "(pt "))
-    throw_parser_error("missing beginning '(pt '");
+    throw_point_parser_error("missing beginning '(pt '");
 
   Glib::ustring::const_iterator tmp = begin;
   while(begin!=end)
   {
     if(*begin==' ')
       break;
+    ++begin;
   }
   if(begin==end)
-    throw_parser_error("(pt ... ...) needs two real numbers!");
+    throw_point_parser_error("(pt ... ...) needs two real numbers!");
 
   bool success;
   pt.x = str_to_real(Glib::ustring(tmp, begin), 0., &success);
   if(!success)
-    throw_parser_error("(pt ... ...) needs two real numbers!");
+    throw_point_parser_error("(pt ... ...) needs two real numbers!");
 
   if(*begin != ' ')
-    throw_parser_error("(pt ... ...) needs two real numbers divided by a space character");
+    throw_point_parser_error("(pt ... ...) needs two real numbers divided by a space character");
 
   ++begin;
   tmp = begin;
   while(begin!=end)
   {
-    if(*begin==' ')
+    if(*begin==')')
       break;
+    ++begin;
   }
   if(begin==end)
-    throw_parser_error("(pt ... ...) needs two real numbers!");
+    throw_point_parser_error("(pt ... ...) needs two real numbers!");
 
   pt.y = str_to_real(Glib::ustring(tmp, begin), 0., &success);
   if(!success)
-    throw_parser_error("(pt ... ...) needs two real numbers!");
+    throw_point_parser_error("(pt ... ...) needs two real numbers!");
 
   if(*begin != ')')
-    throw_parser_error("missing ')'");
+    throw_point_parser_error("missing ')'");
+  ++begin;
 }
 
 Glib::ustring Curve::save_to_string()const
@@ -274,7 +296,11 @@ Glib::ustring Curve::save_to_string()const
   Glib::ustring str;
 
   for(gsize i=0; i<get_n_points(); ++i)
-    str += "(pt "+Options::real2string(points[i].x)+" "+Options::real2string(points[i].x)+")";
+  {
+    if(i>0)
+      str+=" ";
+    str += "(pt "+Options::real2string(points[i].x)+" "+Options::real2string(points[i].y)+")";
+  }
 
   return "(curve "+Options::boolean2string(get_interpolate_linear())+" "+str+")";
 }
