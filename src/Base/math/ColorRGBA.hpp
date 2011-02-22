@@ -35,6 +35,14 @@ public:
   {
   }
 
+  ColorRGBA(const Gdk::Color& c, gfloat a_=1.f)
+  {
+    r = c.get_red_p();
+    g = c.get_green_p();
+    b = c.get_blue_p();
+    a = a_;
+  }
+
   ColorRGBA(gfloat grey=0.f, gfloat a_=1.f)throw()
   {
     r = grey;
@@ -56,6 +64,14 @@ public:
     r = grey;
     g = grey;
     b = grey;
+    a = a_;
+  }
+
+  void set(const Gdk::Color& c, gfloat a_=1.f)
+  {
+    r = c.get_red_p();
+    g = c.get_green_p();
+    b = c.get_blue_p();
     a = a_;
   }
 
@@ -104,6 +120,14 @@ public:
       a = 1.f;
   }
 
+  Gdk::Color get_gdk_color()const
+  {
+    Gdk::Color c;
+    c.set_rgb_p(r, g, b);
+
+    return c;
+  }
+
   /** @name  Conversion
    * */
   //@{
@@ -125,7 +149,7 @@ public:
     this->b = (a.b*p1 + b.b*p2) * inv_p;
     this->a = (a.a*p1 + b.a*p2) * inv_p;
   }
-  
+
   /** \brief Mixes two colors in a way, like Gimp would do it using "Normal" Layer Mode.
    *
    * \param above represents the aboves "Layers color"
@@ -137,18 +161,18 @@ public:
     gfloat a  = CLAMP(CLAMP(above_transparency, 0.f, 1.f)*above.a, 0.f, 1.f);
     gfloat om_a = 1.f - a;
     ColorRGBA result;
-    
+
     result.a = CLAMP(below.a + (below.a+a)*0.5f, 0.f, 1.f);
     if(result.a<=0.f)
     {
       result.r = result.g = result.b = 0.f;
       return result;
     }
-    
+
     result.r = a*above.r + om_a*below.r;
     result.g = a*above.g + om_a*below.g;
     result.b = a*above.b + om_a*below.b;
-    
+
     return result;
   }
 

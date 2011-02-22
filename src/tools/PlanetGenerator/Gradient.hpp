@@ -66,6 +66,17 @@ public:
   ConstCurvePtr get_curve3()const{return curve3;}
   const CurvePtr& get_curve4(){return curve4;}
   ConstCurvePtr get_curve4()const{return curve4;}
+
+  const ColorRGBA& get_defcolor()const{return defcolor;}
+  const ColorRGBA& get_color1()const{return color1;}
+  const ColorRGBA& get_color2()const{return color2;}
+  const ColorRGBA& get_color3()const{return color3;}
+  const ColorRGBA& get_color4()const{return color4;}
+  void set_defcolor(const ColorRGBA& defcolor);
+  void set_color1(const ColorRGBA& color1);
+  void set_color2(const ColorRGBA& color2);
+  void set_color3(const ColorRGBA& color3);
+  void set_color4(const ColorRGBA& color4);
 ///@}
 
 ///@{

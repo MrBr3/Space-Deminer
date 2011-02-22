@@ -50,6 +50,38 @@ Gradient::~Gradient()throw()
 {
 }
 
+//---- colors ----
+
+void Gradient::set_defcolor(const ColorRGBA& defcolor)
+{
+  this->defcolor = defcolor;
+  invalidate_and_update();
+}
+
+void Gradient::set_color1(const ColorRGBA& color1)
+{
+  this->color1 = color1;
+  invalidate_and_update();
+}
+
+void Gradient::set_color2(const ColorRGBA& color2)
+{
+  this->color2 = color2;
+  invalidate_and_update();
+}
+
+void Gradient::set_color3(const ColorRGBA& color3)
+{
+  this->color3 = color3;
+  invalidate_and_update();
+}
+
+void Gradient::set_color4(const ColorRGBA& color4)
+{
+  this->color4 = color4;
+  invalidate_and_update();
+}
+
 //---- Samples ----
 
 void Gradient::set_n_samples(gsize s)
@@ -108,13 +140,11 @@ void Gradient::update_samples()
                      +color2.b*c2
                      +color3.b*c3
                      +color4.b*c4)*inv_c,
-                     ( defcolor.a*c_def
+                     /*( defcolor.a*c_def
                      +color1.a*c1
                      +color2.a*c2
                      +color3.a*c3
-                     +color4.a*c4)*inv_c);
-
-    _samples[i].set(c1, c1, c1);
+                     +color4.a*c4)*inv_c*/1.f);
   }
 
   update_cairo_gradient();

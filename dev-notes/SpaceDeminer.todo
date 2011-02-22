@@ -148,7 +148,15 @@ PlanetGenerator
               [X] Linear Checkbox sollte tun
             [X] Kurven sollten Werte in String exportieren können
             [X] Kurven sollten Werte aus String importieren können
+            [ ] nSamples für Kurven übernehmen
+              [ ] beim remappen für Farbverlauf intern übersetzen?
+            [ ] farben berechnen
+            [ ] zwischen mit und ohne Alpha umschalten können
+            [ ] Farbverläufe zum live editing vorbereiten
+            [ ] als string speichern
+            [ ] aus string lesen
       [ ] Graditionskurve für Texture Layer
+        [ ] wie mit Live preview kombinieren? richtige Textur im VideoRam und Graditionskurve in der vorschau "nur" per Shader?
       [ ] Atmosphären effekt
         [ ] Farbverlauf soll Material beeinflussen
         [ ] Entfernung, mit der der Strahl an der Kugel vorbeifliegt bestimmen können

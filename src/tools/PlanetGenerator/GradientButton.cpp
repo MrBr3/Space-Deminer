@@ -123,14 +123,24 @@ GradientDialog::GradientDialog()
       label[6].set_alignment(0.f, 0.5f);
     table_.attach(def_color, 1, 2, 0, 1, Gtk::SHRINK, Gtk::SHRINK);
       def_color.show();
+      def_color.set_color(_private_gradient->get_defcolor().get_gdk_color());
+      def_color.signal_color_set().connect(sigc::mem_fun(*this, &GradientDialog::set_defcolor_from_widget));
     table_.attach(color1, 1, 2, 1, 2, Gtk::SHRINK, Gtk::SHRINK);
       color1.show();
+      color1.set_color(_private_gradient->get_color1().get_gdk_color());
+      color1.signal_color_set().connect(sigc::mem_fun(*this, &GradientDialog::set_color1_from_widget));
     table_.attach(color2, 1, 2, 2, 3, Gtk::SHRINK, Gtk::SHRINK);
       color2.show();
+      color2.set_color(_private_gradient->get_color2().get_gdk_color());
+      color2.signal_color_set().connect(sigc::mem_fun(*this, &GradientDialog::set_color2_from_widget));
     table_.attach(color3, 1, 2, 3, 4, Gtk::SHRINK, Gtk::SHRINK);
       color3.show();
+      color3.set_color(_private_gradient->get_color3().get_gdk_color());
+      color3.signal_color_set().connect(sigc::mem_fun(*this, &GradientDialog::set_color3_from_widget));
     table_.attach(color4, 1, 2, 4, 5, Gtk::SHRINK, Gtk::SHRINK);
       color4.show();
+      color4.set_color(_private_gradient->get_color4().get_gdk_color());
+      color4.signal_color_set().connect(sigc::mem_fun(*this, &GradientDialog::set_color4_from_widget));
     table_.attach(curve1, 2, 3, 1, 2, Gtk::EXPAND|Gtk::FILL, Gtk::SHRINK);
       curve1.show();
       curve1.set_curve(_private_gradient->get_curve1());
@@ -190,6 +200,7 @@ void GradientDialog::set_gradient(const GradientPtr& g)
 {
   _private_gradient->set(g);
 
+std::cout<<"GradientDialog::set_gradient\n";
   //TODO
   // def_color.set_color(_private_gradient->get_def_color);
   // same for input widgets....

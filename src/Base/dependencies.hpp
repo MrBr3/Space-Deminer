@@ -30,6 +30,7 @@
 #include <iostream>
 #include <algorithm>
 #include <gdkmm/rectangle.h>
+#include <gdkmm/color.h>
 
 
 inline Glib::ustring _(const Glib::ustring& str)

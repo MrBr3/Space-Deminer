@@ -53,6 +53,27 @@ class GradientDialog : public Gtk::Dialog
   Gtk::SpinButton remap_a, remap_b, n_samples;
   Gtk::CheckButton use_alpha_;
 
+  void set_defcolor_from_widget()
+  {
+    _private_gradient->set_defcolor(def_color.get_color());
+  }
+  void set_color1_from_widget()
+  {
+    _private_gradient->set_color1(color1.get_color());
+  }
+  void set_color2_from_widget()
+  {
+    _private_gradient->set_color2(color2.get_color());
+  }
+  void set_color3_from_widget()
+  {
+    _private_gradient->set_color3(color3.get_color());
+  }
+  void set_color4_from_widget()
+  {
+    _private_gradient->set_color4(color4.get_color());
+  }
+
 public:
   void set_gradient(const GradientPtr& g);
   ConstGradientPtr get_gradient()const{return _private_gradient;}
