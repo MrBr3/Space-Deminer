@@ -21,7 +21,7 @@
 
 GradientPreview::GradientPreview()
 {
-  set_gradient(Gradient::create_black2white());
+  set_gradient(Gradient::create());
 }
 
 GradientPreview::~GradientPreview()throw()
@@ -34,11 +34,11 @@ void GradientPreview::set_gradient(const GradientPtr& g)
   if(_gradient)
   {
     _gradient->signal_changed().slots().erase(gradient_changed_signal_iter);
-    _gradient->clear_cairo_gradient();
+    _gradient->unreference_cairo_gradient();
   }
 
   _gradient = g;
-  _gradient->require_cairo_gradient(256);
+  _gradient->reference_cairo_gradient();
   invalidate(this);
 
   gradient_changed_signal_iter = _gradient->signal_changed().connect(sigc::bind(sigc::ptr_fun(::invalidate), this));
@@ -56,7 +56,7 @@ bool GradientPreview::on_expose_event(GdkEventExpose* ee)
   if(!cc)
     return false;
 
-  Cairo::RefPtr<Cairo::Gradient> cg = _gradient->get_cairo_gradient();
+  Cairo::RefPtr<const Cairo::Gradient> cg = _gradient->get_cairo_gradient();
 
   if(!cg)
     return false;
@@ -82,7 +82,7 @@ void GradientPreview::on_size_request(Gtk::Requisition* r)
 
 GradientDialog::GradientDialog()
 {
-  _private_gradient = Gradient::create_black2white();
+  _private_gradient = Gradient::create();
 
   set_default_size(300, -1);
 
@@ -133,12 +133,16 @@ GradientDialog::GradientDialog()
       color4.show();
     table_.attach(curve1, 2, 3, 1, 2, Gtk::EXPAND|Gtk::FILL, Gtk::SHRINK);
       curve1.show();
+      curve1.set_curve(_private_gradient->get_curve1());
     table_.attach(curve2, 2, 3, 2, 3, Gtk::EXPAND|Gtk::FILL, Gtk::SHRINK);
       curve2.show();
+      curve2.set_curve(_private_gradient->get_curve2());
     table_.attach(curve3, 2, 3, 3, 4, Gtk::EXPAND|Gtk::FILL, Gtk::SHRINK);
       curve3.show();
+      curve3.set_curve(_private_gradient->get_curve3());
     table_.attach(curve4, 2, 3, 4, 5, Gtk::EXPAND|Gtk::FILL, Gtk::SHRINK);
       curve4.show();
+      curve4.set_curve(_private_gradient->get_curve4());
     table_.attach(table2_, 0, 3, 5, 6, Gtk::EXPAND|Gtk::FILL, Gtk::SHRINK);
     table2_.show();
       table2_.set_spacings(LENGTH_SMALLSPACE);
@@ -195,7 +199,7 @@ void GradientDialog::set_gradient(const GradientPtr& g)
 
 GradientButton::GradientButton()
 {
-  _gradient = Gradient::create_black2white();
+  _gradient = Gradient::create();
 
   preview_.show();
   preview_.set_gradient(_gradient);

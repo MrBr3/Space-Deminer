@@ -20,10 +20,15 @@
  #ifndef TOOLS_MODEL_GRADIENT_HPP_
  #define TOOLS_MODEL_GRADIENT_HPP_
 
+#include <base.hpp>
  #include "./Curve.hpp"
 
 class Gradient : public Refable
 {
+  bool operator==(const Gradient& g)const;
+  bool operator!=(const Gradient& g)const;
+  Gradient(const Gradient&);
+
   sigc::signal<void> _signal_changed;
 public:
   typedef Glib::RefPtr<Gradient> GradientPtr;
@@ -35,12 +40,6 @@ public:
     PRESENT_TRANSPARENT_2_WHITE,
   };
 
-  bool operator==(const Gradient& g)const{return true;/*TODO implement*/}
-  bool operator!=(const Gradient& g)const
-  {
-    return !(*this==g);
-  }
-
   void flip_h(){std::cout<<"Gradient::flip_h\n";}
   void load_present(Present p){std::cout<<"Gradient::load_present("<<p<<")\n";}
   void save_slot(guint i){std::cout<<"Gradient::save_slot("<<i<<")\n";}
@@ -48,32 +47,63 @@ public:
 
   void set(GradientPtr g){std::cout<<"Gradient::set\n";}
 
-  static GradientPtr create_black2white(){return GradientPtr(new Gradient());}
+  static GradientPtr create(){return GradientPtr(new Gradient());}
 
   sigc::signal<void>& signal_changed(){return _signal_changed;}
 
 ///@{
-///@name Puffer Stuff
+///@name Components
 private:
-  ColorRGBA* _puffer;
-  gsize _puffer_size;
+  CurvePtr curve1, curve2, curve3, curve4;
+  ColorRGBA defcolor, color1, color2, color3, color4;
+
+public:
+  const CurvePtr& get_curve1(){return curve1;}
+  ConstCurvePtr get_curve1()const{return curve1;}
+  const CurvePtr& get_curve2(){return curve2;}
+  ConstCurvePtr get_curve2()const{return curve2;}
+  const CurvePtr& get_curve3(){return curve3;}
+  ConstCurvePtr get_curve3()const{return curve3;}
+  const CurvePtr& get_curve4(){return curve4;}
+  ConstCurvePtr get_curve4()const{return curve4;}
+///@}
+
+///@{
+///@name Samples Stuff
+public:
+  typedef std::vector<ColorRGBA> SamplesVector;
+
+private:
+  SamplesVector _samples;
   gsize _n_gradients_needed;
   Cairo::RefPtr<Cairo::Gradient> _cairo_gradient;
 
-  void invalidate_cairo_gradient();
+  void update_cairo_gradient();
+
+  bool _invalidated;
+  gsize _dont_update;
+
+  void request_no_updates(){_dont_update++;}
+  void unrequest_no_updates(){g_assert(_dont_update>0);_dont_update--;}
 
 public:
-  gsize get_puffer_size()const{return _puffer_size;}
-  void require_puffer_size(gsize s);
-  void clear_puffer();
+  gsize get_n_samples()const{return _samples.size();}
+  void set_n_samples(gsize s);
 
-  const ColorRGBA* get_puffer()const{return _puffer;}
-  const Cairo::RefPtr<Cairo::Gradient>& get_cairo_gradient()const{return _cairo_gradient;}
+  const SamplesVector& get_samples()const{return _samples;}
+  Cairo::RefPtr<const Cairo::Gradient> get_cairo_gradient()const{return _cairo_gradient;}
 
-  void require_cairo_gradient(gsize s);
-  void clear_cairo_gradient();
+  void reference_cairo_gradient();
+  void unreference_cairo_gradient();
 
-  void invalidate();
+  void invalidate(){_invalidated=true;}
+  void update_samples();
+
+  void invalidate_and_update()
+  {
+    invalidate();
+    update_samples();
+  }
 ///@}
 
 private:

@@ -28,7 +28,8 @@ class GradientPreview : public Gtk::DrawingArea
   sigc::signal<void>::iterator gradient_changed_signal_iter;
 
 public:
-  const GradientPtr& get_gradient()const{return _gradient;}
+  ConstGradientPtr get_gradient()const{return _gradient;}
+  const GradientPtr& get_gradient(){return _gradient;}
   void set_gradient(const GradientPtr& g);
 
   bool on_expose_event(GdkEventExpose* ee);
@@ -54,7 +55,8 @@ class GradientDialog : public Gtk::Dialog
 
 public:
   void set_gradient(const GradientPtr& g);
-  const GradientPtr& get_gradient()const{return _private_gradient;}
+  ConstGradientPtr get_gradient()const{return _private_gradient;}
+  const GradientPtr& get_gradient(){return _private_gradient;}
 
   GradientDialog();
   ~GradientDialog()throw();
@@ -99,7 +101,8 @@ public:
   typedef Gtk::Button ParentClass;
 
   void set_gradient(const GradientPtr& g);
-  const GradientPtr& get_gradient()const{return _gradient;}
+  GradientPtr& get_gradient(){return _gradient;}
+  ConstGradientPtr get_gradient()const{return _gradient;}
 
   void on_clicked();
 

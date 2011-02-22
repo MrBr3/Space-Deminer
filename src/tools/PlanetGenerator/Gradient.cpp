@@ -21,94 +21,140 @@
 
 Gradient::Gradient()
 {
-  _puffer = new ColorRGBA[2];
-  _puffer_size = 2;
-  _puffer[0].set(0.f, 0.f, 0.f, 1.f);
-  _puffer[1].set(1.f, 1.f, 1.f, 1.f);
-
+  _dont_update = 0;
   _n_gradients_needed = 0;
+
+  request_no_updates();
+    defcolor.set(0.f, 0.f, 0.f, 0.f);
+    color1.set(1.f, 1.f, 1.f);
+
+    curve1 = Curve::create();
+    curve2 = Curve::create();
+    curve3 = Curve::create();
+    curve4 = Curve::create();
+
+    curve2->load_present(Curve::PRESENT_EMPTY);
+    curve3->load_present(Curve::PRESENT_EMPTY);
+    curve4->load_present(Curve::PRESENT_EMPTY);
+  unrequest_no_updates();
+
+  curve1->signal_changed().connect(sigc::mem_fun(*this, &Gradient::invalidate_and_update));
+  curve2->signal_changed().connect(sigc::mem_fun(*this, &Gradient::invalidate_and_update));
+  curve3->signal_changed().connect(sigc::mem_fun(*this, &Gradient::invalidate_and_update));
+  curve4->signal_changed().connect(sigc::mem_fun(*this, &Gradient::invalidate_and_update));
+
+  set_n_samples(256);
 }
 
 Gradient::~Gradient()throw()
 {
-  delete[] _puffer;
 }
 
-void Gradient::require_puffer_size(gsize s)
+//---- Samples ----
+
+void Gradient::set_n_samples(gsize s)
 {
-  s = MAX(256, s);
+  s = MAX(16, s);
 
-  if(s<=_puffer_size)
-    return;
+  request_no_updates();
+    curve1->set_n_samples(s);
+    curve2->set_n_samples(s);
+    curve3->set_n_samples(s);
+    curve4->set_n_samples(s);
+  unrequest_no_updates();
 
-  _puffer_size = s;
-  delete[] _puffer;
-  _puffer = new ColorRGBA[_puffer_size];
+  _samples.resize(s, DONT_INIT);
 
   invalidate();
+  update_samples();
 }
 
-void Gradient::clear_puffer()
+void Gradient::update_samples()
 {
-  if(_puffer_size<=265)
+  if(!_invalidated||_dont_update>0)
     return;
-  _puffer_size = 0;
-  delete[] _puffer;
-  require_puffer_size(256);
-}
+  _invalidated = false;
 
-void Gradient::require_cairo_gradient(gsize s)
-{
-  ++_n_gradients_needed;
+  gsize n_samples = _samples.size();
+  gdouble inv_n_samples = 1.f/gdouble(n_samples);
 
-  if(_cairo_gradient&&_puffer_size==s)
-    return;
 
-  _cairo_gradient = Cairo::LinearGradient::create(0., 0., 1., 0.);
-
-  if(s>_puffer_size)
-    require_puffer_size(s);
-  else
-    invalidate_cairo_gradient();
-}
-
-void Gradient::clear_cairo_gradient()
-{
-  --_n_gradients_needed;
-
-  if(_n_gradients_needed==0)
-    _cairo_gradient.clear();
-}
-
-void Gradient::invalidate()
-{
-  gdouble inv_puffersize = 1.f/gdouble(_puffer_size);
-
-  for(gsize i=0; i<_puffer_size; ++i)
+  for(gsize i=0; i<n_samples; ++i)
   {
-    gdouble offset = gdouble(i)*inv_puffersize;
+    gdouble offset = gdouble(i)*inv_n_samples;
+  //TODO remap
 
-    _puffer[i].set(offset, offset, offset, 1.f);//TODO change
+    gdouble c1 = curve1->get_value(offset);
+    gdouble c2 = curve2->get_value(offset);
+    gdouble c3 = curve3->get_value(offset);
+    gdouble c4 = curve4->get_value(offset);
+    gdouble c_def = 1. - CLAMP(c1+c2+c3+c4, 0., 1.);
+    gdouble inv_c = c1+c2+c3+c4+c_def;
+    g_assert(inv_c>0.);
+    inv_c = 1./inv_c;
+
+    _samples[i].set(( defcolor.r*c_def
+                     +color1.r*c1
+                     +color2.r*c2
+                     +color3.r*c3
+                     +color4.r*c4)*inv_c,
+                     ( defcolor.g*c_def
+                     +color1.g*c1
+                     +color2.g*c2
+                     +color3.g*c3
+                     +color4.g*c4)*inv_c,
+                     ( defcolor.b*c_def
+                     +color1.b*c1
+                     +color2.b*c2
+                     +color3.b*c3
+                     +color4.b*c4)*inv_c,
+                     ( defcolor.a*c_def
+                     +color1.a*c1
+                     +color2.a*c2
+                     +color3.a*c3
+                     +color4.a*c4)*inv_c);
+
+    _samples[i].set(c1, c1, c1);
   }
 
-  invalidate_cairo_gradient();
+  update_cairo_gradient();
 
   signal_changed().emit();
 }
 
-void Gradient::invalidate_cairo_gradient()
+//---- Cairo:Gradient ----
+
+void Gradient::reference_cairo_gradient()
 {
-  if(!_cairo_gradient)
+  ++_n_gradients_needed;
+
+  update_cairo_gradient();
+}
+
+void Gradient::unreference_cairo_gradient()
+{
+  --_n_gradients_needed;
+
+  update_cairo_gradient();
+}
+
+void Gradient::update_cairo_gradient()
+{
+  if(!_n_gradients_needed)
+  {
+    _cairo_gradient.clear();
     return;
+  }
 
   _cairo_gradient = Cairo::LinearGradient::create(0., 0., 1., 0.);
 
-  gdouble inv_puffersize = 1.f/gdouble(_puffer_size);
+  gsize n_samples = _samples.size();
+  gdouble inv_n_samples = 1.f/gdouble(n_samples);
 
-  for(gsize i=0; i<_puffer_size; ++i)
+  for(gsize i=0; i<n_samples; ++i)
   {
-    gdouble offset = gdouble(i)*inv_puffersize;
+    gdouble offset = gdouble(i)*inv_n_samples;
 
-    _cairo_gradient->add_color_stop_rgba(offset, _puffer[i].r, _puffer[i].g, _puffer[i].b, _puffer[i].a);
+    _cairo_gradient->add_color_stop_rgba(offset, _samples[i].r, _samples[i].g, _samples[i].b, _samples[i].a);
   }
 }

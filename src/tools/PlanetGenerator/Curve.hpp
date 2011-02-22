@@ -30,6 +30,7 @@ public:
   enum Present
   {
     PRESENT_FULL,
+    PRESENT_EMPTY,
     PRESENT_LINEAR,
   };
 
@@ -104,6 +105,15 @@ public:
     if(i>=get_n_samples())
       throw std::out_of_range("Curve::get_sample: bad index");
     return get_samples()[i];
+  }
+
+  gdouble get_value(gdouble x)const
+  {
+    x = CLAMP(x, 0., 1.)*(get_n_samples()-1);
+
+    gdouble a = get_frac_part(x);
+    gdouble b = 1.-a;
+    return get_sample(floor(x))*a + b*get_sample(ceil(x));
   }
 
   const Point* get_points()const{return points;}

@@ -104,6 +104,7 @@ class CurveButton : public Gtk::Button
     Gtk::MenuItem _load_present;
       Gtk::Menu load_present_menu;
       Gtk::MenuItem load_present_full;
+      Gtk::MenuItem load_present_empty;
       Gtk::MenuItem load_present_linear;
     Gtk::MenuItem _load_slot;
       Gtk::Menu load_slot_menu;

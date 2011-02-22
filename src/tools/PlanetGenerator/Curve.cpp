@@ -123,6 +123,16 @@ void Curve::load_present(Present p)
       update_all_samples();
     }
     break;
+  case PRESENT_EMPTY:
+    {
+      set_n_points(1);
+      points[0].x = 0.5;
+      points[0].y = 0.0;
+
+      invalidate();
+      update_all_samples();
+    }
+    break;
   case PRESENT_LINEAR:
     {
       set_n_points(2);

@@ -516,6 +516,10 @@ CurveButton::CurveButton()
       load_present_full.set_label("100%");
       load_present_full.set_use_underline(true);
       load_present_full.signal_activate().connect(sigc::bind(sigc::mem_fun(*this, &CurveButton::load_present), Curve::PRESENT_FULL));
+    load_present_menu.append(load_present_empty);
+      load_present_empty.set_label("0%");
+      load_present_empty.set_use_underline(true);
+      load_present_empty.signal_activate().connect(sigc::bind(sigc::mem_fun(*this, &CurveButton::load_present), Curve::PRESENT_EMPTY));
     load_present_menu.append(load_present_linear);
       load_present_linear.set_label("0% -> 100% Linear");
       load_present_linear.set_use_underline(true);

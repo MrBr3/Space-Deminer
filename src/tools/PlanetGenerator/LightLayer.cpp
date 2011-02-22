@@ -235,7 +235,7 @@ void LightLayer::GradientSetting::init_widgets(guint light_id, int id, SettingsW
   INIT_REAL_PROPERTY(inside_planet, 1.0f, "InsidePlanet", "Visibility inside the planet", 0.1, 0.2, 3);
   INIT_REAL_PROPERTY(outside_planet, 0.0f, "OutsidePlanet", "Visibility inside the planet", 0.1, 0.2, 3);
   INIT_ENUM_PROPERTY(modulate_type, GRADIENT_MODULATE_ADD, "ModulateType", "The Type of the Modulation of th gradient", enum_modulate_type);
-  INIT_GRADIENT_PROPERTY(gradient, light_gradient, Gradient::create_black2white(), "LightGradient", "The Color Gradient of the Light");
+  INIT_GRADIENT_PROPERTY(gradient, light_gradient, Gradient::create(), "LightGradient", "The Color Gradient of the Light");
 
   settings.attach_full_line(w_expand);
 }
