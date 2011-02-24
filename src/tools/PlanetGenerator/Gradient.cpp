@@ -280,25 +280,29 @@ void Gradient::update_samples()
     gdouble c3 = curve3->get_value(offset);
     gdouble c4 = curve4->get_value(offset);
     gdouble c_def = 1. - CLAMP(c1+c2+c3+c4, 0., 1.);
+    gdouble c_color_def = defcolor.a*c_def;
     gdouble inv_c = c1+c2+c3+c4+c_def;
-    g_assert(inv_c>0.);
-    inv_c = 1./inv_c;
+    gdouble inv_col_c = c1+c2+c3+c4+c_color_def;
+    if(inv_c>0.)
+      inv_c = 1./inv_c;
+    if(inv_col_c>0.)
+      inv_col_c = 1./inv_col_c;
 
-    gfloat r = (defcolor.r*c_def
+    gfloat r = (defcolor.r*c_color_def
                +color1.r*c1
                +color2.r*c2
                +color3.r*c3
-               +color4.r*c4)*inv_c;
-    gfloat g = (defcolor.g*c_def
+               +color4.r*c4)*inv_col_c;
+    gfloat g = (defcolor.g*c_color_def
                +color1.g*c1
                +color2.g*c2
                +color3.g*c3
-               +color4.g*c4)*inv_c;
-    gfloat b = (defcolor.b*c_def
+               +color4.g*c4)*inv_col_c;
+    gfloat b = (defcolor.b*c_color_def
                +color1.b*c1
                +color2.b*c2
                +color3.b*c3
-               +color4.b*c4)*inv_c;
+               +color4.b*c4)*inv_col_c;
     gfloat a = get_use_alpha() ?
                (defcolor.a*c_def
                +color1.a*c1
