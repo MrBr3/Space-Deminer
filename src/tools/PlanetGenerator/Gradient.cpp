@@ -19,6 +19,8 @@
 
 #include "./Model.hpp"
 
+GradientPtr Gradient::slot[4];
+
 Gradient::Gradient()
 {
   _use_alpha = false;
@@ -120,25 +122,55 @@ void Gradient::load_present(Present p)
     throw std::invalid_argument("**Gradient::load_present** illegal argument");
 }
 
-void Gradient::set(GradientPtr g)
+void Gradient::set(const Gradient& g)
 {
   request_no_updates();
-    curve1->set(g->curve1);
-    curve2->set(g->curve2);
-    curve3->set(g->curve3);
-    curve4->set(g->curve4);
-    defcolor = g->defcolor;
-    color1 = g->color1;
-    color2 = g->color2;
-    color3 = g->color3;
-    color4 = g->color4;
-    _use_alpha = g->_use_alpha;
-    remap_a = g->remap_a;
-    remap_b = g->remap_b;
-    set_n_samples(g->get_n_samples());
+    curve1->set(g.curve1);
+    curve2->set(g.curve2);
+    curve3->set(g.curve3);
+    curve4->set(g.curve4);
+    defcolor = g.defcolor;
+    color1 = g.color1;
+    color2 = g.color2;
+    color3 = g.color3;
+    color4 = g.color4;
+    _use_alpha = g._use_alpha;
+    remap_a = g.remap_a;
+    remap_b = g.remap_b;
+    set_n_samples(g.get_n_samples());
   unrequest_no_updates();
 
   invalidate_and_update();
+}
+
+void Gradient::set(GradientPtr g)
+{
+  set(*g.operator->());
+}
+
+void Gradient::init_slots()
+{
+  if(slot[0])
+    return;
+
+  for(gsize i=0; i<4; ++i)
+  {
+    slot[i] = Gradient::create();
+  }
+}
+
+void Gradient::save_slot(guint i)
+{
+  init_slots();
+
+  slot[i]->set(*this);
+}
+
+void Gradient::load_slot(guint i)
+{
+  init_slots();
+
+  set(slot[i]);
 }
 
 //---- colors ----

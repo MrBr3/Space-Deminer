@@ -47,6 +47,7 @@ int main(int argc, char **argv)
 
   options.load_options();
   Curve::init_slots();
+  Gradient::init_slots();
   {
     MainWindow main_window;
 

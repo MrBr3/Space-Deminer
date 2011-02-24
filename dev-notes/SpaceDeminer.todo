@@ -157,7 +157,7 @@ PlanetGenerator
             [X] Farbverläufe zum live editing vorbereiten
             [X] remap
             [X] presents laden
-            [ ] in slots speichern/laden
+            [X] in slots speichern/laden
             [ ] als string speichern
             [ ] aus string lesen
             [ ] slots in den Options speichern

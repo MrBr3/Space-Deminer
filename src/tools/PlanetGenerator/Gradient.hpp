@@ -42,14 +42,20 @@ public:
 
   void flip_h();
   void load_present(Present p);
-  void save_slot(guint i){std::cout<<"Gradient::save_slot("<<i<<")\n";}
-  void load_slot(guint i){std::cout<<"Gradient::load_slot("<<i<<")\n";}
+  void save_slot(guint i);
+  void load_slot(guint i);
 
+  void set(const Gradient& g);
   void set(GradientPtr g);
 
   static GradientPtr create(){return GradientPtr(new Gradient());}
 
   sigc::signal<void>& signal_changed(){return _signal_changed;}
+
+  static void init_slots();
+
+private:
+  static GradientPtr slot[4];
 
 ///@{
 ///@name Components
