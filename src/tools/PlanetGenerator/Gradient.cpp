@@ -24,9 +24,11 @@ Gradient::Gradient()
   _use_alpha = false;
   _dont_update = 0;
   _n_gradients_needed = 0;
+  remap_a = 0.;
+  remap_b = 1.;
 
   request_no_updates();
-    defcolor.set(0.f, 0.f, 0.f, 0.f);
+    defcolor.set(0.f, 0.f, 0.f);
     color1.set(1.f, 1.f, 1.f);
 
     curve1 = Curve::create();
@@ -49,6 +51,91 @@ Gradient::Gradient()
 
 Gradient::~Gradient()throw()
 {
+}
+
+void Gradient::flip_h()
+{
+  request_no_updates();
+    curve1->flip_h();
+    curve2->flip_h();
+    curve3->flip_h();
+    curve4->flip_h();
+  unrequest_no_updates();
+
+  invalidate_and_update();
+}
+
+void Gradient::load_present(Present p)
+{
+  bool illegal = false;
+
+  request_no_updates();
+  switch(p)
+  {
+  case PRESENT_BLACK_2_WHITE:
+    {
+      curve1->load_present(Curve::PRESENT_LINEAR);
+      curve2->load_present(Curve::PRESENT_EMPTY);
+      curve3->load_present(Curve::PRESENT_EMPTY);
+      curve4->load_present(Curve::PRESENT_EMPTY);
+      defcolor.set(0.f, 0.f, 0.f);
+      color1.set(1.f, 1.f, 1.f);
+      color2.set(1.f, 0.f, 0.f);
+      color3.set(0.f, 1.f, 0.f);
+      color4.set(0.f, 0.f, 1.f);
+      _use_alpha = false;
+      remap_a = 0.;
+      remap_b = 1.;
+      set_n_samples(512);
+    }
+    break;
+  case PRESENT_TRANSPARENT_2_WHITE:
+    {
+      curve1->load_present(Curve::PRESENT_LINEAR);
+      curve2->load_present(Curve::PRESENT_EMPTY);
+      curve3->load_present(Curve::PRESENT_EMPTY);
+      curve4->load_present(Curve::PRESENT_EMPTY);
+      defcolor.set(1.f, 1.f, 1.f, 0.f);
+      color1.set(1.f, 1.f, 1.f);
+      color2.set(1.f, 0.f, 0.f);
+      color3.set(0.f, 1.f, 0.f);
+      color4.set(0.f, 0.f, 1.f);
+      _use_alpha = true;
+      remap_a = 0.;
+      remap_b = 1.;
+      set_n_samples(512);
+    }
+    break;
+  default:
+    illegal = true;
+  }
+  unrequest_no_updates();
+
+  invalidate_and_update();
+
+  if(illegal)
+    throw std::invalid_argument("**Gradient::load_present** illegal argument");
+}
+
+void Gradient::set(GradientPtr g)
+{
+  request_no_updates();
+    curve1->set(g->curve1);
+    curve2->set(g->curve2);
+    curve3->set(g->curve3);
+    curve4->set(g->curve4);
+    defcolor = g->defcolor;
+    color1 = g->color1;
+    color2 = g->color2;
+    color3 = g->color3;
+    color4 = g->color4;
+    _use_alpha = g->_use_alpha;
+    remap_a = g->remap_a;
+    remap_b = g->remap_b;
+    set_n_samples(g->get_n_samples());
+  unrequest_no_updates();
+
+  invalidate_and_update();
 }
 
 //---- colors ----
@@ -83,28 +170,23 @@ void Gradient::set_color4(const ColorRGBA& color4)
   invalidate_and_update();
 }
 
+//--------
+
 void Gradient::set_use_alpha(bool use_alpha)
 {
   this->_use_alpha = use_alpha;
   invalidate_and_update();
 }
 
-void Gradient::set(GradientPtr g)
+void Gradient::set_remap_a(gdouble a)
 {
-  request_no_updates();
-    curve1->set(g->curve1);
-    curve2->set(g->curve2);
-    curve3->set(g->curve3);
-    curve4->set(g->curve4);
-    defcolor = g->defcolor;
-    color1 = g->color1;
-    color2 = g->color2;
-    color3 = g->color3;
-    color4 = g->color4;
-    _use_alpha = g->_use_alpha;
-    set_n_samples(g->get_n_samples());
-  unrequest_no_updates();
+  remap_a = a;
+  invalidate_and_update();
+}
 
+void Gradient::set_remap_b(gdouble b)
+{
+  remap_b = b;
   invalidate_and_update();
 }
 
@@ -141,11 +223,15 @@ void Gradient::update_samples()
   gsize n_samples = _samples.size();
   gdouble inv_n_samples = 1.f/gdouble(n_samples);
 
+  gdouble inv_remap_b_minus_a = remap_b - remap_a;
+  if(inv_remap_b_minus_a!=0.)
+    inv_remap_b_minus_a = 1./inv_remap_b_minus_a;
 
   for(gsize i=0; i<n_samples; ++i)
   {
     gdouble offset = gdouble(i)*inv_n_samples;
-  //TODO remap
+
+    offset = CLAMP((offset-remap_a)*inv_remap_b_minus_a, 0., 1.);
 
     gdouble c1 = curve1->get_value(offset);
     gdouble c2 = curve2->get_value(offset);

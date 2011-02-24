@@ -40,8 +40,8 @@ public:
     PRESENT_TRANSPARENT_2_WHITE,
   };
 
-  void flip_h(){std::cout<<"Gradient::flip_h\n";}
-  void load_present(Present p){std::cout<<"Gradient::load_present("<<p<<")\n";}
+  void flip_h();
+  void load_present(Present p);
   void save_slot(guint i){std::cout<<"Gradient::save_slot("<<i<<")\n";}
   void load_slot(guint i){std::cout<<"Gradient::load_slot("<<i<<")\n";}
 
@@ -57,6 +57,7 @@ private:
   CurvePtr curve1, curve2, curve3, curve4;
   ColorRGBA defcolor, color1, color2, color3, color4;
   bool _use_alpha;
+  gdouble remap_a, remap_b;
 
 public:
   const CurvePtr& get_curve1(){return curve1;}
@@ -81,6 +82,11 @@ public:
 
   void set_use_alpha(bool a);
   bool get_use_alpha()const{return _use_alpha;}
+
+  void set_remap_a(gdouble a);
+  void set_remap_b(gdouble b);
+  gdouble get_remap_a()const{return remap_a;}
+  gdouble get_remap_b()const{return remap_b;}
 ///@}
 
 ///@{

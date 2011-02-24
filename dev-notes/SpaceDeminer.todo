@@ -155,8 +155,8 @@ PlanetGenerator
             [X] farben berechnen
             [X] zwischen mit und ohne Alpha umschalten können
             [X] Farbverläufe zum live editing vorbereiten
-            [ ] remap
-            [ ] presents laden
+            [X] remap
+            [X] presents laden
             [ ] in slots speichern/laden
             [ ] als string speichern
             [ ] aus string lesen

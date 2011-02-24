@@ -28,15 +28,15 @@ GradientPreview::GradientPreview()
 {
   set_gradient(Gradient::create());
 
-  if(_n_instances==0)
+  alpha_checker_pattern = _alpha_checker_pattern;
+  if(_n_instances==0 || !alpha_checker_pattern)
   {
-    _n_instances++;
     int w, h;
     w = h = CHECKER_WIDTH*2;
     Cairo::RefPtr<Cairo::ImageSurface> checker_img = Cairo::ImageSurface::create(Cairo::FORMAT_RGB24, w, h);;
-    _alpha_checker_pattern = Cairo::SurfacePattern::create(checker_img);
-    _alpha_checker_pattern->set_extend(Cairo::EXTEND_REPEAT);
-    _alpha_checker_pattern->set_filter(Cairo::FILTER_NEAREST);
+    alpha_checker_pattern = Cairo::SurfacePattern::create(checker_img);
+    alpha_checker_pattern->set_extend(Cairo::EXTEND_REPEAT);
+    alpha_checker_pattern->set_filter(Cairo::FILTER_NEAREST);
 
     int rowstride = checker_img->get_stride();
     guint8* data = (guint8*)checker_img->get_data();
@@ -60,7 +60,10 @@ GradientPreview::GradientPreview()
       }
       line += rowstride;
     }
+
+    _alpha_checker_pattern = alpha_checker_pattern;
   }
+  _n_instances++;
 }
 
 GradientPreview::~GradientPreview()throw()
@@ -106,9 +109,9 @@ bool GradientPreview::on_expose_event(GdkEventExpose* ee)
   if(!cg)
     return false;
 
-  if(_gradient->get_use_alpha())
+  if(_gradient->get_use_alpha() && alpha_checker_pattern)
   {
-    cc->set_source(_alpha_checker_pattern);
+    cc->set_source(alpha_checker_pattern);
     cc->paint();
   }
 
@@ -229,12 +232,12 @@ GradientDialog::GradientDialog()
         remap_b.set_increments(1., 5.);
         remap_a.set_range(G_MININT, G_MAXINT);
         remap_b.set_range(G_MININT, G_MAXINT);
-        remap_b.set_value(100.);
+        remap_a.set_value(_private_gradient->get_remap_a()*100.);
+        remap_b.set_value(_private_gradient->get_remap_b()*100.);
         set_unit(remap_a, " %");
         set_unit(remap_b, " %");
-        //TODO remapwerte vom Gradient Laden
-        //remap_a.signal_value_changed().connect(sigc::mem_fun(*this, &GradientDialog::set_remap));
-        //remap_b.signal_value_changed().connect(sigc::mem_fun(*this, &GradientDialog::set_remap));
+        remap_a.signal_value_changed().connect(sigc::mem_fun(*this, &GradientDialog::set_remap));
+        remap_b.signal_value_changed().connect(sigc::mem_fun(*this, &GradientDialog::set_remap));
       table2_.attach(use_alpha_, 0, 3, 0, 1, Gtk::EXPAND|Gtk::FILL, Gtk::SHRINK);
         use_alpha_.show();
         use_alpha_.set_label(_("UseAlpha"));
@@ -265,7 +268,8 @@ void GradientDialog::set_gradient(const GradientPtr& g)
   _private_gradient->request_no_updates();
     preview_.set_gradient(_private_gradient);
     use_alpha_.set_active(_private_gradient->get_use_alpha());
-    //TODO remapwerte vom Gradient Laden
+    remap_a.set_value(_private_gradient->get_remap_a()*100.);
+    remap_b.set_value(_private_gradient->get_remap_b()*100.);
     n_samples.set_value(_private_gradient->get_n_samples());
 
     curve1.set_curve(_private_gradient->get_curve1());
