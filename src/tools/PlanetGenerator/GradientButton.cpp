@@ -19,14 +19,59 @@
 
 #include "./MainWindow.hpp"
 
+#define CHECKER_WIDTH 8
+
+Cairo::RefPtr<Cairo::SurfacePattern> GradientPreview::_alpha_checker_pattern;
+gsize GradientPreview::_n_instances = 0;
+
 GradientPreview::GradientPreview()
 {
   set_gradient(Gradient::create());
+
+  if(_n_instances==0)
+  {
+    _n_instances++;
+    int w, h;
+    w = h = CHECKER_WIDTH*2;
+    Cairo::RefPtr<Cairo::ImageSurface> checker_img = Cairo::ImageSurface::create(Cairo::FORMAT_RGB24, w, h);;
+    _alpha_checker_pattern = Cairo::SurfacePattern::create(checker_img);
+    _alpha_checker_pattern->set_extend(Cairo::EXTEND_REPEAT);
+    _alpha_checker_pattern->set_filter(Cairo::FILTER_NEAREST);
+
+    int rowstride = checker_img->get_stride();
+    guint8* data = (guint8*)checker_img->get_data();
+    guint8* line = data;
+    bool dark;
+
+    for(int y=0; y<h; ++y)
+    {
+      guint8* pixel = line;
+      for(int x=0; x<w; ++x)
+      {
+        dark = !XOR(x<CHECKER_WIDTH, y<CHECKER_WIDTH);
+
+        guint8 g = 0x80;
+        if(dark)
+          g = 0x40;
+
+        pixel[0] = pixel[1] = pixel[2] = g;
+
+        pixel+=4;
+      }
+      line += rowstride;
+    }
+  }
 }
 
 GradientPreview::~GradientPreview()throw()
 {
   _gradient->signal_changed().slots().erase(gradient_changed_signal_iter);
+
+  _n_instances--;
+  if(_n_instances==0)
+  {
+    _alpha_checker_pattern.clear();
+  }
 }
 
 void GradientPreview::set_gradient(const GradientPtr& g)
@@ -61,7 +106,11 @@ bool GradientPreview::on_expose_event(GdkEventExpose* ee)
   if(!cg)
     return false;
 
-  // TODO handle alpha
+  if(_gradient->get_use_alpha())
+  {
+    cc->set_source(_alpha_checker_pattern);
+    cc->paint();
+  }
 
   cc->scale(get_width(), 1.);
   cc->set_source(cg);
@@ -73,10 +122,12 @@ void GradientPreview::on_size_request(Gtk::Requisition* r)
 {
   if(r)
   {
-    r->width = 35;
-    r->height = 15;
+    r->width = 48;
+    r->height = 16;
   }
 }
+
+#undef CHECKER_WIDTH
 
 // ------------
 
@@ -124,22 +175,27 @@ GradientDialog::GradientDialog()
     table_.attach(def_color, 1, 2, 0, 1, Gtk::SHRINK, Gtk::SHRINK);
       def_color.show();
       def_color.set_color(_private_gradient->get_defcolor().get_gdk_color());
+      def_color.set_alpha(_private_gradient->get_defcolor().a*0xffff);
       def_color.signal_color_set().connect(sigc::mem_fun(*this, &GradientDialog::set_defcolor_from_widget));
     table_.attach(color1, 1, 2, 1, 2, Gtk::SHRINK, Gtk::SHRINK);
       color1.show();
       color1.set_color(_private_gradient->get_color1().get_gdk_color());
+      color1.set_alpha(_private_gradient->get_color1().a*0xffff);
       color1.signal_color_set().connect(sigc::mem_fun(*this, &GradientDialog::set_color1_from_widget));
     table_.attach(color2, 1, 2, 2, 3, Gtk::SHRINK, Gtk::SHRINK);
       color2.show();
       color2.set_color(_private_gradient->get_color2().get_gdk_color());
+      color2.set_alpha(_private_gradient->get_color2().a*0xffff);
       color2.signal_color_set().connect(sigc::mem_fun(*this, &GradientDialog::set_color2_from_widget));
     table_.attach(color3, 1, 2, 3, 4, Gtk::SHRINK, Gtk::SHRINK);
       color3.show();
       color3.set_color(_private_gradient->get_color3().get_gdk_color());
+      color3.set_alpha(_private_gradient->get_color3().a*0xffff);
       color3.signal_color_set().connect(sigc::mem_fun(*this, &GradientDialog::set_color3_from_widget));
     table_.attach(color4, 1, 2, 4, 5, Gtk::SHRINK, Gtk::SHRINK);
       color4.show();
       color4.set_color(_private_gradient->get_color4().get_gdk_color());
+      color4.set_alpha(_private_gradient->get_color4().a*0xffff);
       color4.signal_color_set().connect(sigc::mem_fun(*this, &GradientDialog::set_color4_from_widget));
     table_.attach(curve1, 2, 3, 1, 2, Gtk::EXPAND|Gtk::FILL, Gtk::SHRINK);
       curve1.show();
@@ -161,6 +217,8 @@ GradientDialog::GradientDialog()
         n_samples.set_digits(0);
         n_samples.set_range(16., 2.5e5);
         n_samples.set_increments(1., 10.);
+        n_samples.set_value(_private_gradient->get_n_samples());
+        n_samples.signal_value_changed().connect(sigc::mem_fun(*this, &GradientDialog::set_n_samples));
       table2_.attach(remap_a, 1, 2, 2, 3, Gtk::EXPAND|Gtk::FILL, Gtk::SHRINK);
       table2_.attach(remap_b, 2, 3, 2, 3, Gtk::EXPAND|Gtk::FILL, Gtk::SHRINK);
         remap_a.show();
@@ -177,6 +235,8 @@ GradientDialog::GradientDialog()
       table2_.attach(use_alpha_, 0, 3, 0, 1, Gtk::EXPAND|Gtk::FILL, Gtk::SHRINK);
         use_alpha_.show();
         use_alpha_.set_label(_("UseAlpha"));
+        use_alpha_.signal_toggled().connect(sigc::mem_fun(*this, &GradientDialog::set_use_alpha));
+        use_alpha_.set_active(_private_gradient->get_use_alpha());
       //TODO die ganzen anderen widgets sollten refreshen, wenn das hier verändert wurde
     table_.attach(preview_frame_, 0, 3, 6, 7);
       preview_frame_.show();

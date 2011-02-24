@@ -21,6 +21,7 @@
 
 Gradient::Gradient()
 {
+  _use_alpha = false;
   _dont_update = 0;
   _n_gradients_needed = 0;
 
@@ -82,11 +83,20 @@ void Gradient::set_color4(const ColorRGBA& color4)
   invalidate_and_update();
 }
 
+void Gradient::set_use_alpha(bool use_alpha)
+{
+  this->_use_alpha = use_alpha;
+  invalidate_and_update();
+}
+
 //---- Samples ----
 
 void Gradient::set_n_samples(gsize s)
 {
   s = MAX(16, s);
+
+  if(s==get_n_samples())
+    return;
 
   request_no_updates();
     curve1->set_n_samples(s);
@@ -96,6 +106,8 @@ void Gradient::set_n_samples(gsize s)
   unrequest_no_updates();
 
   _samples.resize(s, DONT_INIT);
+
+  g_assert(s==get_n_samples());
 
   invalidate();
   update_samples();
@@ -125,30 +137,32 @@ void Gradient::update_samples()
     g_assert(inv_c>0.);
     inv_c = 1./inv_c;
 
-    _samples[i].set(( defcolor.r*c_def
-                     +color1.r*c1
-                     +color2.r*c2
-                     +color3.r*c3
-                     +color4.r*c4)*inv_c,
-                     ( defcolor.g*c_def
-                     +color1.g*c1
-                     +color2.g*c2
-                     +color3.g*c3
-                     +color4.g*c4)*inv_c,
-                     ( defcolor.b*c_def
-                     +color1.b*c1
-                     +color2.b*c2
-                     +color3.b*c3
-                     +color4.b*c4)*inv_c,
-                     /*( defcolor.a*c_def
-                     +color1.a*c1
-                     +color2.a*c2
-                     +color3.a*c3
-                     +color4.a*c4)*inv_c*/1.f);
+    gfloat r = (defcolor.r*c_def
+               +color1.r*c1
+               +color2.r*c2
+               +color3.r*c3
+               +color4.r*c4)*inv_c;
+    gfloat g = (defcolor.g*c_def
+               +color1.g*c1
+               +color2.g*c2
+               +color3.g*c3
+               +color4.g*c4)*inv_c;
+    gfloat b = (defcolor.b*c_def
+               +color1.b*c1
+               +color2.b*c2
+               +color3.b*c3
+               +color4.b*c4)*inv_c;
+    gfloat a = get_use_alpha() ?
+               (defcolor.a*c_def
+               +color1.a*c1
+               +color2.a*c2
+               +color3.a*c3
+               +color4.a*c4)*inv_c : 1.f;
+
+    _samples[i].set(r, g, b, a);
   }
 
   update_cairo_gradient();
-
   signal_changed().emit();
 }
 
@@ -164,8 +178,6 @@ void Gradient::reference_cairo_gradient()
 void Gradient::unreference_cairo_gradient()
 {
   --_n_gradients_needed;
-
-  update_cairo_gradient();
 }
 
 void Gradient::update_cairo_gradient()
@@ -173,6 +185,7 @@ void Gradient::update_cairo_gradient()
   if(!_n_gradients_needed)
   {
     _cairo_gradient.clear();
+    signal_changed().emit();
     return;
   }
 

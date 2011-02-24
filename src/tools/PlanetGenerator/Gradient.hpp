@@ -56,6 +56,7 @@ public:
 private:
   CurvePtr curve1, curve2, curve3, curve4;
   ColorRGBA defcolor, color1, color2, color3, color4;
+  bool _use_alpha;
 
 public:
   const CurvePtr& get_curve1(){return curve1;}
@@ -77,6 +78,9 @@ public:
   void set_color2(const ColorRGBA& color2);
   void set_color3(const ColorRGBA& color3);
   void set_color4(const ColorRGBA& color4);
+
+  void set_use_alpha(bool a);
+  bool get_use_alpha()const{return _use_alpha;}
 ///@}
 
 ///@{

@@ -119,8 +119,10 @@ PlanetGenerator
       [ ] aktuellen zustand (inklusive rotation) speichern und laden können
         [ ] Planetendaten in Datei speichern können
           [ ] relative Pfadangaben
+            [ ] Gio::File::get_relative_path
         [ ] Planetendaten aus Datei laden können
           [ ] relative Pfadangaben
+            [ ] Gio::File::resolve_relative_path
         [ ] "Zulezt geöffnet" Liste
       [ ] gucken, ob antialiasing wirklich funzt (auch bei 2x und 4x?)
       [ ] gucken, ob alles bei sehr kleinen Bildern funzt
@@ -148,10 +150,10 @@ PlanetGenerator
               [X] Linear Checkbox sollte tun
             [X] Kurven sollten Werte in String exportieren können
             [X] Kurven sollten Werte aus String importieren können
-            [ ] nSamples für Kurven übernehmen
-              [ ] beim remappen für Farbverlauf intern übersetzen?
-            [ ] farben berechnen
-            [ ] zwischen mit und ohne Alpha umschalten können
+            [X] nSamples für Kurven übernehmen
+              [X] beim remappen für Farbverlauf intern übersetzen? Nope
+            [X] farben berechnen
+            [X] zwischen mit und ohne Alpha umschalten können
             [ ] Farbverläufe zum live editing vorbereiten
             [ ] als string speichern
             [ ] aus string lesen

@@ -27,6 +27,9 @@ class GradientPreview : public Gtk::DrawingArea
 
   sigc::signal<void>::iterator gradient_changed_signal_iter;
 
+  static Cairo::RefPtr<Cairo::SurfacePattern> _alpha_checker_pattern;
+  static gsize _n_instances;
+
 public:
   ConstGradientPtr get_gradient()const{return _gradient;}
   const GradientPtr& get_gradient(){return _gradient;}
@@ -55,23 +58,37 @@ class GradientDialog : public Gtk::Dialog
 
   void set_defcolor_from_widget()
   {
-    _private_gradient->set_defcolor(def_color.get_color());
+    _private_gradient->set_defcolor(ColorRGBA(def_color.get_color(), def_color.get_alpha()/gdouble(0xffff)));
   }
   void set_color1_from_widget()
   {
-    _private_gradient->set_color1(color1.get_color());
+    _private_gradient->set_color1(ColorRGBA(color1.get_color(), color1.get_alpha()/gdouble(0xffff)));
   }
   void set_color2_from_widget()
   {
-    _private_gradient->set_color2(color2.get_color());
+    _private_gradient->set_color2(ColorRGBA(color2.get_color(), color2.get_alpha()/gdouble(0xffff)));
   }
   void set_color3_from_widget()
   {
-    _private_gradient->set_color3(color3.get_color());
+    _private_gradient->set_color3(ColorRGBA(color3.get_color(), color3.get_alpha()/gdouble(0xffff)));
   }
   void set_color4_from_widget()
   {
-    _private_gradient->set_color4(color4.get_color());
+    _private_gradient->set_color4(ColorRGBA(color4.get_color(), color4.get_alpha()/gdouble(0xffff)));
+  }
+  void set_n_samples()
+  {
+    _private_gradient->set_n_samples(MAX(16, n_samples.get_value()));
+  }
+  void set_use_alpha()
+  {
+    bool a = use_alpha_.get_active();
+    def_color.set_use_alpha(a);
+    color1.set_use_alpha(a);
+    color2.set_use_alpha(a);
+    color3.set_use_alpha(a);
+    color4.set_use_alpha(a);
+    _private_gradient->set_use_alpha(a);
   }
 
 public:
