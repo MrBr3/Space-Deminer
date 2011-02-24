@@ -54,8 +54,12 @@ public:
 
   static void init_slots();
 
+  Glib::ustring save_to_string()const;
+  void load_from_string(Glib::ustring::const_iterator& begin, Glib::ustring::const_iterator end);
+
 private:
   static GradientPtr slot[4];
+  static void slot_changed(gsize i);
 
 ///@{
 ///@name Components

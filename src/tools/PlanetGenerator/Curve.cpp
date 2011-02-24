@@ -76,14 +76,14 @@ void Curve::init_slots()
 
   for(gsize i=0; i<4; ++i)
   {
-    Options::get_curve(Glib::ustring::compose("slot%1", i),  slots[i]);
+    Options::get_curve(Glib::ustring::compose("curve-slot%1", i),  slots[i]);
     slots[i]->signal_changed().connect(sigc::bind(sigc::ptr_fun(slot_changed), i));
   }
 }
 
 void Curve::slot_changed(gsize i)
 {
-  Options::set_curve(Glib::ustring::compose("slot%1", i), slots[i]);
+  Options::set_curve(Glib::ustring::compose("curve-slot%1", i), slots[i]);
 }
 
 void Curve::set(const Curve& other_c)
@@ -97,6 +97,8 @@ void Curve::set(const Curve& other_c)
     points[i] = other_c.points[i];
 
   invalidate();
+
+  _interpolate_linear = other_c._interpolate_linear;
 
   set_n_samples(other_c.get_n_samples());
   update_all_samples();
@@ -118,6 +120,7 @@ void Curve::load_present(Present p)
       set_n_points(1);
       points[0].x = 0.5;
       points[0].y = 1.0;
+      _interpolate_linear = false;
 
       invalidate();
       update_all_samples();
@@ -128,6 +131,7 @@ void Curve::load_present(Present p)
       set_n_points(1);
       points[0].x = 0.5;
       points[0].y = 0.0;
+      _interpolate_linear = false;
 
       invalidate();
       update_all_samples();
@@ -136,6 +140,7 @@ void Curve::load_present(Present p)
   case PRESENT_LINEAR:
     {
       set_n_points(2);
+      _interpolate_linear = false;
       points[0].x = 0.0;
       points[0].y = 0.0;
       points[1].x = 1.0;
@@ -215,10 +220,10 @@ void Curve::load_from_string(Glib::ustring::const_iterator& begin, Glib::ustring
   ++begin;
 
   if(begin==end)
-    throw_parser_error("expected ' ' after boolean value and points");
+    throw_parser_error("expected ' ' after boolean value and before points");
 
   if(*begin!=' ')
-    throw_parser_error("expected ' ' after boolean value and points");
+    throw_parser_error("expected ' ' after boolean value and before points");
   ++begin;
 
   if(*begin!='(')

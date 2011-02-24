@@ -61,6 +61,7 @@
       <File Name="Gradient.hpp"/>
       <File Name="Curve.cpp"/>
       <File Name="Curve.hpp"/>
+      <File Name="GradientAsString.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Both">
       <File Name="Options.cpp"/>

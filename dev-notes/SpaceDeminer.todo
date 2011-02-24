@@ -158,9 +158,9 @@ PlanetGenerator
             [X] remap
             [X] presents laden
             [X] in slots speichern/laden
-            [ ] als string speichern
-            [ ] aus string lesen
-            [ ] slots in den Options speichern
+            [X] als string speichern
+            [X] aus string lesen
+            [X] slots in den Options speichern
       [ ] Graditionskurve für Texture Layer
         [ ] wie mit Live preview kombinieren? richtige Textur im VideoRam und Graditionskurve in der vorschau "nur" per Shader?
       [ ] Atmosphären effekt

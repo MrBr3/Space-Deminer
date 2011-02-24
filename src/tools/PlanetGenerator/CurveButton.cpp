@@ -475,6 +475,7 @@ void CurveDialog::set_curve(const CurvePtr& c)
 {
   _curve = c;
   view.set_curve(_curve);
+  cbtn.set_active(_curve->get_interpolate_linear());
 }
 
 void CurveDialog::set_linear()

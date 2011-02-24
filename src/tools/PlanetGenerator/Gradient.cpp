@@ -156,7 +156,14 @@ void Gradient::init_slots()
   for(gsize i=0; i<4; ++i)
   {
     slot[i] = Gradient::create();
+    Options::get_gradient(Glib::ustring::compose("gradient-slot%1", i),  slot[i]);
+    slot[i]->signal_changed().connect(sigc::bind(sigc::ptr_fun(slot_changed), i));
   }
+}
+
+void Gradient::slot_changed(gsize i)
+{
+  Options::set_gradient(Glib::ustring::compose("gradient-slot%1", i), slot[i]);
 }
 
 void Gradient::save_slot(guint i)

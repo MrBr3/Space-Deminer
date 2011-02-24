@@ -132,12 +132,40 @@ void Options::set_color(const Glib::ustring& name, const Gdk::Color& value)
 }
 
 void Options::get_gradient(const Glib::ustring& name, const GradientPtr& gradient)
-{//TODO
+{
+  if(!option_exists(name))
+  {
+    set_gradient(name, gradient);
+    return;
+  }
+
+  GradientPtr tmp = Gradient::create();
+
+  try
+  {
+    Glib::ustring str = get_string(name, "");
+    Glib::ustring::const_iterator b = str.begin();
+    tmp->load_from_string(b, str.end());
+    if(b!=str.end())
+    {
+      std::cout<<"**Options::get_gradient** couldn't parse the whole line\n";
+      return;
+    }
+  }catch(const std::exception& e)
+  {
+    std::cout<<"**Options::get_gradient** error while Parsing: '"<<e.what()<<"'\n";
+    return;
+  }catch(...)
+  {
+    std::cout<<"**Options::get_gradient** unknown error while Parsing\n";
+    return;
+  }
+  gradient->set(tmp);
 }
 
 void Options::set_gradient(const Glib::ustring& name, const ConstGradientPtr& value)
 {
-  //TODO
+  set_string(name, value->save_to_string());
 }
 
 void Options::get_curve(const Glib::ustring& name, const CurvePtr& curve)
@@ -170,7 +198,6 @@ void Options::get_curve(const Glib::ustring& name, const CurvePtr& curve)
     std::cout<<"**Options::get_curve** unknown error while Parsing\n";
     return;
   }
-
   curve->set(tmp);
 }
 
