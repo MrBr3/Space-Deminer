@@ -236,8 +236,8 @@ GradientDialog::GradientDialog()
         remap_b.set_value(_private_gradient->get_remap_b()*100.);
         set_unit(remap_a, " %");
         set_unit(remap_b, " %");
-        remap_a.signal_value_changed().connect(sigc::mem_fun(*this, &GradientDialog::set_remap));
-        remap_b.signal_value_changed().connect(sigc::mem_fun(*this, &GradientDialog::set_remap));
+        remap_a.signal_value_changed().connect(sigc::mem_fun(*this, &GradientDialog::set_remap_a));
+        remap_b.signal_value_changed().connect(sigc::mem_fun(*this, &GradientDialog::set_remap_b));
       table2_.attach(use_alpha_, 0, 3, 0, 1, Gtk::EXPAND|Gtk::FILL, Gtk::SHRINK);
         use_alpha_.show();
         use_alpha_.set_label(_("UseAlpha"));

@@ -92,13 +92,13 @@ class GradientDialog : public Gtk::Dialog
     color4.set_use_alpha(a);
     _private_gradient->set_use_alpha(a);
   }
-  void set_remap()
+  void set_remap_a()
   {
-    _private_gradient->request_no_updates();
-      _private_gradient->set_remap_a(remap_a.get_value()*0.01);
-      _private_gradient->set_remap_b(remap_b.get_value()*0.01);
-    _private_gradient->unrequest_no_updates();
-    _private_gradient->invalidate_and_update();
+    _private_gradient->set_remap_a(remap_a.get_value()*0.01);
+  }
+  void set_remap_b()
+  {
+    _private_gradient->set_remap_b(remap_b.get_value()*0.01);
   }
 
 public:

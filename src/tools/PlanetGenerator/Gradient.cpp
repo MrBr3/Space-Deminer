@@ -60,6 +60,9 @@ void Gradient::flip_h()
     curve2->flip_h();
     curve3->flip_h();
     curve4->flip_h();
+    exchange(remap_a, remap_b);
+    remap_a = 1.-remap_a;
+    remap_b = 1.-remap_b;
   unrequest_no_updates();
 
   invalidate_and_update();
