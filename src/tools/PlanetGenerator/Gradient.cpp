@@ -89,6 +89,25 @@ void Gradient::set_use_alpha(bool use_alpha)
   invalidate_and_update();
 }
 
+void Gradient::set(GradientPtr g)
+{
+  request_no_updates();
+    curve1->set(g->curve1);
+    curve2->set(g->curve2);
+    curve3->set(g->curve3);
+    curve4->set(g->curve4);
+    defcolor = g->defcolor;
+    color1 = g->color1;
+    color2 = g->color2;
+    color3 = g->color3;
+    color4 = g->color4;
+    _use_alpha = g->_use_alpha;
+    set_n_samples(g->get_n_samples());
+  unrequest_no_updates();
+
+  invalidate_and_update();
+}
+
 //---- Samples ----
 
 void Gradient::set_n_samples(gsize s)

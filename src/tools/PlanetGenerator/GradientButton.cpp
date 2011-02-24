@@ -232,12 +232,14 @@ GradientDialog::GradientDialog()
         remap_b.set_value(100.);
         set_unit(remap_a, " %");
         set_unit(remap_b, " %");
+        //TODO remapwerte vom Gradient Laden
+        //remap_a.signal_value_changed().connect(sigc::mem_fun(*this, &GradientDialog::set_remap));
+        //remap_b.signal_value_changed().connect(sigc::mem_fun(*this, &GradientDialog::set_remap));
       table2_.attach(use_alpha_, 0, 3, 0, 1, Gtk::EXPAND|Gtk::FILL, Gtk::SHRINK);
         use_alpha_.show();
         use_alpha_.set_label(_("UseAlpha"));
         use_alpha_.signal_toggled().connect(sigc::mem_fun(*this, &GradientDialog::set_use_alpha));
         use_alpha_.set_active(_private_gradient->get_use_alpha());
-      //TODO die ganzen anderen widgets sollten refreshen, wenn das hier verändert wurde
     table_.attach(preview_frame_, 0, 3, 6, 7);
       preview_frame_.show();
       preview_frame_.set_shadow_type(Gtk::SHADOW_ETCHED_OUT);
@@ -258,12 +260,30 @@ GradientDialog::~GradientDialog()throw()
 
 void GradientDialog::set_gradient(const GradientPtr& g)
 {
-  _private_gradient->set(g);
+  _private_gradient = g;
 
-std::cout<<"GradientDialog::set_gradient\n";
-  //TODO
-  // def_color.set_color(_private_gradient->get_def_color);
-  // same for input widgets....
+  _private_gradient->request_no_updates();
+    preview_.set_gradient(_private_gradient);
+    use_alpha_.set_active(_private_gradient->get_use_alpha());
+    //TODO remapwerte vom Gradient Laden
+    n_samples.set_value(_private_gradient->get_n_samples());
+
+    curve1.set_curve(_private_gradient->get_curve1());
+    curve2.set_curve(_private_gradient->get_curve2());
+    curve3.set_curve(_private_gradient->get_curve3());
+    curve4.set_curve(_private_gradient->get_curve4());
+
+    color1.set_color(_private_gradient->get_color1().get_gdk_color());
+    color1.set_alpha(_private_gradient->get_color1().a*0xffff);
+    color2.set_color(_private_gradient->get_color2().get_gdk_color());
+    color2.set_alpha(_private_gradient->get_color2().a*0xffff);
+    color3.set_color(_private_gradient->get_color3().get_gdk_color());
+    color3.set_alpha(_private_gradient->get_color3().a*0xffff);
+    color4.set_color(_private_gradient->get_color4().get_gdk_color());
+    color4.set_alpha(_private_gradient->get_color4().a*0xffff);
+    def_color.set_color(_private_gradient->get_defcolor().get_gdk_color());
+    def_color.set_alpha(_private_gradient->get_defcolor().a*0xffff);
+  _private_gradient->unrequest_no_updates();
 }
 
 // ------------
@@ -373,8 +393,11 @@ void GradientButton::on_clicked()
 {
   GradientDialog dlg;
 
+  GradientPtr tmp = Gradient::create();
+  tmp->set(get_gradient());
+
   dlg.set_gradient(get_gradient());
 
-  if(dlg.run()==Gtk::RESPONSE_OK)
-    _gradient->set(dlg.get_gradient());
+  if(dlg.run()!=Gtk::RESPONSE_OK)
+    _gradient->set(tmp);
 }

@@ -45,7 +45,7 @@ public:
   void save_slot(guint i){std::cout<<"Gradient::save_slot("<<i<<")\n";}
   void load_slot(guint i){std::cout<<"Gradient::load_slot("<<i<<")\n";}
 
-  void set(GradientPtr g){std::cout<<"Gradient::set\n";}
+  void set(GradientPtr g);
 
   static GradientPtr create(){return GradientPtr(new Gradient());}
 
@@ -98,12 +98,12 @@ private:
   bool _invalidated;
   gsize _dont_update;
 
-  void request_no_updates(){_dont_update++;}
-  void unrequest_no_updates(){g_assert(_dont_update>0);_dont_update--;}
-
 public:
   gsize get_n_samples()const{return _samples.size();}
   void set_n_samples(gsize s);
+
+  void request_no_updates(){_dont_update++;}
+  void unrequest_no_updates(){g_assert(_dont_update>0);_dont_update--;}
 
   const SamplesVector& get_samples()const{return _samples;}
   Cairo::RefPtr<const Cairo::Gradient> get_cairo_gradient()const{return _cairo_gradient;}
