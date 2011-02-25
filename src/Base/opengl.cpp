@@ -17,7 +17,6 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <gtkglmm.h>
 #include "math.hpp"
 #include "opengl.hpp"
 

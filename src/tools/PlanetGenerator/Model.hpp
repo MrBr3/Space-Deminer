@@ -19,7 +19,6 @@
 
 #include <base.hpp>
 #include <gtkmm.h>
-#include "opengl.hpp"
 
 #include "./Gradient.hpp"
 #include "./ModelSettings.hpp"

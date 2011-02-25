@@ -46,11 +46,11 @@ void RingMesh::init(gsize n_segments)
 void RingMesh::deinit()
 {
   if(_vertex_buffer_triangles)
-    glDeleteBuffersARB(1, &_vertex_buffer_triangles);
+    glDeleteBuffers(1, &_vertex_buffer_triangles);
   if(_vertex_buffer_normals)
-    glDeleteBuffersARB(1, &_vertex_buffer_normals);
+    glDeleteBuffers(1, &_vertex_buffer_normals);
   if(_vertex_buffer_uv)
-    glDeleteBuffersARB(1, &_vertex_buffer_uv);
+    glDeleteBuffers(1, &_vertex_buffer_uv);
 
   _vertex_buffer_triangles  = 0;
   _vertex_buffer_normals  = 0;
@@ -81,16 +81,16 @@ void RingMesh::render(gfloat width, gfloat outer_radius)
   g_assert(_n_triangles>=12);
 
   glEnableClientState(GL_VERTEX_ARRAY);
-  glBindBufferARB(GL_ARRAY_BUFFER_ARB,_vertex_buffer_triangles);
+  glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_triangles);
   glVertexPointer(3,GL_FLOAT,0,0);
 
   glEnableClientState(GL_NORMAL_ARRAY);
-  glBindBufferARB(GL_ARRAY_BUFFER_ARB,_vertex_buffer_normals);
+  glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_normals);
   glNormalPointer(GL_FLOAT,0,0);
 
   glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-  glClientActiveTextureARB(GL_TEXTURE0_ARB+0);
-  glBindBufferARB(GL_ARRAY_BUFFER_ARB,_vertex_buffer_uv);
+  glClientActiveTexture(GL_TEXTURE0+0);
+  glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_uv);
   glTexCoordPointer(2,GL_FLOAT,0,0);
 
   glDrawArrays(GL_TRIANGLES, 0, _n_triangles*3);
@@ -141,17 +141,17 @@ void RingMesh::set_segment_division(gsize n_segments)
     normal_buffer[i*3 + 2] = Vector3(0.f, 0.f, 1.f);
   }
 
-  glGenBuffersARB(1,&_vertex_buffer_triangles);
-  glBindBufferARB(GL_ARRAY_BUFFER_ARB,_vertex_buffer_triangles);
-  glBufferDataARB(GL_ARRAY_BUFFER_ARB,_n_triangles * sizeof(Polygon), triangle_buffer, GL_STATIC_DRAW_ARB);
+  glGenBuffers(1,&_vertex_buffer_triangles);
+  glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_triangles);
+  glBufferData(GL_ARRAY_BUFFER,_n_triangles * sizeof(Polygon), triangle_buffer, GL_STATIC_DRAW);
 
-  glGenBuffersARB(1,&_vertex_buffer_normals);
-  glBindBufferARB(GL_ARRAY_BUFFER_ARB,_vertex_buffer_normals);
-  glBufferDataARB(GL_ARRAY_BUFFER_ARB,_n_triangles * 3 * sizeof(Vector3), normal_buffer, GL_STATIC_DRAW_ARB);
+  glGenBuffers(1,&_vertex_buffer_normals);
+  glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_normals);
+  glBufferData(GL_ARRAY_BUFFER,_n_triangles * 3 * sizeof(Vector3), normal_buffer, GL_STATIC_DRAW);
 
-  glGenBuffersARB(1,&_vertex_buffer_uv);
-  glBindBufferARB(GL_ARRAY_BUFFER_ARB,_vertex_buffer_uv);
-  glBufferDataARB(GL_ARRAY_BUFFER_ARB,_n_triangles * sizeof(UV), uv_buffer, GL_STATIC_DRAW_ARB);
+  glGenBuffers(1,&_vertex_buffer_uv);
+  glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_uv);
+  glBufferData(GL_ARRAY_BUFFER,_n_triangles * sizeof(UV), uv_buffer, GL_STATIC_DRAW);
 
   signal_changed().emit();
 

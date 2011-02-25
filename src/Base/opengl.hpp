@@ -18,7 +18,9 @@
  */
 
 #include "dependencies.hpp"
-#include <gdkmm.h>
+#include <GL/glew.h>
+#include <GL/glut.h>
+#include <gtkglmm.h>
 
 #ifndef _SPACE_DEMINER_BASE_OGL_H_
 #define _SPACE_DEMINER_BASE_OGL_H_
@@ -46,7 +48,7 @@ inline TextureHint& operator^=(TextureHint& a, TextureHint b){return a = a^b;}
 
 /** \brief Sets the content of an OpenGL Texture based on a Pixbuf
  *
- * \note The OpenGL Texture won't be generated. You múst call <tt>glGenTextures(...)</tt> and  <tt>glBindTexture(GL_TEXTURE_2D, ..);</tt> by yourself before calling this function
+ * \note The OpenGL Texture won't be generated. You must call <tt>glGenTextures(...)</tt> and  <tt>glBindTexture(GL_TEXTURE_2D, ..);</tt> by yourself before calling this function
  * */
 void set_gl_texture_content(const Glib::RefPtr<const Gdk::Pixbuf>& pixbuf_, TextureHint hint_, Real& coord_max_u, Real& coord_max_v);
 

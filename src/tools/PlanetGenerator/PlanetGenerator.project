@@ -67,8 +67,6 @@
       <File Name="Options.cpp"/>
       <File Name="Options.hpp"/>
     </VirtualDirectory>
-    <File Name="opengl.hpp"/>
-    <File Name="opengl.cpp"/>
     <VirtualDirectory Name="Raytracer">
       <File Name="Raytracer/Raytracer.hpp"/>
       <File Name="Raytracer/Ray.cpp"/>

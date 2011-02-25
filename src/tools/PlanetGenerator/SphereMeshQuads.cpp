@@ -109,19 +109,19 @@ namespace QuadVersion
     g_assert(_n_quads>12);
 
     glEnableClientState(GL_VERTEX_ARRAY);
-    glBindBufferARB(GL_ARRAY_BUFFER_ARB,_vertex_buffer_quads);
+    glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_quads);
     glVertexPointer(3,GL_FLOAT,0,0);
 
     glEnableClientState(GL_NORMAL_ARRAY);
-    glBindBufferARB(GL_ARRAY_BUFFER_ARB,_vertex_buffer_normals);
+    glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_normals);
     glNormalPointer(GL_FLOAT,0,0);
 
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-    glClientActiveTextureARB(GL_TEXTURE0_ARB+0);
+    glClientActiveTexture(GL_TEXTURE0+0);
     if(use_warped_uv)
-      glBindBufferARB(GL_ARRAY_BUFFER_ARB,_vertex_buffer_uv_warped);
+      glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_uv_warped);
     else
-      glBindBufferARB(GL_ARRAY_BUFFER_ARB,_vertex_buffer_uv_rectangular);
+      glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_uv_rectangular);
     glTexCoordPointer(2,GL_FLOAT,0,0);
 
     glDrawArrays(GL_QUADS, 0, _n_quads*4);
@@ -134,13 +134,13 @@ namespace QuadVersion
   void SphereMesh::deinit()
   {
     if(_vertex_buffer_quads)
-      glDeleteBuffersARB(1, &_vertex_buffer_quads);
+      glDeleteBuffers(1, &_vertex_buffer_quads);
     if(_vertex_buffer_normals)
-      glDeleteBuffersARB(1, &_vertex_buffer_normals);
+      glDeleteBuffers(1, &_vertex_buffer_normals);
     if(_vertex_buffer_uv_warped)
-      glDeleteBuffersARB(1, &_vertex_buffer_uv_warped);
+      glDeleteBuffers(1, &_vertex_buffer_uv_warped);
     if(_vertex_buffer_uv_rectangular)
-      glDeleteBuffersARB(1, &_vertex_buffer_uv_rectangular);
+      glDeleteBuffers(1, &_vertex_buffer_uv_rectangular);
 
     _vertex_buffer_quads  = 0;
     _vertex_buffer_normals  = 0;
@@ -181,21 +181,21 @@ namespace QuadVersion
 
     if(_use_gl_buffers)
     {
-      glGenBuffersARB(1,&_vertex_buffer_quads);
-      glBindBufferARB(GL_ARRAY_BUFFER_ARB,_vertex_buffer_quads);
-      glBufferDataARB(GL_ARRAY_BUFFER_ARB,_n_quads * sizeof(Polygon), circle.quads, GL_STATIC_DRAW_ARB);
+      glGenBuffers(1,&_vertex_buffer_quads);
+      glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_quads);
+      glBufferData(GL_ARRAY_BUFFER,_n_quads * sizeof(Polygon), circle.quads, GL_STATIC_DRAW);
 
-      glGenBuffersARB(1,&_vertex_buffer_normals);
-      glBindBufferARB(GL_ARRAY_BUFFER_ARB,_vertex_buffer_normals);
-      glBufferDataARB(GL_ARRAY_BUFFER_ARB,_n_quads * 4 * sizeof(Vector3), circle.normals, GL_STATIC_DRAW_ARB);
+      glGenBuffers(1,&_vertex_buffer_normals);
+      glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_normals);
+      glBufferData(GL_ARRAY_BUFFER,_n_quads * 4 * sizeof(Vector3), circle.normals, GL_STATIC_DRAW);
 
-      glGenBuffersARB(1,&_vertex_buffer_uv_rectangular);
-      glBindBufferARB(GL_ARRAY_BUFFER_ARB,_vertex_buffer_uv_rectangular);
-      glBufferDataARB(GL_ARRAY_BUFFER_ARB,_n_quads * sizeof(UV), circle.uv_rectangle, GL_STATIC_DRAW_ARB);
+      glGenBuffers(1,&_vertex_buffer_uv_rectangular);
+      glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_uv_rectangular);
+      glBufferData(GL_ARRAY_BUFFER,_n_quads * sizeof(UV), circle.uv_rectangle, GL_STATIC_DRAW);
 
-      glGenBuffersARB(1,&_vertex_buffer_uv_warped);
-      glBindBufferARB(GL_ARRAY_BUFFER_ARB,_vertex_buffer_uv_warped);
-      glBufferDataARB(GL_ARRAY_BUFFER_ARB,_n_quads * sizeof(UV), circle.uv_warped, GL_STATIC_DRAW_ARB);
+      glGenBuffers(1,&_vertex_buffer_uv_warped);
+      glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_uv_warped);
+      glBufferData(GL_ARRAY_BUFFER,_n_quads * sizeof(UV), circle.uv_warped, GL_STATIC_DRAW);
     }
 
     signal_changed().emit();

@@ -38,8 +38,7 @@ int main(int argc, char **argv)
   srand(time(0));
 
   Gtk::Main kit(argc, argv);
-
-  init_opengl_stuff(argc, argv);
+  Gtk::GL::init(argc, argv);
 
   init_paths("planet-generator");
 

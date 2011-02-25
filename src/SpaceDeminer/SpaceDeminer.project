@@ -153,7 +153,7 @@
         <IncludePath Value="./src"/>
         <IncludePath Value="./../include"/>
       </Compiler>
-      <Linker Options="$$(pkg-config --libs gtkmm-2.4 --libs gtkglextmm-1.2) -lbase">
+      <Linker Options="$$(pkg-config --libs gtkmm-2.4 --libs gtkglextmm-1.2 glew) -lbase">
         <LibraryPath Value="."/>
       </Linker>
       <ResourceCompiler Options=""/>

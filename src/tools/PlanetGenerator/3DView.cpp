@@ -90,6 +90,21 @@ void View3D::on_realize()
 
   gl_drawable->gl_begin(get_gl_context());
 
+  GLenum err = glewInit();
+  if(err!=GLEW_OK)
+  {
+    Gtk::MessageDialog dlg(_("couldn't load GLEW!"), false, Gtk::MESSAGE_ERROR);
+    dlg.run();
+    exit(-1);
+  }
+  if(!glewIsSupported("GL_VERSION_2_1"))
+  {
+    Gtk::MessageDialog dlg(_("OpenGL 2.1 not supported"), false, Gtk::MESSAGE_ERROR);
+    dlg.set_secondary_text(_("Your Graphic Hardware or Driver does not support OpenGL 2.1, which is needed by this application!"));
+    dlg.run();
+    exit(-1);
+  }
+
   sphere_mesh.init(view_settings->get_n_sphere_segments());
   ring_mesh.init(view_settings->get_n_ring_segments());
   base_texture->init();
