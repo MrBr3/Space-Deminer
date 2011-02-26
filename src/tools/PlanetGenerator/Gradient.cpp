@@ -223,13 +223,13 @@ void Gradient::set_use_alpha(bool use_alpha)
 void Gradient::set_remap_a(gdouble a)
 {
   remap_a = a;
-  invalidate_and_update();
+  invalidate_and_update_just_gradient();
 }
 
 void Gradient::set_remap_b(gdouble b)
 {
   remap_b = b;
-  invalidate_and_update();
+  invalidate_and_update_just_gradient();
 }
 
 //---- Samples ----
@@ -265,15 +265,9 @@ void Gradient::update_samples()
   gsize n_samples = _samples.size();
   gdouble inv_n_samples = 1.f/gdouble(n_samples);
 
-  gdouble inv_remap_b_minus_a = remap_b - remap_a;
-  if(inv_remap_b_minus_a!=0.)
-    inv_remap_b_minus_a = 1./inv_remap_b_minus_a;
-
   for(gsize i=0; i<n_samples; ++i)
   {
     gdouble offset = gdouble(i)*inv_n_samples;
-
-    offset = CLAMP((offset-remap_a)*inv_remap_b_minus_a, 0., 1.);
 
     gdouble c1 = curve1->get_value(offset);
     gdouble c2 = curve2->get_value(offset);
@@ -347,7 +341,7 @@ void Gradient::update_cairo_gradient()
 
   for(gsize i=0; i<n_samples; ++i)
   {
-    gdouble offset = gdouble(i)*inv_n_samples;
+    gdouble offset = get_remapped_offset(gdouble(i)*inv_n_samples);
 
     _cairo_gradient->add_color_stop_rgba(offset, _samples[i].r, _samples[i].g, _samples[i].b, _samples[i].a);
   }

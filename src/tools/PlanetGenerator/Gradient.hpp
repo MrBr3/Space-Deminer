@@ -97,6 +97,8 @@ public:
   void set_remap_b(gdouble b);
   gdouble get_remap_a()const{return remap_a;}
   gdouble get_remap_b()const{return remap_b;}
+
+  gdouble get_remapped_offset(gdouble o)const{return remap_a+o*(remap_b-remap_a);}
 ///@}
 
 ///@{
@@ -121,7 +123,15 @@ public:
   void request_no_updates(){_dont_update++;}
   void unrequest_no_updates(){g_assert(_dont_update>0);_dont_update--;}
 
+  /**
+   *
+   * \note the samples are \b not remapped
+   * */
   const SamplesVector& get_samples()const{return _samples;}
+  /**
+   *
+   * \note the gradient is already remapped
+   * */
   Cairo::RefPtr<const Cairo::Gradient> get_cairo_gradient()const{return _cairo_gradient;}
 
   void reference_cairo_gradient();
@@ -134,6 +144,16 @@ public:
   {
     invalidate();
     update_samples();
+  }
+  void invalidate_and_update_just_gradient()
+  {
+    if(_invalidated)
+      update_samples();
+    else
+    {
+      update_cairo_gradient();
+      signal_changed().emit();
+    }
   }
 ///@}
 
