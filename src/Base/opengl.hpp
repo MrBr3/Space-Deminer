@@ -19,7 +19,6 @@
 
 #include "dependencies.hpp"
 #include <GL/glew.h>
-#include <GL/glut.h>
 #include <gtkglmm.h>
 
 #ifndef _SPACE_DEMINER_BASE_OGL_H_
