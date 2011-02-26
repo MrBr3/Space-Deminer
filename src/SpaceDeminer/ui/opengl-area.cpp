@@ -81,6 +81,10 @@ void MainWindow::GtkGlDrawingArea::on_realize()
     dlg.run();
     exit(-1);
   }
+  if(!glewIsSupported("GL_VERSION_3_3"))
+  {
+    std::cout<<"Open GL 3.3 is not supported, so some features can't be used - sorry :-(";
+  }
 
   MainWindow::get_singleton()->_engine = Framework::Engine::create_gl_engine(get_gl_context());
 
