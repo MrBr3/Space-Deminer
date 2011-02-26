@@ -44,6 +44,18 @@
   <VirtualDirectory Name="external">
     <File Name="../extern/binreloc/binreloc.c"/>
     <File Name="../extern/binreloc/binreloc.h"/>
+    <VirtualDirectory Name="glim">
+      <File Name="../extern/glim/Config.h"/>
+      <File Name="../extern/glim/Declarations.h"/>
+      <File Name="../extern/glim/glimBatch.cpp"/>
+      <File Name="../extern/glim/glimBatch.h"/>
+      <File Name="../extern/glim/glimBatchAttributes.cpp"/>
+      <File Name="../extern/glim/glimBatchData.cpp"/>
+      <File Name="../extern/glim/glimBatchData.h"/>
+      <File Name="../extern/glim/glimInterface.h"/>
+      <File Name="../extern/glim/Main.h"/>
+      <File Name="../extern/glim/Stuff.cpp"/>
+    </VirtualDirectory>
   </VirtualDirectory>
   <Settings Type="Static Library">
     <GlobalSettings>

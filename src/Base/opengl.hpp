@@ -20,6 +20,7 @@
 #include "dependencies.hpp"
 #include <GL/glew.h>
 #include <gtkglmm.h>
+#include "./../extern/glim/Main.h"
 
 #ifndef _SPACE_DEMINER_BASE_OGL_H_
 #define _SPACE_DEMINER_BASE_OGL_H_
