@@ -21,6 +21,7 @@ namespace Raytracer
 {
   class Ray : public Math::Ray
   {
+    Vector2 screen_pos;
     Ray();
   public:
     /** \brief Constructer making the Ray to represent a Ray sent by the camera

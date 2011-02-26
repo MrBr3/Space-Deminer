@@ -19,4 +19,66 @@
 
 namespace Raytracer
 {
+  class RenderParam;
+  namespace Shader
+  {
+    enum ObjectShadeID
+    {
+      NO_ID = 0,
+      PLANET_SURFACE_ID = 1,
+      PLANET_NIGHT_ID = 2,
+      PLANET_CLOUDS_ID = 3,
+      PLANET_ATMOSPHERE_ID = 5,
+      ATMOSPHERE_ID = 256, // The Planet's Glow
+      RING_ID = 1024,
+    };
+
+    inline ObjectShadeID operator|(ObjectShadeID a, ObjectShadeID b){return ObjectShadeID(int(a)|int(b));}
+    inline ObjectShadeID operator&(ObjectShadeID a, ObjectShadeID b){return ObjectShadeID(int(a)&int(b));}
+    inline ObjectShadeID operator^(ObjectShadeID a, ObjectShadeID b){return ObjectShadeID(int(a)^int(b));}
+    inline ObjectShadeID operator~(ObjectShadeID a){return ObjectShadeID(~int(a));}
+    inline ObjectShadeID& operator|=(ObjectShadeID& a, ObjectShadeID b){return a = a|b;}
+    inline ObjectShadeID& operator&=(ObjectShadeID& a, ObjectShadeID b){return a = a&b;}
+    inline ObjectShadeID& operator^=(ObjectShadeID& a, ObjectShadeID b){return a = a^b;}
+
+    class Param
+    {
+    public:
+      ColorRGBA result;
+      ColorRGBA diffuse;
+      ColorRGBA specular;
+      gfloat specular_width, specular_strength;
+      Vector3 view;
+      Vector3 normal;
+      Vector3 geometry_normal; // just needed for planet_surface
+      Vector2 screen_pos;
+      gfloat day_light; // just needed to differ between day and night Texture
+      gint n_day_lights; // just needed to differ between day and night Texture
+      ObjectShadeID object_id;
+
+      Param(ObjectShadeID oid) : object_id(oid)
+      {
+        result.set(0.f, 0.f, 0.f);
+        day_light = 0.f;
+        n_day_lights = 0;
+      }
+    };
+
+    class Shader : public Refable
+    {
+    public:
+      ObjectShadeID mask;
+      virtual void shade(Param& shader_param)const=0;
+    };
+
+    typedef Glib::RefPtr<Shader> ShaderPtr;
+    typedef std::list<ShaderPtr> ShaderList;
+
+    extern ShaderList all_shaders;
+
+    void shade(Param& shader_param);
+  }
+  typedef Shader::Param Param;
+  typedef Glib::RefPtr<Shader::Shader> ShaderPtr;
+  typedef std::list<ShaderPtr> ShaderList;
 }

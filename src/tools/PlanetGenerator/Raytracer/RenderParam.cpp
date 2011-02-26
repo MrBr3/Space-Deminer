@@ -20,9 +20,9 @@
 #include "./../MainWindow.hpp"
 
 namespace Raytracer
-{  
+{
   RenderParam* RenderParam::_singleton = nullptr;
-  
+
   RenderParam::RenderParam(const Matrix44& ring_matrix, const Matrix44& planet_matrix,  const Matrix44& view_matrix_, const Matrix44& projection_matrix_,
                            int img_width_, int img_height_, int antialiasing) :
                            planet(planet_matrix, 1.f), ring(planet_matrix, ring_matrix),
@@ -35,40 +35,40 @@ namespace Raytracer
     g_assert(img_width>0);
     g_assert(img_height>0);
     g_assert(antialiasing>=0 && antialiasing<9);
-    
+
     // Prepare Texture Filtering
     {
       n_texture_filter_samples  = Manager::get_settings().get_texture_filtering_n_samples();
       filter_ring_textures  = Manager::get_settings().get_texture_filtering_in_ring() && n_texture_filter_samples>0;
       texture_filter_radius  = Manager::get_settings().get_texture_filtering_radius();
-      
+
       if(!filter_ring_textures)
         n_texture_filter_samples = 0;
-        
+
       g_assert(n_texture_filter_samples>=0 && n_texture_filter_samples<=max_texture_filtering_samples);
-      
+
       if(n_texture_filter_samples>0)
-      {      
+      {
         gdouble inv_2pi = 1.f/(PI2);
         gdouble tmp;
         gdouble f=0.;
-          
+
         for(gsize i=0; i<n_texture_filter_samples; ++i)
-        {          
+        {
           if(i==0)
             texture_filter_coordinates[i].set(0.f, 0.f);
           else
             texture_filter_coordinates[i].set(2.f*frand()-1.f, 2.f*frand()-1.f);
-          
+
           gdouble x = texture_filter_coordinates[i].x*3.;
           gdouble y = texture_filter_coordinates[i].y*3.;
-          
+
           texture_filter_coefficients[i] = tmp = inv_2pi * exp(-(x*x+y*y)*0.5);
           f += tmp;
         }
         g_assert(f>0.);
         f = 1./f;
-        
+
         for(gsize i=0; i<n_texture_filter_samples; ++i)
         {
           texture_filter_coefficients[i] *=f;
@@ -97,11 +97,21 @@ namespace Raytracer
       // Get the seeming radius of the planet
       {
         Vector2 sphere_middle;
-        
+
         planet.sphere.screen_circle_pixelscreen(sphere_middle, bounding_sphere.r, projection_matrix, view_matrix, img_width, img_height);
         bounding_sphere.x = sphere_middle.x;
         bounding_sphere.y = sphere_middle.y;
       }
+
+      //----
+
+      Shader::all_shaders.clear();
+
+      for(gsize i=0; i<N_LIGHT_LAYERS; ++i)
+      {
+        LightLayer::get_singleton(i)->create_shaders();
+      }
+
       //----
 
       if(ring.visible)
@@ -129,45 +139,45 @@ namespace Raytracer
       }
     }
   }
-  
+
   RenderParam::~RenderParam()throw()
   {
     g_assert(_singleton);
     _singleton = nullptr;
   }
-  
+
   void RenderParam::get_filtered_texture_color(const Texture& tex, ColorRGBA& color, gfloat u, gfloat v, gfloat blur_amount, Texture::WrapMode u_mode, Texture::WrapMode v_mode)
   {
     /*blur_amount = 1.f-blur_amount;
     blur_amount = 1.f-blur_amount*blur_amount;
     blur_amount = 1.f;*/
     gfloat biger_len = 0.5f/MAX(1.f, MAX(tex.get_height(), tex.get_width()));
-  
-    gfloat r = biger_len+CLAMP(blur_amount, 0.f, 1.f)*MAX(texture_filter_radius-biger_len, 0.f)*0.01f; // TODO 
-    
+
+    gfloat r = biger_len+CLAMP(blur_amount, 0.f, 1.f)*MAX(texture_filter_radius-biger_len, 0.f)*0.01f; // TODO
+
     color.set(0.f, 0.f, 0.f, 0.f);
-    
+
     ColorRGBA tmp;
-    
+
     for(gsize i=0; i<n_texture_filter_samples; ++i)
     {
       gfloat coeff = texture_filter_coefficients[i];
       Vector2 coord = texture_filter_coordinates[i];
-      
+
       tex.get_color(tmp, u+coord.x*r, v+coord.y*r, u_mode, v_mode);
-      
+
       color.a += tmp.a*coeff;
       color.r += tmp.r*tmp.a*coeff;
       color.g += tmp.g*tmp.a*coeff;
       color.b += tmp.b*tmp.a*coeff;
     }
-    
+
     if(color.a==0.f)
     {
       color.set(0.f, 0.f, 0.f, 0.f);
       return;
     }
-    
+
     gfloat inv_a  = 1.f/color.a;
     color.r *= inv_a;
     color.g *= inv_a;
@@ -206,7 +216,7 @@ namespace Raytracer
     gfloat& culling_epsilon = singletonA()->culling_epsilon;
     CullingCircle& bounding_sphere = singletonA()->bounding_sphere;
     Vector2* bounding_ngon = singletonA()->bounding_ngon;
-    
+
     if(!culling)
       return true;
 

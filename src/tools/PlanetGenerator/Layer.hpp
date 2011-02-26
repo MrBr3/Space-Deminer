@@ -63,7 +63,7 @@ public:
    *
    * \return A valid Pointer if there's just ine visible, otherwise <tt>nullptr</tt>
    * */
-  static Glib::RefPtr<Layer> just_one_layer_visible();
+  static Glib::RefPtr<Layer> just_one_texture_layer_visible();
 
 public:
   static void add_layer(const Glib::RefPtr<Layer>& layer);
@@ -85,6 +85,7 @@ protected:
 
 public:
   Gtk::TreeRow row;
+  bool is_texture_layer;
 
   bool get_visible()const{return LayerModel::get_singletonA()->pb_visible==row[LayerModel::columns().visibility];}
   void set_visible(bool v);
@@ -199,6 +200,7 @@ public:
   ImageLayer(const Glib::ustring& name, bool visible) : ParentClass(name, visible)
   {
     _imagefile  = ImageFile::create();
+    this->is_texture_layer = true;
 
     _imagefile->signal_something_changed().connect(sigc::mem_fun(signal_imagefile_changed(), &sigc::signal<void>::emit));
     signal_imagefile_changed().connect(sigc::mem_fun(ParentClass::signal_something_changed(), &sigc::signal<void>::emit));

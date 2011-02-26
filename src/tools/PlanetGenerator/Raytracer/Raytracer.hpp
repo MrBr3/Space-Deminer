@@ -24,6 +24,7 @@
 #include <boost/thread/thread.hpp>
 #include <boost/thread/barrier.hpp>
 
+#include "./Shader.hpp"
 #include "./RaytracerSettings.hpp"
 #include "./Texture.hpp"
 #include "./ResultingImage.hpp"

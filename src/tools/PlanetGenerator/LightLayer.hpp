@@ -17,6 +17,8 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
+const gsize N_LIGHT_LAYERS = 4;
+
 class LightLayer : public MultiLayer<LightLayer>
 {
 public:
@@ -50,6 +52,7 @@ private:
   INTEGER_SETTING(light_type);
   REAL_SETTING(area_diameter);
   COLOR_SETTING(light_color);
+  REAL_SETTING(influence_night);
   REAL_SETTING(light_intensity);
   REAL_SETTING(light_on_planet);
   REAL_SETTING(light_on_ring);
@@ -107,6 +110,7 @@ public:
   }
 
   sigc::signal<void>& signal_rotation_changed(){return _signal_rotation_changed;}
+  void create_shaders();
 
   LightLayer(guint id);
   ~LightLayer()throw();

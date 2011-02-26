@@ -206,24 +206,20 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   bool warped_uv = false;
 
   glEnable(GL_TEXTURE_2D);
-  Glib::RefPtr<Layer> only_visible_layer  = LayerModel::just_one_layer_visible(); // Gets the only visible Layer
-  if(only_visible_layer.operator->()==BaseTextureLayer::get_singleton())
-  {
-    base_texture->bind();
-    warped_uv = BaseTextureLayer::get_imagefile()->get_needs_to_be_warped();
-  }else if(only_visible_layer.operator->()==CloudTextureLayer::get_singleton())
+  Glib::RefPtr<Layer> only_visible_texture_layer  = LayerModel::just_one_texture_layer_visible(); // Gets the only visible Layer
+  if(only_visible_texture_layer.operator->()==CloudTextureLayer::get_singleton())
   {
     cloud_texture->bind();
     warped_uv = CloudTextureLayer::get_imagefile()->get_needs_to_be_warped();
-  }else if(only_visible_layer.operator->()==NightTextureLayer::get_singleton())
+  }else if(only_visible_texture_layer.operator->()==NightTextureLayer::get_singleton())
   {
     night_texture->bind();
     warped_uv = NightTextureLayer::get_imagefile()->get_needs_to_be_warped();
-  }else if(only_visible_layer.operator->()==WeightTextureLayer::get_singleton())
+  }else if(only_visible_texture_layer.operator->()==WeightTextureLayer::get_singleton())
   {
     weight_texture->bind();
     warped_uv = WeightTextureLayer::get_imagefile()->get_needs_to_be_warped();
-  }else if(only_visible_layer.operator->()!=RingLayer::get_singleton())
+  }else
   {
     base_texture->bind();
     warped_uv = BaseTextureLayer::get_imagefile()->get_needs_to_be_warped();

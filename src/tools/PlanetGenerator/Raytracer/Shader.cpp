@@ -17,6 +17,22 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "./Raytracer.hpp"
+
 namespace Raytracer
 {
+  namespace Shader
+  {
+    ShaderList all_shaders;
+
+    void shade(Param& shader_param)
+    {
+      for(ShaderList::const_iterator i = all_shaders.begin(); i!=all_shaders.end(); ++i)
+      {
+        Shader& shader = *i->operator->();
+        if(shader.mask&shader_param.object_id)
+          shader.shade(shader_param);
+      }
+    }
+  }
 }

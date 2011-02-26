@@ -25,7 +25,7 @@ namespace Raytracer
   {
   }
 
-  bool Planet::get_color(ColorRGBA& resulting_color, Math::Ray ray, gfloat& distance)const
+  bool Planet::get_color(ColorRGBA& resulting_color, const Vector2& screen, Math::Ray ray, gfloat& distance)const
   {
     if(sphere.radius<=0.f)
       return false;
@@ -55,7 +55,7 @@ namespace Raytracer
         resulting_color.set(uv.x, uv.y, 0.f, 1.f);
       }else
       {
-        shader(resulting_color, uv, normal, ray);
+        shader(resulting_color, screen, uv, normal, ray);
       }
     }
 
@@ -71,23 +71,54 @@ namespace Raytracer
     uv.y  = acos(CLAMP(n.z, -1.f, 1.f))/G_PI;
   }
 
-  void Planet::shader(ColorRGBA& color, const Vector2& uv, const Vector3& normal, const Math::Ray& ray)
+  void Planet::shader(ColorRGBA& color, const Vector2& screen, const Vector2& uv, const Vector3& normal, const Math::Ray& ray)
   {
-    ColorRGBA base, clouds;
+    ColorRGBA base, night, clouds;
 
     RenderParam::get_planet_texture_color(*Texture::base_texture, base, uv.x, uv.y);
+    RenderParam::get_planet_texture_color(*Texture::night_texture, night, uv.x, uv.y);
     base.a = 1.f;
-    
+    night.a = 1.f;
+
     if(Manager::get_settings().get_dbg_unlit_base_texture())
     {
       color = base;
       return;
     }
-    
+
     RenderParam::get_planet_texture_color(*Texture::cloud_layer, clouds, uv.x, uv.y);
 
     gfloat cloud_alpha  = clouds.a*(clouds.r+clouds.g+clouds.b)/3.f;
 
+    Shader::Param sp(Shader::PLANET_SURFACE_ID);
+
+    sp.diffuse = base; // mehrere Materialien
+    sp.specular.set(0.f, 0.f, 0.f); // mehrere Materialien
+    sp.specular_width = 0.f; // mehrere Materialien
+    sp.specular_strength = 0.f; // mehrere Materialien
+    sp.view = ray.dir;
+    sp.normal = normal; // TODO: NormalMaps
+    sp.geometry_normal = normal;
+    sp.screen_pos = screen;
+
+    shade(sp);
+
+    base.r *= sp.result.r;
+    base.g *= sp.result.b;
+    base.b *= sp.result.g;
+
+    if(sp.n_day_lights>0)
+    {
+      sp.day_light = 1.f-sp.day_light/sp.n_day_lights;
+      //TODO stärke der Nacht letztendlich mit extra Kurve bestimmen
+      base.r += night.r * sp.day_light;
+      base.g += night.g * sp.day_light;
+      base.b += night.b * sp.day_light;
+    }
+
+    // TODO: Atmosphäre
+
+    // TODO: Wolken auch durch den shader jagen
     color.r = base.r*(1.f-cloud_alpha)+cloud_alpha;
     color.g = base.g*(1.f-cloud_alpha)+cloud_alpha;
     color.b = base.b*(1.f-cloud_alpha)+cloud_alpha;

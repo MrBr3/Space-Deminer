@@ -87,6 +87,7 @@
       <File Name="Raytracer/Planet.cpp"/>
       <File Name="Raytracer/Ring.hpp"/>
       <File Name="Raytracer/Ring.cpp"/>
+      <File Name="Raytracer/LightShader.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="extern">
       <VirtualDirectory Name="gimp">

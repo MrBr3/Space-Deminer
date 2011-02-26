@@ -97,7 +97,8 @@ LightLayer::LightLayer(guint id) : MultiLayer<LightLayer>(Glib::ustring::compose
   INIT_REAL_PROPERTY(area_diameter, 0.5f, "Area Width", "The diameter of the area light.", 0.1, 0.2, 3);
   w_area_diameter = last_set_proprty_widget;
   INIT_PROPERTY(color, light_color, light_color_def_value, "Color", "The color of the light emitted by this source.");
-  INIT_REAL_PROPERTY(light_intensity, 0.5f, "Intensity", "The Intensity of the light emitted by this source.", 0.1, 1., 3);
+  INIT_REAL_PROPERTY(light_intensity, 1.0f, "Intensity", "The Intensity of the light emitted by this source.", 0.1, 1., 3);
+  INIT_REAL_PROPERTY(influence_night, 0.0f, "InfluenceNight", "The amount, this Light influences The day and night side", 0.1, 1., 3);
   INIT_REAL_PROPERTY(light_on_planet, 1.0f, "PlanetIntensity", "The amount of the light which is calculated on the planet's surface.\nThis value doesn't influence the gradient settings.", 0.1, 0.2, 3);
   INIT_REAL_PROPERTY(light_on_ring, 1.0f, "RingIntensity", "The amount of the light which is calculated on the ring's surface.", 0.1, 0.2, 3);
   INIT_REAL_PROPERTY(specular_factor, 1.0f, "Specular", "The amount of the light which is calculated for specular lightning.", 0.1, 0.2, 3);
@@ -172,6 +173,12 @@ void LightLayer::set_light_on_ring(gfloat x)
 {
   light_on_ring = CLAMP(x, 0.f, 10.f);
   signal_light_on_ring_changed().emit();
+}
+
+void LightLayer::set_influence_night(gfloat x)
+{
+  influence_night = CLAMP(x, 0.f, 10.f);
+  signal_influence_night_changed().emit();
 }
 
 void LightLayer::set_specular_factor(gfloat x)

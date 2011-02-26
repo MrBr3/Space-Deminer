@@ -28,6 +28,8 @@
 
 #define PI2 (G_PI*2.0)
 #define INV_SQRT_2 0.7071067811865475f
+#define INV_PI 0.318309886183790672f
+#define INV_PI2 0.636619772367581343f
 
 const gfloat degree = G_PI/180.f;
 

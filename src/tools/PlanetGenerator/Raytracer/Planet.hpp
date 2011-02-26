@@ -38,9 +38,9 @@ namespace Raytracer
      *
      * \return true if hit, otherwise false
      * */
-    bool get_color(ColorRGBA& color, Math::Ray ray, gfloat& distance)const;
+    bool get_color(ColorRGBA& color, const Vector2& screen, Math::Ray ray, gfloat& distance)const;
 
-    static void shader(ColorRGBA& color, const Vector2& uv, const Vector3& normal, const Math::Ray& ray);
+    static void shader(ColorRGBA& color, const Vector2& screen, const Vector2& uv, const Vector3& normal, const Math::Ray& ray);
 
     Planet(const Matrix44& transformation_, gfloat radius_);
   };

@@ -21,7 +21,7 @@
 
 namespace Raytracer
 {
-  Ray::Ray(gfloat x, gfloat y)
+  Ray::Ray(gfloat x, gfloat y) : screen_pos(x, y)
   {
     RenderParam::get_ray_dir(dir, x, y);
     RenderParam::get_camera_pos(origin);
@@ -35,7 +35,7 @@ namespace Raytracer
 
     resulting_color.set(0.f, 0.f, 0.f, 0.f);
 
-    planet_hit  = RenderParam::get_planet().get_color(planet_color, *this, planet_distance);
+    planet_hit  = RenderParam::get_planet().get_color(planet_color, screen_pos, *this, planet_distance);
     ring_hit  = RenderParam::get_ring().get_color(ring_color, *this, ring_distance);
 
     if(planet_hit)

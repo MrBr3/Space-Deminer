@@ -128,6 +128,11 @@ public:
     return c;
   }
 
+  gfloat get_intensity()const
+  {
+    return MAX(r, MAX(g, b));
+  }
+
   /** @name  Conversion
    * */
   //@{

@@ -41,10 +41,8 @@ LayerModel::LayerModel()
   register_cloud_texture_layer();
   register_ring_layer();
   //register_atmosphere_layer();//TODO
-  register_light_layer(0);
-  register_light_layer(1);
-  register_light_layer(2);
-  register_light_layer(3);
+  for(gsize i=0; i<N_LIGHT_LAYERS; ++i)
+    register_light_layer(i);
 }
 
 LayerModel::~LayerModel()throw()
@@ -60,7 +58,7 @@ void LayerModel::add_layer(const Glib::RefPtr<Layer>& layer)
   layer->signal_something_changed().connect(sigc::mem_fun(get_singletonA()->_signal_something_changed, &sigc::signal<void>::emit));
 }
 
-Glib::RefPtr<Layer> LayerModel::just_one_layer_visible()
+Glib::RefPtr<Layer> LayerModel::just_one_texture_layer_visible()
 {
   Glib::RefPtr<Layer> only_visible;
 
@@ -71,7 +69,7 @@ Glib::RefPtr<Layer> LayerModel::just_one_layer_visible()
   {
     Glib::RefPtr<Layer> curr_layer  = *i;
 
-    if(curr_layer->get_visible())
+    if(curr_layer->get_visible() && curr_layer->is_texture_layer)
     {
       if(only_visible)
         return Glib::RefPtr<Layer>();
@@ -90,6 +88,7 @@ Layer::Layer(const Glib::ustring& name, bool visible)
   row[LayerModel::columns()._layer]  = this;
   row[LayerModel::columns().name]  = name;
   row[LayerModel::columns().visibility]  = visible ? LayerModel::get_singletonA()->pb_visible : LayerModel::get_singletonA()->pb_invisible;
+  is_texture_layer = false;
 
   _signal_activated.connect(sigc::mem_fun(_signal_something_changed, &sigc::signal<void>::emit));
   _signal_visibililty_changed.connect(sigc::mem_fun(_signal_something_changed, &sigc::signal<void>::emit));
