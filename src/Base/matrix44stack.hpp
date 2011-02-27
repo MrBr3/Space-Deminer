@@ -17,24 +17,33 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SPACE_DEMINER_BASE_H_
-#define _SPACE_DEMINER_BASE_H_
+#ifndef _SPACE_DEMINER_MATRIX44STACK_H_
+#define _SPACE_DEMINER_MATRIX44STACK_H_
 
-#include "./dependencies.hpp"
-#include "./debugging.hpp"
-#include "./macros.hpp"
-#include "./refable.hpp"
-#include "./static-manager.hpp"
-#include "./obslink.hpp"
-#include "./math.hpp"
-#include "./matrix44stack.hpp"
-#include "./files.hpp"
-#include "./strings.hpp"
-#include "./paths.hpp"
-#include "./templates.hpp"
-#include "./geometry.hpp"
-#include "./state-machine.hpp"
-#include "./cairo-stuff.hpp"
-#include "./opengl.hpp"
+class Matrix44Stack
+{
+  std::vector<Matrix44> _stack;
+  gsize _depth;
+  Matrix44* _top_matrix;
+
+  void set_depth(gsize d);
+
+public:
+  const Matrix44& top()const{return *_top_matrix;}
+
+  Matrix44& top(){return *_top_matrix;}
+
+  void push(bool copy);
+  void pop(){g_assert(_depth>0);set_depth(get_depth()-1);}
+
+  gsize get_depth()const{return _depth;}
+
+public:
+  void load_top_to_opengl()const;
+  void clear();
+
+  Matrix44Stack();
+  ~Matrix44Stack()throw();
+};
 
 #endif

@@ -39,6 +39,8 @@
     <File Name="vector_creators.hpp"/>
     <File Name="geometry.cpp"/>
     <File Name="debugging.hpp"/>
+    <File Name="matrix44stack.hpp"/>
+    <File Name="matrix44stack.cpp"/>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>
   <VirtualDirectory Name="external">

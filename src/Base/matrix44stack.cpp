@@ -17,24 +17,44 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SPACE_DEMINER_BASE_H_
-#define _SPACE_DEMINER_BASE_H_
+#include <base.hpp>
 
-#include "./dependencies.hpp"
-#include "./debugging.hpp"
-#include "./macros.hpp"
-#include "./refable.hpp"
-#include "./static-manager.hpp"
-#include "./obslink.hpp"
-#include "./math.hpp"
-#include "./matrix44stack.hpp"
-#include "./files.hpp"
-#include "./strings.hpp"
-#include "./paths.hpp"
-#include "./templates.hpp"
-#include "./geometry.hpp"
-#include "./state-machine.hpp"
-#include "./cairo-stuff.hpp"
-#include "./opengl.hpp"
+Matrix44Stack::Matrix44Stack()
+{
+  _depth = 0;
+  _top_matrix = nullptr;
 
-#endif
+  set_depth(1);
+}
+
+Matrix44Stack::~Matrix44Stack()throw()
+{
+}
+
+void Matrix44Stack::set_depth(gsize d)
+{
+  d = MAX(1, d);
+  gsize new_capacity = MAX(16, d-(d%16))+8;
+
+  if(new_capacity>_stack.size())
+    _stack.resize(new_capacity, DONT_INIT);
+
+  _top_matrix = &_stack[d];
+}
+
+void Matrix44Stack::push(bool copy)
+{
+  set_depth(get_depth()+1);
+  const Matrix44& prev_matrix = _stack[get_depth()-1];
+
+  if(copy)
+    top() = prev_matrix;
+  else
+    top().set_identity();
+}
+
+void Matrix44Stack::clear()
+{
+  set_depth(1);
+  top().set_identity();
+}
