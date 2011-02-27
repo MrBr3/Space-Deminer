@@ -45,9 +45,6 @@ private:
 
   Gtk::Widget *w_rot_x, *w_rot_z, *w_distance, *w_area_diameter;
 
-  Vector3 position, direction;
-  Vector3 ring_position, ring_direction;
-
   REAL_SETTING(x_rotation);
   REAL_SETTING(z_rotation);
   REAL_SETTING(distance);
@@ -114,6 +111,7 @@ public:
     _signal_x_rotation_changed.emit();
   }
   void recalc_pos();
+  Vector3 position, direction;
 
   sigc::signal<void>& signal_rotation_changed(){return _signal_rotation_changed;}
   void create_shaders();

@@ -217,13 +217,12 @@ bool View3D::on_expose_event(GdkEventExpose* event)
 
   view_matrix.set_translate(0., 0.f, -1.f -1e-2f - 1.5f*distance);
   view_matrix.rotate_x(-90.f);
+  view_matrix.rotate_x(planet->get_x_rotation());
+  view_matrix.rotate_z(planet->get_z_rotation());
   view_matrix.glLoadMatrix();
-
 
   glPushMatrix();
 
-  planet_model_matrix.set_rotate_x(planet->get_x_rotation());
-  planet_model_matrix.rotate_z(planet->get_z_rotation());
   planet_model_matrix.glMultMatrix();
 
   bool warped_uv = false;

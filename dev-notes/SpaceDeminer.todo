@@ -164,6 +164,10 @@ PlanetGenerator
             [X] als string speichern
             [X] aus string lesen
             [X] slots in den Options speichern
+      [ ] OpenGL Vorschau
+        [ ] Deprecated sachen entfernen
+          [ ] eigener MatrixStack?
+        [ ] OpenGL 2.1 und 3.3 kompatibel
       [ ] Shader (nur zum rendern erstellt)
         [ ] anstatt IDs eigenen shade funktionen?
         [ ] GradientLight

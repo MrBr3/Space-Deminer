@@ -21,13 +21,11 @@
 
 namespace Raytracer
 {
-  Ring::Ring(const Matrix44& planet_transformation, const Matrix44& ring_transformation) : plane(Vector3(0.f, 0.f, 1.f), 0.f), transformation(ring_transformation), inv_transformation(ring_transformation)
+  Ring::Ring(const Matrix44& ring_transformation) : plane(Vector3(0.f, 0.f, 1.f), 0.f), transformation(ring_transformation), inv_transformation(ring_transformation)
   {
-    Matrix44 inv_planet_transformation  = planet_transformation;
-    inv_planet_transformation.invert();
     inv_transformation.invert();
 
-    normal  = inv_planet_transformation * ring_transformation * Vector4(0.f, 0.f, 1.f, 0.f);
+    normal  = ring_transformation * Vector4(0.f, 0.f, 1.f, 0.f);
     normal.normalize();
     inv_normal  = normal;
     inv_normal  *= -1.f;
@@ -85,13 +83,13 @@ namespace Raytracer
     ColorRGBA base;
 
     RenderParam::get_ring_texture_color(*Texture::ring_texture, base, uv.x, uv.y, CLAMP(abs(ray.dir*normal), 0.f, 1.f));
-    
+
     if(Manager::get_settings().get_dbg_unlit_base_texture())
     {
       color = base;
       return;
     }
-    
+
     color = base;
   }
 }

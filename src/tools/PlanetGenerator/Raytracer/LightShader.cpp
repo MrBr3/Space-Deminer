@@ -33,7 +33,6 @@ namespace Raytracer
       gfloat cloud_shadow;
       gfloat area_diameter;
       Vector3 dir, pos;
-      Vector3 ring_dir, ring_pos;
     };
   typedef Glib::RefPtr<SimpleLightShader> SimpleLightShaderPtr;
 
@@ -66,7 +65,6 @@ namespace Raytracer
     {
       void shade(Param& shader_param)const
       {
-        const Vector3& dir = (shader_param.object_id==RING_ID) ? this->ring_dir : this->dir;
         gfloat factor = CLAMP(shader_param.normal * dir, 0.f, 1.f)*INV_PI;
 
         switch(shader_param.object_id)
@@ -156,8 +154,6 @@ void LightLayer::create_shaders()
       shader->area_diameter = area_diameter;
       shader->pos = position;
       shader->dir = direction;
-      shader->ring_pos = ring_position;
-      shader->ring_dir = ring_direction;
       Shader::all_shaders.push_back(shader);
     }
   }

@@ -36,7 +36,7 @@ namespace Raytracer
 
     bool visible;
 
-    Ring(const Matrix44& planet, const Matrix44& ring);
+    Ring(const Matrix44& ring);
 
     /** \brief Gets the color by a ray
      *

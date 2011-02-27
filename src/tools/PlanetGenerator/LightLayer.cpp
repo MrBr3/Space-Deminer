@@ -221,21 +221,6 @@ void LightLayer::recalc_pos()
 
   if(position.get_square_length()>0.1f)
     direction = -position*(1.f/position.get_length());
-
-  // Calc the Light pos/direction relative to the Ring
-  const Matrix44& ring_matrix = get_ring_model_matrix();
-  const Matrix44& planet_matrix = get_planet_model_matrix();
-  Matrix44 inv_planet_matrix = planet_matrix;
-
-  inv_planet_matrix.invert();
-
-  Matrix44 ring2planet  = inv_planet_matrix * ring_matrix;
-  Matrix44 planet2ring = ring2planet;
-  planet2ring.invert();
-
-  ring_position = planet2ring*position;
-  if(ring_position.get_square_length()>0.1f)
-    ring_direction = -ring_position*(1.f/ring_position.get_length());
 }
 
 // --------

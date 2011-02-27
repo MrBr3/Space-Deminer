@@ -29,6 +29,8 @@ RingLayer::RingLayer() : ParentClass(_("Ring"), false)
   width  = 0.75f;
   outer_radius  = 2.f;
 
+  is_texture_layer = false;
+
   x_rotation = 0.f;
   z_rotation = 0.f;
 
