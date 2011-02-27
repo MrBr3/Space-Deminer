@@ -34,6 +34,8 @@
       <File Name="GradientButton.hpp"/>
       <File Name="CurveButton.cpp"/>
       <File Name="CurveButton.hpp"/>
+      <File Name="LightSourceMesh.cpp"/>
+      <File Name="LightSourceMesh.hpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Model">
       <File Name="Model.hpp"/>

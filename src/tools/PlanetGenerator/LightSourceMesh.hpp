@@ -17,15 +17,13 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <base.hpp>
-#include <gtkmm.h>
+class LightSourceMesh : public Refable
+{
+public:
+  NS_GLIM::GLIM_BATCH point_mesh, directional_light, area_light;
 
-#include "./Gradient.hpp"
-#include "./ModelSettings.hpp"
-#include "./Options.hpp"
-#include "./Planet.hpp"
-#include "./ImageFile.hpp"
-#include "./Layer.hpp"
+  void init();
 
-const Matrix44& get_ring_model_matrix();
-const Matrix44& get_planet_model_matrix();
+  LightSourceMesh();
+  ~LightSourceMesh()throw();
+};

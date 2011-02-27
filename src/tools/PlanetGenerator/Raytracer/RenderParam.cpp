@@ -187,7 +187,7 @@ namespace Raytracer
   Glib::RefPtr<RenderParam> RenderParam::create(int img_width, int img_height)
   {
     const Settings& settings = Manager::get_settings();
-    const View3D& view3d = main_window->get_view_3d();
+    const View3D& view3d = main_window->get_view_3dA();
 
     g_assert(&settings);
     g_assert(&view3d);

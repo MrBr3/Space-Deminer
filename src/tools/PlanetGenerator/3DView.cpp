@@ -19,6 +19,21 @@
 
 #include "./MainWindow.hpp"
 
+const Matrix44& get_ring_model_matrix()
+{
+  if(!main_window->get_view_3d())
+    return Matrix44::identity;
+  else
+    return main_window->get_view_3dA().ring_model_matrix;
+}
+const Matrix44& get_planet_model_matrix()
+{
+  if(!main_window->get_view_3d())
+    return Matrix44::identity;
+  else
+    return main_window->get_view_3dA().planet_model_matrix;
+}
+
 View3D::View3D() : Gtk::GL::DrawingArea(Gdk::GL::Config::create(Gdk::GL::MODE_DEPTH|Gdk::GL::MODE_RGBA|Gdk::GL::MODE_DOUBLE|Gdk::GL::MODE_ALPHA))
 {
   add_events(Gdk::POINTER_MOTION_MASK|Gdk::BUTTON_PRESS_MASK|Gdk::BUTTON_RELEASE_MASK|Gdk::SCROLL_MASK|Gdk::LEAVE_NOTIFY_MASK|Gdk::ENTER_NOTIFY_MASK);
@@ -37,6 +52,14 @@ View3D::View3D() : Gtk::GL::DrawingArea(Gdk::GL::Config::create(Gdk::GL::MODE_DE
   _gl_initialized = false;
 
   LayerModel::signal_something_changed().connect(sigc::mem_fun(*this, &View3D::invalidate));
+
+  g_assert(RingLayer::get_singleton());
+  for(gsize i=0; i<N_LIGHT_LAYERS; ++i)
+  {
+    g_assert(LightLayer::get_singleton(i));
+    RingLayer::get_singleton()->signal_rotation_changed().connect(sigc::mem_fun(*LightLayer::get_singleton(i), &LightLayer::recalc_pos));
+    LightLayer::get_singleton(i)->recalc_pos();
+  }
 
   base_texture  = Texture::create(BaseTextureLayer::get_imagefile());
   cloud_texture  = Texture::create(CloudTextureLayer::get_imagefile());

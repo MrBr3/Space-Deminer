@@ -30,6 +30,7 @@ using TriangleVersion::SphereMesh;
 #include "Process.hpp"
 #include "Texture.hpp"
 #include "WarningListDialog.hpp"
+#include "LightSourceMesh.hpp"
 #include "3DView.hpp"
 #include "ImageFileSettings.hpp"
 #include "ViewSettings.hpp"
@@ -177,7 +178,8 @@ public:
     return _signal_sensitive_for_changes_changed;
   }
 
-  View3D& get_view_3d(){g_assert(this);g_assert(view_3d);return *view_3d;}
+  View3D& get_view_3dA(){g_assert(this);g_assert(view_3d);return *view_3d;}
+  View3D* get_view_3d(){if(!this)return nullptr;return view_3d;}
   ViewSettings& get_view_settings(){g_assert(this);g_assert(view_settings);return *view_settings;}
 
   void append_settings_widget(Gtk::Widget& w);

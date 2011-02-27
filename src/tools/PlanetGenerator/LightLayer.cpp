@@ -63,6 +63,8 @@ LightLayer::LightLayer(guint id) : MultiLayer<LightLayer>(Glib::ustring::compose
 
   w_distance = nullptr;
   w_area_diameter = nullptr;
+  w_rot_x = nullptr;
+  w_rot_z = nullptr;
 
   INIT_TABLE(pos, "Placement")
   INIT_TABLE(light, "Lightning")
@@ -80,7 +82,9 @@ LightLayer::LightLayer(guint id) : MultiLayer<LightLayer>(Glib::ustring::compose
 #define SETTINGS LightLayer
 
   INIT_PROPERTY(real, x_rotation, 45.f, "X Angle", "The rotation around the x axis to define the light source's position");
+  w_rot_x = last_set_proprty_widget;
   INIT_PROPERTY(real, z_rotation, 45.f, "Z Angle", "The rotation around the z axis to define the light source's position");
+  w_rot_z = last_set_proprty_widget;
   INIT_PROPERTY(real, distance, 4.f, "Distance", "The distance of the light source to the planetcenter");
   w_distance = last_set_proprty_widget;
 
@@ -116,18 +120,21 @@ LightLayer::~LightLayer()throw()
 void LightLayer::set_x_rotation(gfloat x)
 {
   x_rotation = x;
+  recalc_pos();
   signal_x_rotation_changed().emit();
 }
 
 void LightLayer::set_z_rotation(gfloat x)
 {
   z_rotation = x;
+  recalc_pos();
   signal_z_rotation_changed().emit();
 }
 
 void LightLayer::set_distance(gfloat x)
 {
   distance = CLAMP(x, 1.001f, G_MAXFLOAT);
+  recalc_pos();
   signal_distance_changed().emit();
 }
 
@@ -137,6 +144,10 @@ void LightLayer::set_light_type(int x)
 {
   light_type = CLAMP(x, 0, LIGHT_TYPE_AREA);
 
+  if(w_rot_x)
+    w_rot_x->set_sensitive(light_type != LIGHT_TYPE_AMBIENT);
+  if(w_rot_z)
+    w_rot_z->set_sensitive(light_type != LIGHT_TYPE_AMBIENT);
   if(w_distance)
     w_distance->set_sensitive(light_type == LIGHT_TYPE_POINT || light_type == LIGHT_TYPE_AREA);
   if(w_area_diameter)
@@ -197,6 +208,34 @@ void LightLayer::set_cloud_shadow(gfloat x)
 {
   cloud_shadow = CLAMP(x, 0.f, 10.f);
   signal_cloud_shadow_changed().emit();
+}
+
+void LightLayer::recalc_pos()
+{
+  Matrix44 m(DONT_INIT);
+
+  m.set_rotate_x(x_rotation);
+  m.rotate_z(z_rotation);
+
+  position = m * Vector3(0.f, distance, 0.f);
+
+  if(position.get_square_length()>0.1f)
+    direction = -position*(1.f/position.get_length());
+
+  // Calc the Light pos/direction relative to the Ring
+  const Matrix44& ring_matrix = get_ring_model_matrix();
+  const Matrix44& planet_matrix = get_planet_model_matrix();
+  Matrix44 inv_planet_matrix = planet_matrix;
+
+  inv_planet_matrix.invert();
+
+  Matrix44 ring2planet  = inv_planet_matrix * ring_matrix;
+  Matrix44 planet2ring = ring2planet;
+  planet2ring.invert();
+
+  ring_position = planet2ring*position;
+  if(ring_position.get_square_length()>0.1f)
+    ring_direction = -ring_position*(1.f/ring_position.get_length());
 }
 
 // --------

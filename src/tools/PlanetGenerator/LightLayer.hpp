@@ -43,7 +43,10 @@ private:
   Gtk::Frame frame_pos, frame_light;
   Gtk::Table table_pos, table_light;
 
-  Gtk::Widget *w_distance, *w_area_diameter;
+  Gtk::Widget *w_rot_x, *w_rot_z, *w_distance, *w_area_diameter;
+
+  Vector3 position, direction;
+  Vector3 ring_position, ring_direction;
 
   REAL_SETTING(x_rotation);
   REAL_SETTING(z_rotation);
@@ -101,13 +104,16 @@ public:
   void rotate_z(gfloat a)
   {
     z_rotation += a;
+    recalc_pos();
     _signal_z_rotation_changed.emit();
   }
   void rotate_x(gfloat a)
   {
     x_rotation += a;
+    recalc_pos();
     _signal_x_rotation_changed.emit();
   }
+  void recalc_pos();
 
   sigc::signal<void>& signal_rotation_changed(){return _signal_rotation_changed;}
   void create_shaders();

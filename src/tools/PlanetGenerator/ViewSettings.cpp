@@ -36,7 +36,7 @@ ViewSettings::ViewSettings()
   set_main_caption(_("View Settings"));
 
   g_assert(main_window);
-  View3D& view3d  = main_window->get_view_3d();
+  View3D& view3d  = main_window->get_view_3dA();
 
   append_color_widget("view-back-color", _("Back Color"), _("The Color of the background in the 3D view"), sigc::mem_fun(*this, &ViewSettings::get_back_color), sigc::mem_fun(*this, &ViewSettings::set_back_color), signal_back_color_changed());
   append_int_widget("view-n-sphere-segments", _("Planet Segments"), _("The Number of latitudessegments of the sphere mesh"), sigc::mem_fun(*this, &ViewSettings::get_n_sphere_segments), sigc::mem_fun(*this, &ViewSettings::set_n_sphere_segments), signal_n_sphere_segments_changed());
