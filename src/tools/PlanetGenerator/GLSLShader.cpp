@@ -66,26 +66,30 @@ void View3D::init_shaders()
   {
     {
       const char* planet_vs_src =
-        "#version 330 compatibility\n"
+        "#version 330 core\n"
         "\n"
-        "in vec4 vertex;"
-        "in vec4 tex_0;"
-        //"in vec4 tex_1;"
-        //"in vec4 tex_2;"
+        "in vec4 vertex;\n"
+        "in vec2 att_tex_coord;\n"
         "\n"
         "uniform mat4 matrix_M;\n"
         "uniform mat4 matrix_PV;\n"
         "\n"
-        "void main()\n"
-        "{\n"
-        "  gl_Position = matrix_PV * matrix_M * vertex;\n"
-        "}\n";
-      const char* planet_ps_src =
-        "#version 330 compatibility\n"
+        "out vec2 tex_coord;\n"
         "\n"
         "void main()\n"
         "{\n"
-        "  gl_FragColor = vec4(1., 0.5, 0., 1.);"
+        "  gl_Position = matrix_PV * matrix_M * vertex;\n"
+        "  tex_coord = att_tex_coord;\n"
+        "}\n";
+
+      const char* planet_ps_src =
+        "#version 330 core\n"
+        "\n"
+        "in vec2 tex_coord;\n"
+        "\n"
+        "void main()\n"
+        "{\n"
+        "  gl_FragColor = vec4(tex_coord.x, tex_coord.y, 0., 1.);"
         "}\n";
 
       GLuint vs = glCreateShader(GL_VERTEX_SHADER);
@@ -111,6 +115,7 @@ void View3D::init_shaders()
       glDeleteShader(fs);
 
       glBindAttribLocation(planet_program, 0, "vertex");
+      glBindAttribLocation(planet_program, 1, "att_tex_coord");
 
       glLinkProgram(planet_program);
 

@@ -114,7 +114,7 @@ namespace TriangleVersion
       glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_uv_warped);
     else
       glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_uv_rectangular);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4*2*3, 0);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(1);
 
     glDrawArrays(GL_TRIANGLES, 0, _n_triangles*3);
