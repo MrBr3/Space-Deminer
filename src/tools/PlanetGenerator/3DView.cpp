@@ -136,11 +136,12 @@ void View3D::on_realize()
   weight_texture->init();
   ring_texture->init();
   ring_texture->set_wrapping(Texture::CLAMP, Texture::REPEAT);
+  lightsource_mesh.init();
 
-  glEnable(GL_DEPTH_TEST);
+  glEnable(GL_DEPTH_TEST); //CHECK
 
-  glDepthFunc(GL_LEQUAL);
-  glDepthMask(GL_TRUE);
+  glDepthFunc(GL_LEQUAL); //CHECK
+  glDepthMask(GL_TRUE); //CHECK
 
   _gl_initialized = true;
 
@@ -166,7 +167,7 @@ void View3D::on_size_allocate(Gtk::Allocation& allocation)
 {
   Gtk::GL::DrawingArea::on_size_allocate(allocation);
 
-  glViewport(0, 0, allocation.get_width(), allocation.get_height());
+  glViewport(0, 0, allocation.get_width(), allocation.get_height()); //CHECK
 }
 
 Matrix44 View3D::calc_projection_matrix(Matrix44& dest, gfloat aspect)const
@@ -183,6 +184,8 @@ bool View3D::on_expose_event(GdkEventExpose* event)
 
   if(!gl_drawable)
     return false;
+
+  matrix_stack.clear();
 
   gl_drawable->gl_begin(get_gl_context());
 
@@ -202,32 +205,31 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   else
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-  glMatrixMode(GL_TEXTURE);
+  glMatrixMode(GL_TEXTURE); //REMOVE
 
-  glLoadIdentity();
+  glLoadIdentity(); //REMOVE
 
-  glMatrixMode(GL_PROJECTION);
+  glMatrixMode(GL_MODELVIEW); //REMOVE
 
   gfloat aspect = gfloat(get_width())/gfloat(get_height());
 
   calc_projection_matrix(projection_matrix, aspect);
-  projection_matrix.glLoadMatrix();
-
-  glMatrixMode(GL_MODELVIEW);
+  matrix_stack.top() = projection_matrix;
 
   view_matrix.set_translate(0., 0.f, -1.f -1e-2f - 1.5f*distance);
   view_matrix.rotate_x(-90.f);
   view_matrix.rotate_x(planet->get_x_rotation());
   view_matrix.rotate_z(planet->get_z_rotation());
-  view_matrix.glLoadMatrix();
+  matrix_stack.top() *= view_matrix;
 
-  glPushMatrix();
+  matrix_stack.push(true);
 
-  planet_model_matrix.glMultMatrix();
+  matrix_stack.top() *= planet_model_matrix;
+  matrix_stack.top().glLoadMatrix();
 
   bool warped_uv = false;
 
-  glEnable(GL_TEXTURE_2D);
+  glEnable(GL_TEXTURE_2D); //REMOVE
   Glib::RefPtr<Layer> only_visible_texture_layer  = LayerModel::just_one_texture_layer_visible(); // Gets the only visible Layer
   if(only_visible_texture_layer.operator->()==CloudTextureLayer::get_singleton())
   {
@@ -251,13 +253,13 @@ bool View3D::on_expose_event(GdkEventExpose* event)
 
   unbind_all_textures();
 
-  glPopMatrix();
+  matrix_stack.pop();
 
   if(RingLayer::get_singleton()->get_visible())
   {
     RingLayer* ring_planet = RingLayer::get_singleton();
 
-    glPushMatrix();
+    matrix_stack.push(true);
 
     glDisable(GL_CULL_FACE);
     glEnable(GL_BLEND);
@@ -267,7 +269,8 @@ bool View3D::on_expose_event(GdkEventExpose* event)
     ring_model_matrix = planet_model_matrix;
     ring_model_matrix.rotate_z(ring_planet->get_z_rotation());
     ring_model_matrix.rotate_x(ring_planet->get_x_rotation());
-    ring_model_matrix.glMultMatrix();
+    matrix_stack.top() *= ring_model_matrix;
+    matrix_stack.top().glLoadMatrix();
 
     ring_texture->bind();
 
@@ -275,7 +278,23 @@ bool View3D::on_expose_event(GdkEventExpose* event)
 
     unbind_all_textures();
 
-    glPopMatrix();
+    matrix_stack.pop();
+  }
+
+  for(gsize i=0; i<N_LIGHT_LAYERS; ++i)
+  {
+    const LightLayer& light_layer = *LightLayer::get_singleton(i);
+    g_assert(&light_layer);
+
+    if(light_layer.get_light_type()==LightLayer::LIGHT_TYPE_AMBIENT)
+      continue;
+
+    matrix_stack.push(true);
+    /*glPushMatrix(); //REMOVE
+      glTranslatef(light_layer.position.x, light_layer.position.y, light_layer.position.z);; //REMOVE
+      lightsource_mesh.point_mesh.RenderBatch();
+    glPopMatrix();*/ //REMOVE
+    matrix_stack.pop();
   }
 
   gl_drawable->swap_buffers();

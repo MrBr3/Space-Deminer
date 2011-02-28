@@ -33,7 +33,7 @@ Matrix44Stack::~Matrix44Stack()throw()
 
 void Matrix44Stack::set_depth(gsize d)
 {
-  d = MAX(1, d);
+  _depth = d = MAX(1, d);
   gsize new_capacity = MAX(16, d-(d%16))+8;
 
   if(new_capacity>_stack.size())

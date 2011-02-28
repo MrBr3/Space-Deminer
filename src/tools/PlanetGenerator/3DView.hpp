@@ -37,6 +37,8 @@ class View3D : public Gtk::GL::DrawingArea
   void reinit_sphere_mesh();
   void reinit_ring_mesh();
 
+  Matrix44Stack matrix_stack;
+
 public:
 
   View3D();
@@ -79,6 +81,7 @@ public:
 
   SphereMesh sphere_mesh;
   RingMesh ring_mesh;
+  LightSourceMesh lightsource_mesh;
   Glib::RefPtr<Texture> base_texture, cloud_texture, night_texture, weight_texture, ring_texture;
 
   void unbind_all_textures();

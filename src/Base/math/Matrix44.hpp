@@ -675,9 +675,6 @@ public:
   /** @name OpenGL
    * */
   //@{
-  /** \brief Multiplies the current OpenGL Matrix with this Matrix
-   * */
-   void glMultMatrix();
 
   /** \brief Replaces the current OpenGL Matrix with this Matrix
    * */

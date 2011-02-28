@@ -24,11 +24,6 @@ namespace Math
 {
   const Matrix44 Matrix44::identity;
 
-  void Matrix44::glMultMatrix()
-  {
-    glMultMatrixf(m);
-  }
-
   void Matrix44::glLoadMatrix()
   {
     glLoadMatrixf(m);
