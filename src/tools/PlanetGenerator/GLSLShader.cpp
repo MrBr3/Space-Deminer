@@ -109,8 +109,8 @@ void View3D::init_shaders()
 
       possible_program_error(planet_program);
 
-      planet_program_unified.matrix_PV = glGetUniformLocation(planet_program, "matrix_PV");
-      planet_program_unified.matrix_M  = glGetUniformLocation(planet_program, "matrix_M");
+      planet_program_uniform.matrix_PV = glGetUniformLocation(planet_program, "matrix_PV");
+      planet_program_uniform.matrix_M  = glGetUniformLocation(planet_program, "matrix_M");
     }
   }catch(const std::exception& e)
   {

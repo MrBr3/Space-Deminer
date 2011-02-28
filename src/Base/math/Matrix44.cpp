@@ -31,6 +31,6 @@ namespace Math
 
   void Matrix44::glUniform(GLuint uniform_location)
   {
-    glUniformMatrix4fv(uniform_location, 4, 0, m);
+    glUniformMatrix4fv(uniform_location, 1, 0, m);
   }
 }

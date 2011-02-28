@@ -191,6 +191,8 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   if(!gl_drawable)
     return false;
 
+  glUseProgram(planet_program);
+
   matrix_stack.clear();
 
   gl_drawable->gl_begin(get_gl_context());
@@ -211,10 +213,10 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   else
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-  glMatrixMode(GL_TEXTURE); //REMOVE
-  glLoadIdentity(); //REMOVE
+  //glMatrixMode(GL_TEXTURE); //REMOVE
+  //glLoadIdentity(); //REMOVE
 
-  glMatrixMode(GL_PROJECTION); //REMOVE
+  //glMatrixMode(GL_PROJECTION); //REMOVE
 
   gfloat aspect = gfloat(get_width())/gfloat(get_height());
 
@@ -226,18 +228,19 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   view_matrix.rotate_x(planet->get_x_rotation());
   view_matrix.rotate_z(planet->get_z_rotation());
   matrix_stack.top() *= view_matrix;
-  matrix_stack.top().glLoadMatrix();
+  matrix_stack.top().glUniform(planet_program_uniform.matrix_PV);
 
-  glMatrixMode(GL_MODELVIEW); //REMOVE
+  //glMatrixMode(GL_MODELVIEW); //REMOVE
 
   matrix_stack.push(false);
 
   matrix_stack.top() *= planet_model_matrix;
-  matrix_stack.top().glLoadMatrix();
+  //matrix_stack.top().glLoadMatrix(); //REMOVE
+  matrix_stack.top().glUniform(planet_program_uniform.matrix_M);
 
   bool warped_uv = false;
 
-  glEnable(GL_TEXTURE_2D); //REMOVE
+  //glEnable(GL_TEXTURE_2D); //REMOVE
   Glib::RefPtr<Layer> only_visible_texture_layer  = LayerModel::just_one_texture_layer_visible(); // Gets the only visible Layer
   if(only_visible_texture_layer.operator->()==CloudTextureLayer::get_singleton())
   {
