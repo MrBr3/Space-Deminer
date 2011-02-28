@@ -675,6 +675,10 @@ public:
   /** @name OpenGL
    * */
   //@{
+  /** \brief Sets the Matrix as Uniform specified by uniform_location
+   * */
+   void glUniform(GLuint uniform_location);
+  //@}
 
   /** \brief Replaces the current OpenGL Matrix with this Matrix
    * */

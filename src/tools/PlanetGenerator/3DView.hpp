@@ -89,4 +89,14 @@ public:
   Matrix44 calc_projection_matrix(Matrix44& dest, gfloat aspect)const;
 
   Matrix44 planet_model_matrix, ring_model_matrix, view_matrix, projection_matrix;
+
+// Shaders
+  struct PlanetProgramUnified
+  {
+    GLuint matrix_PV;
+    GLuint matrix_M;
+  }planet_program_unified;
+  GLuint planet_program, ring_program, dummy_program;
+  void init_shaders();
+  void deinit_shaders();
 };

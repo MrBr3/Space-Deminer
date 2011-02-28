@@ -32,6 +32,8 @@
 #include <gdkmm/rectangle.h>
 #include <gdkmm/color.h>
 
+#include <GL/glew.h>
+
 
 inline Glib::ustring _(const Glib::ustring& str)
 {

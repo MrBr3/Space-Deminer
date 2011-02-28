@@ -66,6 +66,8 @@ View3D::View3D() : Gtk::GL::DrawingArea(Gdk::GL::Config::create(Gdk::GL::MODE_DE
   night_texture  = Texture::create(NightTextureLayer::get_imagefile());
   weight_texture  = Texture::create(WeightTextureLayer::get_imagefile());
   ring_texture  = Texture::create(RingLayer::get_imagefile());
+
+  planet_program = ring_program = dummy_program = 0;
 }
 
 View3D::~View3D()throw()
@@ -85,6 +87,8 @@ void View3D::deinit()
 {
   if(_gl_initialized)
   {
+    deinit_shaders();
+
     Glib::RefPtr<Gdk::GL::Drawable> gl_drawable = get_gl_drawable();
 
     g_assert(gl_drawable);
@@ -120,13 +124,15 @@ void View3D::on_realize()
     dlg.run();
     exit(-1);
   }
-  if(!glewIsSupported("GL_VERSION_2_1"))
+  if(!glewIsSupported("GL_VERSION_3_3"))
   {
     Gtk::MessageDialog dlg(_("OpenGL 2.1 not supported"), false, Gtk::MESSAGE_ERROR);
-    dlg.set_secondary_text(_("Your Graphic Hardware or Driver does not support OpenGL 2.1, which is needed by this application!"));
+    dlg.set_secondary_text(_("Your Graphic Hardware or Driver does not support OpenGL 3.3, which is needed by this application!"));
     dlg.run();
     exit(-1);
   }
+
+  init_shaders();
 
   sphere_mesh.init(view_settings->get_n_sphere_segments());
   ring_mesh.init(view_settings->get_n_ring_segments());
@@ -206,10 +212,9 @@ bool View3D::on_expose_event(GdkEventExpose* event)
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
   glMatrixMode(GL_TEXTURE); //REMOVE
-
   glLoadIdentity(); //REMOVE
 
-  glMatrixMode(GL_MODELVIEW); //REMOVE
+  glMatrixMode(GL_PROJECTION); //REMOVE
 
   gfloat aspect = gfloat(get_width())/gfloat(get_height());
 
@@ -221,8 +226,11 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   view_matrix.rotate_x(planet->get_x_rotation());
   view_matrix.rotate_z(planet->get_z_rotation());
   matrix_stack.top() *= view_matrix;
+  matrix_stack.top().glLoadMatrix();
 
-  matrix_stack.push(true);
+  glMatrixMode(GL_MODELVIEW); //REMOVE
+
+  matrix_stack.push(false);
 
   matrix_stack.top() *= planet_model_matrix;
   matrix_stack.top().glLoadMatrix();
@@ -259,7 +267,7 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   {
     RingLayer* ring_planet = RingLayer::get_singleton();
 
-    matrix_stack.push(true);
+    matrix_stack.push(false);
 
     glDisable(GL_CULL_FACE);
     glEnable(GL_BLEND);
@@ -289,7 +297,7 @@ bool View3D::on_expose_event(GdkEventExpose* event)
     if(light_layer.get_light_type()==LightLayer::LIGHT_TYPE_AMBIENT)
       continue;
 
-    matrix_stack.push(true);
+    matrix_stack.push(false);
     /*glPushMatrix(); //REMOVE
       glTranslatef(light_layer.position.x, light_layer.position.y, light_layer.position.z);; //REMOVE
       lightsource_mesh.point_mesh.RenderBatch();

@@ -35,8 +35,8 @@ void LightSourceMesh::init()
   gfloat step=PI2/n_circle_steps;
 
   point_mesh.BeginBatch();
-    point_mesh.Attribute2f("attr_TexCoord", 0.f, 0.f);
-    point_mesh.Attribute4ub("attr_Color", 255, 255, 32);
+    point_mesh.Attribute2f("att_TexCoord0", 0.f, 0.f);
+    point_mesh.Attribute4ub("att_Color", 255, 255, 32);
 
     point_mesh.Begin(NS_GLIM::GLIM_LINES);
       point_mesh.Vertex(-point_r, 0.f, 0.f);

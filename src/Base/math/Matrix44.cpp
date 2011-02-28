@@ -28,4 +28,9 @@ namespace Math
   {
     glLoadMatrixf(m);
   }
+
+  void Matrix44::glUniform(GLuint uniform_location)
+  {
+    glUniformMatrix4fv(uniform_location, 4, 0, m);
+  }
 }

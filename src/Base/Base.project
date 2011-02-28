@@ -32,6 +32,7 @@
       <File Name="math/Ray.hpp"/>
       <File Name="math/Plane.hpp"/>
       <File Name="math/Sphere.cpp"/>
+      <File Name="../tools/PlanetGenerator/GLSLShader.cpp"/>
     </VirtualDirectory>
     <File Name="opengl.hpp"/>
     <File Name="opengl.cpp"/>
