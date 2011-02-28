@@ -637,6 +637,14 @@ public:
     return *this *= tmp;
   }
 
+  Matrix44& translate(const Vector3& v)throw()
+  {
+    Matrix44 tmp(DONT_INIT);
+    tmp.set_translate(v.x, v.y, v.z);
+
+    return *this *= tmp;
+  }
+
   /** \brief Makes the current Matrix to represent a perspective Matrix.
    *
    * Implementation based on http://www.opengl.org/sdk/docs/man/xhtml/gluPerspective.xml (2011-01-06)

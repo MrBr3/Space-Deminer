@@ -91,17 +91,22 @@ public:
   Matrix44 planet_model_matrix, ring_model_matrix, view_matrix, projection_matrix;
 
 // Shaders
-  struct PlanetProgramUnified
+  struct PlanetProgramUniform
   {
     GLuint matrix_PV;
     GLuint matrix_M;
   }planet_program_uniform;
-  struct RingProgramUnified
+  struct RingProgramUniform
   {
     GLuint matrix_PV;
     GLuint matrix_M;
   }ring_program_uniform;
-  GLuint planet_program, ring_program, dummy_program;
+  struct SimpleProgramUniform
+  {
+    GLuint matrix_PV;
+    GLuint matrix_M;
+  }simple_program_uniform;
+  GLuint planet_program, ring_program, simple_program;
   void init_shaders();
   void deinit_shaders();
 };

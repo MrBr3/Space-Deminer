@@ -67,7 +67,7 @@ View3D::View3D() : Gtk::GL::DrawingArea(Gdk::GL::Config::create(Gdk::GL::MODE_DE
   weight_texture  = Texture::create(WeightTextureLayer::get_imagefile());
   ring_texture  = Texture::create(RingLayer::get_imagefile());
 
-  planet_program = ring_program = dummy_program = 0;
+  planet_program = ring_program = simple_program = 0;
 }
 
 View3D::~View3D()throw()
@@ -295,19 +295,28 @@ bool View3D::on_expose_event(GdkEventExpose* event)
     matrix_stack.pop();
   }
 
+  glUseProgram(simple_program);
+
+  glEnableVertexAttribArray(1);
   for(gsize i=0; i<N_LIGHT_LAYERS; ++i)
   {
     const LightLayer& light_layer = *LightLayer::get_singleton(i);
     g_assert(&light_layer);
 
-    if(light_layer.get_light_type()==LightLayer::LIGHT_TYPE_AMBIENT)
+    if(!light_layer.get_visible())
       continue;
 
     matrix_stack.push(false);
-      //matrix_stack.top().translate(light_layer.position);
-      //lightsource_mesh.point_mesh.RenderBatch();
+      matrix_stack.top().translate(light_layer.position);
+
+      matrix_M = matrix_stack.top();
+
+      matrix_PV.glUniform(ring_program_uniform.matrix_PV);
+      matrix_M.glUniform(ring_program_uniform.matrix_M);
+      lightsource_mesh.point_mesh.RenderBatch();
     matrix_stack.pop();
   }
+  glDisableVertexAttribArray(1);
 
   gl_drawable->swap_buffers();
   return true;

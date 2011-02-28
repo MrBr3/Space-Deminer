@@ -20,7 +20,7 @@
 class LightSourceMesh : public Refable
 {
 public:
-  NS_GLIM::GLIM_BATCH point_mesh, directional_light, area_light;
+  NS_GLIM::GLIM_BATCH point_mesh, directional_light;
 
   void init();
 
