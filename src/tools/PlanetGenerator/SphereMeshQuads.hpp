@@ -33,7 +33,22 @@ namespace QuadVersion
     class Polygon
     {
     public:
-      Vector3 a,b,c,d;
+      Vector3 a;
+      gfloat dummy_a;
+      Vector3 b;
+      gfloat dummy_b;
+      Vector3 c;
+      gfloat dummy_c;
+      Vector3 d;
+      gfloat dummy_d;
+
+      Polygon()
+      {
+        dummy_a = 1.f;
+        dummy_b = 1.f;
+        dummy_c = 1.f;
+        dummy_d = 1.f;
+      }
     };
     class UV
     {
@@ -52,7 +67,6 @@ namespace QuadVersion
     void deinit();
 
     GLuint _vertex_buffer_quads;
-    GLuint _vertex_buffer_normals;
     GLuint _vertex_buffer_uv_warped;
     GLuint _vertex_buffer_uv_rectangular;
 

@@ -21,7 +21,7 @@
 
 namespace Private
 {
-  void possible_shader_error(GLuint shader, const Glib::ustring& type)
+  void possible_shader_error(GLuint shader, const Glib::ustring& type, const Glib::ustring& name)
   {
     GLint r;
     if(!shader)
@@ -36,10 +36,10 @@ namespace Private
 
     glGetShaderInfoLog(shader, 2048, 0, info);
 
-    throw std::logic_error(Glib::ustring::compose("Couldn't compile %1-Shader:\n%2", type, info).c_str());
+    throw std::logic_error(Glib::ustring::compose("Couldn't compile %1-Shader \"%2\"\n%3", type, name, info).c_str());
   }
 
-  void possible_program_error(GLuint program)
+  void possible_program_error(GLuint program, const Glib::ustring& name)
   {
     GLint r;
     if(!program)
@@ -54,7 +54,7 @@ namespace Private
 
     glGetProgramInfoLog(program, 2048, 0, info);
 
-    throw std::logic_error(Glib::ustring::compose("Couldn't link Shader-Programs:\n%1", info).c_str());
+    throw std::logic_error(Glib::ustring::compose("Couldn't link Shader-Programs \"%1\"\n%2", name, info).c_str());
   }
 }
 
@@ -68,12 +68,17 @@ void View3D::init_shaders()
       const char* planet_vs_src =
         "#version 330 compatibility\n"
         "\n"
+        "in vec4 vertex;"
+        "in vec4 tex_0;"
+        //"in vec4 tex_1;"
+        //"in vec4 tex_2;"
+        "\n"
         "uniform mat4 matrix_M;\n"
         "uniform mat4 matrix_PV;\n"
         "\n"
         "void main()\n"
         "{\n"
-        "  gl_Position = matrix_PV * matrix_M * gl_Vertex;\n"
+        "  gl_Position = matrix_PV * matrix_M * vertex;\n"
         "}\n";
       const char* planet_ps_src =
         "#version 330 compatibility\n"
@@ -94,8 +99,8 @@ void View3D::init_shaders()
       glCompileShader(vs);
       glCompileShader(fs);
 
-      possible_shader_error(vs, "Vertex");
-      possible_shader_error(fs, "Fragment");
+      possible_shader_error(vs, "Vertex", "Planet");
+      possible_shader_error(fs, "Fragment", "Planet");
 
       planet_program = glCreateProgram();
 
@@ -105,9 +110,11 @@ void View3D::init_shaders()
       glDeleteShader(vs);
       glDeleteShader(fs);
 
+      glBindAttribLocation(planet_program, 0, "vertex");
+
       glLinkProgram(planet_program);
 
-      possible_program_error(planet_program);
+      possible_program_error(planet_program, "Planet");
 
       planet_program_uniform.matrix_PV = glGetUniformLocation(planet_program, "matrix_PV");
       planet_program_uniform.matrix_M  = glGetUniformLocation(planet_program, "matrix_M");

@@ -135,7 +135,7 @@ void View3D::on_realize()
   init_shaders();
 
   sphere_mesh.init(view_settings->get_n_sphere_segments());
-  ring_mesh.init(view_settings->get_n_ring_segments());
+  ring_mesh.init(view_settings->get_n_ring_segments(), /*glGetUniformLocation(ring_program, "ring_uv_factor")*/0);
   base_texture->init();
   cloud_texture->init();
   night_texture->init();
@@ -191,8 +191,6 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   if(!gl_drawable)
     return false;
 
-  glUseProgram(planet_program);
-
   matrix_stack.clear();
 
   gl_drawable->gl_begin(get_gl_context());
@@ -240,6 +238,8 @@ bool View3D::on_expose_event(GdkEventExpose* event)
 
   bool warped_uv = false;
 
+  glUseProgram(planet_program);
+
   //glEnable(GL_TEXTURE_2D); //REMOVE
   Glib::RefPtr<Layer> only_visible_texture_layer  = LayerModel::just_one_texture_layer_visible(); // Gets the only visible Layer
   if(only_visible_texture_layer.operator->()==CloudTextureLayer::get_singleton())
@@ -281,11 +281,12 @@ bool View3D::on_expose_event(GdkEventExpose* event)
     ring_model_matrix.rotate_z(ring_planet->get_z_rotation());
     ring_model_matrix.rotate_x(ring_planet->get_x_rotation());
     matrix_stack.top() *= ring_model_matrix;
-    matrix_stack.top().glLoadMatrix();
+    matrix_stack.top().scale(ring_planet->get_outer_radius());
+    matrix_stack.top().glUniform(planet_program_uniform.matrix_M);
 
     ring_texture->bind();
 
-    ring_mesh.render(ring_planet->get_width(), ring_planet->get_outer_radius());
+    ring_mesh.render(MAX(1.f, ring_planet->get_width()), ring_planet->get_outer_radius());
 
     unbind_all_textures();
 
@@ -301,10 +302,8 @@ bool View3D::on_expose_event(GdkEventExpose* event)
       continue;
 
     matrix_stack.push(false);
-    /*glPushMatrix(); //REMOVE
-      glTranslatef(light_layer.position.x, light_layer.position.y, light_layer.position.z);; //REMOVE
-      lightsource_mesh.point_mesh.RenderBatch();
-    glPopMatrix();*/ //REMOVE
+      //matrix_stack.top().translate(light_layer.position);
+      //lightsource_mesh.point_mesh.RenderBatch();
     matrix_stack.pop();
   }
 

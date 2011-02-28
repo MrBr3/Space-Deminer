@@ -33,7 +33,19 @@ namespace TriangleVersion
     class Polygon
     {
     public:
-      Vector3 a,b,c;
+      Vector3 a;
+      gfloat dummy_a;
+      Vector3 b;
+      gfloat dummy_b;
+      Vector3 c;
+      gfloat dummy_c;
+
+      Polygon()
+      {
+        dummy_a = 1.f;
+        dummy_b = 1.f;
+        dummy_c = 1.f;
+      }
     };
     class UV
     {
@@ -52,7 +64,6 @@ namespace TriangleVersion
     void deinit();
 
     GLuint _vertex_buffer_triangles;
-    GLuint _vertex_buffer_normals;
     GLuint _vertex_buffer_uv_warped;
     GLuint _vertex_buffer_uv_rectangular;
 

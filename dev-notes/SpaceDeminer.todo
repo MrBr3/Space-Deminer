@@ -166,8 +166,7 @@ PlanetGenerator
             [X] slots in den Options speichern
       [ ] OpenGL Vorschau
         [ ] Deprecated sachen entfernen
-          [ ] eigener MatrixStack?
-        [ ] OpenGL 2.1 und 3.3 kompatibel
+        [ ] gucken, ob Ring noch tut (breite, durchmesser...)
       [ ] Shader (nur zum rendern erstellt)
         [ ] anstatt IDs eigenen shade funktionen?
         [ ] GradientLight

@@ -31,7 +31,19 @@ public:
   class Polygon
   {
   public:
-    Vector3 a,b,c;
+    Vector3 a;
+    gfloat dummy_a;
+    Vector3 b;
+    gfloat dummy_b;
+    Vector3 c;
+    gfloat dummy_c;
+
+    Polygon()
+    {
+      dummy_a = 1.f;
+      dummy_b = 1.f;
+      dummy_c = 1.f;
+    }
   };
   class UV
   {
@@ -49,11 +61,10 @@ private:
   void deinit();
 
   GLuint _vertex_buffer_triangles;
-  GLuint _vertex_buffer_normals;
   GLuint _vertex_buffer_uv;
 
 public:
-  void init(gsize n_segments=42);
+  void init(gsize n_segments, GLuint ring_uv_factor);
 
   /** \brief Sets the number of polygons, the Sphere will have.
    *
@@ -74,6 +85,8 @@ public:
    * This Function won't change anything in lightning nor any texture settings - just the polygons, the uvmesh and the normals.
    * */
   void render(gfloat width, gfloat outer_radius);
+
+  GLuint ring_uv_factor;
 
   RingMesh();
   ~RingMesh()throw();

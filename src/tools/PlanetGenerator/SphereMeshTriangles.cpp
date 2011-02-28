@@ -40,7 +40,6 @@ namespace TriangleVersion
       Polygon* triangles;
       UV* uv_rectangle;
       UV* uv_warped;
-      Normal* normals;
 
       void triangle_pushed(gfloat upper_radius, gfloat lower_radius, bool a_upper, bool b_upper, bool c_upper);
       Polygon& curr_triangle()
@@ -74,7 +73,6 @@ namespace TriangleVersion
   SphereMesh::SphereMesh()
   {
     _vertex_buffer_triangles  = 0;
-    _vertex_buffer_normals  = 0;
     _vertex_buffer_uv_warped  = 0;
     _vertex_buffer_uv_rectangular  = 0;
 
@@ -104,47 +102,37 @@ namespace TriangleVersion
       return;
 
     g_assert(_vertex_buffer_triangles);
-    g_assert(_vertex_buffer_normals);
     g_assert(_vertex_buffer_uv_warped);
     g_assert(_vertex_buffer_uv_rectangular);
     g_assert(_n_triangles>12);
 
-    glEnableClientState(GL_VERTEX_ARRAY);
     glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_triangles);
-    glVertexPointer(3,GL_FLOAT,0,0);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(0);
 
-    glEnableClientState(GL_NORMAL_ARRAY);
-    glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_normals);
-    glNormalPointer(GL_FLOAT,0,0);
-
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-    glClientActiveTexture(GL_TEXTURE0+0);
     if(use_warped_uv)
       glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_uv_warped);
     else
       glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_uv_rectangular);
-    glTexCoordPointer(2,GL_FLOAT,0,0);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4*2*3, 0);
+    glEnableVertexAttribArray(1);
 
     glDrawArrays(GL_TRIANGLES, 0, _n_triangles*3);
 
-    glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_NORMAL_ARRAY);
-    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(1);
   }
 
   void SphereMesh::deinit()
   {
     if(_vertex_buffer_triangles)
       glDeleteBuffers(1, &_vertex_buffer_triangles);
-    if(_vertex_buffer_normals)
-      glDeleteBuffers(1, &_vertex_buffer_normals);
     if(_vertex_buffer_uv_warped)
       glDeleteBuffers(1, &_vertex_buffer_uv_warped);
     if(_vertex_buffer_uv_rectangular)
       glDeleteBuffers(1, &_vertex_buffer_uv_rectangular);
 
     _vertex_buffer_triangles  = 0;
-    _vertex_buffer_normals  = 0;
     _vertex_buffer_uv_warped  = 0;
     _vertex_buffer_uv_rectangular  = 0;
   }
@@ -191,10 +179,6 @@ namespace TriangleVersion
       glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_triangles);
       glBufferData(GL_ARRAY_BUFFER,_n_triangles * sizeof(Polygon), circle.triangles, GL_STATIC_DRAW);
 
-      glGenBuffers(1,&_vertex_buffer_normals);
-      glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_normals);
-      glBufferData(GL_ARRAY_BUFFER,_n_triangles * 3 * sizeof(Vector3), circle.normals, GL_STATIC_DRAW);
-
       glGenBuffers(1,&_vertex_buffer_uv_rectangular);
       glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_uv_rectangular);
       glBufferData(GL_ARRAY_BUFFER,_n_triangles * sizeof(UV), circle.uv_rectangle, GL_STATIC_DRAW);
@@ -218,7 +202,6 @@ namespace TriangleVersion
       triangles  = new Polygon[n_triangles];
       uv_rectangle  = new UV[n_triangles*3];
       uv_warped  = new UV[n_triangles*3];
-      normals  = new Normal[n_triangles*3];
 
       //-- Generates the Circle
       _n_circle_vertices = n_circle_vertices;
@@ -242,13 +225,6 @@ namespace TriangleVersion
     void Circle::triangle_pushed(gfloat upper_radius, gfloat lower_radius, bool a_upper, bool b_upper, bool c_upper)
     {
       g_assert(i_triangle<n_triangles);
-
-      normals[i_triangle+0] = triangles[i_triangle].a;
-      normals[i_triangle+1] = triangles[i_triangle].a;
-      normals[i_triangle+2] = triangles[i_triangle].a;
-      /*normals[i_triangle+0].normalize(); shouldn't be needed, as our sphere has the radius 1
-      normals[i_triangle+1].normalize();
-      normals[i_triangle+2].normalize();*/
 
       uv_warped[i_triangle].a = uv_rectangle[i_triangle].a;
       uv_warped[i_triangle].b = uv_rectangle[i_triangle].b;
@@ -422,7 +398,6 @@ namespace TriangleVersion
       delete[] triangles;
       delete[] uv_rectangle;
       delete[] uv_warped;
-      delete[] normals;
     }
   }
 }

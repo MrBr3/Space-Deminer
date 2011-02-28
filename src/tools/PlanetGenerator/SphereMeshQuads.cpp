@@ -40,7 +40,6 @@ namespace QuadVersion
       Polygon* quads;
       UV* uv_rectangle;
       UV* uv_warped;
-      Normal* normals;
 
       void quad_pushed(gfloat upper_radius, gfloat lower_radius, bool a_upper, bool b_upper, bool c_upper, bool d_upper);
       Polygon& curr_quad()
@@ -73,7 +72,6 @@ namespace QuadVersion
   SphereMesh::SphereMesh()
   {
     _vertex_buffer_quads  = 0;
-    _vertex_buffer_normals  = 0;
     _vertex_buffer_uv_warped  = 0;
     _vertex_buffer_uv_rectangular  = 0;
 
@@ -103,47 +101,38 @@ namespace QuadVersion
       return;
 
     g_assert(_vertex_buffer_quads);
-    g_assert(_vertex_buffer_normals);
     g_assert(_vertex_buffer_uv_warped);
     g_assert(_vertex_buffer_uv_rectangular);
     g_assert(_n_quads>12);
 
-    glEnableClientState(GL_VERTEX_ARRAY);
+
     glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_quads);
-    glVertexPointer(3,GL_FLOAT,0,0);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(0);
 
-    glEnableClientState(GL_NORMAL_ARRAY);
-    glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_normals);
-    glNormalPointer(GL_FLOAT,0,0);
-
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-    glClientActiveTexture(GL_TEXTURE0+0);
     if(use_warped_uv)
       glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_uv_warped);
     else
       glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_uv_rectangular);
-    glTexCoordPointer(2,GL_FLOAT,0,0);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(1);
 
     glDrawArrays(GL_QUADS, 0, _n_quads*4);
 
-    glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_NORMAL_ARRAY);
-    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(1);
   }
 
   void SphereMesh::deinit()
   {
     if(_vertex_buffer_quads)
       glDeleteBuffers(1, &_vertex_buffer_quads);
-    if(_vertex_buffer_normals)
-      glDeleteBuffers(1, &_vertex_buffer_normals);
     if(_vertex_buffer_uv_warped)
       glDeleteBuffers(1, &_vertex_buffer_uv_warped);
     if(_vertex_buffer_uv_rectangular)
       glDeleteBuffers(1, &_vertex_buffer_uv_rectangular);
 
     _vertex_buffer_quads  = 0;
-    _vertex_buffer_normals  = 0;
     _vertex_buffer_uv_warped  = 0;
     _vertex_buffer_uv_rectangular  = 0;
   }
@@ -185,10 +174,6 @@ namespace QuadVersion
       glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_quads);
       glBufferData(GL_ARRAY_BUFFER,_n_quads * sizeof(Polygon), circle.quads, GL_STATIC_DRAW);
 
-      glGenBuffers(1,&_vertex_buffer_normals);
-      glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_normals);
-      glBufferData(GL_ARRAY_BUFFER,_n_quads * 4 * sizeof(Vector3), circle.normals, GL_STATIC_DRAW);
-
       glGenBuffers(1,&_vertex_buffer_uv_rectangular);
       glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_uv_rectangular);
       glBufferData(GL_ARRAY_BUFFER,_n_quads * sizeof(UV), circle.uv_rectangle, GL_STATIC_DRAW);
@@ -214,7 +199,6 @@ namespace QuadVersion
       quads  = new Polygon[n_quads];
       uv_rectangle  = new UV[n_quads];
       uv_warped  = new UV[n_quads];
-      normals  = new Normal[n_quads*4];
 
       //-- Generates the Circle
       _n_circle_vertices = n_circle_vertices;
@@ -238,15 +222,6 @@ namespace QuadVersion
     void Circle::quad_pushed(gfloat upper_radius, gfloat lower_radius, bool a_upper, bool b_upper, bool c_upper, bool d_upper)
     {
       g_assert(i_quad<n_quads);
-
-      normals[4*i_quad+0] = quads[i_quad].a;
-      normals[4*i_quad+1] = quads[i_quad].b;
-      normals[4*i_quad+2] = quads[i_quad].c;
-      normals[4*i_quad+3] = quads[i_quad].d;
-      /*normals[i_quad+0].normalize(); shouldn't be needed, as our sphere has the radius 1
-      normals[i_quad+1].normalize();
-      normals[i_quad+2].normalize();
-      normals[i_quad+3].normalize();*/
 
       uv_warped[i_quad].a = uv_rectangle[i_quad].a;
       uv_warped[i_quad].b = uv_rectangle[i_quad].b;
@@ -344,7 +319,6 @@ namespace QuadVersion
       delete[] quads;
       delete[] uv_rectangle;
       delete[] uv_warped;
-      delete[] normals;
     }
   }
 }

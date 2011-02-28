@@ -25,8 +25,9 @@ RingMesh::RingMesh()
   _n_triangles  = 0;
 
   _vertex_buffer_triangles  = 0;
-  _vertex_buffer_normals = 0;
   _vertex_buffer_uv = 0;
+
+  ring_uv_factor = 0;
 }
 
 RingMesh::~RingMesh()throw()
@@ -34,26 +35,25 @@ RingMesh::~RingMesh()throw()
   deinit();
 }
 
-void RingMesh::init(gsize n_segments)
+void RingMesh::init(gsize n_segments, GLuint ring_uv_factor)
 {
   g_assert(!_initialized);
 
   set_segment_division(n_segments);
 
   _initialized  = true;
+
+  this->ring_uv_factor = ring_uv_factor;
 }
 
 void RingMesh::deinit()
 {
   if(_vertex_buffer_triangles)
     glDeleteBuffers(1, &_vertex_buffer_triangles);
-  if(_vertex_buffer_normals)
-    glDeleteBuffers(1, &_vertex_buffer_normals);
   if(_vertex_buffer_uv)
     glDeleteBuffers(1, &_vertex_buffer_uv);
 
   _vertex_buffer_triangles  = 0;
-  _vertex_buffer_normals  = 0;
   _vertex_buffer_uv  = 0;
 
   _n_triangles  = 0;
@@ -61,47 +61,32 @@ void RingMesh::deinit()
 
 void RingMesh::render(gfloat width, gfloat outer_radius)
 {
-  if(!_initialized || width<=0.f || outer_radius<=1.f)
+  std::cout<<"uncomment \"glGetUniformLocation(ring_program, \"ring_uv_factor\")\"\n";
+  exit(0);
+
+  if(!_initialized || width<=0.f || outer_radius<=1.f || !ring_uv_factor)
     return;
 
-  glPushMatrix();
-
-  width  = MIN(width, 1.f);
-
-  glScalef(outer_radius, outer_radius, outer_radius);
-
-  glMatrixMode(GL_TEXTURE);
-
   glLoadIdentity();
-  glScalef(outer_radius/((outer_radius-1.f)*width), 1.f, 1.f);
+
+  glUniform1f(ring_uv_factor, outer_radius/((outer_radius-1.f)*width));
 
   g_assert(_vertex_buffer_triangles);
-  g_assert(_vertex_buffer_normals);
   g_assert(_vertex_buffer_uv);
   g_assert(_n_triangles>=12);
 
-  glEnableClientState(GL_VERTEX_ARRAY);
   glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_triangles);
-  glVertexPointer(3,GL_FLOAT,0,0);
+  glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
+  glEnableVertexAttribArray(0);
 
-  glEnableClientState(GL_NORMAL_ARRAY);
-  glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_normals);
-  glNormalPointer(GL_FLOAT,0,0);
-
-  glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-  glClientActiveTexture(GL_TEXTURE0+0);
   glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_uv);
-  glTexCoordPointer(2,GL_FLOAT,0,0);
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+  glEnableVertexAttribArray(1);
 
   glDrawArrays(GL_TRIANGLES, 0, _n_triangles*3);
 
-  glDisableClientState(GL_VERTEX_ARRAY);
-  glDisableClientState(GL_NORMAL_ARRAY);
-  glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-
-  glPopMatrix();
-
-  glMatrixMode(GL_MODELVIEW);
+  glDisableVertexAttribArray(0);
+  glDisableVertexAttribArray(1);
 }
 
 void RingMesh::set_segment_division(gsize n_segments)
@@ -109,7 +94,6 @@ void RingMesh::set_segment_division(gsize n_segments)
   _n_triangles  = MAX(12, n_segments);
 
   Polygon* triangle_buffer  = new Polygon[_n_triangles];
-  Vector3* normal_buffer  = new Vector3[3*_n_triangles];
   UV* uv_buffer  = new UV[_n_triangles];
 
   Vector3* points = new Vector3[_n_triangles];
@@ -135,19 +119,11 @@ void RingMesh::set_segment_division(gsize n_segments)
     triangle_buffer[i].a  = points[i];
     triangle_buffer[i].b  = points[(i+1)%_n_triangles];
     triangle_buffer[i].c  = Vector3(0.f, 0.f, 0.f);
-
-    normal_buffer[i*3 + 0] = Vector3(0.f, 0.f, 1.f);
-    normal_buffer[i*3 + 1] = Vector3(0.f, 0.f, 1.f);
-    normal_buffer[i*3 + 2] = Vector3(0.f, 0.f, 1.f);
   }
 
   glGenBuffers(1,&_vertex_buffer_triangles);
   glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_triangles);
   glBufferData(GL_ARRAY_BUFFER,_n_triangles * sizeof(Polygon), triangle_buffer, GL_STATIC_DRAW);
-
-  glGenBuffers(1,&_vertex_buffer_normals);
-  glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_normals);
-  glBufferData(GL_ARRAY_BUFFER,_n_triangles * 3 * sizeof(Vector3), normal_buffer, GL_STATIC_DRAW);
 
   glGenBuffers(1,&_vertex_buffer_uv);
   glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_uv);
@@ -157,6 +133,5 @@ void RingMesh::set_segment_division(gsize n_segments)
 
   delete[] points;
   delete[] triangle_buffer;
-  delete[] normal_buffer;
   delete[] uv_buffer;
 }
