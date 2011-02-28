@@ -65,7 +65,7 @@ namespace Raytracer
     {
       void shade(Param& shader_param)const
       {
-        gfloat factor = CLAMP(shader_param.normal * dir, 0.f, 1.f)*INV_PI;
+        gfloat factor = CLAMP(shader_param.normal * dir, 0.f, 1.f);
 
         switch(shader_param.object_id)
         {
