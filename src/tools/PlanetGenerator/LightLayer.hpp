@@ -29,7 +29,6 @@ public:
     LIGHT_TYPE_AMBIENT = 0,
     LIGHT_TYPE_DIRECTIONAL = 1,
     LIGHT_TYPE_POINT = 2,
-    LIGHT_TYPE_AREA = 3,
   };
 
   enum GradientModulateType
@@ -43,14 +42,13 @@ private:
   Gtk::Frame frame_pos, frame_light;
   Gtk::Table table_pos, table_light;
 
-  Gtk::Widget *w_rot_x, *w_rot_z, *w_distance, *w_area_diameter;
+  Gtk::Widget *w_rot_x, *w_rot_z, *w_distance;
 
   REAL_SETTING(x_rotation);
   REAL_SETTING(z_rotation);
   REAL_SETTING(distance);
 
   INTEGER_SETTING(light_type);
-  REAL_SETTING(area_diameter);
   COLOR_SETTING(light_color);
   REAL_SETTING(influence_night);
   REAL_SETTING(light_intensity);

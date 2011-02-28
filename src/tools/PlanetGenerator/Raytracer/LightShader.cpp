@@ -31,7 +31,6 @@ namespace Raytracer
       gfloat specular_factor;
       gfloat ring_shadow;
       gfloat cloud_shadow;
-      gfloat area_diameter;
       Vector3 dir, pos;
     };
   typedef Glib::RefPtr<SimpleLightShader> SimpleLightShaderPtr;
@@ -94,12 +93,6 @@ namespace Raytracer
       {
       }
     };
-    class AreaLightShader : public SimpleLightShader
-    {
-      void shade(Param& shader_param)const
-      {
-      }
-    };
 
     SimpleLightShaderPtr lightshader_fabricator(LightLayer::LightType lt)
     {
@@ -110,10 +103,8 @@ namespace Raytracer
       case LightLayer::LIGHT_TYPE_DIRECTIONAL:
         return SimpleLightShaderPtr(new DirectionalLightShader());
       case LightLayer::LIGHT_TYPE_POINT:
-        return SimpleLightShaderPtr(new PointLightShader());
-      case LightLayer::LIGHT_TYPE_AREA:
       default:
-        return SimpleLightShaderPtr(new AreaLightShader());
+        return SimpleLightShaderPtr(new PointLightShader());
       }
     }
   }
@@ -151,7 +142,6 @@ void LightLayer::create_shaders()
       shader->specular_factor = specular_factor;
       shader->ring_shadow = ring_shadow;
       shader->cloud_shadow = cloud_shadow;
-      shader->area_diameter = area_diameter;
       shader->pos = position;
       shader->dir = direction;
       Shader::all_shaders.push_back(shader);

@@ -62,7 +62,6 @@ LightLayer::LightLayer(guint id) : MultiLayer<LightLayer>(Glib::ustring::compose
   last_set_proprty_widget = &settings.append_real_widget(TABLE, n, prefix+"-"#c_name, _(name), _(description), X_GETTER_SETTER_SIGNAL(SETTINGS, c_name), step_increment, page_increment, n_digits);
 
   w_distance = nullptr;
-  w_area_diameter = nullptr;
   w_rot_x = nullptr;
   w_rot_z = nullptr;
 
@@ -92,14 +91,12 @@ LightLayer::LightLayer(guint id) : MultiLayer<LightLayer>(Glib::ustring::compose
   n = 0;
 #define TABLE table_light
 
-  std::vector<Glib::ustring> enum_light_type = create_vector<Glib::ustring>(_("Ambient"), _("Directional"), _("Point"), _("Area"));
+  std::vector<Glib::ustring> enum_light_type = create_vector<Glib::ustring>(_("Ambient"), _("Directional"), _("Point"));
   Gdk::Color light_color_def_value;
 
   light_color_def_value.set_rgb_p(1., 1., 1.);
 
-  INIT_ENUM_PROPERTY(light_type, LIGHT_TYPE_AREA, "Lighttype", "The Type of the Lightsource", enum_light_type);
-  INIT_REAL_PROPERTY(area_diameter, 0.5f, "Area Width", "The diameter of the area light.", 0.1, 0.2, 3);
-  w_area_diameter = last_set_proprty_widget;
+  INIT_ENUM_PROPERTY(light_type, LIGHT_TYPE_POINT, "Lighttype", "The Type of the Lightsource", enum_light_type);
   INIT_PROPERTY(color, light_color, light_color_def_value, "Color", "The color of the light emitted by this source.");
   INIT_REAL_PROPERTY(light_intensity, 1.0f, "Intensity", "The Intensity of the light emitted by this source.", 0.1, 1., 3);
   INIT_REAL_PROPERTY(influence_night, 0.0f, "InfluenceNight", "The amount, this Light influences The day and night side", 0.1, 1., 3);
@@ -142,24 +139,16 @@ void LightLayer::set_distance(gfloat x)
 
 void LightLayer::set_light_type(int x)
 {
-  light_type = CLAMP(x, 0, LIGHT_TYPE_AREA);
+  light_type = CLAMP(x, 0, LIGHT_TYPE_POINT);
 
   if(w_rot_x)
     w_rot_x->set_sensitive(light_type != LIGHT_TYPE_AMBIENT);
   if(w_rot_z)
     w_rot_z->set_sensitive(light_type != LIGHT_TYPE_AMBIENT);
   if(w_distance)
-    w_distance->set_sensitive(light_type == LIGHT_TYPE_POINT || light_type == LIGHT_TYPE_AREA);
-  if(w_area_diameter)
-    w_area_diameter->set_sensitive(light_type == LIGHT_TYPE_AREA);
+    w_distance->set_sensitive(light_type == LIGHT_TYPE_POINT);
 
   signal_light_type_changed().emit();
-}
-
-void LightLayer::set_area_diameter(gfloat x)
-{
-  area_diameter = CLAMP(x, 0.f, G_MAXFLOAT);
-  signal_area_diameter_changed().emit();
 }
 
 void LightLayer::set_light_color(const Gdk::Color& x)
