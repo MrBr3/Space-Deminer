@@ -35,9 +35,20 @@ class Options : public sigc::trackable
 
   static Options* _singleton;
 
-  static guint8 char_to_uint8(Glib::ustring::value_type u, Glib::ustring::value_type v)
+  static guint8 single_hex_digit_to_uint8(Glib::ustring::value_type u)
   {
-    return 16*CLAMP(u-'0', 0, 255)+CLAMP(v-'0', 0, 255);
+    if(u>='0' && u<='9')
+      return u-'0';
+    if(u>='a' && u<='f')
+      return u-'a'+0xa;
+    if(u>='A' && u<='F')
+      return u-'A'+0xA;
+    return 0;
+  }
+
+  static guint8 hexchar_to_uint8(Glib::ustring::value_type u, Glib::ustring::value_type v)
+  {
+    return 16*single_hex_digit_to_uint8(u)+single_hex_digit_to_uint8(v);
   }
 public:
 

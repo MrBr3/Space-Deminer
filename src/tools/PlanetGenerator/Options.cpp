@@ -100,6 +100,9 @@ void Options::set_real(const Glib::ustring& name, gfloat value)
 
 Gdk::Color Options::get_color(const Glib::ustring& name, const Gdk::Color& def_value)
 {
+  if(name=="light-0-light_color")
+    std::cout<<"";
+
   if(!option_exists(name))
   {
     set_color(name, def_value);
@@ -116,9 +119,9 @@ Gdk::Color Options::get_color(const Glib::ustring& name, const Gdk::Color& def_v
 
   Gdk::Color col;
 
-  col.set_rgb_p(char_to_uint8(str[0], str[1])/255.f,
-                char_to_uint8(str[2], str[3])/255.f,
-                char_to_uint8(str[4], str[5])/255.f);
+  col.set_rgb_p(hexchar_to_uint8(str[0], str[1])/255.f,
+                hexchar_to_uint8(str[2], str[3])/255.f,
+                hexchar_to_uint8(str[4], str[5])/255.f);
 
   return col;
 }
