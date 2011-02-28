@@ -21,6 +21,36 @@
 
 namespace Private
 {
+  const GLchar** load_shader(const Glib::ustring& filename)
+  {
+    const gsize buffer_size = 4096;
+    static char buffer[buffer_size+1];
+    static char* buffer_ptr;
+
+    std::string fullpath = Glib::filename_from_utf8(apply_filename_macros("$(exe-share)/shader/330/"+filename));
+
+    try
+    {
+      Glib::RefPtr<Gio::File> shader_file = Gio::File::create_for_path(fullpath);
+
+      Glib::RefPtr<Gio::FileInputStream> stream = shader_file->read();
+
+      gsize bytes_read = 0;
+      if(!stream->read_all(buffer, buffer_size, bytes_read))
+        throw Gio::Error(Gio::Error::Code::FAILED, _("Temp buffer is too small. :-("));
+      buffer[bytes_read] = 0;
+
+      buffer_ptr = &buffer[0];
+      return (const GLchar**)&buffer_ptr;
+    }catch(Glib::Exception& e)
+    {
+      Gtk::MessageDialog dlg(_("Couldn't load shader File"), false, Gtk::MESSAGE_ERROR);
+      dlg.set_secondary_text("Couldn't load Shader-File <"+fullpath+">\n\n"+e.what());
+      dlg.run();
+      exit(-1);
+    }
+  }
+
   void possible_shader_error(GLuint shader, const Glib::ustring& type, const Glib::ustring& name)
   {
     GLint r;
@@ -65,40 +95,12 @@ void View3D::init_shaders()
   try
   {
     {
-      const char* planet_vs_src =
-        "#version 330 core\n"
-        "\n"
-        "in vec4 vertex;\n"
-        "in vec2 att_tex_coord;\n"
-        "\n"
-        "uniform mat4 matrix_M;\n"
-        "uniform mat4 matrix_PV;\n"
-        "\n"
-        "out vec2 tex_coord;\n"
-        "\n"
-        "void main()\n"
-        "{\n"
-        "  gl_Position = matrix_PV * matrix_M * vertex;\n"
-        "  tex_coord = att_tex_coord;\n"
-        "}\n";
-
-      const char* planet_ps_src =
-        "#version 330 core\n"
-        "\n"
-        "in vec2 tex_coord;\n"
-        "\n"
-        "void main()\n"
-        "{\n"
-        "  gl_FragColor = vec4(tex_coord.x, tex_coord.y, 0., 1.);"
-        "}\n";
-
       GLuint vs = glCreateShader(GL_VERTEX_SHADER);
       //gluint gs = glCreateShader(GL_GEOMETRY_SHADER);
       GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
 
-      glShaderSource(vs, 1, &planet_vs_src, 0);
-
-      glShaderSource(fs, 1, &planet_ps_src, 0);
+      glShaderSource(vs, 1, load_shader("planet.vert"), 0);
+      glShaderSource(fs, 1, load_shader("planet.frag"), 0);
 
       glCompileShader(vs);
       glCompileShader(fs);
