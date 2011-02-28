@@ -135,7 +135,8 @@ void View3D::on_realize()
   init_shaders();
 
   sphere_mesh.init(view_settings->get_n_sphere_segments());
-  ring_mesh.init(view_settings->get_n_ring_segments(), /*glGetUniformLocation(ring_program, "ring_uv_factor")*/0);
+  ring_mesh.init(view_settings->get_n_ring_segments());
+  ring_mesh.ring_uv_factor = glGetUniformLocation(ring_program, "ring_uv_factor");
   base_texture->init();
   cloud_texture->init();
   night_texture->init();
@@ -191,6 +192,8 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   if(!gl_drawable)
     return false;
 
+  Matrix44 matrix_PV, matrix_M;
+
   matrix_stack.clear();
 
   gl_drawable->gl_begin(get_gl_context());
@@ -211,11 +214,6 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   else
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-  //glMatrixMode(GL_TEXTURE); //REMOVE
-  //glLoadIdentity(); //REMOVE
-
-  //glMatrixMode(GL_PROJECTION); //REMOVE
-
   gfloat aspect = gfloat(get_width())/gfloat(get_height());
 
   calc_projection_matrix(projection_matrix, aspect);
@@ -226,21 +224,17 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   view_matrix.rotate_x(planet->get_x_rotation());
   view_matrix.rotate_z(planet->get_z_rotation());
   matrix_stack.top() *= view_matrix;
-  matrix_stack.top().glUniform(planet_program_uniform.matrix_PV);
-
-  //glMatrixMode(GL_MODELVIEW); //REMOVE
+  matrix_PV = matrix_stack.top();
 
   matrix_stack.push(false);
 
   matrix_stack.top() *= planet_model_matrix;
-  //matrix_stack.top().glLoadMatrix(); //REMOVE
-  matrix_stack.top().glUniform(planet_program_uniform.matrix_M);
+  matrix_M = matrix_stack.top();
 
   bool warped_uv = false;
 
   glUseProgram(planet_program);
 
-  //glEnable(GL_TEXTURE_2D); //REMOVE
   Glib::RefPtr<Layer> only_visible_texture_layer  = LayerModel::just_one_texture_layer_visible(); // Gets the only visible Layer
   if(only_visible_texture_layer.operator->()==CloudTextureLayer::get_singleton())
   {
@@ -260,6 +254,9 @@ bool View3D::on_expose_event(GdkEventExpose* event)
     warped_uv = BaseTextureLayer::get_imagefile()->get_needs_to_be_warped();
   }
 
+  matrix_PV.glUniform(planet_program_uniform.matrix_PV);
+  matrix_M.glUniform(planet_program_uniform.matrix_M);
+
   sphere_mesh.render(warped_uv);
 
   unbind_all_textures();
@@ -268,6 +265,8 @@ bool View3D::on_expose_event(GdkEventExpose* event)
 
   if(RingLayer::get_singleton()->get_visible())
   {
+    glUseProgram(ring_program);
+
     RingLayer* ring_planet = RingLayer::get_singleton();
 
     matrix_stack.push(false);
@@ -277,16 +276,19 @@ bool View3D::on_expose_event(GdkEventExpose* event)
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    ring_model_matrix = planet_model_matrix;
+    ring_model_matrix.set_identity();
     ring_model_matrix.rotate_z(ring_planet->get_z_rotation());
     ring_model_matrix.rotate_x(ring_planet->get_x_rotation());
-    matrix_stack.top() *= ring_model_matrix;
+    matrix_stack.top() = ring_model_matrix;
     matrix_stack.top().scale(ring_planet->get_outer_radius());
-    matrix_stack.top().glUniform(planet_program_uniform.matrix_M);
+    matrix_M = matrix_stack.top();
+
+    matrix_PV.glUniform(ring_program_uniform.matrix_PV);
+    matrix_M.glUniform(ring_program_uniform.matrix_M);
 
     ring_texture->bind();
 
-    ring_mesh.render(MAX(1.f, ring_planet->get_width()), ring_planet->get_outer_radius());
+    ring_mesh.render(ring_planet->get_width(), ring_planet->get_outer_radius());
 
     unbind_all_textures();
 

@@ -96,6 +96,11 @@ public:
     GLuint matrix_PV;
     GLuint matrix_M;
   }planet_program_uniform;
+  struct RingProgramUnified
+  {
+    GLuint matrix_PV;
+    GLuint matrix_M;
+  }ring_program_uniform;
   GLuint planet_program, ring_program, dummy_program;
   void init_shaders();
   void deinit_shaders();

@@ -35,15 +35,13 @@ RingMesh::~RingMesh()throw()
   deinit();
 }
 
-void RingMesh::init(gsize n_segments, GLuint ring_uv_factor)
+void RingMesh::init(gsize n_segments)
 {
   g_assert(!_initialized);
 
   set_segment_division(n_segments);
 
   _initialized  = true;
-
-  this->ring_uv_factor = ring_uv_factor;
 }
 
 void RingMesh::deinit()
@@ -61,13 +59,11 @@ void RingMesh::deinit()
 
 void RingMesh::render(gfloat width, gfloat outer_radius)
 {
-  std::cout<<"uncomment \"glGetUniformLocation(ring_program, \"ring_uv_factor\")\"\n";
-  exit(0);
-
-  if(!_initialized || width<=0.f || outer_radius<=1.f || !ring_uv_factor)
+  if(!_initialized || width<=0.f)
     return;
 
-  glLoadIdentity();
+  outer_radius = MAX(outer_radius, 1.f);
+  width = MIN(width, 1.f);
 
   glUniform1f(ring_uv_factor, outer_radius/((outer_radius-1.f)*width));
 

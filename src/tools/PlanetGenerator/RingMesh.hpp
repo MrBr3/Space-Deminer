@@ -64,7 +64,7 @@ private:
   GLuint _vertex_buffer_uv;
 
 public:
-  void init(gsize n_segments, GLuint ring_uv_factor);
+  void init(gsize n_segments);
 
   /** \brief Sets the number of polygons, the Sphere will have.
    *

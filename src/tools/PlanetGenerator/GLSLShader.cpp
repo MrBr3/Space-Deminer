@@ -126,6 +126,38 @@ void View3D::init_shaders()
       planet_program_uniform.matrix_PV = glGetUniformLocation(planet_program, "matrix_PV");
       planet_program_uniform.matrix_M  = glGetUniformLocation(planet_program, "matrix_M");
     }
+    {
+      GLuint vs = glCreateShader(GL_VERTEX_SHADER);
+      //gluint gs = glCreateShader(GL_GEOMETRY_SHADER);
+      GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
+
+      glShaderSource(vs, 1, load_shader("ring.vert"), 0);
+      glShaderSource(fs, 1, load_shader("ring.frag"), 0);
+
+      glCompileShader(vs);
+      glCompileShader(fs);
+
+      possible_shader_error(vs, "Vertex", "Ring");
+      possible_shader_error(fs, "Fragment", "Ring");
+
+      ring_program = glCreateProgram();
+
+      glAttachShader(ring_program, vs);
+      glAttachShader(ring_program, fs);
+
+      glDeleteShader(vs);
+      glDeleteShader(fs);
+
+      glBindAttribLocation(ring_program, 0, "att_vertex");
+      glBindAttribLocation(ring_program, 1, "att_tex_coord");
+
+      glLinkProgram(ring_program);
+
+      possible_program_error(ring_program, "Ring");
+
+      ring_program_uniform.matrix_PV = glGetUniformLocation(ring_program, "matrix_PV");
+      ring_program_uniform.matrix_M  = glGetUniformLocation(ring_program, "matrix_M");
+    }
   }catch(const std::exception& e)
   {
     deinit_shaders();
@@ -136,14 +168,14 @@ void View3D::init_shaders()
     exit(-1);
   }
 
-  ring_program = dummy_program = planet_program;
+  dummy_program = 0;
 }
 
 void View3D::deinit_shaders()
 {
-  if(planet_program!=dummy_program && planet_program)
+  if(planet_program)
     glDeleteProgram(planet_program);
-  if(ring_program!=dummy_program && ring_program)
+  if(ring_program)
     glDeleteProgram(ring_program);
   if(dummy_program)
     glDeleteProgram(dummy_program);
