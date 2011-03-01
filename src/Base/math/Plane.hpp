@@ -28,6 +28,10 @@ public:
   gfloat d; //> distance to origin
   Vector3 normal;
 
+  Plane(DontInit) : normal(DONT_INIT)
+  {
+  }
+
   Plane() : d(0.f), normal(0.f, 0.f, 1.f)
   {
   }
