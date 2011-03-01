@@ -279,6 +279,11 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   matrix_PV.glUniform(planet_program_uniform.matrix_PV);
   matrix_M.glUniform(planet_program_uniform.matrix_M);
 
+  planet_program_uniform.light[0].feed_data(0);
+  planet_program_uniform.light[1].feed_data(1);
+  planet_program_uniform.light[2].feed_data(2);
+  planet_program_uniform.light[3].feed_data(3);
+
   sphere_mesh.render();
 
   unbind_all_textures();

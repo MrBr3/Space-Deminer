@@ -149,6 +149,10 @@ void View3D::init_shaders()
       planet_program_uniform.uni_cloud_texture_warped  = glGetUniformLocation(planet_program, "uni_cloud_texture_warped");
       planet_program_uniform.uni_weight_texture_visible  = glGetUniformLocation(planet_program, "uni_weight_texture_visible");
       planet_program_uniform.uni_weight_texture_warped  = glGetUniformLocation(planet_program, "uni_weight_texture_warped");
+      planet_program_uniform.light[0].get_uniform_loacations(planet_program, "light[0].");
+      planet_program_uniform.light[1].get_uniform_loacations(planet_program, "light[1].");
+      planet_program_uniform.light[2].get_uniform_loacations(planet_program, "light[2].");
+      planet_program_uniform.light[3].get_uniform_loacations(planet_program, "light[3].");
     }
     {
       GLuint vs = glCreateShader(GL_VERTEX_SHADER);
@@ -240,4 +244,61 @@ void View3D::deinit_shaders()
     glDeleteProgram(simple_program);
 
   planet_program = ring_program = simple_program = 0;
+}
+
+//--------
+
+void View3D::GradientUniform::get_uniform_loacations(GLuint program, const std::string& prefix)
+{
+  curves = glGetUniformLocation(program, (prefix+"curves").c_str());
+  defcolor = glGetUniformLocation(program, (prefix+"defcolor").c_str());
+  col[0] = glGetUniformLocation(program, (prefix+"col[0]").c_str());
+  col[1] = glGetUniformLocation(program, (prefix+"col[1]").c_str());
+  col[2] = glGetUniformLocation(program, (prefix+"col[2]").c_str());
+  col[3] = glGetUniformLocation(program, (prefix+"col[3]").c_str());
+}
+
+void View3D::PlanetProgramUniform::Light::get_uniform_loacations(GLuint program, const std::string& prefix)
+{
+  visible = glGetUniformLocation(program, (prefix+"visible").c_str());
+  dir = glGetUniformLocation(program, (prefix+"dir").c_str());
+  pos = glGetUniformLocation(program, (prefix+"pos").c_str());
+  color = glGetUniformLocation(program, (prefix+"color").c_str());
+  type = glGetUniformLocation(program, (prefix+"type").c_str());
+  influence_night = glGetUniformLocation(program, (prefix+"influence_night").c_str());
+  light_on_planet = glGetUniformLocation(program, (prefix+"light_on_planet").c_str());
+  light_on_ring = glGetUniformLocation(program, (prefix+"light_on_ring").c_str());
+  specular_factor = glGetUniformLocation(program, (prefix+"specular_factor").c_str());
+  ring_shadow = glGetUniformLocation(program, (prefix+"ring_shadow").c_str());
+  cloud_shadow = glGetUniformLocation(program, (prefix+"cloud_shadow").c_str());
+  shade_gradient.get_uniform_loacations(program, (prefix+"shade_gradient.").c_str());
+  gradient[0].get_uniform_loacations(program, prefix+"gradient[0].");
+  gradient[1].get_uniform_loacations(program, prefix+"gradient[1].");
+  gradient[2].get_uniform_loacations(program, prefix+"gradient[2].");
+  gradient[3].get_uniform_loacations(program, prefix+"gradient[3].");
+}
+
+void View3D::PlanetProgramUniform::Light::GradientLight::get_uniform_loacations(GLuint program, const std::string& prefix)
+{
+  use = glGetUniformLocation(program, (prefix+"use").c_str());
+  multiply_gradient_color_with_light_color = glGetUniformLocation(program, (prefix+"multiply_gradient_color_with_light_color").c_str());
+  //add_x_rotation = glGetUniformLocation(program, (prefix+"add_x_rotation").c_str());
+  //add_z_rotation = glGetUniformLocation(program, (prefix+"add_z_rotation").c_str());
+  //radius = glGetUniformLocation(program, (prefix+"radius").c_str());
+  inside_planet = glGetUniformLocation(program, (prefix+"inside_planet").c_str());
+  outside_planet = glGetUniformLocation(program, (prefix+"outside_planet").c_str());
+  modulate_type = glGetUniformLocation(program, (prefix+"modulate_type").c_str());
+  light_gradient.get_uniform_loacations(program, prefix+"light_gradient.");
+}
+
+void View3D::PlanetProgramUniform::Light::feed_data(guint i)
+{
+  LightLayer& layer = *LightLayer::get_singleton(i);
+
+  glUniform1i(visible, layer.get_visible());
+  glUniform1i(type, layer.get_light_type());
+  layer.get_light_direction().glUniform4(dir); TODO implement
+  layer.get_light_position()).glUniform4(pos); TODO implement
+  ColorRGBA(layer.get_color()).glUniformRGB(); TODO implement
+  TODO: rest
 }

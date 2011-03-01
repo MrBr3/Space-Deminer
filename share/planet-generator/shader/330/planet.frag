@@ -44,6 +44,7 @@ struct GradientLight
 };
 struct Light
 {
+  bool visible;
   vec4 dir, pos;
   vec4 color;
   uint type;
@@ -51,11 +52,11 @@ struct Light
   float specular_factor;
   float ring_shadow;
   float cloud_shadow;
-  Gradient light_gradient;
+  Gradient shade_gradient;
   GradientLight gradient[N_GRADIENT_PER_LIGHT];
 };
 
-uniform Light ligths[N_LIGHTS];
+uniform Light ligth[N_LIGHTS];
 
 // ==== Material ========
 

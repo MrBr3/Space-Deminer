@@ -93,6 +93,14 @@ public:
   Matrix44 planet_model_matrix, ring_model_matrix, view_matrix, projection_matrix;
 
 // Shaders
+  struct GradientUniform
+  {
+    GLuint curves;
+    GLuint defcolor, col[4];
+
+    void get_uniform_loacations(GLuint program, const std::string& prefix);
+    void feed_data(const ConstGradientPtr& gradient);
+  };
   struct PlanetProgramUniform
   {
     GLuint matrix_PV;
@@ -111,6 +119,35 @@ public:
     GLuint uni_cloud_texture_warped;
     GLuint uni_weight_texture_visible;
     GLuint uni_weight_texture_warped;
+
+    struct Light
+    {
+      struct GradientLight
+      {
+        GLuint use;
+        GLuint multiply_gradient_color_with_light_color;
+        //GLuint add_x_rotation, add_z_rotation;
+        //GLuint radius;
+        GLuint inside_planet, outside_planet;
+        GLuint modulate_type;
+        GradientUniform light_gradient;
+
+        void get_uniform_loacations(GLuint program, const std::string& prefix);
+        void feed_data(const LightLayer::GradientSetting& gradient);
+      };
+
+      GLuint visible, type;
+      GLuint dir, pos, color;
+      GLuint influence_night, light_on_planet, light_on_ring;
+      GLuint specular_factor, ring_shadow, cloud_shadow;
+      GradientUniform shade_gradient;
+      GradientLight gradient[4];
+
+      void get_uniform_loacations(GLuint program, const std::string& prefix);
+      void feed_data(guint i);
+    };
+
+    Light light[4];
   }planet_program_uniform;
   struct RingProgramUniform
   {
