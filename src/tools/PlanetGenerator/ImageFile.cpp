@@ -21,6 +21,8 @@
 
 ImageFile::ImageFile()
 {
+  _needs_to_be_warped = false;
+
   signal_imagefile_changed().connect(sigc::mem_fun(_signal_something_changed, &sigc::signal<void>::emit));
   signal_needs_to_be_warped_changed().connect(sigc::mem_fun(_signal_something_changed, &sigc::signal<void>::emit));
 }

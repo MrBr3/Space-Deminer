@@ -80,6 +80,10 @@ LightLayer::LightLayer(guint id) : MultiLayer<LightLayer>(Glib::ustring::compose
 #define TABLE table_pos
 #define SETTINGS LightLayer
 
+  x_rotation = 0.f;
+  z_rotation = 0.f;
+  distance = 0.f;
+
   INIT_PROPERTY(real, x_rotation, 45.f, "X Angle", "The rotation around the x axis to define the light source's position");
   w_rot_x = last_set_proprty_widget;
   INIT_PROPERTY(real, z_rotation, 45.f, "Z Angle", "The rotation around the z axis to define the light source's position");

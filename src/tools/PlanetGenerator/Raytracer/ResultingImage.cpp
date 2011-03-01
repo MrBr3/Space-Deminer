@@ -19,7 +19,7 @@
 
 #include "./../MainWindow.hpp"
 
-//#define DEBUG_RENDER_THREAD
+#define DEBUG_RENDER_THREAD
 
 namespace Raytracer
 {

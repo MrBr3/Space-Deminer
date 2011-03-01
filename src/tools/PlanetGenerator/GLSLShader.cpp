@@ -53,7 +53,7 @@ namespace Private
 
   void possible_shader_error(GLuint shader, const Glib::ustring& type, const Glib::ustring& name)
   {
-    GLint r;
+    GLint r = GL_FALSE;
     if(!shader)
       throw std::logic_error("sorry, uninitializezed Shader :-(");
 
@@ -75,11 +75,11 @@ namespace Private
 
   void possible_program_error(GLuint program, const Glib::ustring& name)
   {
-    GLint r;
+    GLint r = GL_FALSE;
     if(!program)
       throw std::logic_error("sorry, uninitializezed Shader-Program :-(");
 
-    glGetProgramiv(program, GL_COMPILE_STATUS, &r);
+    glGetProgramiv(program, GL_LINK_STATUS, &r);
 
     GLchar info[2048];
 
