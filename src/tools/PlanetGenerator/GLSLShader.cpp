@@ -120,6 +120,8 @@ void View3D::init_shaders()
       glBindAttribLocation(planet_program, 1, "att_tex_coord");
       glBindAttribLocation(planet_program, 2, "att_tex_coord_warped");
 
+      glBindFragDataLocation(planet_program, 0, "resulting_color");
+
       glLinkProgram(planet_program);
 
       possible_program_error(planet_program, "Planet");
