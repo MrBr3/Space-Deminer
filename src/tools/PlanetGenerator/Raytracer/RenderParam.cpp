@@ -127,7 +127,6 @@ namespace Raytracer
         camera_plane.set(camera_dir, camera_origin);
 
         Vector3 tmp[8];
-        gsize n_behind = 0;
 
         gfloat o  = 2.f*INV_SQRT_2-1.f+1.e-4f;
         tmp[0].set( 1.f,   o, 0.f);
@@ -141,30 +140,12 @@ namespace Raytracer
 
         for(int i=0; i<8; ++i)
         {
-          bool make_sure_to_be_outside = false;
-
           tmp[i]  = ring_matrix * (tmp[i]*ring.outer_radius);
           if(camera_plane.check_point(tmp[i])==Math::BACKSIDE)
           {
-            tmp[i] += camera_dir*camera_plane.get_distance(tmp[i]);
-
-            make_sure_to_be_outside = true;
-
-            n_behind++;
+            culling=false;
           }
           tmp[i]  = projection_matrix * view_matrix * tmp[i];
-          if(make_sure_to_be_outside)
-          {
-            if(tmp[i].x<0.f)
-              tmp[i].x = MIN(-1.1f, tmp[i].x);
-            else if(tmp[i].x>0.f)
-              tmp[i].x = MAX(1.1f, tmp[i].x);
-
-            if(tmp[i].y<0.f)
-              tmp[i].y = MIN(-1.1f, tmp[i].y);
-            else if(tmp[i].y>0.f)
-              tmp[i].y = MAX(1.1f, tmp[i].y);
-          }
           bounding_ngon[i].x  = (tmp[i].x+1.f)*0.5f;
           bounding_ngon[i].y  = (tmp[i].y-1.f)*-0.5f;
           bounding_ngon[i].x *= img_width;
