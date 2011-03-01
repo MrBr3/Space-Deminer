@@ -59,12 +59,16 @@ namespace Private
 
     glGetShaderiv(shader, GL_COMPILE_STATUS, &r);
 
-    if(r==GL_TRUE)
-      return;
-
     GLchar info[2048];
 
     glGetShaderInfoLog(shader, 2048, 0, info);
+
+    if(r==GL_TRUE)
+    {
+      if(info[0]!=0)
+        std::cout<<"Warning(s) while compiling "<<type<<"-Shader \""<<name<<"\":\n"<<info<<"\n";
+      return;
+    }
 
     throw std::logic_error(Glib::ustring::compose("Couldn't compile %1-Shader \"%2\"\n%3", type, name, info).c_str());
   }
@@ -77,14 +81,18 @@ namespace Private
 
     glGetProgramiv(program, GL_COMPILE_STATUS, &r);
 
-    if(r==GL_TRUE)
-      return;
-
     GLchar info[2048];
 
     glGetProgramInfoLog(program, 2048, 0, info);
 
-    throw std::logic_error(Glib::ustring::compose("Couldn't link Shader-Programs \"%1\"\n%2", name, info).c_str());
+    if(r==GL_TRUE)
+    {
+      if(info[0]!=0)
+        std::cout<<"Warning(s) while linking ShaderProgram \""<<name<<"\":\n"<<info<<"\n";
+      return;
+    }
+
+    throw std::logic_error(Glib::ustring::compose("Couldn't link ShaderProgram \"%1\"\n%2", name, info).c_str());
   }
 }
 
@@ -167,6 +175,8 @@ void View3D::init_shaders()
       glBindAttribLocation(ring_program, 0, "att_vertex");
       glBindAttribLocation(ring_program, 1, "att_tex_coord");
 
+      glBindFragDataLocation(ring_program, 0, "resulting_color");
+
       glLinkProgram(ring_program);
 
       possible_program_error(ring_program, "Ring");
@@ -199,6 +209,8 @@ void View3D::init_shaders()
 
       glBindAttribLocation(simple_program, 0, "att_vertex");
       glBindAttribLocation(simple_program, 1, "att_color");
+
+      glBindFragDataLocation(simple_program, 0, "resulting_color");
 
       glLinkProgram(simple_program);
 
