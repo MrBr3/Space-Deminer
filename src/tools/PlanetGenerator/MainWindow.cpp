@@ -90,7 +90,11 @@ void about_dlg()
                       "\n\n"
                       "<b>binreloc</b>\n"
                       "  see http://autopackage.org/docs/binreloc/\n"
-                      "  <i>(last visited 2011-02-20)</i>");
+                      "  <i>(last visited 2011-02-20)</i>"
+                      "\n\n"
+                      "<b>GLIM</b>\n"
+                      "  see http://www.artifactgames.de/FILES/START.PHP?where=GLIM.PHP\n"
+                      "  <i>(last visited 2011-03-01)</i>");
 
   dlg.run();
 }

@@ -16,6 +16,7 @@ Gimp
 Inkscape
 CodeLite
 Gitg
+valgrind
 
 Libraries we use:
 
@@ -24,6 +25,7 @@ gtkmm
 gtkglextmm
 glew
 boost-thread
+glim
 
 Disclaimer
 
