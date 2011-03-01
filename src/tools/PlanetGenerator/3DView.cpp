@@ -285,6 +285,29 @@ bool View3D::on_expose_event(GdkEventExpose* event)
 
   matrix_stack.pop();
 
+  glUseProgram(simple_program);
+
+  glEnableVertexAttribArray(1);
+  for(gsize i=0; i<N_LIGHT_LAYERS; ++i)
+  {
+    const LightLayer& light_layer = *LightLayer::get_singleton(i);
+    g_assert(&light_layer);
+
+    if(!light_layer.get_visible())
+      continue;
+
+    matrix_stack.push(false);
+      matrix_stack.top().translate(light_layer.position);
+
+      matrix_M = matrix_stack.top();
+
+      matrix_PV.glUniform(ring_program_uniform.matrix_PV);
+      matrix_M.glUniform(ring_program_uniform.matrix_M);
+      lightsource_mesh.point_mesh.RenderBatch();
+    matrix_stack.pop();
+  }
+  glDisableVertexAttribArray(1);
+
   if(RingLayer::get_singleton()->get_visible())
   {
     glUseProgram(ring_program);
@@ -318,29 +341,6 @@ bool View3D::on_expose_event(GdkEventExpose* event)
 
     matrix_stack.pop();
   }
-
-  glUseProgram(simple_program);
-
-  glEnableVertexAttribArray(1);
-  for(gsize i=0; i<N_LIGHT_LAYERS; ++i)
-  {
-    const LightLayer& light_layer = *LightLayer::get_singleton(i);
-    g_assert(&light_layer);
-
-    if(!light_layer.get_visible())
-      continue;
-
-    matrix_stack.push(false);
-      matrix_stack.top().translate(light_layer.position);
-
-      matrix_M = matrix_stack.top();
-
-      matrix_PV.glUniform(ring_program_uniform.matrix_PV);
-      matrix_M.glUniform(ring_program_uniform.matrix_M);
-      lightsource_mesh.point_mesh.RenderBatch();
-    matrix_stack.pop();
-  }
-  glDisableVertexAttribArray(1);
 
   gl_drawable->swap_buffers();
   return true;

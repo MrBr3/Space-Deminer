@@ -33,6 +33,7 @@ struct Material
 out vec4 resulting_color;
 
 vec4 query_surface_color();
+vec4 query_cloud_color();
 vec4 just_one_layer();
 
 void main()
@@ -43,9 +44,20 @@ void main()
     return;
   }
 
-  vec4 surface_color = query_surface_color();
+  resulting_color = query_surface_color();
 
-  resulting_color = surface_color;
+  if(uni_cloud_texture_visible)
+  {
+    float thickness;
+    vec4 cloud_color;
+
+    PLANET_TEXTURE_COLOR(cloud_color=, cloud);
+    thickness = clamp(max(max(cloud_color.x, cloud_color.y), cloud_color.z), 0.,1.); // TODO use texture with just one component
+
+    cloud_color = query_cloud_color();
+    
+    resulting_color = mix(resulting_color, cloud_color, thickness);
+  }
 }
 
 vec4 just_one_layer()
@@ -67,6 +79,15 @@ vec4 query_surface_color()
   Material mat;
 
   PLANET_TEXTURE_COLOR(mat.diffuse=, base);
+
+  return mat.diffuse;
+}
+
+vec4 query_cloud_color()
+{
+  Material mat;
+
+  mat.diffuse=vec4(1., 1., 1., 1.);
 
   return mat.diffuse;
 }
