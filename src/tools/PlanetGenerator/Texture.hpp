@@ -17,6 +17,8 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
+const gsize ENSURED_N_TEXTURE_STAGES = 16; // must be less than 32
+
 class Texture : public Refable
 {
 private:
@@ -38,10 +40,10 @@ public:
     CLAMP,
   };
 
-  void set_wrapping(WrapMode wm_u, WrapMode wm_v);
+  void set_wrapping(WrapMode wm_u, WrapMode wm_v, int texture_stage=-1);
 
-  void bind();
-  void unbind();
+  void bind(guint i, bool do_bind=true);
+  static void unbind(guint i);
 
   void deinit();
   void init();

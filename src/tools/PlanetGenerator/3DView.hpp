@@ -17,6 +17,8 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
+ const gsize ENSURED_N_UNIFORM_STAGES = 512;
+
 class View3D : public Gtk::GL::DrawingArea
 {
   bool _gl_initialized;
@@ -95,11 +97,26 @@ public:
   {
     GLuint matrix_PV;
     GLuint matrix_M;
+    GLuint uni_texture_layer_visibility;
+    GLuint base_texture;
+    GLuint night_texture;
+    GLuint cloud_texture;
+    GLuint weight_texture;
+    GLuint uni_just_one_texture_visible;
+    GLuint uni_base_texture_visible;
+    GLuint uni_base_texture_warped;
+    GLuint uni_night_texture_visible;
+    GLuint uni_night_texture_warped;
+    GLuint uni_cloud_texture_visible;
+    GLuint uni_cloud_texture_warped;
+    GLuint uni_weight_texture_visible;
+    GLuint uni_weight_texture_warped;
   }planet_program_uniform;
   struct RingProgramUniform
   {
     GLuint matrix_PV;
     GLuint matrix_M;
+    GLuint ring_texture;
   }ring_program_uniform;
   struct SimpleProgramUniform
   {

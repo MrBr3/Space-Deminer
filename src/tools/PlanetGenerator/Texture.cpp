@@ -33,18 +33,35 @@ Texture::~Texture()throw()
   deinit();
 }
 
-void Texture::bind()
+void Texture::bind(guint i, bool do_bind)
 {
+  g_assert(i<ENSURED_N_TEXTURE_STAGES);
+
+  if(!do_bind)
+  {
+    unbind(i);
+    return;
+  }
+
   if(!_initialized)
     return;
 
+  glActiveTexture(GL_TEXTURE0+i);
   glBindTexture(GL_TEXTURE_2D, _texture);
 }
 
-void Texture::set_wrapping(WrapMode wm_u, WrapMode wm_v)
+void Texture::set_wrapping(WrapMode wm_u, WrapMode wm_v, int texture_stage)
 {
   if(!_initialized)
     return;
+
+  GLint n_texture_stages;
+  glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &n_texture_stages);
+
+  g_assert(n_texture_stages>8);
+
+  if(texture_stage<0 || texture_stage>n_texture_stages-1)
+    texture_stage = n_texture_stages-1;
 
   GLint p_u, p_v;
 
@@ -67,17 +84,20 @@ void Texture::set_wrapping(WrapMode wm_u, WrapMode wm_v)
     p_v = GL_REPEAT;
   }
 
-  bind();
+  glActiveTexture(GL_TEXTURE0+texture_stage);
+  glBindTexture(GL_TEXTURE_2D, _texture);
 
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, p_u);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, p_v);
+
+  glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void Texture::unbind()
+void Texture::unbind(guint i)
 {
-  if(!_initialized)
-    return;
+  g_assert(i<ENSURED_N_TEXTURE_STAGES);
 
+  glActiveTexture(GL_TEXTURE0+i);
   glBindTexture(GL_TEXTURE_2D, 0);
 }
 

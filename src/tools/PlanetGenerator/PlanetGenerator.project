@@ -17,8 +17,6 @@
       <File Name="LayerView.cpp"/>
       <File Name="Texture.cpp"/>
       <File Name="Texture.hpp"/>
-      <File Name="SphereMeshQuads.cpp"/>
-      <File Name="SphereMeshQuads.hpp"/>
       <File Name="SphereMeshTriangles.cpp"/>
       <File Name="SphereMeshTriangles.hpp"/>
       <File Name="SettingsWidget.hpp"/>

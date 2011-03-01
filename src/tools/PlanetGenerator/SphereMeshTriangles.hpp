@@ -89,7 +89,7 @@ namespace TriangleVersion
      *
      * This Function won't change anything in lightning nor any texture settings - just the polygons, the uvmesh and the normals.
      * */
-    void render(bool use_warped_uv);
+    void render();
 
     SphereMesh();
     ~SphereMesh()throw();

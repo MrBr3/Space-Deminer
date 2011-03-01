@@ -21,7 +21,6 @@
 
 #include <cairomm/cairomm.h>
 
-#include "SphereMeshQuads.hpp"
 #include "SphereMeshTriangles.hpp"
 
 using TriangleVersion::SphereMesh;

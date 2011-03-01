@@ -118,6 +118,7 @@ void View3D::init_shaders()
 
       glBindAttribLocation(planet_program, 0, "vertex");
       glBindAttribLocation(planet_program, 1, "att_tex_coord");
+      glBindAttribLocation(planet_program, 2, "att_tex_coord_warped");
 
       glLinkProgram(planet_program);
 
@@ -125,6 +126,19 @@ void View3D::init_shaders()
 
       planet_program_uniform.matrix_PV = glGetUniformLocation(planet_program, "matrix_PV");
       planet_program_uniform.matrix_M  = glGetUniformLocation(planet_program, "matrix_M");
+      planet_program_uniform.base_texture  = glGetUniformLocation(planet_program, "uni_base_texture");
+      planet_program_uniform.night_texture  = glGetUniformLocation(planet_program, "uni_night_texture");
+      planet_program_uniform.cloud_texture  = glGetUniformLocation(planet_program, "uni_cloud_texture");
+      planet_program_uniform.weight_texture  = glGetUniformLocation(planet_program, "uni_weight_texture");
+      planet_program_uniform.uni_just_one_texture_visible  = glGetUniformLocation(planet_program, "uni_just_one_texture_visible");
+      planet_program_uniform.uni_base_texture_visible  = glGetUniformLocation(planet_program, "uni_base_texture_visible");
+      planet_program_uniform.uni_base_texture_warped  = glGetUniformLocation(planet_program, "uni_base_texture_warped");
+      planet_program_uniform.uni_night_texture_visible  = glGetUniformLocation(planet_program, "uni_night_texture_visible");
+      planet_program_uniform.uni_night_texture_warped  = glGetUniformLocation(planet_program, "uni_night_texture_warped");
+      planet_program_uniform.uni_cloud_texture_visible  = glGetUniformLocation(planet_program, "uni_cloud_texture_visible");
+      planet_program_uniform.uni_cloud_texture_warped  = glGetUniformLocation(planet_program, "uni_cloud_texture_warped");
+      planet_program_uniform.uni_weight_texture_visible  = glGetUniformLocation(planet_program, "uni_weight_texture_visible");
+      planet_program_uniform.uni_weight_texture_warped  = glGetUniformLocation(planet_program, "uni_weight_texture_warped");
     }
     {
       GLuint vs = glCreateShader(GL_VERTEX_SHADER);
@@ -157,6 +171,7 @@ void View3D::init_shaders()
 
       ring_program_uniform.matrix_PV = glGetUniformLocation(ring_program, "matrix_PV");
       ring_program_uniform.matrix_M  = glGetUniformLocation(ring_program, "matrix_M");
+      ring_program_uniform.ring_texture  = glGetUniformLocation(ring_program, "uni_ring_texture");
     }
     {
       GLuint vs = glCreateShader(GL_VERTEX_SHADER);

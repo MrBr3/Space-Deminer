@@ -76,11 +76,10 @@ View3D::~View3D()throw()
 
 void View3D::unbind_all_textures()
 {
-  base_texture->unbind();
-  cloud_texture->unbind();
-  night_texture->unbind();
-  weight_texture->unbind();
-  ring_texture->unbind();
+  Texture::unbind(0);
+  Texture::unbind(1);
+  Texture::unbind(2);
+  Texture::unbind(3);
 }
 
 void View3D::deinit()
@@ -128,6 +127,30 @@ void View3D::on_realize()
   {
     Gtk::MessageDialog dlg(_("OpenGL 2.1 not supported"), false, Gtk::MESSAGE_ERROR);
     dlg.set_secondary_text(_("Your Graphic Hardware or Driver does not support OpenGL 3.3, which is needed by this application!"));
+    dlg.run();
+    exit(-1);
+  }
+  GLint n_texture_stages;
+  glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &n_texture_stages);
+
+  if(n_texture_stages<ENSURED_N_TEXTURE_STAGES)
+  {
+    Gtk::MessageDialog dlg(_("Too less Texture stages supported"), false, Gtk::MESSAGE_ERROR);
+    dlg.set_secondary_text(Glib::ustring::compose(_("Your Graphic Hardware or Driver does only support %1 Texture stages.\nThis application needs %2!"), n_texture_stages, ENSURED_N_TEXTURE_STAGES));
+    dlg.run();
+    exit(-1);
+  }
+
+  GLint n_fragment_uniform_stages, n_vertex_uniform_stages, n_min_uniform_stages;
+  glGetIntegerv(GL_MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS, &n_fragment_uniform_stages);
+  glGetIntegerv(GL_MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS, &n_vertex_uniform_stages);
+
+  n_min_uniform_stages = MIN(n_vertex_uniform_stages, n_fragment_uniform_stages);
+
+  if(n_min_uniform_stages<ENSURED_N_UNIFORM_STAGES)
+  {
+    Gtk::MessageDialog dlg(_("Too less Uniform stages supported"), false, Gtk::MESSAGE_ERROR);
+    dlg.set_secondary_text(Glib::ustring::compose(_("Your Graphic Hardware or Driver does only support %1 Uniform stages\nThis application needs %2!"), n_min_uniform_stages, ENSURED_N_UNIFORM_STAGES));
     dlg.run();
     exit(-1);
   }
@@ -231,33 +254,32 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   matrix_stack.top() *= planet_model_matrix;
   matrix_M = matrix_stack.top();
 
-  bool warped_uv = false;
-
   glUseProgram(planet_program);
 
-  Glib::RefPtr<Layer> only_visible_texture_layer  = LayerModel::just_one_texture_layer_visible(); // Gets the only visible Layer
-  if(only_visible_texture_layer.operator->()==CloudTextureLayer::get_singleton())
-  {
-    cloud_texture->bind();
-    warped_uv = CloudTextureLayer::get_imagefile()->get_needs_to_be_warped();
-  }else if(only_visible_texture_layer.operator->()==NightTextureLayer::get_singleton())
-  {
-    night_texture->bind();
-    warped_uv = NightTextureLayer::get_imagefile()->get_needs_to_be_warped();
-  }else if(only_visible_texture_layer.operator->()==WeightTextureLayer::get_singleton())
-  {
-    weight_texture->bind();
-    warped_uv = WeightTextureLayer::get_imagefile()->get_needs_to_be_warped();
-  }else
-  {
-    base_texture->bind();
-    warped_uv = BaseTextureLayer::get_imagefile()->get_needs_to_be_warped();
-  }
+  glUniform1i(planet_program_uniform.uni_just_one_texture_visible, LayerModel::just_one_texture_layer_visible());
+  glUniform1i(planet_program_uniform.uni_base_texture_visible, BaseTextureLayer::get_singleton()->get_visible());
+  glUniform1i(planet_program_uniform.uni_base_texture_warped, BaseTextureLayer::get_singleton()->get_imagefile()->get_needs_to_be_warped());
+  glUniform1i(planet_program_uniform.uni_night_texture_visible, NightTextureLayer::get_singleton()->get_visible());
+  glUniform1i(planet_program_uniform.uni_night_texture_warped, NightTextureLayer::get_singleton()->get_imagefile()->get_needs_to_be_warped());
+  glUniform1i(planet_program_uniform.uni_cloud_texture_visible, CloudTextureLayer::get_singleton()->get_visible());
+  glUniform1i(planet_program_uniform.uni_cloud_texture_warped, CloudTextureLayer::get_singleton()->get_imagefile()->get_needs_to_be_warped());
+  glUniform1i(planet_program_uniform.uni_weight_texture_visible, WeightTextureLayer::get_singleton()->get_visible());
+  glUniform1i(planet_program_uniform.uni_weight_texture_warped, WeightTextureLayer::get_singleton()->get_imagefile()->get_needs_to_be_warped());
+
+  base_texture->bind(0, BaseTextureLayer::get_singleton()->get_visible());
+  night_texture->bind(1, NightTextureLayer::get_singleton()->get_visible());
+  cloud_texture->bind(2, CloudTextureLayer::get_singleton()->get_visible());
+  weight_texture->bind(3, WeightTextureLayer::get_singleton()->get_visible());
+
+  glUniform1i(planet_program_uniform.base_texture, 0);
+  glUniform1i(planet_program_uniform.night_texture, 1);
+  glUniform1i(planet_program_uniform.cloud_texture, 2);
+  glUniform1i(planet_program_uniform.weight_texture, 3);
 
   matrix_PV.glUniform(planet_program_uniform.matrix_PV);
   matrix_M.glUniform(planet_program_uniform.matrix_M);
 
-  sphere_mesh.render(warped_uv);
+  sphere_mesh.render();
 
   unbind_all_textures();
 
@@ -286,7 +308,9 @@ bool View3D::on_expose_event(GdkEventExpose* event)
     matrix_PV.glUniform(ring_program_uniform.matrix_PV);
     matrix_M.glUniform(ring_program_uniform.matrix_M);
 
-    ring_texture->bind();
+    glActiveTexture(GL_TEXTURE0);
+    ring_texture->bind(0);
+    glUniform1i(ring_program_uniform.ring_texture, 0);
 
     ring_mesh.render(ring_planet->get_width(), ring_planet->get_outer_radius());
 

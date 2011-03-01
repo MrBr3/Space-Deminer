@@ -96,7 +96,7 @@ namespace TriangleVersion
     deinit();
   }
 
-  void SphereMesh::render(bool use_warped_uv)
+  void SphereMesh::render()
   {
     if(!_initialized)
       return;
@@ -110,17 +110,19 @@ namespace TriangleVersion
     glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(0);
 
-    if(use_warped_uv)
-      glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_uv_warped);
-    else
-      glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_uv_rectangular);
+    glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_uv_rectangular);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(1);
+
+    glBindBuffer(GL_ARRAY_BUFFER,_vertex_buffer_uv_warped);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(2);
 
     glDrawArrays(GL_TRIANGLES, 0, _n_triangles*3);
 
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(2);
   }
 
   void SphereMesh::deinit()
