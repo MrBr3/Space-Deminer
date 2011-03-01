@@ -25,6 +25,8 @@ namespace Framework
   {
     set_name("buttonbox");
 
+    _layout = BUTTONBOX_SPREAD;
+
     _min_max_child_width  = 0;
     _min_max_child_height  = 0;
   }

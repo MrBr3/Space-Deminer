@@ -9,6 +9,7 @@ Space-Deminer:
   [X] Maustaste hoch
 [X] Dialog
   [X] MessageBox
+[ ] automatische Tests sollten auch im vollbildmodus funzen
 [ ] per Tasten navigieren können
   [ ] Fokus
     [ ] Maske anpassen

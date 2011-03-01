@@ -151,9 +151,6 @@ namespace Raytracer
           bounding_ngon[i].x *= img_width;
           bounding_ngon[i].y *= img_height;
         }
-
-        if(n_behind>=8)
-          ring.visible = false;
       }
     }
   }

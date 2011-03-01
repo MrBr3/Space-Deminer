@@ -40,6 +40,10 @@ namespace Framework
       gint x1, x2, y1, y2;
 
       void set(gint x)throw(){x1=x2=y1=y2=x;}
+      Metrics()
+      {
+        set(0);
+      }
     };
 
     enum Spacing
