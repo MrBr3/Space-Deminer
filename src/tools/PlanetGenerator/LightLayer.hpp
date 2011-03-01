@@ -57,6 +57,7 @@ private:
   REAL_SETTING(specular_factor);
   REAL_SETTING(ring_shadow);
   REAL_SETTING(cloud_shadow);
+  GRADIENT_SETTING(shading_gradient);
 
   sigc::signal<void> _signal_rotation_changed;
 
@@ -82,8 +83,8 @@ public:
     //REAL_SETTING(multiply_offset_with_calculated_pos);
     //REAL_SETTING(multiply_offset_with_one_minus_calculated_pos);
     REAL_SETTING(radius);
-    //REAL_SETTING(offset_x);
-    //REAL_SETTING(offset_y);
+    REAL_SETTING(add_x_rotation);
+    REAL_SETTING(add_z_rotation);
     REAL_SETTING(inside_planet);
     REAL_SETTING(outside_planet);
     INTEGER_SETTING(modulate_type);

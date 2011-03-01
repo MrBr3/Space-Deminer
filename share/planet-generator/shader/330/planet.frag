@@ -21,7 +21,43 @@ uniform bool uni_weight_texture_warped;
 in vec2 tex_coord;
 in vec2 tex_coord_warped;
 
-// ==== Mateial ========
+// ==== Lights ========
+
+#define N_LIGHTS 4
+#define N_GRADIENT_PER_LIGHT 4
+
+struct Gradient
+{
+  sampler1D curves;
+  vec4 defcolor, col[4];
+};
+
+struct GradientLight
+{
+  bool use;
+  float multiply_gradient_color_with_light_color;
+  //float add_x_rotation, add_z_rotation; //TODO use precelcalculated values
+  //float radius;
+  float inside_planet, outside_planet;
+  uint modulate_type;
+  Gradient light_gradient;
+};
+struct Light
+{
+  vec4 dir, pos;
+  vec4 color;
+  uint type;
+  float influence_night, light_on_planet, light_on_ring;
+  float specular_factor;
+  float ring_shadow;
+  float cloud_shadow;
+  Gradient light_gradient;
+  GradientLight gradient[N_GRADIENT_PER_LIGHT];
+};
+
+uniform Light ligths[N_LIGHTS];
+
+// ==== Material ========
 
 struct Material
 {

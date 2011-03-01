@@ -46,10 +46,10 @@ LightLayer::LightLayer(guint id) : MultiLayer<LightLayer>(Glib::ustring::compose
   signal_##c_name##_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));\
   last_set_proprty_widget = &settings.append_##t##_widget(TABLE, n, prefix+"-"#c_name, _(name), _(description), X_GETTER_SETTER_SIGNAL(SETTINGS, c_name));
 
-#define INIT_GRADIENT_PROPERTY(t, c_name, def, name, description)\
+#define INIT_GRADIENT_PROPERTY(c_name, def, name, description)\
   c_name = def;\
   signal_##c_name##_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));\
-  last_set_proprty_widget = &settings.append_##t##_widget(TABLE, n, prefix+"-"#c_name, _(name), _(description), def);
+  last_set_proprty_widget = &settings.append_gradient_widget(TABLE, n, prefix+"-"#c_name, _(name), _(description), c_name);
 
 #define INIT_ENUM_PROPERTY(c_name, def, name, description, e)\
   c_name = def;\
@@ -109,6 +109,7 @@ LightLayer::LightLayer(guint id) : MultiLayer<LightLayer>(Glib::ustring::compose
   INIT_REAL_PROPERTY(specular_factor, 1.0f, "Specular", "The amount of the light which is calculated for specular lightning.", 0.1, 0.2, 3);
   INIT_REAL_PROPERTY(ring_shadow, 1.0f, "RingShadow", "The strength of the ring's shadow.", 0.1, 0.2, 3);
   INIT_REAL_PROPERTY(cloud_shadow, 1.0f, "CloudShadow", "The strength of the cloud's shadow.", 0.1, 0.2, 3);
+  INIT_GRADIENT_PROPERTY(shading_gradient, Gradient::create(Gradient::PRESENT_BLACK_2_WHITE), "ShadingGradient", "This allows to modifiy the the gradient of the light");
 
 #undef TABLE
 #undef SETTINGS
@@ -216,6 +217,12 @@ void LightLayer::recalc_pos()
     direction = -position*(1.f/position.get_length());
 }
 
+void LightLayer::set_shading_gradient(const GradientPtr& x)
+{
+  shading_gradient->set(x);
+  signal_shading_gradient_changed().emit();
+}
+
 // --------
 
 LightLayer::GradientSetting::GradientSetting()
@@ -255,11 +262,13 @@ void LightLayer::GradientSetting::init_widgets(guint light_id, int id, SettingsW
 
   INIT_PROPERTY(boolean, use, false, "Use", "The distance of the light source to the planetcenter");
   INIT_REAL_PROPERTY(multiply_gradient_color_with_light_color, 1.0f, "MultWithLightColor", "The color of the Gradient will be multiplied with the Light color.", 0.1, 0.2, 3);
+  INIT_REAL_PROPERTY(add_x_rotation, 0.0f, "AddXRotation", "Allows to define a offset of the gradient to other gradients of the same source.", 1., 2., 3);
+  INIT_REAL_PROPERTY(add_z_rotation, 0.0f, "AddZRotation", "Allows to define a offset of the gradient to other gradients of the same source.", 1., 2., 3);
   INIT_REAL_PROPERTY(radius, 1.0f, "Radius", "The Radius of the Radialgradient, when the light is directly behind the planet and the inverse, if the light is directly in front of the planet.\nThe distance of the Light is ignored.", 0.1, 0.2, 3);
   INIT_REAL_PROPERTY(inside_planet, 1.0f, "InsidePlanet", "Visibility inside the planet", 0.1, 0.2, 3);
   INIT_REAL_PROPERTY(outside_planet, 0.0f, "OutsidePlanet", "Visibility inside the planet", 0.1, 0.2, 3);
   INIT_ENUM_PROPERTY(modulate_type, GRADIENT_MODULATE_ADD, "ModulateType", "The Type of the Modulation of th gradient", enum_modulate_type);
-  INIT_GRADIENT_PROPERTY(gradient, light_gradient, Gradient::create(), "LightGradient", "The Color Gradient of the Light");
+  INIT_GRADIENT_PROPERTY(light_gradient, Gradient::create(), "LightGradient", "The Color Gradient of the Light");
 
   settings.attach_full_line(w_expand);
 }
@@ -277,6 +286,18 @@ void LightLayer::GradientSetting::set_multiply_gradient_color_with_light_color(g
 {
   multiply_gradient_color_with_light_color = CLAMP(x, 0.f, 1.f);
   signal_multiply_gradient_color_with_light_color_changed().emit();
+}
+
+void LightLayer::GradientSetting::set_add_x_rotation(gfloat x)
+{
+  add_x_rotation = x;
+  signal_add_x_rotation_changed().emit();
+}
+
+void LightLayer::GradientSetting::set_add_z_rotation(gfloat x)
+{
+  add_z_rotation = x;
+  signal_add_z_rotation_changed().emit();
 }
 
 void LightLayer::GradientSetting::set_radius(gfloat x)
@@ -305,7 +326,7 @@ void LightLayer::GradientSetting::set_modulate_type(int x)
 
 void LightLayer::GradientSetting::set_light_gradient(const GradientPtr& x)
 {
-  *light_gradient.operator->() = *x.operator->();
+  light_gradient->set(x);
   signal_light_gradient_changed().emit();
 }
 

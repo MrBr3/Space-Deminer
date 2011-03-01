@@ -32,6 +32,7 @@ namespace Raytracer
       gfloat ring_shadow;
       gfloat cloud_shadow;
       Vector3 dir, pos;
+      //TODO lightgradient
     };
   typedef Glib::RefPtr<SimpleLightShader> SimpleLightShaderPtr;
 
