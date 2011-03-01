@@ -48,7 +48,7 @@ public:
   void set(const Gradient& g);
   void set(GradientPtr g);
 
-  static GradientPtr create(){return GradientPtr(new Gradient());}
+  static GradientPtr create(Present p=PRESENT_BLACK_2_WHITE){return GradientPtr(new Gradient(p));}
 
   sigc::signal<void>& signal_changed(){return _signal_changed;}
 
@@ -158,7 +158,7 @@ public:
 ///@}
 
 private:
-  Gradient();
+  Gradient(Present p);
   ~Gradient()throw();
 };
 

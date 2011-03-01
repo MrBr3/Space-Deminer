@@ -21,26 +21,22 @@
 
 GradientPtr Gradient::slot[4];
 
-Gradient::Gradient()
+Gradient::Gradient(Present p)
 {
   _use_alpha = false;
   _dont_update = 0;
   _n_gradients_needed = 0;
   remap_a = 0.;
   remap_b = 1.;
+  _samples.resize(512);
 
   request_no_updates();
-    defcolor.set(0.f, 0.f, 0.f);
-    color1.set(1.f, 1.f, 1.f);
-
     curve1 = Curve::create();
     curve2 = Curve::create();
     curve3 = Curve::create();
     curve4 = Curve::create();
 
-    curve2->load_present(Curve::PRESENT_EMPTY);
-    curve3->load_present(Curve::PRESENT_EMPTY);
-    curve4->load_present(Curve::PRESENT_EMPTY);
+    load_present(p);
   unrequest_no_updates();
 
   curve1->signal_changed().connect(sigc::mem_fun(*this, &Gradient::invalidate_and_update));
@@ -48,7 +44,7 @@ Gradient::Gradient()
   curve3->signal_changed().connect(sigc::mem_fun(*this, &Gradient::invalidate_and_update));
   curve4->signal_changed().connect(sigc::mem_fun(*this, &Gradient::invalidate_and_update));
 
-  set_n_samples(256);
+  invalidate_and_update();
 }
 
 Gradient::~Gradient()throw()
