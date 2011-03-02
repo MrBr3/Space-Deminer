@@ -163,5 +163,4 @@ using Math::Vector4;
 using Math::Matrix44;
 using Math::Plane;
 using Math::ColorRGBA;
-
 #endif

@@ -256,6 +256,20 @@ bool View3D::on_expose_event(GdkEventExpose* event)
 
   glUseProgram(planet_program);
 
+  bool use_lights = false;
+  for(gsize i=0; i<N_LIGHT_LAYERS; ++i)
+  {
+    const LightLayer& light_layer = *LightLayer::get_singleton(i);
+    g_assert(&light_layer);
+
+    if(light_layer.get_visible())
+    {
+      use_lights = true;
+      break;
+    }
+  }
+  glUniform1i(planet_program_uniform.no_lightning, !use_lights);
+
   glUniform1i(planet_program_uniform.uni_just_one_texture_visible, LayerModel::just_one_texture_layer_visible());
   glUniform1i(planet_program_uniform.uni_base_texture_visible, BaseTextureLayer::get_singleton()->get_visible());
   glUniform1i(planet_program_uniform.uni_base_texture_warped, BaseTextureLayer::get_singleton()->get_imagefile()->get_needs_to_be_warped());

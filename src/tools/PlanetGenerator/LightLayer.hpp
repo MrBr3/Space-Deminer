@@ -112,6 +112,15 @@ public:
   void recalc_pos();
   Vector3 position, direction;
 
+  const Vector3& get_light_position()const
+  {
+    return position;
+  }
+  const Vector3& get_light_direction()const
+  {
+    return direction;
+  }
+
   sigc::signal<void>& signal_rotation_changed(){return _signal_rotation_changed;}
   void create_shaders();
 

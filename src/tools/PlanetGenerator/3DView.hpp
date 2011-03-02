@@ -97,8 +97,9 @@ public:
   {
     GLuint curves;
     GLuint defcolor, col[4];
+    GLuint remap[2];
 
-    void get_uniform_loacations(GLuint program, const std::string& prefix);
+    void get_uniform_locations(GLuint program, const std::string& prefix);
     void feed_data(const ConstGradientPtr& gradient);
   };
   struct PlanetProgramUniform
@@ -119,6 +120,7 @@ public:
     GLuint uni_cloud_texture_warped;
     GLuint uni_weight_texture_visible;
     GLuint uni_weight_texture_warped;
+    GLuint no_lightning;
 
     struct Light
     {
@@ -132,7 +134,7 @@ public:
         GLuint modulate_type;
         GradientUniform light_gradient;
 
-        void get_uniform_loacations(GLuint program, const std::string& prefix);
+        void get_uniform_locations(GLuint program, const std::string& prefix);
         void feed_data(const LightLayer::GradientSetting& gradient);
       };
 
@@ -143,7 +145,7 @@ public:
       GradientUniform shade_gradient;
       GradientLight gradient[4];
 
-      void get_uniform_loacations(GLuint program, const std::string& prefix);
+      void get_uniform_locations(GLuint program, const std::string& prefix);
       void feed_data(guint i);
     };
 

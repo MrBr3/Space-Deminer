@@ -252,5 +252,33 @@ public:
     dither_sw.a += diff.a * _3;
   }
   //@}
+
+  /** @name Multiply
+   * */
+  //@{
+  static ColorRGBA rgb_mult(const ColorRGBA& c1, gfloat f)
+  {
+    return ColorRGBA(c1.r*f, c1.g*f, c1.g*f, c1.a);
+  }
+
+  static ColorRGBA rgb_mult(gfloat f, const ColorRGBA& c1)
+  {
+    return ColorRGBA(c1.r*f, c1.g*f, c1.g*f, c1.a);
+  }
+  //@}
+
+  /** @name OpenGL
+   * */
+  //@{
+  void glUniformRGB(GLuint location)const
+  {
+    glUniform4f(location, r, g, b, 1.f);
+  }
+
+  void glUniformRGBA(GLuint location)const
+  {
+    glUniform4f(location, r, g, b, a);
+  }
+  //@}
 };
 #endif

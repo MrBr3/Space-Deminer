@@ -265,6 +265,20 @@ public:
     return Glib::ustring::compose("(%1, %2, %3)", x, y, z).c_str();
   }
   //@}
+
+  /** @name OpenGL
+   * */
+  //@{
+  void glUniform3(GLuint location)const
+  {
+    glUniform3f(location, x, y, z);
+  }
+
+  void glUniform4(GLuint location)const
+  {
+    glUniform4f(location, x, y, z, 0.f);
+  }
+  //@}
 };
 
 #endif

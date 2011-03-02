@@ -21,15 +21,31 @@ uniform bool uni_weight_texture_warped;
 in vec2 tex_coord;
 in vec2 tex_coord_warped;
 
+// ==== Material ========
+
+struct Material
+{
+  vec4 diffuse;
+};
+
 // ==== Lights ========
 
 #define N_LIGHTS 4
 #define N_GRADIENT_PER_LIGHT 4
 
+#define LIGHT_TYPE_AMBIENT 0
+#define LIGHT_TYPE_DIRECTIONAL 1
+#define LIGHT_TYPE_POINT 2
+
+#define GRADIENT_MODULATE_NORMAL 0
+#define GRADIENT_MODULATE_ADD 1
+#define GRADIENT_MODULATE_MULTIPLY 2
+
 struct Gradient
 {
   sampler1D curves;
   vec4 defcolor, col[4];
+  float remap[2];
 };
 
 struct GradientLight
@@ -39,15 +55,15 @@ struct GradientLight
   //float add_x_rotation, add_z_rotation; //TODO use precelcalculated values
   //float radius;
   float inside_planet, outside_planet;
-  uint modulate_type;
+  int modulate_type;
   Gradient light_gradient;
 };
 struct Light
 {
   bool visible;
+  int type;
   vec4 dir, pos;
   vec4 color;
-  uint type;
   float influence_night, light_on_planet, light_on_ring;
   float specular_factor;
   float ring_shadow;
@@ -57,13 +73,16 @@ struct Light
 };
 
 uniform Light ligth[N_LIGHTS];
+uniform bool no_lightning;
+float night = 0.;
 
-// ==== Material ========
-
-struct Material
+vec4 calc_lightning(Material m)
 {
-  vec4 diffuse;
-};
+  if(no_lightning)
+    return m.diffuse;
+  else
+    return m.diffuse; // how handle multiple matierials and day->night?
+} 
 
 // ============
 
