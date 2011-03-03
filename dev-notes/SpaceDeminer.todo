@@ -166,8 +166,9 @@ PlanetGenerator
             [X] aus string lesen
             [X] slots in den Options speichern
       [ ] OpenGL Vorschau
-        [ ] Deprecated sachen entfernen
-        [ ] gucken, ob Ring noch tut (breite, durchmesser...)
+        [X] Deprecated sachen entfernen
+        [X] gucken, ob Ring noch tut (breite, durchmesser...)
+        [ ] für die ganzen Kurven nur eine Texture verwenden?
       [ ] Shader (nur zum rendern erstellt)
         [ ] anstatt IDs eigenen shade funktionen?
         [ ] GradientLight
