@@ -25,6 +25,8 @@ void set_gl_texture_content(const Glib::RefPtr<const Gdk::Pixbuf>& pixbuf_, Text
   if(!pixbuf_)
     throw std::invalid_argument("**set_gl_texture_content** invalid argument \"pixbuf_\"");
 
+  glEnable(GL_TEXTURE_2D);
+
   g_assert(blog_int(16)==4);
   g_assert(blog_int(32)==5);
   g_assert(blog_int(1)==0);
@@ -48,7 +50,7 @@ void set_gl_texture_content(const Glib::RefPtr<const Gdk::Pixbuf>& pixbuf_, Text
   int n_dest_components ;
   if(pixbuf->get_has_alpha() || pixbuf->get_n_channels()==4)
   {
-    internal_format = GL_RGBA;
+    internal_format = GL_RGBA8;
     format = GL_RGBA;
 
     n_dest_components = 4;
@@ -57,7 +59,7 @@ void set_gl_texture_content(const Glib::RefPtr<const Gdk::Pixbuf>& pixbuf_, Text
     if(pixbuf->get_n_channels()!=3)
       throw std::invalid_argument("'pixbuf' should have 3 or 4 channels!");
 
-    internal_format = GL_RGB;
+    internal_format = GL_RGB8;
     format = GL_RGB;
 
     n_dest_components = 3;
@@ -174,7 +176,7 @@ void set_gl_texture_content(const Glib::RefPtr<const Gdk::Pixbuf>& pixbuf_, Text
   if(hint_&TEXTURE_HINT_MIPMAPS)
   {
     min_filter  = GL_LINEAR_MIPMAP_LINEAR;
-    mag_filter  = GL_LINEAR_MIPMAP_LINEAR;
+    mag_filter  = GL_LINEAR;
   }else if(hint_&TEXTURE_HINT_SIZEABLE)
   {
     min_filter  = GL_LINEAR;
@@ -195,29 +197,17 @@ void set_gl_texture_content(const Glib::RefPtr<const Gdk::Pixbuf>& pixbuf_, Text
     wrap_v  = GL_CLAMP;
   }
 
-  if(hint_ & TEXTURE_HINT_MIPMAPS)
-  {
-    GLint level = 0;
-    while(tex_width>1 && tex_height>>1)
-    {
-      glTexImage2D(GL_TEXTURE_2D, level, internal_format, tex_width, tex_height, 0/*border*/, format, type, pixbuf->get_pixels());
-
-      tex_height  = MAX(1, tex_height>>1);
-      tex_width  = MAX(1, tex_width>>1);
-      ++level;
-
-      private_pixbuf  = pixbuf->scale_simple(tex_width, tex_height, Gdk::INTERP_HYPER);
-      pixbuf  = private_pixbuf;
-    }
-  }else
-  {
-    glTexImage2D(GL_TEXTURE_2D, 0/*mipmaplevel*/, internal_format, tex_width, tex_height, 0/*border*/, format, type, text_pixels);
-  }
+  glTexImage2D(GL_TEXTURE_2D, 0/*mipmaplevel*/, internal_format, tex_width, tex_height, 0/*border*/, format, type, text_pixels);
 
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_u);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_v);
+
+  if(hint_ & TEXTURE_HINT_MIPMAPS)
+  {
+    glGenerateMipmap(GL_TEXTURE_2D);
+  }
 
   if(delete_tex_pixels)
   {

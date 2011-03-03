@@ -124,5 +124,5 @@ void Texture::init()
   glBindTexture(GL_TEXTURE_2D, _texture);
   _initialized  = true;
 
-  set_gl_texture_content(pb, TEXTURE_HINT_SIZEABLE|TEXTURE_HINT_FIT_SIZE);
+  set_gl_texture_content(pb, TEXTURE_HINT_MIPMAPS);
 }
