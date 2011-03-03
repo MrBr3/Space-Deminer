@@ -20,6 +20,7 @@ uniform bool uni_weight_texture_warped;
 
 in vec2 tex_coord;
 in vec2 tex_coord_warped;
+in vec4 world_pos;
 
 // ==== Material ========
 
@@ -72,25 +73,54 @@ struct Light
   GradientLight gradient[N_GRADIENT_PER_LIGHT];
 };
 
-uniform Light ligth[N_LIGHTS];
+uniform Light light[N_LIGHTS];
 uniform bool uni_no_lightning;
 uniform bool uni_no_nighttexture;
 float night_factor = 0.;
 float night_weight = 0.;
 float diffuse_lightning = 1.;
+vec4 normal;
 
 void calc_diffuse_lightning()
 {
   if(uni_no_lightning)
     return;
-} 
+
+  normal = normalize(world_pos);
+  
+  for(int i=0; i<N_LIGHTS; ++i)
+  {
+    Light l = light[i];
+
+    if(!l.visible)
+      continue;
+    
+    float diff;
+
+    switch(l.type)
+    {
+    case LIGHT_TYPE_DIRECTIONAL:
+      diff = max(0., dot(normal, l.dir));
+      break;
+    case LIGHT_TYPE_POINT:
+      diff = max(0., dot(normal, (normal-l.pos)));
+      break;
+    case LIGHT_TYPE_AMBIENT:
+    default:
+      diff = 1.;
+    }
+
+    night_factor += l.influence_night*(1.-diff);
+    night_weight += l.influence_night;
+  }
+}
 
 vec4 calc_specular_lightning(SpecularMaterial m)
 {
   if(uni_no_lightning)
     return vec4(0., 0., 0., 0.);
   return vec4(0., 0., 0., 0.);
-} 
+}
 
 // ============
 
@@ -127,6 +157,7 @@ void main()
   }
 
   resulting_color += query_night_color();
+  resulting_color.w = 1.;
 }
 
 vec4 query_surface_color()
@@ -150,9 +181,12 @@ vec4 query_cloud_color()
 
 vec4 query_night_color()
 {
+  if(uni_no_nighttexture)
+    return vec4(0., 0., 0., 0.);
+
   vec4 night;
-  PLANET_TEXTURE_COLOR(night=, base);
-  return night*night_factor;
+  PLANET_TEXTURE_COLOR(night=, night);
+  return night/night_factor;
 }
 
 vec4 just_one_layer()
@@ -160,8 +194,8 @@ vec4 just_one_layer()
   if(uni_night_texture_visible)
     PLANET_TEXTURE_COLOR(return, night)
   if(uni_cloud_texture_visible)
-    PLANET_TEXTURE_COLOR(return, cloud);
+    PLANET_TEXTURE_COLOR(return, cloud)
   if(uni_weight_texture_visible)
-    PLANET_TEXTURE_COLOR(return, weight);
-  PLANET_TEXTURE_COLOR(return, base);
+    PLANET_TEXTURE_COLOR(return, weight)
+  PLANET_TEXTURE_COLOR(return, base)
 }

@@ -274,9 +274,9 @@ public:
     glUniform3f(location, x, y, z);
   }
 
-  void glUniform4(GLuint location)const
+  void glUniform4(GLuint location, gfloat w)const
   {
-    glUniform4f(location, x, y, z, 0.f);
+    glUniform4f(location, x, y, z, w);
   }
   //@}
 };

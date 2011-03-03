@@ -104,46 +104,46 @@ public:
   };
   struct PlanetProgramUniform
   {
-    GLuint matrix_PV;
-    GLuint matrix_M;
-    GLuint uni_texture_layer_visibility;
-    GLuint base_texture;
-    GLuint night_texture;
-    GLuint cloud_texture;
-    GLuint weight_texture;
-    GLuint uni_just_one_texture_visible;
-    GLuint uni_base_texture_visible;
-    GLuint uni_base_texture_warped;
-    GLuint uni_night_texture_visible;
-    GLuint uni_night_texture_warped;
-    GLuint uni_cloud_texture_visible;
-    GLuint uni_cloud_texture_warped;
-    GLuint uni_weight_texture_visible;
-    GLuint uni_weight_texture_warped;
-    GLuint uni_no_lightning;
-    GLuint uni_no_nighttexture;
+    GLint matrix_PV;
+    GLint matrix_M;
+    GLint uni_texture_layer_visibility;
+    GLint base_texture;
+    GLint night_texture;
+    GLint cloud_texture;
+    GLint weight_texture;
+    GLint uni_just_one_texture_visible;
+    GLint uni_base_texture_visible;
+    GLint uni_base_texture_warped;
+    GLint uni_night_texture_visible;
+    GLint uni_night_texture_warped;
+    GLint uni_cloud_texture_visible;
+    GLint uni_cloud_texture_warped;
+    GLint uni_weight_texture_visible;
+    GLint uni_weight_texture_warped;
+    GLint uni_no_lightning;
+    GLint uni_no_nighttexture;
 
     struct Light
     {
       struct GradientLight
       {
-        GLuint use;
-        GLuint multiply_gradient_color_with_light_color;
-        //GLuint add_x_rotation, add_z_rotation;
-        //GLuint radius;
-        GLuint inside_planet;//, outside_planet;
-        GLuint modulate_type;
+        GLint use;
+        GLint multiply_gradient_color_with_light_color;
+        //GLint add_x_rotation, add_z_rotation;
+        //GLint radius;
+        GLint inside_planet;//, outside_planet;
+        GLint modulate_type;
         GradientUniform light_gradient;
 
         void get_uniform_locations(GLuint program, const std::string& prefix);
         void feed_data(const LightLayer::GradientSetting& gradient);
       };
 
-      GLuint visible, type;
-      GLuint dir, pos, color;
-      GLuint influence_night, light_on_planet;//, light_on_ring;
-      GLuint specular_factor, ring_shadow, cloud_shadow;//planet shadow
-      GLuint just_shadows;
+      GLint visible, type;
+      GLint dir, pos, color;
+      GLint influence_night, light_on_planet;//, light_on_ring;
+      GLint specular_factor, ring_shadow, cloud_shadow;//planet shadow
+      GLint just_shadows;
       GradientUniform shade_gradient;
       GradientLight gradient[4];
 
@@ -155,14 +155,14 @@ public:
   }planet_program_uniform;
   struct RingProgramUniform
   {
-    GLuint matrix_PV;
-    GLuint matrix_M;
-    GLuint ring_texture;
+    GLint matrix_PV;
+    GLint matrix_M;
+    GLint ring_texture;
   }ring_program_uniform;
   struct SimpleProgramUniform
   {
-    GLuint matrix_PV;
-    GLuint matrix_M;
+    GLint matrix_PV;
+    GLint matrix_M;
   }simple_program_uniform;
   GLuint planet_program, ring_program, simple_program;
   void init_shaders();
