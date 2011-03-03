@@ -203,12 +203,15 @@ void main()
 
 vec4 query_surface_color()
 {
-  if(!uni_base_texture_visible)
-    return vec4(0.5, 0.5, 0.5, 1.);
-
   vec4 surface_diffuse;
 
-  PLANET_TEXTURE_COLOR(surface_diffuse=, base);
+  if(uni_base_texture_visible)
+  {
+    PLANET_TEXTURE_COLOR(surface_diffuse=, base);
+  }else
+  {
+    surface_diffuse = vec4(0.5, 0.5, 0.5, 1.);
+  }
 
   return surface_diffuse*diffuse_lightning_color;
 }

@@ -339,7 +339,7 @@ void MainWindow::reload_shader()
     v->invalidate();
   }catch(BadShader)
   {
-    Gtk::MessageDialog dlg(_("Retry?"), false, Gtk::MESSAGE_QUESTION);
+    Gtk::MessageDialog dlg(_("Retry?"), false, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_NONE);
     dlg.add_button(_("_Yep"), 42);
     dlg.add_button(_("_Nope"), 0);
     if(dlg.run()==42)
