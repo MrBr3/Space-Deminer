@@ -71,6 +71,7 @@ namespace NS_GLIM
 
 	glimBatchData::glimBatchData ()
 	{
+    m_bUploadedToGPU = false;
 		Reset ();
 	}
 
