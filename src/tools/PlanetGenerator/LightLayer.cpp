@@ -227,8 +227,8 @@ void LightLayer::recalc_pos()
 {
   Matrix44 m(DONT_INIT);
 
-  m.set_rotate_x(x_rotation);
-  m.rotate_z(z_rotation);
+  m.set_rotate_z(z_rotation);
+  m.rotate_x(x_rotation);
 
   position = m * Vector3(0.f, distance, 0.f);
 

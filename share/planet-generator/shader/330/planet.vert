@@ -13,8 +13,7 @@ out vec4 world_pos;
 
 void main()
 {
-  gl_Position = matrix_PV * matrix_M * vertex;
+  gl_Position = matrix_PV * (world_pos = matrix_M * vertex);
   tex_coord = att_tex_coord;
   tex_coord_warped = att_tex_coord_warped;
-  world_pos = gl_Position;
 }

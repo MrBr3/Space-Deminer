@@ -179,6 +179,7 @@ PlanetGenerator
         [ ] Farbverlauf soll Material beeinflussen
         [ ] Entfernung, mit der der Strahl an der Kugel vorbeifliegt bestimmen können
         [ ] Atmosphäre soll auch Ringe beeinflussen
+      [ ] Viewport zum raytracen
   [ ] Shader
     [ ] Textur mit vier Kanälen (alpha invertiert?), wobie jede der vier Texturen für ein eigenes Material steht
       z.B Rot: Wüsten, Grün: kein Glanzlicht, Blau: Eis, Alpha-Invertiert: Wasser

@@ -1,5 +1,10 @@
 #version 330 core
 
+float max_vec3(vec3 v)
+{
+  return max(v.x, max(v.y, v.z));
+}
+
 // ==== Texture Layers ========
 uniform sampler2D uni_base_texture;
 uniform sampler2D uni_night_texture;
@@ -49,6 +54,17 @@ struct Gradient
   float remap[2];
 };
 
+float get_curve_value(sampler1D curve, float v)
+{
+  return v;
+//  return texture1D(curve, v); //TODO
+}
+
+vec4 get_gradient_color(Gradient g, float v)
+{
+  return vec4(v, v, v, 1.);
+}
+
 struct GradientLight
 {
   bool use;
@@ -69,6 +85,7 @@ struct Light
   float specular_factor;
   float ring_shadow;
   float cloud_shadow;
+  bool just_shadows;
   Gradient shade_gradient;
   GradientLight gradient[N_GRADIENT_PER_LIGHT];
 };
@@ -78,23 +95,27 @@ uniform bool uni_no_lightning;
 uniform bool uni_no_nighttexture;
 float night_factor = 0.;
 float night_weight = 0.;
-float diffuse_lightning = 1.;
+vec4 diffuse_lightning_color = vec4(0., 0., 0., 0.);
 vec4 normal;
 
 void calc_diffuse_lightning()
 {
   if(uni_no_lightning)
+  {
+    diffuse_lightning_color = vec4(1., 1., 1., 0.);
     return;
+  }
 
   normal = normalize(world_pos);
+  float n_diff = 0.;
   
   for(int i=0; i<N_LIGHTS; ++i)
   {
     Light l = light[i];
 
-    if(!l.visible)
+    if(!l.visible || l.just_shadows)
       continue;
-    
+
     float diff;
 
     switch(l.type)
@@ -103,15 +124,22 @@ void calc_diffuse_lightning()
       diff = max(0., dot(normal, l.dir));
       break;
     case LIGHT_TYPE_POINT:
-      diff = max(0., dot(normal, (normal-l.pos)));
+      diff = max(0., dot(normal, normalize(normal-l.pos)));
       break;
     case LIGHT_TYPE_AMBIENT:
     default:
       diff = 1.;
     }
 
-    night_factor += l.influence_night*(1.-diff);
+    vec4 color = l.color*get_gradient_color(l.shade_gradient, diff);
+
+    float color_intensity = max_vec3(color.xyz);
+
+    night_factor += l.influence_night*(1.-color_intensity);
+//    night_factor += l.influence_night*(1.-get_curve_value(night_switch_curve, color_intensity)); //TODO instead the previous line
     night_weight += l.influence_night;
+
+    diffuse_lightning_color += color;
   }
 }
 
@@ -169,14 +197,14 @@ vec4 query_surface_color()
 
   PLANET_TEXTURE_COLOR(surface_diffuse=, base);
 
-  return surface_diffuse*diffuse_lightning;
+  return surface_diffuse*diffuse_lightning_color;
 }
 
 vec4 query_cloud_color()
 {
   vec4 cloud_diffuse = vec4(1., 1., 1., 1.);
 
-  return cloud_diffuse*diffuse_lightning;
+  return cloud_diffuse*diffuse_lightning_color;
 }
 
 vec4 query_night_color()
@@ -186,7 +214,7 @@ vec4 query_night_color()
 
   vec4 night;
   PLANET_TEXTURE_COLOR(night=, night);
-  return night/night_factor;
+  return night*(night_factor/max(1., night_weight));
 }
 
 vec4 just_one_layer()
