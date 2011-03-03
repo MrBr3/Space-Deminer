@@ -68,7 +68,7 @@ void Texture::set_wrapping(WrapMode wm_u, WrapMode wm_v, int texture_stage)
   switch(wm_u)
   {
   case CLAMP:
-    p_u = GL_CLAMP;
+    p_u = GL_CLAMP_TO_EDGE;
    break;
   case REPEAT:
   default:
@@ -77,7 +77,7 @@ void Texture::set_wrapping(WrapMode wm_u, WrapMode wm_v, int texture_stage)
   switch(wm_v)
   {
   case CLAMP:
-    p_v = GL_CLAMP;
+    p_v = GL_CLAMP_TO_EDGE;
    break;
   case REPEAT:
   default:

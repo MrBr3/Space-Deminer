@@ -50,14 +50,6 @@ inline TextureHint& operator^=(TextureHint& a, TextureHint b){return a = a^b;}
  *
  * \note The OpenGL Texture won't be generated. You must call <tt>glGenTextures(...)</tt> and  <tt>glBindTexture(GL_TEXTURE_2D, ..);</tt> by yourself before calling this function
  * */
-void set_gl_texture_content(const Glib::RefPtr<const Gdk::Pixbuf>& pixbuf_, TextureHint hint_, Real& coord_max_u, Real& coord_max_v);
-
-/** \brief Overloads and Wraps  around the set_gl_texture_content function.
- * */
-inline void set_gl_texture_content(const Glib::RefPtr<const Gdk::Pixbuf>& pixbuf_, TextureHint hint_=TEXTURE_HINT_DEFAULT)
-{
-  Real dummy_a, dummy_b;
-  set_gl_texture_content(pixbuf_, hint_, dummy_a, dummy_b);
-}
+void set_gl_texture_content(const Glib::RefPtr<const Gdk::Pixbuf>& pixbuf_, TextureHint hint_);
 
 #endif

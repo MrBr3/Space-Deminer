@@ -48,7 +48,7 @@ namespace Framework
       set_width(_tex_width);
       set_height(_tex_height);
 
-      set_gl_texture_content(pixbuf_, _hint, coord_max_u, coord_max_v);
+      set_gl_texture_content(pixbuf_, _hint);
 
       set_is_loaded(true);
     }
@@ -64,9 +64,6 @@ namespace Framework
 
       set_width(0.f);
       set_height(0.f);
-
-      coord_max_u = 0.f;
-      coord_max_v = 0.f;
 
       glDeleteTextures(1, &_texture);
       _texture  = 0;
@@ -132,8 +129,6 @@ namespace Framework
     Type _type;
 
     int _tex_width, _tex_height;
-
-    Real coord_max_u, coord_max_v;
   };
 
   class PaintToolGL : public PaintTool
@@ -175,13 +170,13 @@ namespace Framework
         glTexCoord2f(0.f, 0.f);
         glVertex2f(x, y);
 
-        glTexCoord2f(0.f, gl_tex->coord_max_v);
+        glTexCoord2f(0.f, 1.f);
         glVertex2f(x, y+height);
 
-        glTexCoord2f(gl_tex->coord_max_u, gl_tex->coord_max_v);
+        glTexCoord2f(1.f, 1.f);
         glVertex2f(x+width, y+height);
 
-        glTexCoord2f(gl_tex->coord_max_u, 0.f);
+        glTexCoord2f(1.f, 0.f);
         glVertex2f(x+width, y);
       glEnd();
 
@@ -202,11 +197,11 @@ namespace Framework
 
       gl_tex->bind();
 
-      Real min_u  = gl_tex->coord_max_u*Real(sub_img_x)/Real(gl_tex->get_width());
-      Real min_v  = gl_tex->coord_max_v*Real(sub_img_y)/Real(gl_tex->get_height());
+      Real min_u  = Real(sub_img_x)/Real(gl_tex->get_width());
+      Real min_v  = Real(sub_img_y)/Real(gl_tex->get_height());
 
-      Real max_u  = gl_tex->coord_max_u*Real(sub_img_x+sub_img_width) /Real(gl_tex->get_width());
-      Real max_v  = gl_tex->coord_max_v*Real(sub_img_y+sub_img_height)/Real(gl_tex->get_height());
+      Real max_u  = Real(sub_img_x+sub_img_width) /Real(gl_tex->get_width());
+      Real max_v  = Real(sub_img_y+sub_img_height)/Real(gl_tex->get_height());
 
       glBegin(GL_QUADS);
         glTexCoord2f(min_u, min_v);
