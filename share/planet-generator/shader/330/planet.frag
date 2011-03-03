@@ -23,9 +23,9 @@ in vec2 tex_coord_warped;
 
 // ==== Material ========
 
-struct Material
+struct SpecularMaterial
 {
-  vec4 diffuse;
+  float exponent;
 };
 
 // ==== Lights ========
@@ -54,7 +54,7 @@ struct GradientLight
   float multiply_gradient_color_with_light_color;
   //float add_x_rotation, add_z_rotation; //TODO use precelcalculated values
   //float radius;
-  float inside_planet, outside_planet;
+  float inside_planet;
   int modulate_type;
   Gradient light_gradient;
 };
@@ -64,7 +64,7 @@ struct Light
   int type;
   vec4 dir, pos;
   vec4 color;
-  float influence_night, light_on_planet, light_on_ring;
+  float influence_night, light_on_planet;
   float specular_factor;
   float ring_shadow;
   float cloud_shadow;
@@ -73,15 +73,23 @@ struct Light
 };
 
 uniform Light ligth[N_LIGHTS];
-uniform bool no_lightning;
-float night = 0.;
+uniform bool uni_no_lightning;
+uniform bool uni_no_nighttexture;
+float night_factor = 0.;
+float night_weight = 0.;
+float diffuse_lightning = 1.;
 
-vec4 calc_lightning(Material m)
+void calc_diffuse_lightning()
 {
-  if(no_lightning)
-    return m.diffuse;
-  else
-    return m.diffuse; // how handle multiple matierials and day->night?
+  if(uni_no_lightning)
+    return;
+} 
+
+vec4 calc_specular_lightning(SpecularMaterial m)
+{
+  if(uni_no_lightning)
+    return vec4(0., 0., 0., 0.);
+  return vec4(0., 0., 0., 0.);
 } 
 
 // ============
@@ -91,6 +99,7 @@ out vec4 resulting_color;
 vec4 query_surface_color();
 vec4 query_cloud_color();
 vec4 just_one_layer();
+vec4 query_night_color();
 
 void main()
 {
@@ -100,6 +109,8 @@ void main()
     return;
   }
 
+  calc_diffuse_lightning();
+
   resulting_color = query_surface_color();
 
   if(uni_cloud_texture_visible)
@@ -108,12 +119,40 @@ void main()
     vec4 cloud_color;
 
     PLANET_TEXTURE_COLOR(cloud_color=, cloud);
-    thickness = clamp(max(max(cloud_color.x, cloud_color.y), cloud_color.z), 0.,1.); // TODO use texture with just one component
+    thickness = clamp(max(max(cloud_color.x, cloud_color.y), cloud_color.z), 0., 1.); // TODO use texture with just one component
 
     cloud_color = query_cloud_color();
     
     resulting_color = mix(resulting_color, cloud_color, thickness);
   }
+
+  resulting_color += query_night_color();
+}
+
+vec4 query_surface_color()
+{
+  if(!uni_base_texture_visible)
+    return vec4(0.5, 0.5, 0.5, 1.);
+
+  vec4 surface_diffuse;
+
+  PLANET_TEXTURE_COLOR(surface_diffuse=, base);
+
+  return surface_diffuse*diffuse_lightning;
+}
+
+vec4 query_cloud_color()
+{
+  vec4 cloud_diffuse = vec4(1., 1., 1., 1.);
+
+  return cloud_diffuse*diffuse_lightning;
+}
+
+vec4 query_night_color()
+{
+  vec4 night;
+  PLANET_TEXTURE_COLOR(night=, base);
+  return night*night_factor;
 }
 
 vec4 just_one_layer()
@@ -125,25 +164,4 @@ vec4 just_one_layer()
   if(uni_weight_texture_visible)
     PLANET_TEXTURE_COLOR(return, weight);
   PLANET_TEXTURE_COLOR(return, base);
-}
-
-vec4 query_surface_color()
-{
-  if(!uni_base_texture_visible)
-    return vec4(0.5, 0.5, 0.5, 1.);
-
-  Material mat;
-
-  PLANET_TEXTURE_COLOR(mat.diffuse=, base);
-
-  return mat.diffuse;
-}
-
-vec4 query_cloud_color()
-{
-  Material mat;
-
-  mat.diffuse=vec4(1., 1., 1., 1.);
-
-  return mat.diffuse;
 }

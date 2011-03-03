@@ -61,6 +61,11 @@ LightLayer::LightLayer(guint id) : MultiLayer<LightLayer>(Glib::ustring::compose
   signal_##c_name##_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));\
   last_set_proprty_widget = &settings.append_real_widget(TABLE, n, prefix+"-"#c_name, _(name), _(description), X_GETTER_SETTER_SIGNAL(SETTINGS, c_name), step_increment, page_increment, n_digits);
 
+#define INIT_BOOL_PROPERTY(c_name, def, name, description)\
+  c_name = def;\
+  signal_##c_name##_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));\
+  last_set_proprty_widget = &settings.append_boolean_widget(TABLE, n, prefix+"-"#c_name, _(name), _(description), X_GETTER_SETTER_SIGNAL(SETTINGS, c_name));
+
   w_distance = nullptr;
   w_rot_x = nullptr;
   w_rot_z = nullptr;
@@ -107,8 +112,10 @@ LightLayer::LightLayer(guint id) : MultiLayer<LightLayer>(Glib::ustring::compose
   INIT_REAL_PROPERTY(light_on_planet, 1.0f, "PlanetIntensity", "The amount of the light which is calculated on the planet's surface.\nThis value doesn't influence the gradient settings.", 0.1, 0.2, 3);
   INIT_REAL_PROPERTY(light_on_ring, 1.0f, "RingIntensity", "The amount of the light which is calculated on the ring's surface.", 0.1, 0.2, 3);
   INIT_REAL_PROPERTY(specular_factor, 1.0f, "Specular", "The amount of the light which is calculated for specular lightning.", 0.1, 0.2, 3);
+  INIT_REAL_PROPERTY(planet_shadow, 1.0f, "PlanetShadow", "The strength of the ring's shadow.", 0.1, 0.2, 3);
   INIT_REAL_PROPERTY(ring_shadow, 1.0f, "RingShadow", "The strength of the ring's shadow.", 0.1, 0.2, 3);
   INIT_REAL_PROPERTY(cloud_shadow, 1.0f, "CloudShadow", "The strength of the cloud's shadow.", 0.1, 0.2, 3);
+  INIT_BOOL_PROPERTY(just_shadows, false, "JustShadows", "whether the Light should only cast Shadows and do no lightning\n\n(does not influence the gradients)");
   INIT_GRADIENT_PROPERTY(shading_gradient, Gradient::create(Gradient::PRESENT_BLACK_2_WHITE), "ShadingGradient", "This allows to modifiy the the gradient of the light");
 
 #undef TABLE
@@ -178,6 +185,18 @@ void LightLayer::set_light_on_ring(gfloat x)
 {
   light_on_ring = CLAMP(x, 0.f, 10.f);
   signal_light_on_ring_changed().emit();
+}
+
+void LightLayer::set_planet_shadow(gfloat x)
+{
+  planet_shadow = CLAMP(x, 0.f, 10.f);
+  signal_planet_shadow_changed().emit();
+}
+
+void LightLayer::set_just_shadows(gfloat x)
+{
+  just_shadows = x;
+  signal_just_shadows_changed().emit();
 }
 
 void LightLayer::set_influence_night(gfloat x)

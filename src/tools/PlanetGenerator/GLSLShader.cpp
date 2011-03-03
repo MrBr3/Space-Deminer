@@ -149,7 +149,8 @@ void View3D::init_shaders()
       planet_program_uniform.uni_cloud_texture_warped  = glGetUniformLocation(planet_program, "uni_cloud_texture_warped");
       planet_program_uniform.uni_weight_texture_visible  = glGetUniformLocation(planet_program, "uni_weight_texture_visible");
       planet_program_uniform.uni_weight_texture_warped  = glGetUniformLocation(planet_program, "uni_weight_texture_warped");
-      planet_program_uniform.no_lightning = glGetUniformLocation(planet_program, "no_lightning");
+      planet_program_uniform.uni_no_lightning = glGetUniformLocation(planet_program, "uni_no_lightning");
+      planet_program_uniform.uni_no_nighttexture = glGetUniformLocation(planet_program, "uni_no_nighttexture");
       planet_program_uniform.light[0].get_uniform_locations(planet_program, "light[0].");
       planet_program_uniform.light[1].get_uniform_locations(planet_program, "light[1].");
       planet_program_uniform.light[2].get_uniform_locations(planet_program, "light[2].");
@@ -270,10 +271,12 @@ void View3D::PlanetProgramUniform::Light::get_uniform_locations(GLuint program, 
   type = glGetUniformLocation(program, (prefix+"type").c_str());
   influence_night = glGetUniformLocation(program, (prefix+"influence_night").c_str());
   light_on_planet = glGetUniformLocation(program, (prefix+"light_on_planet").c_str());
-  light_on_ring = glGetUniformLocation(program, (prefix+"light_on_ring").c_str());
+  //light_on_ring = glGetUniformLocation(program, (prefix+"light_on_ring").c_str());
   specular_factor = glGetUniformLocation(program, (prefix+"specular_factor").c_str());
   ring_shadow = glGetUniformLocation(program, (prefix+"ring_shadow").c_str());
   cloud_shadow = glGetUniformLocation(program, (prefix+"cloud_shadow").c_str());
+  //planet_shadow = glGetUniformLocation(program, (prefix+"planet_shadow").c_str());
+  just_shadows = glGetUniformLocation(program, (prefix+"just_shadows").c_str());
   shade_gradient.get_uniform_locations(program, (prefix+"shade_gradient.").c_str());
   gradient[0].get_uniform_locations(program, prefix+"gradient[0].");
   gradient[1].get_uniform_locations(program, prefix+"gradient[1].");
@@ -289,7 +292,7 @@ void View3D::PlanetProgramUniform::Light::GradientLight::get_uniform_locations(G
   //add_z_rotation = glGetUniformLocation(program, (prefix+"add_z_rotation").c_str());
   //radius = glGetUniformLocation(program, (prefix+"radius").c_str());
   inside_planet = glGetUniformLocation(program, (prefix+"inside_planet").c_str());
-  outside_planet = glGetUniformLocation(program, (prefix+"outside_planet").c_str());
+  //outside_planet = glGetUniformLocation(program, (prefix+"outside_planet").c_str());
   modulate_type = glGetUniformLocation(program, (prefix+"modulate_type").c_str());
   light_gradient.get_uniform_locations(program, prefix+"light_gradient.");
 }
@@ -305,10 +308,12 @@ void View3D::PlanetProgramUniform::Light::feed_data(guint i)
   ColorRGBA::rgb_mult(layer.get_light_color(), layer.get_light_intensity()).glUniformRGB(color);
   glUniform1f(influence_night, layer.get_influence_night());
   glUniform1f(light_on_planet, layer.get_light_on_planet());
-  glUniform1f(light_on_ring, layer.get_light_on_ring());
+  //glUniform1f(light_on_ring, layer.get_light_on_ring());
   glUniform1f(specular_factor, layer.get_specular_factor());
   glUniform1f(ring_shadow, layer.get_ring_shadow());
   glUniform1f(cloud_shadow, layer.get_cloud_shadow());
+  //glUniform1f(cloud_shadow, layer.get_planet_shadow());
+  glUniform1i(just_shadows, layer.get_just_shadows());
   shade_gradient.feed_data(layer.get_shading_gradient());
   gradient[0].feed_data(layer.gradient0);
   gradient[1].feed_data(layer.gradient1);
@@ -324,7 +329,7 @@ void View3D::PlanetProgramUniform::Light::GradientLight::feed_data(const LightLa
   //glUniform1f(add_z_rotation, gradient.get_add_z_rotation());
   //glUniform1f(radius, gradient.get_radius());
   glUniform1f(inside_planet, gradient.get_inside_planet());
-  glUniform1f(outside_planet, gradient.get_outside_planet());
+  //glUniform1f(outside_planet, gradient.get_outside_planet());
   glUniform1f(modulate_type, gradient.get_modulate_type());
   light_gradient.feed_data(gradient.get_light_gradient());
 }
@@ -348,6 +353,13 @@ void View3D::GradientUniform::feed_data(const ConstGradientPtr& gradient)
     gradient->get_color3().glUniformRGB(col[2]);
     gradient->get_color4().glUniformRGB(col[3]);
   }
-  glUniform1f(remap[0], gradient->get_remap_a());
-  glUniform1f(remap[1], gradient->get_remap_b());
+  gfloat remap_a = gradient->get_remap_a();
+  gfloat remap_b = gradient->get_remap_b();
+  if(remap_a==remap_b)
+  {
+    remap_a = 2.f;
+    remap_b = 3.f;
+  }
+  glUniform1f(remap[0], remap_a);
+  glUniform1f(remap[1], remap_b);
 }

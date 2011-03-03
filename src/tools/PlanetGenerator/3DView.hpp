@@ -120,7 +120,8 @@ public:
     GLuint uni_cloud_texture_warped;
     GLuint uni_weight_texture_visible;
     GLuint uni_weight_texture_warped;
-    GLuint no_lightning;
+    GLuint uni_no_lightning;
+    GLuint uni_no_nighttexture;
 
     struct Light
     {
@@ -130,7 +131,7 @@ public:
         GLuint multiply_gradient_color_with_light_color;
         //GLuint add_x_rotation, add_z_rotation;
         //GLuint radius;
-        GLuint inside_planet, outside_planet;
+        GLuint inside_planet;//, outside_planet;
         GLuint modulate_type;
         GradientUniform light_gradient;
 
@@ -140,8 +141,9 @@ public:
 
       GLuint visible, type;
       GLuint dir, pos, color;
-      GLuint influence_night, light_on_planet, light_on_ring;
-      GLuint specular_factor, ring_shadow, cloud_shadow;
+      GLuint influence_night, light_on_planet;//, light_on_ring;
+      GLuint specular_factor, ring_shadow, cloud_shadow;//planet shadow
+      GLuint just_shadows;
       GradientUniform shade_gradient;
       GradientLight gradient[4];
 

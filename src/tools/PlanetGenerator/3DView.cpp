@@ -256,19 +256,23 @@ bool View3D::on_expose_event(GdkEventExpose* event)
 
   glUseProgram(planet_program);
 
-  bool use_lights = false;
+  bool no_lights = true;
+  bool no_nighttexture = true;
   for(gsize i=0; i<N_LIGHT_LAYERS; ++i)
   {
     const LightLayer& light_layer = *LightLayer::get_singleton(i);
     g_assert(&light_layer);
 
-    if(light_layer.get_visible())
-    {
-      use_lights = true;
-      break;
-    }
+    if(!light_layer.get_visible())
+      continue;
+
+    no_lights = false;
+
+    if(light_layer.get_influence_night() > 0.f)
+      no_nighttexture = false;
   }
-  glUniform1i(planet_program_uniform.no_lightning, !use_lights);
+  glUniform1i(planet_program_uniform.uni_no_lightning, no_lights);
+  glUniform1i(planet_program_uniform.uni_no_nighttexture, no_nighttexture||!NightTextureLayer::get_singleton()->get_visible());
 
   glUniform1i(planet_program_uniform.uni_just_one_texture_visible, LayerModel::just_one_texture_layer_visible());
   glUniform1i(planet_program_uniform.uni_base_texture_visible, BaseTextureLayer::get_singleton()->get_visible());
