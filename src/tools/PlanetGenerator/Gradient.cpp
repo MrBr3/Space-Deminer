@@ -28,7 +28,7 @@ Gradient::Gradient(Present p)
   _n_gradients_needed = 0;
   remap_a = 0.;
   remap_b = 1.;
-  _samples.resize(512);
+  _samples.resize(2);
 
   request_no_updates();
     curve1 = Curve::create();

@@ -22,6 +22,8 @@ class NightTextureLayer : public ImageLayer<NightTextureLayer>
 public:
   typedef ImageLayer<NightTextureLayer> ParentClass;
 
+  //CurvePtr visibility_curve; TODO
+
 public:
   NightTextureLayer();
   ~NightTextureLayer()throw();

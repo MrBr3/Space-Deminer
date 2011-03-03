@@ -51,6 +51,7 @@ public:
   static GradientPtr create(Present p=PRESENT_BLACK_2_WHITE){return GradientPtr(new Gradient(p));}
 
   sigc::signal<void>& signal_changed(){return _signal_changed;}
+  sigc::signal<void>& signal_changed()const{return const_cast<sigc::signal<void>& >(_signal_changed);}
 
   static void init_slots();
 

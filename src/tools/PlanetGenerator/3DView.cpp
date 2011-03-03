@@ -168,10 +168,10 @@ void View3D::on_realize()
   ring_texture->set_wrapping(Texture::CLAMP, Texture::REPEAT);
   lightsource_mesh.init();
 
-  glEnable(GL_DEPTH_TEST); //CHECK
+  glEnable(GL_DEPTH_TEST);
 
-  glDepthFunc(GL_LEQUAL); //CHECK
-  glDepthMask(GL_TRUE); //CHECK
+  glDepthFunc(GL_LEQUAL);
+  glDepthMask(GL_TRUE);
 
   _gl_initialized = true;
 

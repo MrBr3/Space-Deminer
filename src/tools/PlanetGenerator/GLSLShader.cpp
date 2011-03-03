@@ -347,12 +347,9 @@ void View3D::PlanetProgramUniform::Light::GradientLight::feed_data(const LightLa
 
 void View3D::GradientUniform::feed_data(const ConstGradientPtr& gradient)
 {
-  static bool l=false;
-  if(!l)
-  {
-    l=true;
-    std::cout<<"glUniform1i(curves, gradient.);\n";
-  }
+  curves_texture.set(gradient);
+  curves_texture.bind();
+  glUniform1i(curves, curves_texture.get_texture_stage());
 
   if(gradient->get_use_alpha())
   {

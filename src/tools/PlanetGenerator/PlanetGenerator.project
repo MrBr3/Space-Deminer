@@ -63,6 +63,7 @@
       <File Name="Curve.cpp"/>
       <File Name="Curve.hpp"/>
       <File Name="GradientAsString.cpp"/>
+      <File Name="3DViewCurveTexture.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Both">
       <File Name="Options.cpp"/>

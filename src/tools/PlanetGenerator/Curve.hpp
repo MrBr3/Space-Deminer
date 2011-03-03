@@ -54,7 +54,8 @@ public:
   bool get_interpolate_linear()const{return _interpolate_linear;}
   void set_interpolate_linear(bool linear=true);
 
-  sigc::signal<void> signal_changed(){return _signal_changed;}
+  sigc::signal<void>& signal_changed(){return _signal_changed;}
+  sigc::signal<void>& signal_changed()const{return const_cast<sigc::signal<void>& >(_signal_changed);}
 
   void invalidate()
   {

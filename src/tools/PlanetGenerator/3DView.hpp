@@ -97,12 +97,37 @@ public:
 
   Matrix44 planet_model_matrix, ring_model_matrix, view_matrix, projection_matrix;
 
+  class CurveTexture : public sigc::trackable
+  {
+    GLuint texture;
+    GLint texture_stage;
+    static GLint curr_curve_texture_stage;
+
+    ConstGradientPtr gradient;
+    ConstCurvePtr curve;
+
+    void fill_texture();
+    void init();
+  public:
+    void set(ConstGradientPtr g);
+    void set(ConstCurvePtr g);
+
+    GLint get_texture_stage()const{return curr_curve_texture_stage;}
+
+    void bind();
+
+    CurveTexture();
+    ~CurveTexture()throw();
+  };
+
 // Shaders
   struct GradientUniform
   {
     GLuint curves;
     GLuint defcolor, col[4];
     GLuint remap[2];
+
+    CurveTexture curves_texture;
 
     void get_uniform_locations(GLuint program, const std::string& prefix);
     void feed_data(const ConstGradientPtr& gradient);
