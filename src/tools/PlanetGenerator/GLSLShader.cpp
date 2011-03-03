@@ -243,7 +243,7 @@ void View3D::init_shaders()
     Gtk::MessageDialog dlg(_("Couldn't init Shaders!"), false, Gtk::MESSAGE_ERROR);
     dlg.set_secondary_text(e.what());
     dlg.run();
-    exit(-1);
+    throw BAD_SHADER;
   }
 }
 

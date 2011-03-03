@@ -17,7 +17,12 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
- const gsize ENSURED_N_UNIFORM_STAGES = 512;
+const gsize ENSURED_N_UNIFORM_STAGES = 512;
+
+enum BadShader
+{
+  BAD_SHADER
+};
 
 class View3D : public Gtk::GL::DrawingArea
 {

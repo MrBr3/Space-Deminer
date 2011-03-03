@@ -247,6 +247,11 @@ MainWindow::MainWindow()
         menu_view_settings.set_label(_("View _Settings"));
         menu_view_settings.set_use_underline();
         menu_view_settings.signal_activate().connect(sigc::mem_fun(*view_settings, &SettingsWidget::bring_to_front));
+      menu_view_menu.append(menu_view_reload_shader);
+        menu_view_reload_shader.set_label(_("_Reload Shader"));
+        menu_view_reload_shader.set_use_underline();
+        menu_view_reload_shader.set_accel_key("<control>F12");
+        menu_view_reload_shader.signal_activate().connect(sigc::mem_fun(*this, &MainWindow::reload_shader));
   _menu_bar.append(menu_info);
     menu_info.set_label(_("_Info"));
     menu_info.set_use_underline();
@@ -318,6 +323,28 @@ void MainWindow::get_render_view_size(guint& width, guint& height)
   height = _render_preview.get_height();
   _render_preview.set_size_request(width, height);
   _render_preview_scrollbars.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+}
+
+void MainWindow::reload_shader()
+{
+  View3D* v = get_view_3d();
+
+  if(!v)
+    return;
+
+  try
+  {
+    v->deinit_shaders();
+    v->init_shaders();
+    v->invalidate();
+  }catch(BadShader)
+  {
+    Gtk::MessageDialog dlg(_("Retry?"), false, Gtk::MESSAGE_QUESTION);
+    dlg.add_button(_("_Yep"), 42);
+    dlg.add_button(_("_Nope"), 0);
+    if(dlg.run()==42)
+      reload_shader();
+  }
 }
 
 MainWindow::RenderResultView::RenderResultView()

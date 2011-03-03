@@ -106,6 +106,7 @@ class MainWindow : public Gtk::Window
     MyCheckMenuItem menu_view_show_sidebar;
     MyCheckMenuItem menu_view_wireframed;
     MyMenuItem menu_view_settings;
+    MyMenuItem menu_view_reload_shader;
   MyMenuItem menu_info;
   Gtk::Menu  menu_info_menu;
     MyMenuItem menu_info_about;
@@ -152,6 +153,8 @@ class MainWindow : public Gtk::Window
   void update_statusbar();
 
   void invalidate_render_preview();
+
+  void reload_shader();
 
 public:
   MainWindow();
