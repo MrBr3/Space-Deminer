@@ -165,6 +165,7 @@ PlanetGenerator
             [X] als string speichern
             [X] aus string lesen
             [X] slots in den Options speichern
+        [ ] farbe/transparenz dor Wolken auf der Nachtseite steuern können
       [ ] OpenGL Vorschau
         [X] Deprecated sachen entfernen
         [X] gucken, ob Ring noch tut (breite, durchmesser...)

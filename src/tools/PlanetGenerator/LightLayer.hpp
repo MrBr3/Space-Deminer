@@ -29,6 +29,7 @@ public:
     LIGHT_TYPE_AMBIENT = 0,
     LIGHT_TYPE_DIRECTIONAL = 1,
     LIGHT_TYPE_POINT = 2,
+    LIGHT_TYPE_CUSTOM = 3,
   };
 
   enum GradientModulateType

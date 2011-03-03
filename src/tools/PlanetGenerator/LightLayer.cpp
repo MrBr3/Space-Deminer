@@ -100,7 +100,7 @@ LightLayer::LightLayer(guint id) : MultiLayer<LightLayer>(Glib::ustring::compose
   n = 0;
 #define TABLE table_light
 
-  std::vector<Glib::ustring> enum_light_type = create_vector<Glib::ustring>(_("Ambient"), _("Directional"), _("Point"));
+  std::vector<Glib::ustring> enum_light_type = create_vector<Glib::ustring>(_("Ambient"), _("Directional"), _("Point"), _("Custom"));
   Gdk::Color light_color_def_value;
 
   light_color_def_value.set_rgb_p(1., 1., 1.);
@@ -151,7 +151,7 @@ void LightLayer::set_distance(gfloat x)
 
 void LightLayer::set_light_type(int x)
 {
-  light_type = CLAMP(x, 0, LIGHT_TYPE_POINT);
+  light_type = CLAMP(x, 0, LIGHT_TYPE_CUSTOM);
 
   if(w_rot_x)
     w_rot_x->set_sensitive(light_type != LIGHT_TYPE_AMBIENT);

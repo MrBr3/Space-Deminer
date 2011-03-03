@@ -1,5 +1,10 @@
 #version 330 core
 
+const float PI = 3.14159265358979324;
+const float PI2 = 6.28318530717958648;
+const float INV_PI = 0.318309886183790672;
+const float INV_PI2 = 0.159154943091895336;
+
 float max_vec3(vec3 v)
 {
   return max(v.x, max(v.y, v.z));
@@ -25,7 +30,7 @@ uniform bool uni_weight_texture_warped;
 
 in vec2 tex_coord;
 in vec2 tex_coord_warped;
-in vec4 world_pos;
+in vec4 world_pos_;
 
 // ==== Material ========
 
@@ -42,6 +47,7 @@ struct SpecularMaterial
 #define LIGHT_TYPE_AMBIENT 0
 #define LIGHT_TYPE_DIRECTIONAL 1
 #define LIGHT_TYPE_POINT 2
+#define LIGHT_TYPE_CUSTOM 3
 
 #define GRADIENT_MODULATE_NORMAL 0
 #define GRADIENT_MODULATE_ADD 1
@@ -97,6 +103,7 @@ float night_factor = 0.;
 float night_weight = 0.;
 vec4 diffuse_lightning_color = vec4(0., 0., 0., 0.);
 vec4 normal;
+vec4 world_pos;
 
 void calc_diffuse_lightning()
 {
@@ -106,7 +113,10 @@ void calc_diffuse_lightning()
     return;
   }
 
-  normal = normalize(world_pos);
+  world_pos.xyz = normalize(world_pos_.xyz);
+  world_pos.w = 1.;
+  normal.xyz = world_pos.xyz;
+  normal.w = 0.;
   float n_diff = 0.;
   
   for(int i=0; i<N_LIGHTS; ++i)
@@ -121,10 +131,13 @@ void calc_diffuse_lightning()
     switch(l.type)
     {
     case LIGHT_TYPE_DIRECTIONAL:
-      diff = max(0., dot(normal, l.dir));
+      diff = max(0., -dot(normal, l.dir));
       break;
     case LIGHT_TYPE_POINT:
-      diff = max(0., dot(normal, normalize(normal-l.pos)));
+      diff = max(0., -dot(normal, normalize(world_pos-l.pos)));
+      break;
+    case LIGHT_TYPE_CUSTOM:
+      diff = acos(clamp(dot(normal, l.dir), -1., 1.))*INV_PI;
       break;
     case LIGHT_TYPE_AMBIENT:
     default:
@@ -135,11 +148,11 @@ void calc_diffuse_lightning()
 
     float color_intensity = max_vec3(color.xyz);
 
-    night_factor += l.influence_night*(1.-color_intensity);
-//    night_factor += l.influence_night*(1.-get_curve_value(night_switch_curve, color_intensity)); //TODO instead the previous line
-    night_weight += l.influence_night;
+    night_factor += l.light_on_planet*l.influence_night*(1.-color_intensity);
+//    night_factor += l.light_on_planet*l.influence_night*(1.-get_curve_value(night_switch_curve, color_intensity)); //TODO instead the previous line
+    night_weight += l.light_on_planet*l.influence_night;
 
-    diffuse_lightning_color += color;
+    diffuse_lightning_color += l.light_on_planet*color;
   }
 }
 
@@ -171,6 +184,8 @@ void main()
 
   resulting_color = query_surface_color();
 
+  resulting_color += query_night_color();
+
   if(uni_cloud_texture_visible)
   {
     float thickness;
@@ -183,8 +198,6 @@ void main()
     
     resulting_color = mix(resulting_color, cloud_color, thickness);
   }
-
-  resulting_color += query_night_color();
   resulting_color.w = 1.;
 }
 
