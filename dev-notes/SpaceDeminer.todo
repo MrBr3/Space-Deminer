@@ -57,25 +57,20 @@ Base
     [ ] Texturen beliebiger größe (nicht mehr 2^n)
 
 PlanetGenerator
-  [ ] Sphere
+  [X] Sphere
     [X] UV-Fehler bei Caps beheben
     [X] decide whether only quads
-    [ ] decide whether mix of quads and triangles
-    [ ] anisotropes filtering?
+    [X] decide whether mix of quads and triangles => triangles
   [X] LayerView
     [X] mit einfachen Klick entsprechende Settings anzeigen
     [X] mit Klick auf das Auge zwischen sichtbar/unsichtbar umschalten
-  [ ] ImageLayerSettings
-    [ ] Bilder automatisch "warped" zeichnen können
-    [ ] warped version berechnen und als Bild speichern können
-    [ ] riesige Bilder (für offline rendering) verwenden können
-  [ ] offline rendering
+  [X] offline rendering
     [X] extra Texturangabe für offline rendering
     [X] Sphere aufteilen, um große Texturen zu erlauben?
       => Nope
     [X] Bildschirm aufteilen, um große ergebnisse zu erlauben?
       => Nope
-    [ ] Raytracer
+    [X] Raytracer Anfangen
       [X] Matrix
         [X] Matrix invertieren
           [X] Cofaktoren bestimmenn können
@@ -120,18 +115,6 @@ PlanetGenerator
         [X] debugging bilder ein/ausschalten können
       [X] komisches Artefakt finden und fixen
       [X] Culling bug: falscher 2D radius, wenn Kugel über oberen Rand hinausragt
-      [ ] aktuellen zustand (inklusive rotation) speichern und laden können
-        [ ] Planetendaten in Datei speichern können
-          [ ] relative Pfadangaben
-            [ ] Gio::File::get_relative_path
-        [ ] Planetendaten aus Datei laden können
-          [ ] relative Pfadangaben
-            [ ] Gio::File::resolve_relative_path
-        [ ] "Zulezt geöffnet" Liste
-      [ ] gucken, ob antialiasing wirklich funzt (auch bei 2x und 4x?)
-      [ ] gucken, ob alles bei sehr kleinen Bildern funzt
-        [ ] artefakte?
-        [ ] ein Tile sollte nicht weniger als 8x8 px repräsentieren
       [X] Base Textur anzeigen
         [X] Farbe anhand UV herholen (ceil/floor könnte sehr praktisch sein)
           [X] für u/v werte außerhalb von intervall [0, 1] wählen können zwischen
@@ -142,51 +125,72 @@ PlanetGenerator
       [X] RingTextur
       [X] Filtering überarbeiten
         [X] Mit geeigneten Texturen Testen
-      [ ] LightLayer
-        [ ] Material implementieren
-        [ ] Farbverlauf implementieren
-          [X] Farbverlauf Dialog
-            [X] Remap
-            [X] anzahl Samples
-            [X] KurvenDialog
-              [X] Puinkte wieder reinziehen können
-              [X] Fehler bei Endknoten bei vollbild und 256 Samples finden
-              [X] Linear Checkbox sollte tun
-            [X] Kurven sollten Werte in String exportieren können
-            [X] Kurven sollten Werte aus String importieren können
-            [X] nSamples für Kurven übernehmen
-              [X] beim remappen für Farbverlauf intern übersetzen? Nope
-            [X] farben berechnen
-            [X] zwischen mit und ohne Alpha umschalten können
-            [X] Farbverläufe zum live editing vorbereiten
-            [X] remap
-            [X] presents laden
-            [X] in slots speichern/laden
-            [X] als string speichern
-            [X] aus string lesen
-            [X] slots in den Options speichern
-        [ ] farbe/transparenz dor Wolken auf der Nachtseite steuern können
-      [ ] OpenGL Vorschau
-        [X] Deprecated sachen entfernen
-        [X] gucken, ob Ring noch tut (breite, durchmesser...)
-        [ ] für die ganzen Kurven nur eine Texture verwenden?
-      [ ] Shader (nur zum rendern erstellt)
-        [ ] anstatt IDs eigenen shade funktionen?
-        [ ] GradientLight
-          [ ] normalmap als offset in bildschirmkoordinaten für fabe interpretieren?
-      [ ] Graditionskurve für Texture Layer
-        [ ] wie mit Live preview kombinieren? richtige Textur im VideoRam und Graditionskurve in der vorschau "nur" per Shader?
-      [ ] Atmosphären effekt
-        [ ] Farbverlauf soll Material beeinflussen
-        [ ] Entfernung, mit der der Strahl an der Kugel vorbeifliegt bestimmen können
-        [ ] Atmosphäre soll auch Ringe beeinflussen
-      [ ] Viewport zum raytracen
-  [ ] Shader
-    [ ] Textur mit vier Kanälen (alpha invertiert?), wobie jede der vier Texturen für ein eigenes Material steht
-      z.B Rot: Wüsten, Grün: kein Glanzlicht, Blau: Eis, Alpha-Invertiert: Wasser
+  [ ] OpenGL Vorschau
+    [X] Deprecated sachen entfernen
+    [X] gucken, ob Ring noch tut (breite, durchmesser...)
+    [ ] Lichtrepräsentation
+      [ ] direct light mesh anzeigen
+      [ ] ausschalten können
+    [ ] alle Gradiente in eine 2 Textur und/oder Uniform Buffer
+    [ ] gradientenstand mit mehreren Lichtern testen
+    [ ] weitere Gradients einsetzen
+      [ ] getrennte & gemeinsame kurven für Ring & Planetbeleuchtung
+      [ ] Kurve für übergang von Nachttextur
+      [ ] Gradient für Farbe/Transparenz von Wolken in abhängigkeit der beleuchtung
+      [ ] Graditionskurven für einzelne Texturen
+    [ ] RingShader
+      [ ] directionallight
+      [ ] pointlight
+      [ ] customlight
+      [ ] durchleuchtet
+    [ ] Glanzlichter
+      [ ] Planet
+        [ ] Weighttextur
+          [ ] Textur mit vier Kanälen (alpha invertiert?), wobie jede der vier Texturen für ein eigenes Material steht
+            z.B Rot: Wüsten, Grün: ka, schwarz: kein glanzlicht, Blau: Eis, Alpha-Invertiert: Wasser
+      [ ] Glanzlichter für Ring?
+    [ ] Schatten
+      [ ] manuell linear zwischen directlightshadow und pointlightshadow schalten können
+      [ ] schatten auf Ring
+        [ ] schatten vom Planeten
+      [ ] schatten auf Planeten
+        [ ] schatten vom Ring
+        [ ] schatten von Wolken
+          [ ] mithilfen von Matrix von der Lichtquelle aus?
+            [ ] Matrix, die linear zwischen othogonal und projeziet umschalten können
+    [ ] Antialiasing
+    [ ] gucken pb Multisampling nicht etasa schärfer geht
+      [ ] Graditionsbeleuchtung
+        [ ] normalmap als offset in bildschirmkoordinaten für fabe interpretieren?
+    [ ] Atmosphären effekt
+      [ ] Farbverlauf soll Material beeinflussen
+      [ ] Entfernung, mit der der Strahl an der Kugel vorbeifliegt bestimmen können
+      [ ] Atmosphäre soll auch Ringe beeinflussen?
+    [ ] anisotropes filtering?
+  [ ] Raytracer auf stand der echtzeitansicht bringen
+    [ ] möglichkeit zum "backen" nicht verbauen!
+  [ ] Viewport zum raytracen
+  [ ] Planeten "backen" können
+  [ ] Datei (inklusive kameraansicht) speichern und laden können
+    [ ] Planetendaten in Datei speichern können
+      [ ] relative Pfadangaben
+        [ ] Gio::File::get_relative_path
+    [ ] Planetendaten aus Datei laden können
+      [ ] relative Pfadangaben
+        [ ] Gio::File::resolve_relative_path
+    [ ] "Zulezt geöffnet" Liste
+    [ ] "default" wie bei Gimp
+  [ ] Raytracer
+    [ ] gucken, ob antialiasing wirklich funzt (auch bei 2x und 4x?)
+    [ ] gucken, ob alles bei sehr kleinen Bildern funzt
+      [ ] artefakte?
+      [ ] ein Tile sollte nicht weniger als 8x8 px repräsentieren
+    [ ] ungültige Parameter gültig machen (z.B. wo speichern, und ob überschrieben)
+  [ ] Bild automatisch neuladen, wenn auf Festplatte geändert
   [ ] zusätzliche Features
     [X] SVG autom erstellen, die zeigt, welcher Bereich beim "warpen" verwendet wird
       [ ] message box die fragt, ob man überschreiben will
+    [ ] "gutes" uv warping
 
 [ ] Programm
   [X] richtigen Pfade herausfinden (see apply_filename_macros)
