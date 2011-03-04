@@ -42,6 +42,7 @@ ViewSettings::ViewSettings()
   append_int_widget("view-n-sphere-segments", _("Planet Segments"), _("The Number of latitudessegments of the sphere mesh"), sigc::mem_fun(*this, &ViewSettings::get_n_sphere_segments), sigc::mem_fun(*this, &ViewSettings::set_n_sphere_segments), signal_n_sphere_segments_changed());
   append_int_widget("view-n-ring-segments", _("Ring Segments"), _("The Number of segments of the ring mesh"), sigc::mem_fun(*this, &ViewSettings::get_n_ring_segments), sigc::mem_fun(*this, &ViewSettings::set_n_ring_segments), signal_n_ring_segments_changed());
   append_boolean_widget("view-wireframed", _("Wireframed"), _("If set, the Spheres Mesh will be drawn a s Wireframe"), sigc::mem_fun(view3d, &View3D::get_draw_wireframed), sigc::mem_fun(view3d, &View3D::set_draw_wireframed), view3d.sig_wireframed_changed_noparam());
+  append_boolean_widget("view-show-lights", _("Show Lights"), _("If set, the Lightpositions/directiosn will be representes by a yellow point/arroq in the 3D Viewport."), sigc::mem_fun(view3d, &View3D::get_draw_light_representation), sigc::mem_fun(view3d, &View3D::set_draw_light_representation), view3d.sig_draw_light_representation_changed_noparam());
 
   signal_back_color_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
   signal_n_sphere_segments_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));

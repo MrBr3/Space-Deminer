@@ -51,6 +51,8 @@ View3D::View3D() : Gtk::GL::DrawingArea(Gdk::GL::Config::create(Gdk::GL::MODE_DE
   show();
   _gl_initialized = false;
 
+  _draw_light_representation = false;
+
   LayerModel::signal_something_changed().connect(sigc::mem_fun(*this, &View3D::invalidate));
 
   g_assert(RingLayer::get_singleton());
@@ -179,6 +181,7 @@ void View3D::on_realize()
   view_settings->signal_n_ring_segments_changed().connect(sigc::mem_fun(*this, &View3D::reinit_ring_mesh));
 
   signal_wireframed_changed().connect(sigc::hide(sigc::mem_fun(sig_wireframed_changed_noparam(), &sigc::signal<void>::emit)));
+  signal_draw_light_representation_changed().connect(sigc::hide(sigc::mem_fun(sig_draw_light_representation_changed_noparam(), &sigc::signal<void>::emit)));
 }
 
 void View3D::reinit_sphere_mesh()
@@ -308,28 +311,48 @@ bool View3D::on_expose_event(GdkEventExpose* event)
 
   matrix_stack.pop();
 
-  glUseProgram(simple_program);
-
-  glEnableVertexAttribArray(1);
-  for(gsize i=0; i<N_LIGHT_LAYERS; ++i)
+  if(_draw_light_representation)
   {
-    const LightLayer& light_layer = *LightLayer::get_singleton(i);
-    g_assert(&light_layer);
+    glUseProgram(simple_program);
 
-    if(!light_layer.get_visible())
-      continue;
+    glEnableVertexAttribArray(1);
+    for(gsize i=0; i<N_LIGHT_LAYERS; ++i)
+    {
+      const LightLayer& light_layer = *LightLayer::get_singleton(i);
+      g_assert(&light_layer);
 
-    matrix_stack.push(false);
-      matrix_stack.top().translate(light_layer.position);
+      if(!light_layer.get_visible())
+        continue;
 
-      matrix_M = matrix_stack.top();
+      if(light_layer.get_light_type()==LightLayer::LIGHT_TYPE_POINT)
+      {
+        matrix_stack.push(false);
+          matrix_stack.top().translate(light_layer.position);
 
-      matrix_PV.glUniform(ring_program_uniform.matrix_PV);
-      matrix_M.glUniform(ring_program_uniform.matrix_M);
-      lightsource_mesh.point_mesh.RenderBatch();
-    matrix_stack.pop();
+          matrix_M = matrix_stack.top();
+
+          matrix_PV.glUniform(ring_program_uniform.matrix_PV);
+          matrix_M.glUniform(ring_program_uniform.matrix_M);
+          lightsource_mesh.point_mesh.RenderBatch();
+        matrix_stack.pop();
+      }else if(light_layer.get_light_type()==LightLayer::LIGHT_TYPE_DIRECTIONAL || light_layer.get_light_type()==LightLayer::LIGHT_TYPE_CUSTOM)
+      {
+        matrix_stack.push(false);
+          matrix_stack.top().translate(-light_layer.direction*3.f);
+          matrix_stack.top().rotate_z(light_layer.get_z_rotation());
+          matrix_stack.top().rotate_x(light_layer.get_x_rotation());
+
+          matrix_M = matrix_stack.top();
+
+          matrix_PV.glUniform(ring_program_uniform.matrix_PV);
+          matrix_M.glUniform(ring_program_uniform.matrix_M);
+          lightsource_mesh.point_mesh.RenderBatch();
+          lightsource_mesh.directional_light.RenderBatch();
+        matrix_stack.pop();
+      }
+    }
+    glDisableVertexAttribArray(1);
   }
-  glDisableVertexAttribArray(1);
 
   if(RingLayer::get_singleton()->get_visible())
   {

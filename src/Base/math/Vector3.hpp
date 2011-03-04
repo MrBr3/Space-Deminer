@@ -100,7 +100,7 @@ public:
    * */
   //@{
 
-  Vector3 operator-()throw()
+  Vector3 operator-()const throw()
   {
     return Vector3(-x, -y, -z);
   }

@@ -29,6 +29,8 @@ class View3D : public Gtk::GL::DrawingArea
   bool _gl_initialized;
   bool _draw_wireframed;
 
+  bool _draw_light_representation;
+
   bool _rotating_with_mouse;
   bool using_mouse()const throw()
   {
@@ -40,6 +42,8 @@ class View3D : public Gtk::GL::DrawingArea
 
   sigc::signal<void, bool> _signal_wireframed_changed;
   sigc::signal<void> _sig_wireframed_changed_noparam;
+  sigc::signal<void, bool> _signal_draw_light_representation_changed;
+  sigc::signal<void> _sig_draw_light_representation_changed_noparam;
 
   void reinit_sphere_mesh();
   void reinit_ring_mesh();
@@ -69,6 +73,7 @@ public:
   /** \brief Gets, whether the Mesh should be drawn wireframed.
    * */
   bool get_draw_wireframed()const{return _draw_wireframed;}
+  bool get_draw_light_representation()const{return _draw_light_representation;}
 
   /** \brief Sets, whether the Mesh should be drawn wireframed.
    *
@@ -83,8 +88,21 @@ public:
     invalidate();
   }
 
+  void set_draw_light_representation(bool lr)
+  {
+    if(_draw_light_representation==lr)
+      return;
+
+    _draw_light_representation = lr;
+    _signal_draw_light_representation_changed.emit(_draw_light_representation);
+    invalidate();
+  }
+
   sigc::signal<void, bool>& signal_wireframed_changed(){return _signal_wireframed_changed;}
   sigc::signal<void>& sig_wireframed_changed_noparam(){return _sig_wireframed_changed_noparam;}
+
+  sigc::signal<void, bool>& signal_draw_light_representation_changed(){return _signal_draw_light_representation_changed;}
+  sigc::signal<void>& sig_draw_light_representation_changed_noparam(){return _sig_draw_light_representation_changed_noparam;}
 
   SphereMesh sphere_mesh;
   RingMesh ring_mesh;

@@ -128,10 +128,10 @@ PlanetGenerator
   [ ] OpenGL Vorschau
     [X] Deprecated sachen entfernen
     [X] gucken, ob Ring noch tut (breite, durchmesser...)
-    [ ] Lichtrepräsentation
-      [ ] direct light mesh anzeigen
-      [ ] ausschalten können
-    [ ] alle Gradiente in eine 2 Textur und/oder Uniform Buffer
+    [X] Lichtrepräsentation
+      [X] ausschalten können
+      [X] direct light mesh anzeigen
+    [ ] alle Gradiente in eine 2D Textur und/oder Uniform Buffer
     [ ] gradientenstand mit mehreren Lichtern testen
     [ ] weitere Gradients einsetzen
       [ ] getrennte & gemeinsame kurven für Ring & Planetbeleuchtung
@@ -170,7 +170,7 @@ PlanetGenerator
   [ ] Raytracer auf stand der echtzeitansicht bringen
     [ ] möglichkeit zum "backen" nicht verbauen!
   [ ] Viewport zum raytracen
-  [ ] Planeten "backen" können
+  [ ] schauaen, ob wirklich alles abgespeichert wird
   [ ] Datei (inklusive kameraansicht) speichern und laden können
     [ ] Planetendaten in Datei speichern können
       [ ] relative Pfadangaben
@@ -191,6 +191,7 @@ PlanetGenerator
     [X] SVG autom erstellen, die zeigt, welcher Bereich beim "warpen" verwendet wird
       [ ] message box die fragt, ob man überschreiben will
     [ ] "gutes" uv warping
+  [ ] Planeten "backen" können
 
 [ ] Programm
   [X] richtigen Pfade herausfinden (see apply_filename_macros)

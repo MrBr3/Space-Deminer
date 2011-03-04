@@ -67,19 +67,19 @@ void LightSourceMesh::init()
     directional_light.Attribute4f("att_color", 1.f, 1.f, 0.2f, 1.f);
     directional_light.Begin(NS_GLIM::GLIM_LINES);
       directional_light.Vertex(0.f, 0.f, 0.f);
-      directional_light.Vertex(0.f, 1.f, 0.f);
+      directional_light.Vertex(0.f, -1.f, 0.f);
 
-      directional_light.Vertex(0.f, 1.f, 0.f);
-      directional_light.Vertex(0.1f, 0.9f, 0.f);
+      directional_light.Vertex(0.f, -1.f, 0.f);
+      directional_light.Vertex(0.1f, -0.9f, 0.f);
 
-      directional_light.Vertex(0.f, 1.f, 0.f);
-      directional_light.Vertex(-0.1f, 0.9f, 0.f);
+      directional_light.Vertex(0.f, -1.f, 0.f);
+      directional_light.Vertex(-0.1f, -0.9f, 0.f);
 
-      directional_light.Vertex(0.f, 1.f, 0.f);
-      directional_light.Vertex(0.0f, 0.9f, 0.1f);
+      directional_light.Vertex(0.f, -1.f, 0.f);
+      directional_light.Vertex(0.0f, -0.9f, 0.1f);
 
-      directional_light.Vertex(0.f, 1.f, 0.f);
-      directional_light.Vertex(0.0f, 0.9f,-0.1f);
+      directional_light.Vertex(0.f, -1.f, 0.f);
+      directional_light.Vertex(0.0f, -0.9f,-0.1f);
     directional_light.End();
   directional_light.EndBatch();
 }

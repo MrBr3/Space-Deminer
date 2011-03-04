@@ -103,10 +103,12 @@ class MainWindow : public Gtk::Window
     MyMenuItem menu_render_settings;
   MyMenuItem menu_view;
   Gtk::Menu  menu_view_menu;
+    MyMenuItem menu_view_reload_shader;
+    Gtk::SeparatorMenuItem menu_view_sep1;
     MyCheckMenuItem menu_view_show_sidebar;
     MyCheckMenuItem menu_view_wireframed;
+    MyCheckMenuItem menu_view_lights;
     MyMenuItem menu_view_settings;
-    MyMenuItem menu_view_reload_shader;
   MyMenuItem menu_info;
   Gtk::Menu  menu_info_menu;
     MyMenuItem menu_info_about;
@@ -131,6 +133,10 @@ class MainWindow : public Gtk::Window
   void draw_wireframed_toggled()
   {
     view_3d->set_draw_wireframed(menu_view_wireframed.get_active());
+  }
+  void draw_lights_toggled()
+  {
+    view_3d->set_draw_light_representation(menu_view_lights.get_active());
   }
 
   void toggle_show_sidebar()
