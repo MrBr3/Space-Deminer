@@ -112,7 +112,7 @@ public:
     void set(ConstGradientPtr g);
     void set(ConstCurvePtr g);
 
-    GLint get_texture_stage()const{return curr_curve_texture_stage;}
+    GLint get_texture_stage()const{return texture_stage;}
 
     void bind();
 
@@ -125,7 +125,7 @@ public:
   {
     GLuint curves;
     GLuint defcolor, col[4];
-    GLuint remap[2];
+    GLuint remap_offset, remap_size;
 
     CurveTexture curves_texture;
 

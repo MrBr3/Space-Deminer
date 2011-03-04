@@ -274,7 +274,7 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   glUniform1i(planet_program_uniform.uni_no_lightning, no_lights);
   glUniform1i(planet_program_uniform.uni_no_nighttexture, no_nighttexture||!NightTextureLayer::get_singleton()->get_visible());
 
-  glUniform1i(planet_program_uniform.uni_just_one_texture_visible, LayerModel::just_one_texture_layer_visible());
+  glUniform1i(planet_program_uniform.uni_just_one_texture_visible, LayerModel::just_one_texture_layer_visible() && !BaseTextureLayer::get_singleton()->get_visible());
   glUniform1i(planet_program_uniform.uni_base_texture_visible, BaseTextureLayer::get_singleton()->get_visible());
   glUniform1i(planet_program_uniform.uni_base_texture_warped, BaseTextureLayer::get_singleton()->get_imagefile()->get_needs_to_be_warped());
   glUniform1i(planet_program_uniform.uni_night_texture_visible, NightTextureLayer::get_singleton()->get_visible());

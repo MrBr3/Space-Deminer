@@ -26,7 +26,7 @@ uniform bool uni_cloud_texture_warped;
 uniform bool uni_weight_texture_visible;
 uniform bool uni_weight_texture_warped;
 
-#define PLANET_TEXTURE_COLOR(what, t) if(uni_##t##_texture_warped){what texture2D(uni_##t##_texture, tex_coord_warped);}else{what texture2D(uni_##t##_texture, tex_coord);}
+#define PLANET_TEXTURE_COLOR(what, t) if(uni_##t##_texture_warped){what texture(uni_##t##_texture, tex_coord_warped);}else{what texture(uni_##t##_texture, tex_coord);}
 
 in vec2 tex_coord;
 in vec2 tex_coord_warped;
@@ -57,19 +57,16 @@ struct Gradient
 {
   sampler1D curves;
   vec4 defcolor, col[4];
-  float remap[2];
+  float remap_size, remap_offset;
 };
 
 float get_curve_value(sampler1D curve, float v)
 {
   return v;
-//  return texture1D(curve, v); //TODO
+//  return texture(curve, v); //TODO
 }
 
-vec4 get_gradient_color(Gradient g, float v)
-{
-  return vec4(v, v, v, 1.);
-}
+#define GET_GRADIENT_COLOR(g, v) texture(g.curves, (g.remap_offset+v)*g.remap_size)
 
 struct GradientLight
 {
@@ -121,7 +118,7 @@ void calc_diffuse_lightning()
   
   for(int i=0; i<N_LIGHTS; ++i)
   {
-    Light l = light[i];
+#define l light[i]
 
     if(!l.visible || l.just_shadows)
       continue;
@@ -144,7 +141,7 @@ void calc_diffuse_lightning()
       diff = 1.;
     }
 
-    vec4 color = l.color*get_gradient_color(l.shade_gradient, diff);
+    vec4 color = l.color*GET_GRADIENT_COLOR(light[0].shade_gradient, diff);//  TODO make this index depedent instead always 0!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     float color_intensity = max_vec3(color.xyz);
 
@@ -153,6 +150,7 @@ void calc_diffuse_lightning()
     night_weight += l.light_on_planet*l.influence_night;
 
     diffuse_lightning_color += l.light_on_planet*color;
+#undef l
   }
 }
 

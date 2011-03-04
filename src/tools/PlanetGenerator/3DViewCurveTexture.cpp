@@ -90,7 +90,7 @@ void View3D::CurveTexture::fill_texture()
 
   if(gradient)
   {
-    internal_format = GL_RGBA;
+    internal_format = GL_RGBA32F;
     width = gradient->get_n_samples();
     format = GL_RGBA;
 
@@ -99,18 +99,15 @@ void View3D::CurveTexture::fill_texture()
     g_assert(gradient->get_curve3()->get_n_samples()==width);
     g_assert(gradient->get_curve4()->get_n_samples()==width);
 
-    const gdouble* const src1 = gradient->get_curve1()->get_samples();
-    const gdouble* const src2 = gradient->get_curve2()->get_samples();
-    const gdouble* const src3 = gradient->get_curve3()->get_samples();
-    const gdouble* const src4 = gradient->get_curve4()->get_samples();
+    const std::vector<ColorRGBA>& src = gradient->get_samples();
 
     data = new GLfloat[width*4];
     for(gsize i=0; i<width; i++)
     {
-      data[i*4+0] = src1[i];
-      data[i*4+1] = src2[i];
-      data[i*4+2] = src3[i];
-      data[i*4+3] = src4[i];
+      data[i*4+0] = src[i].r;
+      data[i*4+1] = src[i].g;
+      data[i*4+2] = src[i].b;
+      data[i*4+3] = src[i].a;
     }
   }else
   {
@@ -132,10 +129,17 @@ void View3D::CurveTexture::fill_texture()
 
   glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_T, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
   delete[] data;
+
+  if(!main_window)
+    return;
+  View3D* view = main_window->get_view_3d();
+  if(!view)
+    return;
+  view->invalidate();
 }
 
 void View3D::CurveTexture::init()
