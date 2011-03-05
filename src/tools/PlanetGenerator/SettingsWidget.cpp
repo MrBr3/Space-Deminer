@@ -453,5 +453,7 @@ Gtk::Widget& SettingsWidget::append_gradient_widget(Gtk::Table& table, guint& n_
   table.attach(*entry, 1, 2, n_entries, n_entries+1, Gtk::EXPAND|Gtk::FILL, Gtk::FILL);
   ++n_entries;
 
+  gradient->signal_changed().connect(sigc::bind(sigc::ptr_fun(Options::set_gradient), name, gradient));
+
   return *entry;
 }

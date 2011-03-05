@@ -270,7 +270,6 @@ void GradientDialog::set_gradient(const GradientPtr& g)
 
   _private_gradient->request_no_updates();
     preview_.set_gradient(_private_gradient);
-    std::cout<<"\n\nhh: "<<_private_gradient->get_use_alpha()<<"\n\n";
     use_alpha_.set_active(_private_gradient->get_use_alpha());
     remap_a.set_value(_private_gradient->get_remap_a()*100.);
     remap_b.set_value(_private_gradient->get_remap_b()*100.);

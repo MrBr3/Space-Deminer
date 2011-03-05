@@ -136,7 +136,7 @@ PlanetGenerator
     [X] Für Gradiente feste sampleZahl festlegen/Alpha zuweisen können
       [X] in GUI verstecken
     [ ] Uniform Buffer?
-    [ ] gradientenstand mit mehreren Lichtern testen
+    [X] gradientenstand mit mehreren Lichtern testen
     [ ] weitere Gradients einsetzen
       [ ] getrennte & gemeinsame kurven für Ring & Planetbeleuchtung
       [ ] Kurve für übergang von Nachttextur
