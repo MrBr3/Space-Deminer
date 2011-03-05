@@ -139,6 +139,7 @@ PlanetGenerator
     [X] gradientenstand mit mehreren Lichtern testen
     [ ] weitere Gradients einsetzen
       [X] getrennte & gemeinsame kurven für Ring & Planetbeleuchtung
+        [X] flexibler machen (nicht mehr per multiplikation, sondern eher wie graditionskurve)
       [X] Kurve für übergang von Nachttextur
         [X] wahlweise custom oder direkt vom diffusen Licht abhängig
       [X] Gradient für Farbe/Transparenz von Wolken in abhängigkeit der beleuchtung

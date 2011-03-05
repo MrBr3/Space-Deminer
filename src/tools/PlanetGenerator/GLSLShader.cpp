@@ -272,6 +272,11 @@ void View3D::GradientUniform::get_uniform_locations(GLuint planet_program, const
   remap_offset = LOCATE_UNIFORM(planet_program, (prefix+"remap_offset").c_str());
 }
 
+void View3D::CurveUniform::get_uniform_locations(GLuint planet_program, const std::string& prefix)
+{
+  slice_id = LOCATE_UNIFORM(planet_program, (prefix+"slice_id").c_str());
+}
+
 void View3D::PlanetProgramUniform::Light::get_uniform_locations(GLuint planet_program, const std::string& prefix)
 {
   visible = LOCATE_UNIFORM(planet_program, (prefix+"visible").c_str());
@@ -362,4 +367,10 @@ void View3D::GradientUniform::feed_data(const GradientPtr& gradient)
   }
   glUniform1f(remap_size, 1./(remap_b-remap_a));
   glUniform1f(remap_offset, -remap_a);
+}
+
+void View3D::CurveUniform::feed_data(const CurvePtr& curve)
+{
+  curves_texture.set(curve);
+  glUniform1f(slice_id, curves_texture.get_slice_id());
 }

@@ -51,6 +51,11 @@ LightLayer::LightLayer(guint id) : MultiLayer<LightLayer>(Glib::ustring::compose
   signal_##c_name##_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));\
   last_set_proprty_widget = &settings.append_gradient_widget(TABLE, n, prefix+"-"#c_name, _(name), _(description), c_name);
 
+#define INIT_CURVE_PROPERTY(c_name, def, name, description)\
+  c_name = def;\
+  signal_##c_name##_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));\
+  last_set_proprty_widget = &settings.append_curve_widget(TABLE, n, prefix+"-"#c_name, _(name), _(description), c_name);
+
 #define INIT_ENUM_PROPERTY(c_name, def, name, description, e)\
   c_name = def;\
   signal_##c_name##_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));\
@@ -117,8 +122,8 @@ LightLayer::LightLayer(guint id) : MultiLayer<LightLayer>(Glib::ustring::compose
   INIT_REAL_PROPERTY(cloud_shadow, 1.0f, "CloudShadow", "The strength of the cloud's shadow.", 0.1, 0.2, 3);
   INIT_BOOL_PROPERTY(just_shadows, false, "JustShadows", "whether the Light should only cast Shadows and do no lightning\n\n(does not influence the gradients)");
   INIT_GRADIENT_PROPERTY(shading_gradient, Gradient::create(Gradient::PRESENT_BLACK_2_WHITE)->force_use_alpha(false), "ShadingGradient", "This allows to modifiy the the gradient of the light");
-  INIT_GRADIENT_PROPERTY(planet_shading_gradient, Gradient::create(Gradient::PRESENT_FULL_WHITE)->force_use_alpha(false), "PlanetShadingGradient", "This allows to modifiy the the gradient of the light on the lanet.");
-  INIT_GRADIENT_PROPERTY(ring_shading_gradient, Gradient::create(Gradient::PRESENT_FULL_WHITE)->force_use_alpha(false), "RingShadingGradient", "This allows to modifiy the the gradient of the light on the ring.");
+  INIT_CURVE_PROPERTY(planet_shading_gradient, Curve::create(Curve::PRESENT_LINEAR), "PlanetShadingGradient", "This allows to modifiy the the gradient of the light on the lanet.");
+  INIT_CURVE_PROPERTY(ring_shading_gradient, Curve::create(Curve::PRESENT_LINEAR), "RingShadingGradient", "This allows to modifiy the the gradient of the light on the ring.");
 
 #undef TABLE
 #undef SETTINGS

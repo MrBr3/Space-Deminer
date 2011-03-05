@@ -152,6 +152,15 @@ public:
     void get_uniform_locations(GLuint program, const std::string& prefix);
     void feed_data(const GradientPtr& gradient);
   };
+  struct CurveUniform
+  {
+    GLuint slice_id;
+
+    CurveTexture curves_texture;
+
+    void get_uniform_locations(GLuint program, const std::string& prefix);
+    void feed_data(const CurvePtr& gradient);
+  };
   struct PlanetProgramUniform
   {
     GLint matrix_PV;
@@ -199,7 +208,8 @@ public:
       GLint influence_night, light_on_planet;//, light_on_ring;
       GLint specular_factor, ring_shadow, cloud_shadow;//planet shadow
       GLint just_shadows;
-      GradientUniform shade_gradient, planet_shade_gradient;
+      GradientUniform shade_gradient;
+      CurveUniform planet_shade_gradient;
       GradientLight gradient[4];
 
       void get_uniform_locations(GLuint program, const std::string& prefix);
