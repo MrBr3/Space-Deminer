@@ -98,8 +98,7 @@ struct Light
 uniform Light light[N_LIGHTS];
 uniform bool uni_no_lightning;
 uniform bool uni_no_nighttexture;
-float night_factor = 0.;
-float night_weight = 0.;
+float night_factor = 1.;
 vec4 diffuse_lightning_color = vec4(0., 0., 0., 0.);
 vec4 normal;
 vec4 world_pos;
@@ -109,6 +108,7 @@ void calc_diffuse_lightning()
   if(uni_no_lightning)
   {
     diffuse_lightning_color = vec4(1., 1., 1., 0.);
+    night_factor = 0.;
     return;
   }
 
@@ -143,13 +143,12 @@ void calc_diffuse_lightning()
       diff = 1.;
     }
 
-    vec4 color = l.color*GET_GRADIENT_COLOR(light[i].shade_gradient, diff);//  TODO make this index depedent instead always 0!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    vec4 color = l.color*GET_GRADIENT_COLOR(light[i].shade_gradient, diff);
 
     float color_intensity = max_vec3(color.xyz);
 
-    night_factor += l.light_on_planet*l.influence_night*(1.-color_intensity);
-//    night_factor += l.light_on_planet*l.influence_night*(1.-get_curve_value(night_switch_curve, color_intensity)); //TODO instead the previous line
-    night_weight += l.light_on_planet*l.influence_night;
+    night_factor = clamp(1.-l.light_on_planet*l.influence_night*color_intensity, 0., night_factor);
+//    night_factor = min(night_factor, 1.f-l.light_on_planet*l.influence_night*get_curve_value(night_switch_curve, color_intensity)); //TODO instead the previous line
 
     diffuse_lightning_color += l.light_on_planet*color;
 #undef l
@@ -230,7 +229,7 @@ vec4 query_night_color()
 
   vec4 night;
   PLANET_TEXTURE_COLOR(night=, night);
-  return night*(night_factor/max(1., night_weight));
+  return night*night_factor;
 }
 
 vec4 just_one_layer()

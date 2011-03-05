@@ -132,7 +132,7 @@ PlanetGenerator
       [X] ausschalten können
       [X] direct light mesh anzeigen
     [X] alle Gradiente in eine 2D Textur
-    [ ] Nachtseite sollte ganz weg sein, wenn von einer Nachtbeeinflussenden Seite ganz beleuchtet?
+    [X] Nachtseite sollte ganz weg sein, wenn von einer Nachtbeeinflussenden Seite ganz beleuchtet
     [ ] Für Gradiente feste sampleZahl festlegen/Alpha zuweisen können
       [ ] in GUI verstecken
     [ ] Uniform Buffer?
