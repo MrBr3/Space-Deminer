@@ -171,6 +171,7 @@ GradientDialog::GradientDialog()
       label[5].show();
       label[5].set_label(_("nSamples"));
       label[5].set_alignment(0.f, 0.5f);
+      label[5].set_visible(!_private_gradient->is_n_samples_forced());
     table2_.attach(label[6], 0, 1, 2, 3, Gtk::FILL, Gtk::SHRINK);
       label[6].show();
       label[6].set_label(_("Remap"));
@@ -222,6 +223,7 @@ GradientDialog::GradientDialog()
         n_samples.set_increments(1., 10.);
         n_samples.set_value(_private_gradient->get_n_samples());
         n_samples.signal_value_changed().connect(sigc::mem_fun(*this, &GradientDialog::set_n_samples));
+        n_samples.set_visible(!_private_gradient->is_n_samples_forced());
       table2_.attach(remap_a, 1, 2, 2, 3, Gtk::EXPAND|Gtk::FILL, Gtk::SHRINK);
       table2_.attach(remap_b, 2, 3, 2, 3, Gtk::EXPAND|Gtk::FILL, Gtk::SHRINK);
         remap_a.show();
@@ -243,6 +245,7 @@ GradientDialog::GradientDialog()
         use_alpha_.set_label(_("UseAlpha"));
         use_alpha_.signal_toggled().connect(sigc::mem_fun(*this, &GradientDialog::set_use_alpha));
         use_alpha_.set_active(_private_gradient->get_use_alpha());
+        use_alpha_.set_sensitive(!_private_gradient->is_use_alpha_forced());
     table_.attach(preview_frame_, 0, 3, 6, 7);
       preview_frame_.show();
       preview_frame_.set_shadow_type(Gtk::SHADOW_ETCHED_OUT);
@@ -267,6 +270,7 @@ void GradientDialog::set_gradient(const GradientPtr& g)
 
   _private_gradient->request_no_updates();
     preview_.set_gradient(_private_gradient);
+    std::cout<<"\n\nhh: "<<_private_gradient->get_use_alpha()<<"\n\n";
     use_alpha_.set_active(_private_gradient->get_use_alpha());
     remap_a.set_value(_private_gradient->get_remap_a()*100.);
     remap_b.set_value(_private_gradient->get_remap_b()*100.);
@@ -288,6 +292,10 @@ void GradientDialog::set_gradient(const GradientPtr& g)
     def_color.set_color(_private_gradient->get_defcolor().get_gdk_color());
     def_color.set_alpha(_private_gradient->get_defcolor().a*0xffff);
   _private_gradient->unrequest_no_updates();
+
+  label[5].set_visible(!_private_gradient->is_n_samples_forced());
+  n_samples.set_visible(!_private_gradient->is_n_samples_forced());
+  use_alpha_.set_sensitive(!_private_gradient->is_use_alpha_forced());
 }
 
 // ------------

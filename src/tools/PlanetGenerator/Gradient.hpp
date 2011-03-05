@@ -129,7 +129,7 @@ public:
   /**
    * \note if you try to force the number of samples a second time to another number of samples, an assertion will be thrown
    * */
-  void force_n_samples(gsize n)
+  GradientPtr force_n_samples(gsize n)
   {
     g_assert(!_n_samples_forced || n==get_n_samples());
     curve1->force_n_samples(n);
@@ -138,16 +138,22 @@ public:
     curve4->force_n_samples(n);
     set_n_samples(n);
     _n_samples_forced = true;
+
+    reference();
+    return GradientPtr(this);
   }
 
   /**
    * \note if you try to force the number of samples a second time to another number of samples, an assertion will be thrown
    * */
-  void force_use_alpha_forced(bool ua)
+  GradientPtr force_use_alpha(bool ua)
   {
     g_assert(!_use_alpha_forced || ua==get_use_alpha());
     set_use_alpha(ua);
     _use_alpha_forced = true;
+
+    reference();
+    return GradientPtr(this);
   }
 
   /**

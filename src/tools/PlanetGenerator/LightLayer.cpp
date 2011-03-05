@@ -116,7 +116,7 @@ LightLayer::LightLayer(guint id) : MultiLayer<LightLayer>(Glib::ustring::compose
   INIT_REAL_PROPERTY(ring_shadow, 1.0f, "RingShadow", "The strength of the ring's shadow.", 0.1, 0.2, 3);
   INIT_REAL_PROPERTY(cloud_shadow, 1.0f, "CloudShadow", "The strength of the cloud's shadow.", 0.1, 0.2, 3);
   INIT_BOOL_PROPERTY(just_shadows, false, "JustShadows", "whether the Light should only cast Shadows and do no lightning\n\n(does not influence the gradients)");
-  INIT_GRADIENT_PROPERTY(shading_gradient, Gradient::create(Gradient::PRESENT_BLACK_2_WHITE), "ShadingGradient", "This allows to modifiy the the gradient of the light");
+  INIT_GRADIENT_PROPERTY(shading_gradient, Gradient::create(Gradient::PRESENT_BLACK_2_WHITE)->force_use_alpha(false), "ShadingGradient", "This allows to modifiy the the gradient of the light");
 
 #undef TABLE
 #undef SETTINGS

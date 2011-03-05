@@ -86,7 +86,7 @@ void Gradient::load_present(Present p)
       color2.set(1.f, 0.f, 0.f);
       color3.set(0.f, 1.f, 0.f);
       color4.set(0.f, 0.f, 1.f);
-      _use_alpha = false;
+      set_use_alpha(false);
       remap_a = 0.;
       remap_b = 1.;
       set_n_samples(512);
@@ -103,7 +103,7 @@ void Gradient::load_present(Present p)
       color2.set(1.f, 0.f, 0.f);
       color3.set(0.f, 1.f, 0.f);
       color4.set(0.f, 0.f, 1.f);
-      _use_alpha = true;
+      set_use_alpha(true);
       remap_a = 0.;
       remap_b = 1.;
       set_n_samples(512);
@@ -132,7 +132,7 @@ void Gradient::set(const Gradient& g)
     color2 = g.color2;
     color3 = g.color3;
     color4 = g.color4;
-    _use_alpha = g._use_alpha;
+    set_use_alpha(g._use_alpha);
     remap_a = g.remap_a;
     remap_b = g.remap_b;
     set_n_samples(g.get_n_samples());

@@ -111,11 +111,14 @@ public:
   /**
    * \note if you try to force the number of samples a second time to another number of samples, an assertion will be thrown
    * */
-  void force_n_samples(gsize n)
+  CurvePtr force_n_samples(gsize n)
   {
     g_assert(!_n_samples_forced || n==get_n_samples());
     set_n_samples(n);
     _n_samples_forced = true;
+
+    reference();
+    return CurvePtr(this);
   }
 
   gdouble get_value(gdouble x)const

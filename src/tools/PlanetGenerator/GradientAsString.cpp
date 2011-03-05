@@ -262,7 +262,9 @@ void Gradient::load_from_string(Glib::ustring::const_iterator& begin, Glib::ustr
       throw_Gradient_parser_error("expected ' '");
     ++begin;
 
-    boolfromstring_schemestyle(_use_alpha, begin, end);
+    bool temp_bool;
+    boolfromstring_schemestyle(temp_bool, begin, end);
+    set_use_alpha(temp_bool);
 
     if(*begin!=' ')
       throw_Gradient_parser_error("expected ' '");
