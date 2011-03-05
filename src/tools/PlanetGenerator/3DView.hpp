@@ -166,6 +166,7 @@ public:
     GLint uni_base_texture_warped;
     GLint uni_night_texture_visible;
     GLint uni_night_texture_warped;
+    GLint uni_night_gradient_slice;
     GLint uni_cloud_texture_visible;
     GLint uni_cloud_texture_warped;
     GLint uni_weight_texture_visible;
@@ -173,6 +174,8 @@ public:
     GLint uni_no_lightning;
     GLint uni_no_nighttexture;
     GLint uni_all_curves;
+
+    GradientUniform night_gradient;
 
     struct Light
     {

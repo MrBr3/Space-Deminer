@@ -22,7 +22,7 @@ class NightTextureLayer : public ImageLayer<NightTextureLayer>
 public:
   typedef ImageLayer<NightTextureLayer> ParentClass;
 
-  //CurvePtr visibility_curve; TODO
+  GRADIENT_SETTING(night_gradient);
 
 public:
   NightTextureLayer();

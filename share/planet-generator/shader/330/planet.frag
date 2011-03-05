@@ -28,6 +28,8 @@ uniform bool uni_cloud_texture_warped;
 uniform bool uni_weight_texture_visible;
 uniform bool uni_weight_texture_warped;
 
+uniform sampler1DArray uni_all_curves;
+
 #define PLANET_TEXTURE_COLOR(what, t) if(uni_##t##_texture_warped){what texture(uni_##t##_texture, tex_coord_warped);}else{what texture(uni_##t##_texture, tex_coord);}
 
 in vec2 tex_coord;
@@ -55,13 +57,12 @@ struct SpecularMaterial
 #define GRADIENT_MODULATE_ADD 1
 #define GRADIENT_MODULATE_MULTIPLY 2
 
-uniform sampler1DArray uni_all_curves;
-
 struct Gradient
 {
   float slice_id;
   float remap_size, remap_offset;
 };
+
 
 /*float get_curve_value(float slice, float x)
 {
@@ -98,6 +99,8 @@ struct Light
 uniform Light light[N_LIGHTS];
 uniform bool uni_no_lightning;
 uniform bool uni_no_nighttexture;
+uniform Gradient uni_night_gradient;
+
 float night_factor = 1.;
 vec4 diffuse_lightning_color = vec4(0., 0., 0., 0.);
 vec4 normal;
@@ -148,7 +151,6 @@ void calc_diffuse_lightning()
     float color_intensity = max_vec3(color.xyz);
 
     night_factor = clamp(1.-l.light_on_planet*l.influence_night*color_intensity, 0., night_factor);
-//    night_factor = min(night_factor, 1.f-l.light_on_planet*l.influence_night*get_curve_value(night_switch_curve, color_intensity)); //TODO instead the previous line
 
     diffuse_lightning_color += l.light_on_planet*color;
 #undef l
@@ -229,7 +231,7 @@ vec4 query_night_color()
 
   vec4 night;
   PLANET_TEXTURE_COLOR(night=, night);
-  return night*night_factor;
+  return night*GET_GRADIENT_COLOR(uni_night_gradient, night_factor);
 }
 
 vec4 just_one_layer()

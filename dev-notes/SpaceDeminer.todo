@@ -139,7 +139,8 @@ PlanetGenerator
     [X] gradientenstand mit mehreren Lichtern testen
     [ ] weitere Gradients einsetzen
       [ ] getrennte & gemeinsame kurven für Ring & Planetbeleuchtung
-      [ ] Kurve für übergang von Nachttextur
+      [X] Kurve für übergang von Nachttextur
+        [ ] wahlweise custom oder direkt vom diffusen Licht abhängig
       [ ] Gradient für Farbe/Transparenz von Wolken in abhängigkeit der beleuchtung
       [ ] Graditionskurven für einzelne Texturen
     [ ] RingShader

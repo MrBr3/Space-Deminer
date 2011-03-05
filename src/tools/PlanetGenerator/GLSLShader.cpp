@@ -163,6 +163,7 @@ void View3D::init_shaders()
       planet_program_uniform.uni_no_lightning = LOCATE_UNIFORM(planet_program, "uni_no_lightning");
       planet_program_uniform.uni_no_nighttexture = LOCATE_UNIFORM(planet_program, "uni_no_nighttexture");
       planet_program_uniform.uni_all_curves = LOCATE_UNIFORM(planet_program, "uni_all_curves");
+      planet_program_uniform.night_gradient.get_uniform_locations(planet_program, "uni_night_gradient.");
       planet_program_uniform.light[0].get_uniform_locations(planet_program, "light[0].");
       planet_program_uniform.light[1].get_uniform_locations(planet_program, "light[1].");
       planet_program_uniform.light[2].get_uniform_locations(planet_program, "light[2].");
@@ -344,7 +345,6 @@ void View3D::PlanetProgramUniform::Light::GradientLight::feed_data(const LightLa
 void View3D::GradientUniform::feed_data(const GradientPtr& gradient)
 {
   curves_texture.set(gradient);
-  curves_texture.bind();
   glUniform1f(slice_id, curves_texture.get_slice_id());
 
   gfloat remap_a = gradient->get_remap_a();

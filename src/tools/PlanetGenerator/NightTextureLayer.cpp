@@ -25,6 +25,10 @@ NightTextureLayer::NightTextureLayer() : ParentClass(_("Night Texture"), true)
   SettingsWidget* settings  = new SettingsWidget;
   prepare_settings("night-texture", settings);
   settings->append_imagefile_widget("night-texture-file", "File", "The File the Texture is created from", get_imagefile());
+
+  night_gradient = Gradient::create(Gradient::PRESENT_BLACK_2_WHITE)->force_use_alpha(false);\
+  signal_night_gradient_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));\
+  settings->append_gradient_widget("night-texture-night_gradient", _("NightGradient"), _("Describes, how the Night Textures gets faded in depending on the lightning."), night_gradient);
 }
 
 NightTextureLayer::~NightTextureLayer()throw()
