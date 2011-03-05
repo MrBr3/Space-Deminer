@@ -162,6 +162,7 @@ void View3D::init_shaders()
       planet_program_uniform.uni_weight_texture_warped  = LOCATE_UNIFORM(planet_program, "uni_weight_texture_warped");
       planet_program_uniform.uni_no_lightning = LOCATE_UNIFORM(planet_program, "uni_no_lightning");
       planet_program_uniform.uni_no_nighttexture = LOCATE_UNIFORM(planet_program, "uni_no_nighttexture");
+      planet_program_uniform.uni_all_curves = LOCATE_UNIFORM(planet_program, "uni_all_curves");
       planet_program_uniform.light[0].get_uniform_locations(planet_program, "light[0].");
       planet_program_uniform.light[1].get_uniform_locations(planet_program, "light[1].");
       planet_program_uniform.light[2].get_uniform_locations(planet_program, "light[2].");
@@ -263,12 +264,7 @@ void View3D::deinit_shaders()
 
 void View3D::GradientUniform::get_uniform_locations(GLuint planet_program, const std::string& prefix)
 {
-  curves = LOCATE_UNIFORM(planet_program, (prefix+"curves").c_str());
-  defcolor = LOCATE_UNIFORM(planet_program, (prefix+"defcolor").c_str());
-  col[0] = LOCATE_UNIFORM(planet_program, (prefix+"col[0]").c_str());
-  col[1] = LOCATE_UNIFORM(planet_program, (prefix+"col[1]").c_str());
-  col[2] = LOCATE_UNIFORM(planet_program, (prefix+"col[2]").c_str());
-  col[3] = LOCATE_UNIFORM(planet_program, (prefix+"col[3]").c_str());
+  slice_id = LOCATE_UNIFORM(planet_program, (prefix+"slice_id").c_str());
   remap_size = LOCATE_UNIFORM(planet_program, (prefix+"remap_size").c_str());
   remap_offset = LOCATE_UNIFORM(planet_program, (prefix+"remap_offset").c_str());
 }
@@ -323,7 +319,7 @@ void View3D::PlanetProgramUniform::Light::feed_data(guint i)
   glUniform1f(specular_factor, layer.get_specular_factor());
   glUniform1f(ring_shadow, layer.get_ring_shadow());
   glUniform1f(cloud_shadow, layer.get_cloud_shadow());
-  //glUniform1f(cloud_shadow, layer.get_planet_shadow());
+  //glUniform1f(planet_shadow, layer.get_planet_shadow());
   glUniform1i(just_shadows, layer.get_just_shadows());
   shade_gradient.feed_data(layer.get_shading_gradient());
   gradient[0].feed_data(layer.gradient0);
@@ -345,27 +341,12 @@ void View3D::PlanetProgramUniform::Light::GradientLight::feed_data(const LightLa
   light_gradient.feed_data(gradient.get_light_gradient());
 }
 
-void View3D::GradientUniform::feed_data(const ConstGradientPtr& gradient)
+void View3D::GradientUniform::feed_data(const GradientPtr& gradient)
 {
   curves_texture.set(gradient);
   curves_texture.bind();
-  glUniform1i(curves, curves_texture.get_texture_stage());
+  glUniform1f(slice_id, curves_texture.get_slice_id());
 
-  if(gradient->get_use_alpha())
-  {
-    gradient->get_defcolor().glUniformRGBA(defcolor);
-    gradient->get_color1().glUniformRGBA(col[0]);
-    gradient->get_color2().glUniformRGBA(col[1]);
-    gradient->get_color3().glUniformRGBA(col[2]);
-    gradient->get_color4().glUniformRGBA(col[3]);
-  }else
-  {
-    gradient->get_defcolor().glUniformRGB(defcolor);
-    gradient->get_color1().glUniformRGB(col[0]);
-    gradient->get_color2().glUniformRGB(col[1]);
-    gradient->get_color3().glUniformRGB(col[2]);
-    gradient->get_color4().glUniformRGB(col[3]);
-  }
   gfloat remap_a = gradient->get_remap_a();
   gfloat remap_b = gradient->get_remap_b();
   if(remap_a==remap_b)

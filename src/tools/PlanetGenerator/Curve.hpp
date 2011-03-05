@@ -108,6 +108,16 @@ public:
     return get_samples()[i];
   }
 
+  /**
+   * \note if you try to force the number of samples a second time to another number of samples, an assertion will be thrown
+   * */
+  void force_n_samples(gsize n)
+  {
+    g_assert(!_n_samples_forced || n==get_n_samples());
+    set_n_samples(n);
+    _n_samples_forced = true;
+  }
+
   gdouble get_value(gdouble x)const
   {
     x = CLAMP(x, 0., 1.)*(get_n_samples()-1);
@@ -153,6 +163,8 @@ public:
    **/
   bool move_point(gsize i, gdouble x, gdouble y);
 
+  bool is_n_samples_forced()const{return _n_samples_forced;}
+
 private:
   // The following names and types are chosen for compatibility with the gimp_curve_plot procedure in gimpcurve.cpp
   static void gimp_curve_plot(Curve*, gsize, gsize, gsize, gsize);
@@ -161,6 +173,7 @@ private:
   gsize n_points;
   gsize n_samples;
   gdouble* samples;
+  bool _n_samples_forced;
 };
 
 

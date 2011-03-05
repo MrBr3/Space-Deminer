@@ -111,6 +111,8 @@ private:
   SamplesVector _samples;
   gsize _n_gradients_needed;
   Cairo::RefPtr<Cairo::Gradient> _cairo_gradient;
+  bool _n_samples_forced;
+  bool _use_alpha_forced;
 
   void update_cairo_gradient();
 
@@ -123,6 +125,30 @@ public:
 
   void request_no_updates(){_dont_update++;}
   void unrequest_no_updates(){g_assert(_dont_update>0);_dont_update--;}
+
+  /**
+   * \note if you try to force the number of samples a second time to another number of samples, an assertion will be thrown
+   * */
+  void force_n_samples(gsize n)
+  {
+    g_assert(!_n_samples_forced || n==get_n_samples());
+    curve1->force_n_samples(n);
+    curve2->force_n_samples(n);
+    curve3->force_n_samples(n);
+    curve4->force_n_samples(n);
+    set_n_samples(n);
+    _n_samples_forced = true;
+  }
+
+  /**
+   * \note if you try to force the number of samples a second time to another number of samples, an assertion will be thrown
+   * */
+  void force_use_alpha_forced(bool ua)
+  {
+    g_assert(!_use_alpha_forced || ua==get_use_alpha());
+    set_use_alpha(ua);
+    _use_alpha_forced = true;
+  }
 
   /**
    *
@@ -156,6 +182,9 @@ public:
       signal_changed().emit();
     }
   }
+
+  bool is_n_samples_forced()const{return _n_samples_forced;}
+  bool is_use_alpha_forced()const{return _use_alpha_forced;}
 ///@}
 
 private:

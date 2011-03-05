@@ -117,9 +117,12 @@ public:
 
   class CurveTexture : public sigc::trackable
   {
-    GLuint texture;
-    GLint texture_stage;
-    static GLint curr_curve_texture_stage;
+    static GLuint next_texture_slize_to_create;
+    static GLuint texture_id;
+    static gsize n_referenced;
+    static GLfloat* samples;
+
+    int this_slice;
 
     ConstGradientPtr gradient;
     ConstCurvePtr curve;
@@ -127,12 +130,12 @@ public:
     void fill_texture();
     void init();
   public:
-    void set(ConstGradientPtr g);
-    void set(ConstCurvePtr g);
+    void set(GradientPtr g);
+    void set(CurvePtr g);
+    GLfloat get_slice_id()const{return this_slice;}
 
-    GLint get_texture_stage()const{return texture_stage;}
-
-    void bind();
+    static void bind();
+    static void unbind();
 
     CurveTexture();
     ~CurveTexture()throw();
@@ -141,14 +144,13 @@ public:
 // Shaders
   struct GradientUniform
   {
-    GLuint curves;
-    GLuint defcolor, col[4];
+    GLuint slice_id;
     GLuint remap_offset, remap_size;
 
     CurveTexture curves_texture;
 
     void get_uniform_locations(GLuint program, const std::string& prefix);
-    void feed_data(const ConstGradientPtr& gradient);
+    void feed_data(const GradientPtr& gradient);
   };
   struct PlanetProgramUniform
   {
@@ -170,6 +172,7 @@ public:
     GLint uni_weight_texture_warped;
     GLint uni_no_lightning;
     GLint uni_no_nighttexture;
+    GLint uni_all_curves;
 
     struct Light
     {

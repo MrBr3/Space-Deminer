@@ -24,6 +24,8 @@ GradientPtr Gradient::slot[4];
 Gradient::Gradient(Present p)
 {
   _use_alpha = false;
+  _n_samples_forced = false;
+  _use_alpha_forced = false;
   _dont_update = 0;
   _n_gradients_needed = 0;
   remap_a = 0.;
@@ -212,6 +214,8 @@ void Gradient::set_color4(const ColorRGBA& color4)
 
 void Gradient::set_use_alpha(bool use_alpha)
 {
+  if(_use_alpha_forced)
+    return;
   this->_use_alpha = use_alpha;
   invalidate_and_update();
 }
@@ -232,6 +236,9 @@ void Gradient::set_remap_b(gdouble b)
 
 void Gradient::set_n_samples(gsize s)
 {
+  if(_n_samples_forced)
+    return;
+
   s = MAX(16, s);
 
   if(s==get_n_samples())

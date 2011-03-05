@@ -82,6 +82,7 @@ void View3D::unbind_all_textures()
   Texture::unbind(1);
   Texture::unbind(2);
   Texture::unbind(3);
+  CurveTexture::unbind(/*4*/);
 }
 
 void View3D::deinit()
@@ -291,11 +292,13 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   night_texture->bind(1, NightTextureLayer::get_singleton()->get_visible());
   cloud_texture->bind(2, CloudTextureLayer::get_singleton()->get_visible());
   weight_texture->bind(3, WeightTextureLayer::get_singleton()->get_visible());
+  CurveTexture::bind(/*4*/);
 
   glUniform1i(planet_program_uniform.base_texture, 0);
   glUniform1i(planet_program_uniform.night_texture, 1);
   glUniform1i(planet_program_uniform.cloud_texture, 2);
   glUniform1i(planet_program_uniform.weight_texture, 3);
+  glUniform1i(planet_program_uniform.uni_all_curves, 4);
 
   matrix_PV.glUniform(planet_program_uniform.matrix_PV);
   matrix_M.glUniform(planet_program_uniform.matrix_M);

@@ -19,48 +19,90 @@
 
 #include "./MainWindow.hpp"
 
-GLint View3D::CurveTexture::curr_curve_texture_stage = 8;
+#define N_TEXTURE_SLICES 32
+#define N_SAMPLES 512
+
+GLuint View3D::CurveTexture::next_texture_slize_to_create = 0;
+GLuint View3D::CurveTexture::texture_id = 0;
+gsize View3D::CurveTexture::n_referenced = 0;
+GLfloat* View3D::CurveTexture::samples = nullptr;
 
 View3D::CurveTexture::CurveTexture()
 {
-  texture = 0;
-  texture_stage = curr_curve_texture_stage;
-  ++curr_curve_texture_stage;
+  g_assert(N_TEXTURE_SLICES > next_texture_slize_to_create);
+
+  this_slice = next_texture_slize_to_create;
+  ++next_texture_slize_to_create;
 }
 
 View3D::CurveTexture::~CurveTexture()throw()
 {
-  if(texture)
+  g_assert(n_referenced>0);
+
+  --n_referenced;
+
+  if(n_referenced==0)
   {
-    glDeleteTextures(1, &texture);
-    texture = 0;
+    g_assert(samples);
+    g_assert(texture_id);
+    glDeleteTextures(1, &texture_id);
+    texture_id = 0;
+
+    delete[] samples;
   }
 }
 
-void View3D::CurveTexture::set(ConstGradientPtr g)
+void View3D::CurveTexture::init()
+{
+  if(n_referenced==0)
+  {
+    g_assert(!texture_id);
+
+    glGenTextures(1, &texture_id);
+    bind();
+
+    glTexParameteri(GL_TEXTURE_1D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_1D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_1D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_1D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    samples = new GLfloat[4*N_TEXTURE_SLICES*N_SAMPLES];
+  }
+
+  g_assert(texture_id);
+  g_assert(samples);
+
+  ++n_referenced;
+
+  fill_texture();
+}
+
+void View3D::CurveTexture::set(GradientPtr g)
 {
   if(gradient)
   {
-    g_assert(g==gradient);
+    g_assert(gradient==g);
     return;
   }
   g_assert(!curve);
 
+  g->force_n_samples(N_SAMPLES);
   gradient = g;
   gradient->signal_changed().connect(sigc::mem_fun(*this, &View3D::CurveTexture::fill_texture));
 
   init();
 }
 
-void View3D::CurveTexture::set(ConstCurvePtr c)
+void View3D::CurveTexture::set(CurvePtr c)
 {
   if(curve)
   {
-    g_assert(c==curve);
+    g_assert(curve==c);
     return;
   }
   g_assert(!gradient);
 
+  c->force_n_samples(N_SAMPLES);
   curve = c;
   curve->signal_changed().connect(sigc::mem_fun(*this, &View3D::CurveTexture::fill_texture));
 
@@ -69,40 +111,36 @@ void View3D::CurveTexture::set(ConstCurvePtr c)
 
 void View3D::CurveTexture::bind()
 {
-  g_assert(XOR(gradient, curve));
-  g_assert(texture);
+  glActiveTexture(GL_TEXTURE4);
+  glBindTexture(GL_TEXTURE_1D_ARRAY, texture_id);
+}
 
-  glActiveTexture(GL_TEXTURE0+texture_stage);
-  glEnable(GL_TEXTURE_1D);
-  glBindTexture(GL_TEXTURE_1D, texture);
+void View3D::CurveTexture::unbind()
+{
+  glActiveTexture(GL_TEXTURE4);
+  glBindTexture(GL_TEXTURE_1D_ARRAY, 0);
 }
 
 void View3D::CurveTexture::fill_texture()
 {
   g_assert(XOR(gradient, curve));
+  g_assert(texture_id);
 
   bind();
 
-  GLint internal_format;
-  GLsizei width;
-  GLenum format;
-  GLfloat* data = nullptr;
+  GLfloat* data = &samples[N_SAMPLES*4*this_slice];
 
   if(gradient)
   {
-    internal_format = GL_RGBA32F;
-    width = gradient->get_n_samples();
-    format = GL_RGBA;
-
-    g_assert(gradient->get_curve1()->get_n_samples()==width);
-    g_assert(gradient->get_curve2()->get_n_samples()==width);
-    g_assert(gradient->get_curve3()->get_n_samples()==width);
-    g_assert(gradient->get_curve4()->get_n_samples()==width);
+    g_assert(gradient->get_curve1()->get_n_samples()==N_SAMPLES);
+    g_assert(gradient->get_curve2()->get_n_samples()==N_SAMPLES);
+    g_assert(gradient->get_curve3()->get_n_samples()==N_SAMPLES);
+    g_assert(gradient->get_curve4()->get_n_samples()==N_SAMPLES);
+    g_assert(N_SAMPLES==gradient->get_n_samples());
 
     const std::vector<ColorRGBA>& src = gradient->get_samples();
 
-    data = new GLfloat[width*4];
-    for(gsize i=0; i<width; i++)
+    for(gsize i=0; i<N_SAMPLES; i++)
     {
       data[i*4+0] = src[i].r;
       data[i*4+1] = src[i].g;
@@ -113,26 +151,19 @@ void View3D::CurveTexture::fill_texture()
   {
     g_assert(curve);
 
-    internal_format = GL_RED;
-    width = curve->get_n_samples();
-    format = GL_RED;
     const gdouble* const src = curve->get_samples();
+    g_assert(N_SAMPLES==curve->get_n_samples());
 
-    data = new GLfloat[width];
-    for(gsize i=0; i<width; ++i)
+    for(gsize i=0; i<N_SAMPLES; ++i)
     {
-      data[i] = src[i];
+      data[i*4] = src[i];
+      data[i*4+0] = src[i];
+      data[i*4+1] = src[i];
+      data[i*4+2] = src[i];
     }
   }
 
-  glTexImage1D(GL_TEXTURE_1D, 0, internal_format, width, 0, format, GL_FLOAT, data);
-
-  glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-  delete[] data;
+  glTexImage2D(GL_TEXTURE_1D_ARRAY, 0, GL_RGBA32F, N_SAMPLES, N_TEXTURE_SLICES, 0, GL_RGBA, GL_FLOAT, samples);
 
   if(!main_window)
     return;
@@ -140,13 +171,4 @@ void View3D::CurveTexture::fill_texture()
   if(!view)
     return;
   view->invalidate();
-}
-
-void View3D::CurveTexture::init()
-{
-  g_assert(!texture);
-
-  glGenTextures(1, &texture);
-
-  fill_texture();
 }

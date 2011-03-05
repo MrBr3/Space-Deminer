@@ -131,7 +131,11 @@ PlanetGenerator
     [X] Lichtrepräsentation
       [X] ausschalten können
       [X] direct light mesh anzeigen
-    [ ] alle Gradiente in eine 2D Textur und/oder Uniform Buffer
+    [X] alle Gradiente in eine 2D Textur
+    [ ] Nachtseite sollte ganz weg sein, wenn von einer Nachtbeeinflussenden Seite ganz beleuchtet?
+    [ ] Für Gradiente feste sampleZahl festlegen/Alpha zuweisen können
+      [ ] in GUI verstecken
+    [ ] Uniform Buffer?
     [ ] gradientenstand mit mehreren Lichtern testen
     [ ] weitere Gradients einsetzen
       [ ] getrennte & gemeinsame kurven für Ring & Planetbeleuchtung
@@ -159,9 +163,10 @@ PlanetGenerator
           [ ] mithilfen von Matrix von der Lichtquelle aus?
             [ ] Matrix, die linear zwischen othogonal und projeziet umschalten können
     [ ] Antialiasing
-    [ ] gucken pb Multisampling nicht etasa schärfer geht
-      [ ] Graditionsbeleuchtung
-        [ ] normalmap als offset in bildschirmkoordinaten für fabe interpretieren?
+    [ ] gucken pb Multimapping nicht etasa schärfer geht
+    [ ] Graditionsbeleuchtung
+      [ ] Refenrenztextur für Kreisfarbverlauf (nur ein Viertel, andere sollen über shader einfach über abs bestimmt werden)
+      [ ] normalmap als offset in bildschirmkoordinaten für fabe interpretieren?
     [ ] Atmosphären effekt
       [ ] Farbverlauf soll Material beeinflussen
       [ ] Entfernung, mit der der Strahl an der Kugel vorbeifliegt bestimmen können

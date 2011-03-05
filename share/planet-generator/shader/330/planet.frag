@@ -1,5 +1,7 @@
 #version 330 core
 
+#extension GL_EXT_texture_array: enable
+
 const float PI = 3.14159265358979324;
 const float PI2 = 6.28318530717958648;
 const float INV_PI = 0.318309886183790672;
@@ -53,20 +55,20 @@ struct SpecularMaterial
 #define GRADIENT_MODULATE_ADD 1
 #define GRADIENT_MODULATE_MULTIPLY 2
 
+uniform sampler1DArray uni_all_curves;
+
 struct Gradient
 {
-  sampler1D curves;
-  vec4 defcolor, col[4];
+  float slice_id;
   float remap_size, remap_offset;
 };
 
-float get_curve_value(sampler1D curve, float v)
+/*float get_curve_value(float slice, float x)
 {
-  return v;
-//  return texture(curve, v); //TODO
-}
+  return texture1DArray(all_curves, vec2(x, slice)).x;
+}*/
 
-#define GET_GRADIENT_COLOR(g, v) texture(g.curves, (g.remap_offset+v)*g.remap_size)
+#define GET_GRADIENT_COLOR(g, x) texture1DArray(uni_all_curves, vec2((g.remap_offset+x)*g.remap_size, g.slice_id))
 
 struct GradientLight
 {
@@ -141,7 +143,7 @@ void calc_diffuse_lightning()
       diff = 1.;
     }
 
-    vec4 color = l.color*GET_GRADIENT_COLOR(light[0].shade_gradient, diff);//  TODO make this index depedent instead always 0!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    vec4 color = l.color*GET_GRADIENT_COLOR(light[i].shade_gradient, diff);//  TODO make this index depedent instead always 0!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     float color_intensity = max_vec3(color.xyz);
 

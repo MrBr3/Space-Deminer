@@ -27,6 +27,7 @@ Curve::Curve()
   n_points = 2;
   _interpolate_linear = false;
   _invalidated = false;
+  _n_samples_forced = false;
 
   points[0].x = 0.;
   points[0].y = 0.;
@@ -331,6 +332,9 @@ void Curve::set_interpolate_linear(bool linear)
 
 void Curve::set_n_samples(gsize n)
 {
+  if(_n_samples_forced)
+    return;
+
   n = MAX(2, n);
   if(n_samples==n)
     return;
