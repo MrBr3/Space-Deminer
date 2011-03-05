@@ -63,7 +63,6 @@ struct Gradient
   float remap_size, remap_offset;
 };
 
-
 /*float get_curve_value(float slice, float x)
 {
   return texture1DArray(all_curves, vec2(x, slice)).x;
@@ -92,7 +91,7 @@ struct Light
   float ring_shadow;
   float cloud_shadow;
   bool just_shadows;
-  Gradient shade_gradient;
+  Gradient shade_gradient, planet_shading_gradient;
   GradientLight gradient[N_GRADIENT_PER_LIGHT];
 };
 
@@ -148,7 +147,7 @@ void calc_diffuse_lightning()
       diff = 1.;
     }
 
-    vec4 color = l.color*GET_GRADIENT_COLOR(light[i].shade_gradient, diff);
+    vec4 color = l.color*GET_GRADIENT_COLOR(light[i].shade_gradient, diff)*GET_GRADIENT_COLOR(light[i].planet_shading_gradient, diff);
 
     float color_intensity = max_vec3(color.xyz);
 

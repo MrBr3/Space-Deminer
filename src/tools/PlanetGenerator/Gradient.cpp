@@ -109,6 +109,23 @@ void Gradient::load_present(Present p)
       set_n_samples(512);
     }
     break;
+  case PRESENT_FULL_WHITE:
+    {
+      curve1->load_present(Curve::PRESENT_FULL);
+      curve2->load_present(Curve::PRESENT_EMPTY);
+      curve3->load_present(Curve::PRESENT_EMPTY);
+      curve4->load_present(Curve::PRESENT_EMPTY);
+      defcolor.set(0.f, 0.f, 0.f, 0.f);
+      color1.set(1.f, 1.f, 1.f);
+      color2.set(1.f, 0.f, 0.f);
+      color3.set(0.f, 1.f, 0.f);
+      color4.set(0.f, 0.f, 1.f);
+      set_use_alpha(false);
+      remap_a = 0.;
+      remap_b = 1.;
+      set_n_samples(512);
+    }
+    break;
   default:
     illegal = true;
   }

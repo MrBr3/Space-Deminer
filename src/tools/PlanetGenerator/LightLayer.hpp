@@ -61,6 +61,8 @@ private:
   REAL_SETTING(cloud_shadow);
   REAL_SETTING(just_shadows);
   GRADIENT_SETTING(shading_gradient);
+  GRADIENT_SETTING(planet_shading_gradient);
+  GRADIENT_SETTING(ring_shading_gradient);
 
   sigc::signal<void> _signal_rotation_changed;
 

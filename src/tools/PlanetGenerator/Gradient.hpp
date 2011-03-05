@@ -38,6 +38,7 @@ public:
   {
     PRESENT_BLACK_2_WHITE,
     PRESENT_TRANSPARENT_2_WHITE,
+    PRESENT_FULL_WHITE,
   };
 
   void flip_h();

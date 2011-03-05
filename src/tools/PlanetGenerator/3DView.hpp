@@ -199,7 +199,7 @@ public:
       GLint influence_night, light_on_planet;//, light_on_ring;
       GLint specular_factor, ring_shadow, cloud_shadow;//planet shadow
       GLint just_shadows;
-      GradientUniform shade_gradient;
+      GradientUniform shade_gradient, planet_shade_gradient;
       GradientLight gradient[4];
 
       void get_uniform_locations(GLuint program, const std::string& prefix);

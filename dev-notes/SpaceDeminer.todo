@@ -138,7 +138,7 @@ PlanetGenerator
     [ ] Uniform Buffer?
     [X] gradientenstand mit mehreren Lichtern testen
     [ ] weitere Gradients einsetzen
-      [ ] getrennte & gemeinsame kurven für Ring & Planetbeleuchtung
+      [X] getrennte & gemeinsame kurven für Ring & Planetbeleuchtung
       [X] Kurve für übergang von Nachttextur
         [X] wahlweise custom oder direkt vom diffusen Licht abhängig
       [X] Gradient für Farbe/Transparenz von Wolken in abhängigkeit der beleuchtung
@@ -154,6 +154,13 @@ PlanetGenerator
           [ ] Textur mit vier Kanälen (alpha invertiert?), wobie jede der vier Texturen für ein eigenes Material steht
             z.B Rot: Wüsten, Grün: ka, schwarz: kein glanzlicht, Blau: Eis, Alpha-Invertiert: Wasser
       [ ] Glanzlichter für Ring?
+    [ ] Atmosphären effekt
+      [ ] Farbverlauf soll Material beeinflussen
+      [ ] Entfernung, mit der der Strahl an der Kugel vorbeifliegt bestimmen können
+      [ ] Atmosphäre soll auch Ringe beeinflussen?
+    [ ] Normalmap?
+      [ ] Normalmap für Wolken autmatisch generieren
+      [ ] Height/Normalmap für Planeten angeben können
     [ ] Schatten
       [ ] manuell linear zwischen directlightshadow und pointlightshadow schalten können
       [ ] schatten auf Ring
@@ -168,10 +175,6 @@ PlanetGenerator
     [ ] Graditionsbeleuchtung
       [ ] Refenrenztextur für Kreisfarbverlauf (nur ein Viertel, andere sollen über shader einfach über abs bestimmt werden)
       [ ] normalmap als offset in bildschirmkoordinaten für fabe interpretieren?
-    [ ] Atmosphären effekt
-      [ ] Farbverlauf soll Material beeinflussen
-      [ ] Entfernung, mit der der Strahl an der Kugel vorbeifliegt bestimmen können
-      [ ] Atmosphäre soll auch Ringe beeinflussen?
     [ ] anisotropes filtering?
   [ ] Raytracer auf stand der echtzeitansicht bringen
     [ ] möglichkeit zum "backen" nicht verbauen!

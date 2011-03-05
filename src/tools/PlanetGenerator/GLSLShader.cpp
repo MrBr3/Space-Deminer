@@ -288,6 +288,8 @@ void View3D::PlanetProgramUniform::Light::get_uniform_locations(GLuint planet_pr
   //planet_shadow = LOCATE_UNIFORM(planet_program, (prefix+"planet_shadow").c_str());
   just_shadows = LOCATE_UNIFORM(planet_program, (prefix+"just_shadows").c_str());
   shade_gradient.get_uniform_locations(planet_program, (prefix+"shade_gradient.").c_str());
+  planet_shade_gradient.get_uniform_locations(planet_program, (prefix+"planet_shading_gradient.").c_str());
+  //ring_shade_gradient.get_uniform_locations(planet_program, (prefix+"ring_shading_gradient.").c_str());
   gradient[0].get_uniform_locations(planet_program, prefix+"gradient[0].");
   gradient[1].get_uniform_locations(planet_program, prefix+"gradient[1].");
   gradient[2].get_uniform_locations(planet_program, prefix+"gradient[2].");
@@ -325,6 +327,8 @@ void View3D::PlanetProgramUniform::Light::feed_data(guint i)
   //glUniform1f(planet_shadow, layer.get_planet_shadow());
   glUniform1i(just_shadows, layer.get_just_shadows());
   shade_gradient.feed_data(layer.get_shading_gradient());
+  planet_shade_gradient.feed_data(layer.get_planet_shading_gradient());
+  //ring_shade_gradient.feed_data(layer.get_ring_shading_gradient());
   gradient[0].feed_data(layer.gradient0);
   gradient[1].feed_data(layer.gradient1);
   gradient[2].feed_data(layer.gradient2);
