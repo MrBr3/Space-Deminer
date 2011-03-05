@@ -20,6 +20,7 @@
 #include <base.hpp>
 
 #include "./Gradient.hpp"
+#include "./ColorCurve.hpp"
 
 class Options : public sigc::trackable
 {
@@ -66,6 +67,8 @@ public:
   static void set_gradient(const Glib::ustring& name, const ConstGradientPtr&  value);
   static void get_curve(const Glib::ustring& name, const CurvePtr& curve);
   static void set_curve(const Glib::ustring& name, const ConstCurvePtr& value);
+  static void get_colorcurve(const Glib::ustring& name, const ColorCurvePtr& curve);
+  static void set_colorcurve(const Glib::ustring& name, const ConstColorCurvePtr& value);
 
   static Glib::ustring integer2string(gint value){return Glib::ustring::compose("%1", value);}
   static Glib::ustring integer2string(guint value){return Glib::ustring::compose("%1", value);}

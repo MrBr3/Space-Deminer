@@ -21,6 +21,7 @@
 #include <gtkmm.h>
 
 #include "./Gradient.hpp"
+#include "./ColorCurve.hpp"
 #include "./ModelSettings.hpp"
 #include "./Options.hpp"
 #include "./Planet.hpp"

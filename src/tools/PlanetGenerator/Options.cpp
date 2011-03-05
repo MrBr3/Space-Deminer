@@ -134,6 +134,43 @@ void Options::set_color(const Glib::ustring& name, const Gdk::Color& value)
                                           Glib::ustring::format(std::hex, SET_FILL_0, std::setw(2), CLAMP(int(round(value.get_blue_p()*255.)), 0, 255))));
 }
 
+void Options::get_colorcurve(const Glib::ustring& name, const ColorCurvePtr& cc)
+{
+  if(!option_exists(name))
+  {
+    set_colorcurve(name, cc);
+    return;
+  }
+
+  ColorCurvePtr tmp = ColorCurve::create();
+
+  try
+  {
+    Glib::ustring str = get_string(name, "");
+    Glib::ustring::const_iterator b = str.begin();
+    tmp->load_from_string(b, str.end());
+    if(b!=str.end())
+    {
+      std::cout<<"**Options::get_colorcurve** couldn't parse the whole line\n";
+      return;
+    }
+  }catch(const std::exception& e)
+  {
+    std::cout<<"**Options::get_colorcurve** error while Parsing: '"<<e.what()<<"'\n";
+    return;
+  }catch(...)
+  {
+    std::cout<<"**Options::get_colorcurve** unknown error while Parsing\n";
+    return;
+  }
+  cc->set(tmp);
+}
+
+void Options::set_colorcurve(const Glib::ustring& name, const ConstColorCurvePtr& value)
+{
+  set_string(name, value->save_to_string());
+}
+
 void Options::get_gradient(const Glib::ustring& name, const GradientPtr& gradient)
 {
   if(!option_exists(name))
