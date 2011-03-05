@@ -309,6 +309,7 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   planet_program_uniform.light[3].feed_data(3);
 
   planet_program_uniform.night_gradient.feed_data(NightTextureLayer::get_singleton()->get_night_gradient());
+  planet_program_uniform.cloud_gradient.feed_data(CloudTextureLayer::get_singleton()->get_cloud_gradient());
 
   sphere_mesh.render();
 

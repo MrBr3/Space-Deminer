@@ -25,6 +25,10 @@ CloudTextureLayer::CloudTextureLayer() : ParentClass(_("Cloud Texture"), true)
   SettingsWidget* settings  = new SettingsWidget;
   prepare_settings("cloud-texture", settings);
   settings->append_imagefile_widget("cloud-texture-file", "File", "The File the Texture is created from", get_imagefile());
+
+  cloud_gradient = Gradient::create(Gradient::PRESENT_BLACK_2_WHITE);\
+  signal_cloud_gradient_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));\
+  settings->append_gradient_widget("night-texture-cloud_gradient", _("CloudGradient"), _("Describes, the Color/Transparency depending on the diffuse lightment"), cloud_gradient);
 }
 
 CloudTextureLayer::~CloudTextureLayer()throw()

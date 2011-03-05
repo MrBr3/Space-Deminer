@@ -100,6 +100,7 @@ uniform Light light[N_LIGHTS];
 uniform bool uni_no_lightning;
 uniform bool uni_no_nighttexture;
 uniform Gradient uni_night_gradient;
+uniform Gradient uni_cloud_gradient;
 
 float night_factor = 1.;
 vec4 diffuse_lightning_color = vec4(0., 0., 0., 0.);
@@ -197,7 +198,7 @@ void main()
 
     cloud_color = query_cloud_color();
     
-    resulting_color = mix(resulting_color, cloud_color, thickness);
+    resulting_color = mix(resulting_color, cloud_color, thickness*cloud_color.w);
   }
   resulting_color.w = 1.;
 }
@@ -221,7 +222,7 @@ vec4 query_cloud_color()
 {
   vec4 cloud_diffuse = vec4(1., 1., 1., 1.);
 
-  return cloud_diffuse*diffuse_lightning_color;
+  return cloud_diffuse*GET_GRADIENT_COLOR(uni_cloud_gradient, max_vec3(diffuse_lightning_color.xyz));
 }
 
 vec4 query_night_color()

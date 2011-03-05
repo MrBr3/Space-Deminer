@@ -22,6 +22,8 @@ class CloudTextureLayer : public ImageLayer<CloudTextureLayer>
 public:
   typedef ImageLayer<CloudTextureLayer> ParentClass;
 
+  GRADIENT_SETTING(cloud_gradient);
+
 public:
   CloudTextureLayer();
   ~CloudTextureLayer()throw();

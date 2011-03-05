@@ -176,6 +176,7 @@ public:
     GLint uni_all_curves;
 
     GradientUniform night_gradient;
+    GradientUniform cloud_gradient;
 
     struct Light
     {
