@@ -166,7 +166,7 @@ public:
     GLint uni_base_texture_warped;
     GLint uni_night_texture_visible;
     GLint uni_night_texture_warped;
-    GLint uni_night_gradient_slice;
+    GLint uni_night_gradient_depends_on_diffuse;
     GLint uni_cloud_texture_visible;
     GLint uni_cloud_texture_warped;
     GLint uni_weight_texture_visible;

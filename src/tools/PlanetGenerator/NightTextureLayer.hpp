@@ -23,6 +23,7 @@ public:
   typedef ImageLayer<NightTextureLayer> ParentClass;
 
   GRADIENT_SETTING(night_gradient);
+  BOOLEAN_SETTING(diffuse_depending);
 
 public:
   NightTextureLayer();

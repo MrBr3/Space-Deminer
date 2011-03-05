@@ -156,6 +156,7 @@ void View3D::init_shaders()
       planet_program_uniform.uni_base_texture_warped  = LOCATE_UNIFORM(planet_program, "uni_base_texture_warped");
       planet_program_uniform.uni_night_texture_visible  = LOCATE_UNIFORM(planet_program, "uni_night_texture_visible");
       planet_program_uniform.uni_night_texture_warped  = LOCATE_UNIFORM(planet_program, "uni_night_texture_warped");
+      planet_program_uniform.uni_night_gradient_depends_on_diffuse  = LOCATE_UNIFORM(planet_program, "uni_night_gradient_depends_on_diffuse");
       planet_program_uniform.uni_cloud_texture_visible  = LOCATE_UNIFORM(planet_program, "uni_cloud_texture_visible");
       planet_program_uniform.uni_cloud_texture_warped  = LOCATE_UNIFORM(planet_program, "uni_cloud_texture_warped");
       planet_program_uniform.uni_weight_texture_visible  = LOCATE_UNIFORM(planet_program, "uni_weight_texture_visible");

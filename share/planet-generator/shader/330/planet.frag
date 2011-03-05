@@ -100,6 +100,7 @@ uniform Light light[N_LIGHTS];
 uniform bool uni_no_lightning;
 uniform bool uni_no_nighttexture;
 uniform Gradient uni_night_gradient;
+uniform bool uni_night_gradient_depends_on_diffuse;
 uniform Gradient uni_cloud_gradient;
 
 float night_factor = 1.;
@@ -151,7 +152,14 @@ void calc_diffuse_lightning()
 
     float color_intensity = max_vec3(color.xyz);
 
-    night_factor = clamp(1.-l.light_on_planet*l.influence_night*color_intensity, 0., night_factor);
+    float this_night_factor;
+
+    if(uni_night_gradient_depends_on_diffuse)
+      this_night_factor = 1.-l.light_on_planet*l.influence_night*color_intensity;
+    else
+      this_night_factor = acos(clamp(-dot(normal, l.dir), -1., 1.))*INV_PI;
+
+    night_factor = clamp(this_night_factor, 0., night_factor);
 
     diffuse_lightning_color += l.light_on_planet*color;
 #undef l
