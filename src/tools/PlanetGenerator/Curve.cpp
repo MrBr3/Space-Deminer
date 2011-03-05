@@ -21,7 +21,7 @@
 
 CurvePtr Curve::slots[4];
 
-Curve::Curve()
+Curve::Curve(Present p)
 {
   points = new Point[2];
   n_points = 2;
@@ -37,6 +37,11 @@ Curve::Curve()
   n_samples = 0;
   samples = nullptr;
   set_n_samples(256);
+
+  if(p!=PRESENT_LINEAR)
+  {
+    load_present(p);
+  }
 }
 
 Curve::~Curve()throw()

@@ -331,6 +331,10 @@ GradientButton::GradientButton()
       load_present_transparent2white.set_label("_Transparent -> White");
       load_present_transparent2white.set_use_underline(true);
       load_present_transparent2white.signal_activate().connect(sigc::bind(sigc::mem_fun(*this, &GradientButton::load_present), Gradient::PRESENT_TRANSPARENT_2_WHITE));
+    load_present_menu.append(load_present_full_white);
+      load_present_full_white.set_label("Full _White");
+      load_present_full_white.set_use_underline(true);
+      load_present_full_white.signal_activate().connect(sigc::bind(sigc::mem_fun(*this, &GradientButton::load_present), Gradient::PRESENT_FULL_WHITE));
   context_menu.append(_load_slot);
     _load_slot.set_label(_("_Load From Slot"));
     _load_slot.set_use_underline(true);

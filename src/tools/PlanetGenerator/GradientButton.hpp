@@ -125,6 +125,7 @@ class GradientButton : public Gtk::Button
       Gtk::Menu load_present_menu;
       Gtk::MenuItem load_present_black2white;
       Gtk::MenuItem load_present_transparent2white;
+      Gtk::MenuItem load_present_full_white;
     Gtk::MenuItem _load_slot;
       Gtk::Menu load_slot_menu;
       Gtk::MenuItem load_slot0;

@@ -69,7 +69,7 @@ private:
   sigc::signal<void> _signal_changed;
 
 public:
-  static CurvePtr create(){return CurvePtr(new Curve);}
+  static CurvePtr create(Present p=PRESENT_LINEAR){return CurvePtr(new Curve(p));}
 
 // ---- Slot stuff ----
 public:
@@ -93,7 +93,7 @@ private:
 
 // ----Sample/Point stuff----
 private:
-  Curve();
+  Curve(Present p);
   ~Curve()throw();
 
 public:
