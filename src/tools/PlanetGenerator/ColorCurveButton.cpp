@@ -177,7 +177,7 @@ ColorCurveDialog::ColorCurveDialog()
 {
   update.connect(sigc::mem_fun(*this, &ColorCurveDialog::color_curve_changed));
 
-  set_title(_("ColoCurves"));
+  set_title(_("Color Curves"));
 
   g_assert(get_vbox());
   get_vbox()->set_spacing(LENGTH_SMALLSPACE);

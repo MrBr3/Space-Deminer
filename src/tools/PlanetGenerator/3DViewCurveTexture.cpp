@@ -85,6 +85,7 @@ void View3D::CurveTexture::set(GradientPtr g)
     return;
   }
   g_assert(!curve);
+  g_assert(!colorcurve);
 
   g->force_n_samples(N_SAMPLES);
   gradient = g;
@@ -101,10 +102,28 @@ void View3D::CurveTexture::set(CurvePtr c)
     return;
   }
   g_assert(!gradient);
+  g_assert(!colorcurve);
 
   c->force_n_samples(N_SAMPLES);
   curve = c;
   curve->signal_changed().connect(sigc::mem_fun(*this, &View3D::CurveTexture::fill_texture));
+
+  init();
+}
+
+void View3D::CurveTexture::set(ColorCurvePtr c)
+{
+  if(colorcurve)
+  {
+    g_assert(colorcurve==c);
+    return;
+  }
+  g_assert(!gradient);
+  g_assert(!curve);
+
+  c->force_n_samples(N_SAMPLES);
+  colorcurve = c;
+  colorcurve->signal_changed().connect(sigc::mem_fun(*this, &View3D::CurveTexture::fill_texture));
 
   init();
 }
@@ -123,7 +142,7 @@ void View3D::CurveTexture::unbind()
 
 void View3D::CurveTexture::fill_texture()
 {
-  g_assert(XOR(gradient, curve));
+  g_assert(n_true_booleans(gradient, curve, colorcurve)==1);
   g_assert(texture_id);
 
   bind();
@@ -147,7 +166,25 @@ void View3D::CurveTexture::fill_texture()
       data[i*4+2] = src[i].b;
       data[i*4+3] = src[i].a;
     }
-  }else
+  }else if(colorcurve)
+  {
+    g_assert(colorcurve->get_value_curve()->get_n_samples()==N_SAMPLES);
+    g_assert(colorcurve->get_red_curve()->get_n_samples()==N_SAMPLES);
+    g_assert(colorcurve->get_green_curve()->get_n_samples()==N_SAMPLES);
+    g_assert(colorcurve->get_blue_curve()->get_n_samples()==N_SAMPLES);
+    g_assert(colorcurve->get_alpha_curve()->get_n_samples()==N_SAMPLES);
+    g_assert(N_SAMPLES==colorcurve->get_n_samples());
+
+    const std::vector<ColorRGBA>& src = colorcurve->get_samples();
+
+    for(gsize i=0; i<N_SAMPLES; i++)
+    {
+      data[i*4+0] = src[i].r;
+      data[i*4+1] = src[i].g;
+      data[i*4+2] = src[i].b;
+      data[i*4+3] = src[i].a;
+    }
+  }else if(curve)
   {
     g_assert(curve);
 

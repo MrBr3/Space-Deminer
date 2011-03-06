@@ -126,12 +126,14 @@ public:
 
     ConstGradientPtr gradient;
     ConstCurvePtr curve;
+    ConstColorCurvePtr colorcurve;
 
     void fill_texture();
     void init();
   public:
     void set(GradientPtr g);
     void set(CurvePtr g);
+    void set(ColorCurvePtr g);
     GLfloat get_slice_id()const{return this_slice;}
 
     static void bind();
@@ -161,6 +163,15 @@ public:
     void get_uniform_locations(GLuint program, const std::string& prefix);
     void feed_data(const CurvePtr& gradient);
   };
+  struct ColorCurveUniform
+  {
+    GLuint slice_id;
+
+    CurveTexture curves_texture;
+
+    void get_uniform_locations(GLuint program, const std::string& prefix);
+    void feed_data(const ColorCurvePtr& cc);
+  };
   struct PlanetProgramUniform
   {
     GLint matrix_PV;
@@ -186,6 +197,12 @@ public:
 
     GradientUniform night_gradient;
     GradientUniform cloud_gradient;
+
+    ColorCurveUniform uni_base_texture_colorcurves;
+    ColorCurveUniform uni_night_texture_colorcurves;
+    ColorCurveUniform uni_weight_texture_colorcurves;
+    //CurveUniform uni_height_texture_colorcurves;
+    CurveUniform uni_cloud_texture_curve;
 
     struct Light
     {

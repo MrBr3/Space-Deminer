@@ -281,12 +281,16 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   glUniform1i(planet_program_uniform.uni_just_one_texture_visible, LayerModel::just_one_texture_layer_visible() && !BaseTextureLayer::get_singleton()->get_visible());
   glUniform1i(planet_program_uniform.uni_base_texture_visible, BaseTextureLayer::get_singleton()->get_visible());
   glUniform1i(planet_program_uniform.uni_base_texture_warped, BaseTextureLayer::get_singleton()->get_imagefile()->get_needs_to_be_warped());
+  planet_program_uniform.uni_base_texture_colorcurves.feed_data(BaseTextureLayer::get_singleton()->get_imagefile()->get_color_curve());
   glUniform1i(planet_program_uniform.uni_night_texture_visible, NightTextureLayer::get_singleton()->get_visible());
   glUniform1i(planet_program_uniform.uni_night_texture_warped, NightTextureLayer::get_singleton()->get_imagefile()->get_needs_to_be_warped());
+  planet_program_uniform.uni_night_texture_colorcurves.feed_data(BaseTextureLayer::get_singleton()->get_imagefile()->get_color_curve());
   glUniform1i(planet_program_uniform.uni_cloud_texture_visible, CloudTextureLayer::get_singleton()->get_visible());
   glUniform1i(planet_program_uniform.uni_cloud_texture_warped, CloudTextureLayer::get_singleton()->get_imagefile()->get_needs_to_be_warped());
+  planet_program_uniform.uni_cloud_texture_curve.feed_data(BaseTextureLayer::get_singleton()->get_imagefile()->get_contrast_curve());
   glUniform1i(planet_program_uniform.uni_weight_texture_visible, WeightTextureLayer::get_singleton()->get_visible());
   glUniform1i(planet_program_uniform.uni_weight_texture_warped, WeightTextureLayer::get_singleton()->get_imagefile()->get_needs_to_be_warped());
+  planet_program_uniform.uni_weight_texture_colorcurves.feed_data(BaseTextureLayer::get_singleton()->get_imagefile()->get_color_curve());
 
   base_texture->bind(0, BaseTextureLayer::get_singleton()->get_visible());
   night_texture->bind(1, NightTextureLayer::get_singleton()->get_visible());

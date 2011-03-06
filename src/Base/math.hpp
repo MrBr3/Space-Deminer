@@ -124,6 +124,17 @@ inline gdouble get_frac_part(gdouble n){gdouble dummy; return modf(n, &dummy);}
 
 inline bool XOR(bool a, bool b){return a!=b;}
 
+inline gint n_true_booleans(bool a){return a ? 1 : 0;}
+inline gint n_true_booleans(bool a, bool b){return n_true_booleans(a) + n_true_booleans(b);}
+inline gint n_true_booleans(bool a, bool b, bool c){return n_true_booleans(a, b) + n_true_booleans(c);}
+inline gint n_true_booleans(bool a, bool b, bool c, bool d){return n_true_booleans(a, b) + n_true_booleans(c, d);}
+inline gint n_true_booleans(bool a, bool b, bool c, bool d, bool e){return n_true_booleans(a, b, e) + n_true_booleans(c, d);}
+inline gint n_true_booleans(bool a, bool b, bool c, bool d, bool e, bool f){return n_true_booleans(a, b, e) + n_true_booleans(c, d, f);}
+inline gint n_true_booleans(bool a, bool b, bool c, bool d, bool e, bool f, bool g){return n_true_booleans(a, b, e) + n_true_booleans(c, d, f, g);}
+inline gint n_true_booleans(bool a, bool b, bool c, bool d, bool e, bool f, bool g, bool h){return n_true_booleans(a, b, e, h) + n_true_booleans(c, d, f, g);}
+inline gint n_true_booleans(bool a, bool b, bool c, bool d, bool e, bool f, bool g, bool h, bool i){return n_true_booleans(a, b, e, h, i) + n_true_booleans(c, d, f, g);}
+inline gint n_true_booleans(bool a, bool b, bool c, bool d, bool e, bool f, bool g, bool h, bool i, bool j){return n_true_booleans(a, b, e, h, i) + n_true_booleans(c, d, f, g, j);}
+
 namespace Private
 {
   const gdouble inv_rand_max = 1.f/gfloat(RAND_MAX);

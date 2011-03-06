@@ -154,13 +154,17 @@ void View3D::init_shaders()
       planet_program_uniform.uni_just_one_texture_visible  = LOCATE_UNIFORM(planet_program, "uni_just_one_texture_visible");
       planet_program_uniform.uni_base_texture_visible  = LOCATE_UNIFORM(planet_program, "uni_base_texture_visible");
       planet_program_uniform.uni_base_texture_warped  = LOCATE_UNIFORM(planet_program, "uni_base_texture_warped");
+      planet_program_uniform.uni_base_texture_colorcurves.get_uniform_locations(planet_program, "uni_base_texture_colorcurves.");
       planet_program_uniform.uni_night_texture_visible  = LOCATE_UNIFORM(planet_program, "uni_night_texture_visible");
       planet_program_uniform.uni_night_texture_warped  = LOCATE_UNIFORM(planet_program, "uni_night_texture_warped");
+      planet_program_uniform.uni_night_texture_colorcurves.get_uniform_locations(planet_program, "uni_night_texture_colorcurves.");
       planet_program_uniform.uni_night_gradient_depends_on_diffuse  = LOCATE_UNIFORM(planet_program, "uni_night_gradient_depends_on_diffuse");
       planet_program_uniform.uni_cloud_texture_visible  = LOCATE_UNIFORM(planet_program, "uni_cloud_texture_visible");
       planet_program_uniform.uni_cloud_texture_warped  = LOCATE_UNIFORM(planet_program, "uni_cloud_texture_warped");
+      planet_program_uniform.uni_cloud_texture_curve.get_uniform_locations(planet_program, "uni_cloud_texture_curve.");
       planet_program_uniform.uni_weight_texture_visible  = LOCATE_UNIFORM(planet_program, "uni_weight_texture_visible");
       planet_program_uniform.uni_weight_texture_warped  = LOCATE_UNIFORM(planet_program, "uni_weight_texture_warped");
+      planet_program_uniform.uni_weight_texture_colorcurves.get_uniform_locations(planet_program, "uni_weight_texture_colorcurves");
       planet_program_uniform.uni_no_lightning = LOCATE_UNIFORM(planet_program, "uni_no_lightning");
       planet_program_uniform.uni_no_nighttexture = LOCATE_UNIFORM(planet_program, "uni_no_nighttexture");
       planet_program_uniform.uni_all_curves = LOCATE_UNIFORM(planet_program, "uni_all_curves");
@@ -277,6 +281,11 @@ void View3D::CurveUniform::get_uniform_locations(GLuint planet_program, const st
   slice_id = LOCATE_UNIFORM(planet_program, (prefix+"slice_id").c_str());
 }
 
+void View3D::ColorCurveUniform::get_uniform_locations(GLuint planet_program, const std::string& prefix)
+{
+  slice_id = LOCATE_UNIFORM(planet_program, (prefix+"slice_id").c_str());
+}
+
 void View3D::PlanetProgramUniform::Light::get_uniform_locations(GLuint planet_program, const std::string& prefix)
 {
   visible = LOCATE_UNIFORM(planet_program, (prefix+"visible").c_str());
@@ -372,5 +381,11 @@ void View3D::GradientUniform::feed_data(const GradientPtr& gradient)
 void View3D::CurveUniform::feed_data(const CurvePtr& curve)
 {
   curves_texture.set(curve);
+  glUniform1f(slice_id, curves_texture.get_slice_id());
+}
+
+void View3D::ColorCurveUniform::feed_data(const ColorCurvePtr& cc)
+{
+  curves_texture.set(cc);
   glUniform1f(slice_id, curves_texture.get_slice_id());
 }

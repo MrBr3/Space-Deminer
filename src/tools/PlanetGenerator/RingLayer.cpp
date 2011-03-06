@@ -22,6 +22,8 @@
 
 RingLayer::RingLayer() : ParentClass(_("Ring"), false)
 {
+  get_imagefile()->get_color_curve()->force_hide_alpha(false);
+
   SettingsWidget* settings  = new SettingsWidget;
 
   prepare_settings("ring-texture", settings);
