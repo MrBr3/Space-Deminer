@@ -33,22 +33,27 @@ View3D::CurveTexture::CurveTexture()
 
   this_slice = next_texture_slize_to_create;
   ++next_texture_slize_to_create;
+
+  initialized = false;
 }
 
 View3D::CurveTexture::~CurveTexture()throw()
 {
-  g_assert(n_referenced>0);
-
-  --n_referenced;
-
-  if(n_referenced==0)
+  if(initialized)
   {
-    g_assert(samples);
-    g_assert(texture_id);
-    glDeleteTextures(1, &texture_id);
-    texture_id = 0;
+    g_assert(n_referenced>0);
 
-    delete[] samples;
+    --n_referenced;
+
+    if(n_referenced==0)
+    {
+      g_assert(samples);
+      g_assert(texture_id);
+      glDeleteTextures(1, &texture_id);
+      texture_id = 0;
+
+      delete[] samples;
+    }
   }
 }
 
@@ -75,6 +80,8 @@ void View3D::CurveTexture::init()
   ++n_referenced;
 
   fill_texture();
+
+  initialized = true;
 }
 
 void View3D::CurveTexture::set(GradientPtr g)

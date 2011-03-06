@@ -122,6 +122,8 @@ public:
     static gsize n_referenced;
     static GLfloat* samples;
 
+    bool initialized;
+
     int this_slice;
 
     ConstGradientPtr gradient;
