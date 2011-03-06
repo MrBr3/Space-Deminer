@@ -22,6 +22,8 @@
 
 BaseTextureLayer::BaseTextureLayer() : ParentClass(_("Base Texture"), true)
 {
+  get_imagefile()->get_color_curve()->force_hide_alpha(true);
+
   SettingsWidget* settings  = new SettingsWidget;
   prepare_settings("base-texture", settings);
   settings->append_imagefile_widget("base-texture-file", "File", "The File the Texture is created from", get_imagefile());

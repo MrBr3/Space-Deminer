@@ -17,6 +17,11 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef _PLANET_GENERATOR_CURVE_BUTTON_HPP_
+#define _PLANET_GENERATOR_CURVE_BUTTON_HPP_
+
+#include <gtkmm/frame.h>
+
 class CurvePreview : public Gtk::DrawingArea
 {
 protected:
@@ -30,6 +35,8 @@ public:
 
   bool on_expose_event(GdkEventExpose* ee);
   void on_size_request(Gtk::Requisition* r);
+
+  ColorRGBA curve_color;
 
   CurvePreview();
   ~CurvePreview()throw();
@@ -56,6 +63,8 @@ class CurveEditView : public CurvePreview
   void set_state_pointing_or_creating(int x, int y);
 
   void delete_or_move_point(gsize i_prev, gsize i_next, gdouble old_x, int widget_space_new_x, gdouble new_x, bool& allow_to_move, bool& should_remove);
+
+  virtual void draw_back(Cairo::RefPtr<Cairo::Context>& cc){}
 
 public:
   bool on_expose_event(GdkEventExpose* ee);
@@ -140,3 +149,5 @@ public:
   CurveButton();
   ~CurveButton()throw();
 };
+
+#endif

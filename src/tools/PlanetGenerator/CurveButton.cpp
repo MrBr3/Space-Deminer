@@ -22,6 +22,7 @@
 CurvePreview::CurvePreview()
 {
   set_curve(Curve::create());
+  curve_color.set(0.f, 0.f, 0.f);
 }
 
 CurvePreview::~CurvePreview()throw()
@@ -53,6 +54,7 @@ bool CurvePreview::on_expose_event(GdkEventExpose* ee)
     return false;
 
   cc->set_line_width(1.);
+  cc->set_source_rgba(curve_color.r, curve_color.g, curve_color.b, curve_color.a);
 
   if(get_curve()->get_n_samples()>0)
   {
@@ -140,7 +142,11 @@ bool CurveEditView::on_expose_event(GdkEventExpose* ee)
 
   cc->stroke();
 
-  cc->set_source_rgb(0., 0., 0.);
+  //cc->push_group();
+  draw_back(cc);
+  //cc->pop_group_to_source();
+
+  CurvePreview::on_expose_event(ee);
 
   for(gsize i=0; i<get_curve()->get_n_points(); ++i)
   {
@@ -150,13 +156,13 @@ bool CurveEditView::on_expose_event(GdkEventExpose* ee)
     {
       cc->set_source_rgb(1.0, 0.5, 0.); // TODO: use Highlight Color
     }else
-      cc->set_source_rgb(0., 0., 0.); // TODO: use TextColor
+      cc->set_source_rgba(curve_color.r, curve_color.g, curve_color.b, curve_color.a); // TODO: use TextColor
 
     cc->arc(p.x*w, h-p.y*h, 4., 0., PI2);
     cc->stroke();
   }
 
-  return CurvePreview::on_expose_event(ee);
+  return true;
 }
 
 void CurveEditView::on_size_request(Gtk::Requisition* r)
@@ -592,6 +598,7 @@ void CurveButton::set_curve(const CurvePtr& c)
 
   _curve_preview.set_curve(_curve);
   signal_changed().emit();
+  ::invalidate(this);
 }
 
 void CurveButton::on_clicked()
@@ -603,6 +610,6 @@ void CurveButton::on_clicked()
 
   tmp_curve->set(get_curve());
 
-  if(dlg.run()==Gtk::RESPONSE_CANCEL)
+  if(dlg.run()!=Gtk::RESPONSE_OK)
     _curve->set(tmp_curve);
 }

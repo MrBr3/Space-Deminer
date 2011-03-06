@@ -22,6 +22,8 @@
 
 WeightTextureLayer::WeightTextureLayer() : ParentClass(_("Weight Texture"), true)
 {
+  get_imagefile()->get_color_curve()->force_hide_alpha(false);
+
   SettingsWidget* settings  = new SettingsWidget;
   prepare_settings("weight-texture", settings);
   settings->append_imagefile_widget("weight-texture-file", "File", "The File the Texture is created from", get_imagefile());
