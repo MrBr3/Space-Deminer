@@ -197,9 +197,9 @@ public:
 
   sigc::signal<void>& signal_imagefile_changed(){return _signal_imagefile_changed;}
 
-  ImageLayer(const Glib::ustring& name, bool visible) : ParentClass(name, visible)
+  ImageLayer(const Glib::ustring& name, bool visible, ImageFile::CorrectionCurveType corr_type=ImageFile::COLOR_CURVE) : ParentClass(name, visible)
   {
-    _imagefile  = ImageFile::create();
+    _imagefile  = ImageFile::create(corr_type);
     this->is_texture_layer = true;
 
     _imagefile->signal_something_changed().connect(sigc::mem_fun(signal_imagefile_changed(), &sigc::signal<void>::emit));

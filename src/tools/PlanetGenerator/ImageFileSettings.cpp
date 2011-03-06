@@ -50,6 +50,11 @@ ImageFileSettings::ImageFileSettings(const Glib::RefPtr<ImageFile>& imagefile, c
                                        sigc::mem_fun(*image_file.operator->(), &ImageFile::get_needs_to_be_warped),
                                        sigc::mem_fun(*image_file.operator->(), &ImageFile::set_needs_to_be_warped),
                                        image_file->signal_needs_to_be_warped_changed());
+
+  if(imagefile->correction_curve_type==ImageFile::COLOR_CURVE)
+    SettingsWidget::append_colorcurve_widget(table, _n_entries, name+"-color-curve", _("ColorCurve"), _("Allows you to modify the Rexture's Contrast, Brightness, Color ..."), imagefile->get_color_curve());
+  else if(imagefile->correction_curve_type==ImageFile::CONTRAST_CURVE)
+    SettingsWidget::append_curve_widget(table, _n_entries, name+"-contrast-curve", _("ConstrastCurve"), _("Allows you to modify the Rexture's Contrast, Brightness, ..."), imagefile->get_contrast_curve());
 }
 
 ImageFileSettings::~ImageFileSettings()throw()

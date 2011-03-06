@@ -19,12 +19,25 @@
 
 #include "./Model.hpp"
 
-ImageFile::ImageFile()
+ImageFile::ImageFile(CorrectionCurveType correction_curve_type_) : correction_curve_type(correction_curve_type_)
 {
   _needs_to_be_warped = false;
 
+  color_curve = ColorCurve::create();
+  contrast_curve = Curve::create();
+
   signal_imagefile_changed().connect(sigc::mem_fun(_signal_something_changed, &sigc::signal<void>::emit));
   signal_needs_to_be_warped_changed().connect(sigc::mem_fun(_signal_something_changed, &sigc::signal<void>::emit));
+
+  switch(correction_curve_type)
+  {
+  case COLOR_CURVE:
+    signal_color_curve_changed().connect(sigc::mem_fun(_signal_something_changed, &sigc::signal<void>::emit));
+    break;
+  case CONTRAST_CURVE:
+    signal_contrast_curve_changed().connect(sigc::mem_fun(_signal_something_changed, &sigc::signal<void>::emit));
+    break;
+  }
 }
 
 ImageFile::~ImageFile()throw()

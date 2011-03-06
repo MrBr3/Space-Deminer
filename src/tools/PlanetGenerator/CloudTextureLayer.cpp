@@ -20,7 +20,7 @@
 #include "Model.hpp"
 #include "SettingsWidget.hpp"
 
-CloudTextureLayer::CloudTextureLayer() : ParentClass(_("Cloud Texture"), true)
+CloudTextureLayer::CloudTextureLayer() : ParentClass(_("Cloud Texture"), true, ImageFile::CONTRAST_CURVE)
 {
   SettingsWidget* settings  = new SettingsWidget;
   prepare_settings("cloud-texture", settings);

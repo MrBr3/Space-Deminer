@@ -31,7 +31,18 @@ class ImageFile : public Refable
 
   sigc::signal<void> _signal_something_changed;
 
+  COLORCURVE_SETTING(color_curve);
+  CURVE_SETTING(contrast_curve);
 public:
+  enum CorrectionCurveType
+  {
+    CONTRAST_CURVE,
+    COLOR_CURVE,
+    NO_CURVE,
+  };
+
+  const CorrectionCurveType correction_curve_type;
+
   sigc::signal<void>& signal_needs_to_be_warped_changed(){return _signal_needs_to_be_warped_chenged;}
   sigc::signal<void>& signal_imagefile_changed(){return _signal_imagefile_changed;}
   sigc::signal<void>& signal_something_changed(){return _signal_something_changed;}
@@ -50,8 +61,11 @@ public:
    * */
   Glib::RefPtr<Gdk::Pixbuf> create_pixbuf();
 
-  static Glib::RefPtr<ImageFile> create()
+  static Glib::RefPtr<ImageFile> create(CorrectionCurveType correction_curve_type)
   {
-    return Glib::RefPtr<ImageFile>(new ImageFile);
+    return Glib::RefPtr<ImageFile>(new ImageFile(correction_curve_type));
   }
+
+private:
+  ImageFile(CorrectionCurveType correction_curve_type);
 };
