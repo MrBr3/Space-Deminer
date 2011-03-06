@@ -35,6 +35,8 @@
       <File Name="LightSourceMesh.cpp"/>
       <File Name="LightSourceMesh.hpp"/>
       <File Name="GLSLShader.cpp"/>
+      <File Name="ColorCurveButton.hpp"/>
+      <File Name="ColorCurveButton.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Model">
       <File Name="Model.hpp"/>

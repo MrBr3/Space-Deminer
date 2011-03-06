@@ -54,6 +54,19 @@ ColorCurvePtr ColorCurve::create()
   return ColorCurvePtr(new ColorCurve);
 }
 
+void ColorCurve::reset()
+{
+  request_no_updates();
+    value_curve->load_present(Curve::PRESENT_LINEAR);
+    red_curve->load_present(Curve::PRESENT_LINEAR);
+    green_curve->load_present(Curve::PRESENT_LINEAR);
+    blue_curve->load_present(Curve::PRESENT_LINEAR);
+    alpha_curve->load_present(Curve::PRESENT_LINEAR);
+  unrequest_no_updates();
+
+  invalidate_and_update();
+}
+
 void ColorCurve::set(const ColorCurve& cc)
 {
   request_no_updates();

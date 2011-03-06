@@ -37,6 +37,8 @@ public:
   void set(const ColorCurve& cc);
   void set(const ConstColorCurvePtr cc);
 
+  void reset();
+
   static ColorCurvePtr create();
 
   sigc::signal<void>& signal_changed(){return _signal_changed;}

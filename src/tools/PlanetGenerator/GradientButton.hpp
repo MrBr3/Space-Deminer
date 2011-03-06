@@ -17,8 +17,6 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
- #include <gtkmm/frame.h>
-
  #include "./CurveButton.hpp"
 
 class GradientPreview : public Gtk::DrawingArea

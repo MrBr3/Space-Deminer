@@ -313,7 +313,6 @@ GradientButton::GradientButton()
 
   add(frame_);
 
-
   context_menu.append(_flip_h);
     _flip_h.set_label(_("Flip _Horizontal"));
     _flip_h.set_use_underline(true);
@@ -402,6 +401,7 @@ void GradientButton::set_gradient(const GradientPtr& g)
 
   preview_.set_gradient(_gradient);
   signal_changed().emit();
+  ::invalidate(this);
 }
 
 void GradientButton::on_clicked()
