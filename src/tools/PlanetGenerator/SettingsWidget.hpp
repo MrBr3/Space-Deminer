@@ -104,6 +104,10 @@ public:
   {
     return append_curve_widget(table, n_entries, name, label, tooltip, curve);
   }
+  Gtk::Widget& append_colorcurve_widget(const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const ColorCurvePtr& colorcurve)
+  {
+    return append_colorcurve_widget(table, n_entries, name, label, tooltip, colorcurve);
+  }
 
   static Gtk::Widget& append_color_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<Gdk::Color>& getter, const sigc::slot<void, const Gdk::Color&>& setter, sigc::signal<void>& signal_changed);
   static Gtk::Widget& append_boolean_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const sigc::slot<bool>& getter, const sigc::slot<void, bool>& setter, sigc::signal<void>& signal_changed);
@@ -115,6 +119,7 @@ public:
   static Gtk::Widget& append_enum_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const std::vector<Glib::ustring>& items, const sigc::slot<int>& getter, const sigc::slot<void, int>& setter, sigc::signal<void>& signal_changed);
   static Gtk::Widget& append_gradient_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const GradientPtr& gradient);
   static Gtk::Widget& append_curve_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const CurvePtr& curve);
+  static Gtk::Widget& append_colorcurve_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const ColorCurvePtr& colorcurve);
 public:
   void attach_full_line(Gtk::Widget& w)
   {

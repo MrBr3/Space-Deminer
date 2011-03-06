@@ -34,6 +34,7 @@ sigc::signal<void>& signal_##sn##_changed(){return _signal_##sn##_changed;}
 #define COLOR_SETTING(sn) X_SETTING(Gdk::Color, const Gdk::Color&, sn)
 #define GRADIENT_SETTING(sn) X_SETTING(GradientPtr, const GradientPtr&, sn)
 #define CURVE_SETTING(sn) X_SETTING(CurvePtr, const CurvePtr&, sn)
+#define COLORCURVE_SETTING(sn) X_SETTING(ColorCurvePtr, const ColorCurvePtr&, sn)
 
 #define X_GETTER_SETTER_SIGNAL(c, sn)\
 sigc::mem_fun(*this, &c::get_##sn), sigc::mem_fun(*this, &c::set_##sn), signal_##sn##_changed()

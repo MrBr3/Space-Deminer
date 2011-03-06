@@ -483,3 +483,30 @@ Gtk::Widget& SettingsWidget::append_curve_widget(Gtk::Table& table, guint& n_ent
 
   return *entry;
 }
+
+
+Gtk::Widget& SettingsWidget::append_colorcurve_widget(Gtk::Table& table, guint& n_entries, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, const ColorCurvePtr& colorcurve)
+{
+  Gtk::Label* wlabel  = Gtk::manage(new Gtk::Label(label));
+  ColorCurveButton* entry  = Gtk::manage(new ColorCurveButton);
+
+  Options::get_colorcurve(name, colorcurve);
+
+  entry->set_colorcurve(colorcurve);
+
+  wlabel->set_alignment(0., 0.5);
+  wlabel->show();
+
+  entry->show();
+  entry->set_tooltip_text(tooltip);
+  entry->signal_hide().connect(sigc::mem_fun(*wlabel, &Gtk::Widget::hide));
+  entry->signal_show().connect(sigc::mem_fun(*wlabel, &Gtk::Widget::show));
+
+  table.attach(*wlabel, 0, 1, n_entries, n_entries+1, Gtk::FILL, Gtk::FILL);
+  table.attach(*entry, 1, 2, n_entries, n_entries+1, Gtk::EXPAND|Gtk::FILL, Gtk::FILL);
+  ++n_entries;
+
+  colorcurve->signal_changed().connect(sigc::bind(sigc::ptr_fun(Options::set_colorcurve), name, colorcurve));
+
+  return *entry;
+}
