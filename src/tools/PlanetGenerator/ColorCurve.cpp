@@ -141,6 +141,9 @@ void ColorCurve::update_samples()
     gdouble b = value_curve->get_value(blue_curve->get_value(offset));
     gdouble a = alpha_curve->get_value(offset);
 
+    if(get_hide_alpha())
+      a = offset;
+
     _samples[i].set(r, g, b, a);
   }
 

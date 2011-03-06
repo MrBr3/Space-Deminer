@@ -66,10 +66,24 @@ struct Curve
 {
   float slice_id;
 };
+struct ColorCurve
+{
+  float slice_id;
+};
 
+vec4 get_colorcurve(vec4 src_color, float slice_id)
+{
+  src_color.x = texture1DArray(uni_all_curves, vec2(texture1DArray(uni_all_curves, vec2(src_color.x, slice_id)).x, slice_id)).x;
+  src_color.y = texture1DArray(uni_all_curves, vec2(texture1DArray(uni_all_curves, vec2(src_color.y, slice_id)).y, slice_id)).y;
+  src_color.z = texture1DArray(uni_all_curves, vec2(texture1DArray(uni_all_curves, vec2(src_color.z, slice_id)).z, slice_id)).z;
+  src_color.w = texture1DArray(uni_all_curves, vec2(texture1DArray(uni_all_curves, vec2(src_color.w, slice_id)).w, slice_id)).w;
+
+  return src_color;
+}
 
 #define GET_GRADIENT_COLOR(g, x) texture1DArray(uni_all_curves, vec2((g.remap_offset+x)*g.remap_size, g.slice_id))
 #define GET_CURVE_VALUE(g, v) texture1DArray(uni_all_curves, vec2(v, g.slice_id)).x
+#define GET_COLOR_CURVE_VALUE(g, c) get_colorcurve(c, g.slice_id)
 
 struct GradientLight
 {
@@ -103,6 +117,10 @@ uniform bool uni_no_nighttexture;
 uniform Gradient uni_night_gradient;
 uniform bool uni_night_gradient_depends_on_diffuse;
 uniform Gradient uni_cloud_gradient;
+uniform ColorCurve uni_base_texture_colorcurves;
+uniform ColorCurve uni_night_texture_colorcurves;
+uniform Curve uni_cloud_texture_curve;
+uniform ColorCurve uni_weight_texture_colorcurves;
 
 float night_factor = 1.;
 vec4 diffuse_lightning_color = vec4(0., 0., 0., 0.);
@@ -224,7 +242,7 @@ vec4 query_surface_color()
     surface_diffuse = vec4(0.5, 0.5, 0.5, 1.);
   }
 
-  return surface_diffuse*diffuse_lightning_color;
+  return diffuse_lightning_color*GET_COLOR_CURVE_VALUE(uni_base_texture_colorcurves, surface_diffuse);
 }
 
 vec4 query_cloud_color()
@@ -241,7 +259,7 @@ vec4 query_night_color()
 
   vec4 night;
   PLANET_TEXTURE_COLOR(night=, night);
-  return night*GET_GRADIENT_COLOR(uni_night_gradient, night_factor);
+  return GET_COLOR_CURVE_VALUE(uni_night_texture_colorcurves, night)*GET_GRADIENT_COLOR(uni_night_gradient, night_factor);
 }
 
 vec4 just_one_layer()
