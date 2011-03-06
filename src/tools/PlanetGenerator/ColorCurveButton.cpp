@@ -164,7 +164,7 @@ void ColorCurveEditView::draw_back(Cairo::RefPtr<Cairo::Context>& cc)
     ColorCurvePreview::draw_curve(cc, get_width(), get_height(), get_colorcurve()->get_blue_curve());
   }
 
-  if(get_curve()!=get_colorcurve()->get_alpha_curve())
+  if(get_curve()!=get_colorcurve()->get_alpha_curve() && !get_colorcurve()->get_hide_alpha())
   {
     cc->set_source_rgba(0.5, 0.5, 0.5, 0.33);
     ColorCurvePreview::draw_curve(cc, get_width(), get_height(), get_colorcurve()->get_alpha_curve());
@@ -204,6 +204,10 @@ ColorCurveDialog::ColorCurveDialog()
         alpha_btn.set_label("Alpha");
     _my_vbox.pack_start(edit_view);
 
+  get_action_area()->pack_start(reset_btn);
+    reset_btn.signal_clicked().connect(sigc::mem_fun(*this, &ColorCurveDialog::reset));
+    reset_btn.set_label(_("Reset"));
+
   get_vbox()->show_all_children();
 
   set_has_separator(true);
@@ -228,11 +232,11 @@ void ColorCurveDialog::set_active_channel(int c)
     return;
   ++ignore;
 
-  value_btn.set_active(c==0||c>4);
+  value_btn.set_active(c==0 || (c>4&&!get_colorcurve()->get_hide_alpha()) || (c>3&&get_colorcurve()->get_hide_alpha()));
   red_btn.set_active(c==1);
   green_btn.set_active(c==2);
   blue_btn.set_active(c==3);
-  alpha_btn.set_active(c==4);
+  alpha_btn.set_active(c==4 && !get_colorcurve()->get_hide_alpha());
 
   switch(c)
   {
@@ -262,6 +266,8 @@ void ColorCurveDialog::set_active_channel(int c)
 
 void ColorCurveDialog::color_curve_changed()
 {
+  alpha_btn.set_visible(!get_colorcurve()->get_hide_alpha());
+
   if(get_colorcurve()==edit_view.get_colorcurve())
     return;
   edit_view.set_colorcurve(get_colorcurve());
@@ -285,7 +291,7 @@ ColorCurveButton::ColorCurveButton()
   add(_frame);
 
   context_menu.append(_reset);
-    _reset.set_label(_("_Reset"));
+    _reset.set_label(_("Set _Linear"));
     _reset.set_use_underline(true);
     _reset.signal_activate().connect(sigc::mem_fun(*this, &ColorCurveButton::reset));
 
@@ -326,6 +332,7 @@ void ColorCurveButton::on_clicked()
   dlg.set_colorcurve(get_colorcurve());
 
   tmp_curve->set(get_colorcurve());
+  dlg.prev_curve = tmp_curve;
 
   if(dlg.run()!=Gtk::RESPONSE_OK)
     _colorcurve->set(tmp_curve);

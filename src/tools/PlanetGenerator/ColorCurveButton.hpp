@@ -66,11 +66,16 @@ class ColorCurveDialog : public Gtk::Dialog, public ColorCurvePointerHolder
   Gtk::HButtonBox _channels_hbox;
   Gtk::VBox _my_vbox;
   Gtk::ToggleButton value_btn, red_btn, green_btn, blue_btn, alpha_btn;
+  Gtk::Button reset_btn;
   ColorCurveEditView edit_view;
 
   void set_active_channel(int);
 
+  void reset(){g_assert(get_colorcurve());get_colorcurve()->set(prev_curve);}
+
 public:
+  ConstColorCurvePtr prev_curve;
+
   ColorCurveDialog();
   ~ColorCurveDialog()throw();
 };

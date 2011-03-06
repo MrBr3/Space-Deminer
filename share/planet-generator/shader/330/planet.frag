@@ -73,10 +73,10 @@ struct ColorCurve
 
 vec4 get_colorcurve(vec4 src_color, float slice_id)
 {
-  src_color.x = texture1DArray(uni_all_curves, vec2(texture1DArray(uni_all_curves, vec2(src_color.x, slice_id)).x, slice_id)).x;
-  src_color.y = texture1DArray(uni_all_curves, vec2(texture1DArray(uni_all_curves, vec2(src_color.y, slice_id)).y, slice_id)).y;
-  src_color.z = texture1DArray(uni_all_curves, vec2(texture1DArray(uni_all_curves, vec2(src_color.z, slice_id)).z, slice_id)).z;
-  src_color.w = texture1DArray(uni_all_curves, vec2(texture1DArray(uni_all_curves, vec2(src_color.w, slice_id)).w, slice_id)).w;
+  src_color.x = texture1DArray(uni_all_curves, vec2(src_color.x, slice_id)).x;
+  src_color.y = texture1DArray(uni_all_curves, vec2(src_color.y, slice_id)).y;
+  src_color.z = texture1DArray(uni_all_curves, vec2(src_color.z, slice_id)).z;
+  src_color.w = texture1DArray(uni_all_curves, vec2(src_color.w, slice_id)).w;
 
   return src_color;
 }
@@ -221,7 +221,7 @@ void main()
     vec4 cloud_color;
 
     PLANET_TEXTURE_COLOR(cloud_color=, cloud);
-    thickness = clamp(max(max(cloud_color.x, cloud_color.y), cloud_color.z), 0., 1.); // TODO use texture with just one component
+    thickness = GET_CURVE_VALUE(uni_cloud_texture_curve, clamp(max_vec3(cloud_color.xyz), 0., 1.)); // TODO use texture with just one component
 
     cloud_color = query_cloud_color();
     

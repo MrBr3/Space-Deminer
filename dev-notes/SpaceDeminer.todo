@@ -143,9 +143,9 @@ PlanetGenerator
       [X] Kurve für übergang von Nachttextur
         [X] wahlweise custom oder direkt vom diffusen Licht abhängig
       [X] Gradient für Farbe/Transparenz von Wolken in abhängigkeit der beleuchtung
-      [ ] Graditionskurven für einzelne Texturen
-        [ ] Alpha verstecken können
-        [ ] reset button
+      [X] Graditionskurven für einzelne Texturen
+        [X] Alpha verstecken können
+        [X] reset button
     [ ] RingShader
       [ ] directionallight
       [ ] pointlight
