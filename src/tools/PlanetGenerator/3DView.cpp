@@ -36,6 +36,8 @@ const Matrix44& get_planet_model_matrix()
 
 View3D::View3D() : Gtk::GL::DrawingArea(Gdk::GL::Config::create(Gdk::GL::MODE_DEPTH|Gdk::GL::MODE_RGBA|Gdk::GL::MODE_DOUBLE|Gdk::GL::MODE_ALPHA))
 {
+  circle_gradient_texture = 0;
+
   add_events(Gdk::POINTER_MOTION_MASK|Gdk::BUTTON_PRESS_MASK|Gdk::BUTTON_RELEASE_MASK|Gdk::SCROLL_MASK|Gdk::LEAVE_NOTIFY_MASK|Gdk::ENTER_NOTIFY_MASK);
 
   set_size_request(320, 320);
@@ -90,6 +92,9 @@ void View3D::deinit()
   if(_gl_initialized)
   {
     deinit_shaders();
+
+    if(circle_gradient_texture)
+      glDeleteTextures(1, &circle_gradient_texture);
 
     Glib::RefPtr<Gdk::GL::Drawable> gl_drawable = get_gl_drawable();
 
@@ -180,6 +185,27 @@ void View3D::on_realize()
 
   view_settings->signal_n_sphere_segments_changed().connect(sigc::mem_fun(*this, &View3D::reinit_sphere_mesh));
   view_settings->signal_n_ring_segments_changed().connect(sigc::mem_fun(*this, &View3D::reinit_ring_mesh));
+
+  {
+    float circle_gradient_texture_data[1024*1024];
+
+    for(int x=0; x<1024; ++x)
+    for(int y=0; y<1024; ++y)
+    {
+      circle_gradient_texture_data[y*1024+x] = (x*x+y*y)/1024.;
+    }
+
+    glActiveTexture(GL_TEXTURE0);
+    glGenTextures(1, &circle_gradient_texture);
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, circle_gradient_texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 1024, 1024, 0, GL_RED, GL_FLOAT, circle_gradient_texture_data);
+    glGenerateMipmap(GL_TEXTURE_2D);
+  }
 
   signal_wireframed_changed().connect(sigc::hide(sigc::mem_fun(sig_wireframed_changed_noparam(), &sigc::signal<void>::emit)));
   signal_draw_light_representation_changed().connect(sigc::hide(sigc::mem_fun(sig_draw_light_representation_changed_noparam(), &sigc::signal<void>::emit)));
@@ -300,12 +326,15 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   cloud_texture->bind(2, CloudTextureLayer::get_singleton()->get_visible());
   weight_texture->bind(3, WeightTextureLayer::get_singleton()->get_visible());
   CurveTexture::bind(/*4*/);
+  glActiveTexture(GL_TEXTURE0+5);
+  glBindTexture(GL_TEXTURE_2D, circle_gradient_texture);
 
   glUniform1i(planet_program_uniform.base_texture, 0);
   glUniform1i(planet_program_uniform.night_texture, 1);
   glUniform1i(planet_program_uniform.cloud_texture, 2);
   glUniform1i(planet_program_uniform.weight_texture, 3);
   glUniform1i(planet_program_uniform.uni_all_curves, 4);
+  glUniform1i(planet_program_uniform.uni_circle_gradient_texture, 5);
 
   matrix_PV.glUniform(planet_program_uniform.matrix_PV);
   matrix_M.glUniform(planet_program_uniform.matrix_M);

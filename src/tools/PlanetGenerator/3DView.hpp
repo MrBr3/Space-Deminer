@@ -199,6 +199,8 @@ public:
     GradientUniform night_gradient;
     GradientUniform cloud_gradient;
 
+    GLint uni_circle_gradient_texture;
+
     ColorCurveUniform uni_base_texture_colorcurves;
     ColorCurveUniform uni_night_texture_colorcurves;
     ColorCurveUniform uni_weight_texture_colorcurves;
@@ -270,6 +272,7 @@ public:
     GLint matrix_M;
   }simple_program_uniform;
   GLuint planet_program, ring_program, simple_program;
+  GLuint circle_gradient_texture;
   void init_shaders();
   void deinit_shaders();
 };

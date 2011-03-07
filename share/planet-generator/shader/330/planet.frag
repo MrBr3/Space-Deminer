@@ -121,6 +121,7 @@ uniform ColorCurve uni_base_texture_colorcurves;
 uniform ColorCurve uni_night_texture_colorcurves;
 uniform Curve uni_cloud_texture_curve;
 uniform ColorCurve uni_weight_texture_colorcurves;
+uniform sampler2D uni_circle_gradient_texture;
 
 float night_factor = 1.;
 vec4 diffuse_lightning_color = vec4(0., 0., 0., 0.);
