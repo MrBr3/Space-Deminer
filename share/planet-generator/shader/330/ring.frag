@@ -82,7 +82,7 @@ struct Light
 
 uniform Light light[N_LIGHTS];
 uniform bool uni_no_lightning;
-uniform ColorCurve uni_ring_texture_colorcurves;
+uniform ColorCurve uni_ringtexture_colorcurves;
 uniform vec4 uni_ring_normal;
 
 vec4 diffuse_lightning_color = vec4(0., 0., 0., 0.);
@@ -149,7 +149,7 @@ void main()
 
   calc_diffuse_lightning();
 
-  vec4 ring_color = texture2D(uni_ring_texture, tex_coord);
+  vec4 ring_color = GET_COLOR_CURVE_VALUE(uni_ringtexture_colorcurves, texture2D(uni_ring_texture, tex_coord));
 
   resulting_color = ring_color*diffuse_lightning_color;
 }

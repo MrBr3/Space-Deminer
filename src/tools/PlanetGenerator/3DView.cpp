@@ -253,6 +253,9 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   matrix_stack.top() *= view_matrix;
   matrix_PV = matrix_stack.top();
 
+  Vector3 camera_pos = view_matrix.get_inversion()*Vector3(0.f, 0.f, 0.f);
+  Vector3 planet_pos = planet_model_matrix*Vector3(0.f, 0.f, 0.f);
+
   matrix_stack.push(false);
 
   matrix_stack.top() *= planet_model_matrix;
@@ -387,8 +390,14 @@ bool View3D::on_expose_event(GdkEventExpose* event)
     matrix_M = matrix_stack.top();
 
     Vector3 normal = (matrix_M*Vector4(0.f, 0.f, 1.f, 0.f)).get_xyz();
+    normal.normalize();
 
-    // TODO wenn kamera auf der anderen Seite, normale umdrehen?
+    {
+      Plane ring_plane;
+      ring_plane.set(normal, planet_pos);
+      if(ring_plane.check_point(camera_pos)==Math::BACKSIDE)
+        normal = -normal;
+    }
 
     normal.glUniform4(ring_program_uniform.uni_ring_normal, 0.f);
 

@@ -114,7 +114,7 @@ public:
     *
     * \note for a valid result the normal must be normalized
     *
-    * \return Collision one of \li \c BACKSIDE \li \c FORESIDE \li \c OUTSIDE
+    * \return Collision one of \li \c BACKSIDE \li \c FORESIDE \li \c INSIDE
     */
     Overlap check_point(const Vector3& p, gfloat epsilon=1e-5)const
     {

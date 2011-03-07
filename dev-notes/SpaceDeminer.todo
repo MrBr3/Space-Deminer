@@ -147,9 +147,9 @@ PlanetGenerator
         [X] Alpha verstecken können
         [X] reset button
     [ ] RingShader
-      [ ] directionallight
-      [ ] pointlight
-      [ ] customlight
+      [X] directionallight
+      [X] pointlight
+      [X] customlight
       [ ] durchleuchtet
     [ ] Glanzlichter
       [ ] Planet
@@ -180,6 +180,7 @@ PlanetGenerator
       [ ] Refenrenztextur für Kreisfarbverlauf (nur ein Viertel, andere sollen über shader einfach über abs bestimmt werden)
       [ ] normalmap als offset in bildschirmkoordinaten für fabe interpretieren?
     [ ] anisotropes filtering?
+    [ ] Comarerotation und planet (ohne Lichtquellen) seperat rotieren können
   [ ] Raytracer auf stand der echtzeitansicht bringen
     [ ] möglichkeit zum "backen" nicht verbauen!
   [ ] Viewport zum raytracen
