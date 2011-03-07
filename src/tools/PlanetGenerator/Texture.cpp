@@ -28,6 +28,14 @@ Texture::Texture(const Glib::RefPtr<ImageFile>& file)
   imagefile->signal_imagefile_changed().connect(sigc::mem_fun(*this, &Texture::init));
 }
 
+Texture::Texture(const Glib::RefPtr<Gdk::Pixbuf>& pixbuf)
+{
+  _texture  = 0;
+  _initialized  = false;
+
+  this->pixbuf = pixbuf;
+}
+
 Texture::~Texture()throw()
 {
   deinit();
@@ -115,7 +123,10 @@ void Texture::init()
 {
   deinit();
 
-  Glib::RefPtr<Gdk::Pixbuf> pb  = imagefile->create_pixbuf();
+  Glib::RefPtr<Gdk::Pixbuf> pb = pixbuf;
+
+  if(!pb)
+    pb = imagefile->create_pixbuf();
 
   if(!pb)
     return;

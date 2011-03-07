@@ -28,8 +28,10 @@ private:
   Texture();
   Texture(const Texture&);
   Texture(const Glib::RefPtr<ImageFile>& file);
+  Texture(const Glib::RefPtr<Gdk::Pixbuf>& pixbuf);
 
   Glib::RefPtr<ImageFile> imagefile;
+  Glib::RefPtr<Gdk::Pixbuf> pixbuf;
 
 public:
   ~Texture()throw();
@@ -49,4 +51,5 @@ public:
   void init();
 
   static Glib::RefPtr<Texture> create(const Glib::RefPtr<ImageFile>& imagefile){return Glib::RefPtr<Texture>(new Texture(imagefile));}
+  static Glib::RefPtr<Texture> create(const Glib::RefPtr<Gdk::Pixbuf>& pixbuf){return Glib::RefPtr<Texture>(new Texture(pixbuf));}
 };

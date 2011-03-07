@@ -156,7 +156,7 @@ PlanetGenerator
         [ ] Weighttextur
           [ ] Textur mit vier Kanälen (alpha invertiert?), wobie jede der vier Texturen für ein eigenes Material steht
             z.B Rot: Wüsten, Grün: ka, schwarz: kein glanzlicht, Blau: Eis, Alpha-Invertiert: Wasser
-      [ ] Glanzlichter für Ring?
+      [ ] Glanzlichter für Ring? Wie beim durchleuchten?
     [ ] Atmosphären effekt
       [ ] Farbverlauf soll Material beeinflussen
       [ ] Entfernung, mit der der Strahl an der Kugel vorbeifliegt bestimmen können
