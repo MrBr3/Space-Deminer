@@ -213,6 +213,7 @@ void View3D::init_shaders()
       ring_program_uniform.uni_no_lightning = LOCATE_UNIFORM(ring_program, "uni_no_lightning");
       ring_program_uniform.uni_all_curves = LOCATE_UNIFORM(ring_program, "uni_all_curves");
       ring_program_uniform.uni_ring_normal = LOCATE_UNIFORM(ring_program, "uni_ring_normal");
+      ring_program_uniform.uni_ring_translucency = LOCATE_UNIFORM(ring_program, "uni_ring_translucency");
       ring_program_uniform.light[0].get_uniform_locations(ring_program, "light[0].");
       ring_program_uniform.light[1].get_uniform_locations(ring_program, "light[1].");
       ring_program_uniform.light[2].get_uniform_locations(ring_program, "light[2].");

@@ -35,6 +35,7 @@ private:
   sigc::signal<void> _signal_width_changed;
   sigc::signal<void> _signal_outer_radius_changed;
 
+  REAL_SETTING(translucency);
 public:
   void rotate_z(gfloat a)
   {

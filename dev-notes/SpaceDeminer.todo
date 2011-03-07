@@ -146,11 +146,11 @@ PlanetGenerator
       [X] Graditionskurven für einzelne Texturen
         [X] Alpha verstecken können
         [X] reset button
-    [ ] RingShader
+    [X] RingShader
       [X] directionallight
       [X] pointlight
       [X] customlight
-      [ ] durchleuchtet
+      [X] durchleuchtet
     [ ] Glanzlichter
       [ ] Planet
         [ ] Weighttextur

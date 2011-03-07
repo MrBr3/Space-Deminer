@@ -244,6 +244,7 @@ public:
     GLint uni_no_lightning;
     GLint uni_all_curves;
     GLint uni_ring_normal;
+    GLint uni_ring_translucency;
 
     ColorCurveUniform uni_ring_texture_colorcurves;
 

@@ -35,22 +35,31 @@ RingLayer::RingLayer() : ParentClass(_("Ring"), false)
 
   x_rotation = 0.f;
   z_rotation = 0.f;
+  translucency = 0.3f;
 
   signal_x_rotation_changed().connect(sigc::mem_fun(_signal_rotation_changed, &sigc::signal<void>::emit));
   signal_z_rotation_changed().connect(sigc::mem_fun(_signal_rotation_changed, &sigc::signal<void>::emit));
   signal_rotation_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
   signal_width_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
   signal_outer_radius_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
+  signal_translucency_changed().connect(sigc::mem_fun(signal_something_changed(), &sigc::signal<void>::emit));
 
   settings->append_imagefile_widget("ring-texture-file", "File", "The File the Texture is created from\n\nThe Innerpart of the Rings (rightpart of the image) must be transparent", get_imagefile());
   settings->append_real_widget("ring-texture-x-rotation", _("x Rotation"), _("The Rotation along the x axis"), X_GETTER_SETTER_SIGNAL(RingLayer, x_rotation));
   settings->append_real_widget("ring-texture-y-rotation", _("z Rotation"), _("The Rotation along the z axis"), X_GETTER_SETTER_SIGNAL(RingLayer, z_rotation));
   settings->append_real_widget("ring-texture-width", _("width"), _("The width of the ring. 1 means it will fill the whole space between the planets surface and the outer ring"), X_GETTER_SETTER_SIGNAL(RingLayer, width), 0.025, 0.1);
   settings->append_real_widget("ring-texture-outer-radius", _("outer Radius"), _("The outer radius of the rings"), X_GETTER_SETTER_SIGNAL(RingLayer, outer_radius), 0.1, 0.5);
+  settings->append_real_widget("ring-texture-translucency", _("Translucency"), _("The amount of Light shining through the Ring."), X_GETTER_SETTER_SIGNAL(RingLayer, translucency), 0.025, 0.1);
 }
 
 RingLayer::~RingLayer()throw()
 {
+}
+
+void RingLayer::set_translucency(gfloat r)
+{
+  translucency=CLAMP(r, 0.f, 1.f);
+  signal_translucency_changed().emit();
 }
 
 void register_ring_layer()

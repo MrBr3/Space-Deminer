@@ -84,6 +84,7 @@ uniform Light light[N_LIGHTS];
 uniform bool uni_no_lightning;
 uniform ColorCurve uni_ringtexture_colorcurves;
 uniform vec4 uni_ring_normal;
+uniform float uni_ring_translucency;
 
 vec4 diffuse_lightning_color = vec4(0., 0., 0., 0.);
 
@@ -104,23 +105,28 @@ void calc_diffuse_lightning()
     if(!l.visible || l.just_shadows)
       continue;
 
+    bool flip_normal = (dot(uni_ring_normal, l.pos)<0.);
+    vec4 normal;
+    if(flip_normal)
+      normal = uni_ring_translucency*uni_ring_normal;
+    else
+      normal = uni_ring_normal;
+
     switch(l.type)
     {
     case LIGHT_TYPE_DIRECTIONAL:
-      diff = max(0., -dot(uni_ring_normal, l.dir));
+      diff = max(0., -dot(normal, l.dir));
       break;
     case LIGHT_TYPE_POINT:
-      diff = max(0., -dot(uni_ring_normal, normalize(world_pos-l.pos)));
+      diff = max(0., -dot(normal, normalize(world_pos-l.pos)));
       break;
     case LIGHT_TYPE_CUSTOM:
-      diff = acos(clamp(dot(uni_ring_normal, l.dir), -1., 1.))*INV_PI;
+      diff = acos(clamp(dot(normal, l.dir), -1., 1.))*INV_PI;
       break;
     case LIGHT_TYPE_AMBIENT:
     default:
       diff = 1.;
     }
-
-    // TODO durchleuchten
 
     vec4 color = l.color*GET_GRADIENT_COLOR(light[i].shade_gradient, GET_CURVE_VALUE(light[i].ring_shading_gradient, diff));
 

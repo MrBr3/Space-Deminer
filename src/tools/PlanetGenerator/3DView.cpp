@@ -404,6 +404,8 @@ bool View3D::on_expose_event(GdkEventExpose* event)
     matrix_PV.glUniform(ring_program_uniform.matrix_PV);
     matrix_M.glUniform(ring_program_uniform.matrix_M);
 
+    glUniform1f(ring_program_uniform.uni_ring_translucency, -1.f*RingLayer::get_singleton()->get_translucency());
+
     ring_program_uniform.light[0].feed_data(0);
     ring_program_uniform.light[1].feed_data(1);
     ring_program_uniform.light[2].feed_data(2);
