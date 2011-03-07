@@ -37,6 +37,7 @@ using TriangleVersion::SphereMesh;
 #include "UVMeshExporter.hpp"
 #include "GradientButton.hpp"
 #include "ColorCurveButton.hpp"
+#include "Splashscreen.hpp"
 
 void invalidate(Gtk::Widget* w);
 void set_unit(Gtk::SpinButton& sb, const Glib::ustring& str);

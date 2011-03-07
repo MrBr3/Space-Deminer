@@ -30,6 +30,8 @@ Cairo::RefPtr<Cairo::ImageSurface> create_cairo_imagesurface_from_pixbuf(Glib::R
  *   \li if empty ptr or empty image area an empty pixbuf refptr will be returned
  * \param clip_width if<0, the while image width-clip_x will be used
  * \param clip_height if<0, the while image height-clip_y will be used
+ *
+ * \todo renam
  * */
 Glib::RefPtr<Gdk::Pixbuf> create_cairo_imagesurface_from_pixbuf(Cairo::RefPtr<const Cairo::ImageSurface> cairo_img, int clip_x=0, int clip_y=0, int clip_width=-1, int clip_height=-1);
 

@@ -35,7 +35,7 @@ Cairo::RefPtr<Cairo::ImageSurface> create_cairo_imagesurface_from_pixbuf(Glib::R
   else
     cairo_format  = Cairo::FORMAT_RGB24;
 
-  Cairo::RefPtr<Cairo::ImageSurface> cairo_image = Cairo::ImageSurface::create(cairo_format, pixbuf->get_width(), pixbuf->get_height());
+  Cairo::RefPtr<Cairo::ImageSurface> cairo_image = Cairo::ImageSurface::create(cairo_format, width, height);
 
   g_assert(cairo_image);
 
@@ -48,12 +48,14 @@ Cairo::RefPtr<Cairo::ImageSurface> create_cairo_imagesurface_from_pixbuf(Glib::R
   g_assert(cairo_data);
   g_assert(pixbuf_data);
 
-  if(pixbuf->get_has_alpha())
+  gfloat inv_0xff = 1.f/255.f;
+
+  if(cairo_format==Cairo::FORMAT_ARGB32)
   {
     for(gsize y=0; y<height; ++y)
     for(gsize x=0; x<width; ++x)
     {
-      gfloat alpha  = pixbuf_data[y*pb_stride + x*4 + 3]/255.0;
+      gfloat alpha  = pixbuf_data[y*pb_stride + x*4 + 3]*inv_0xff;
       cairo_data[y*c_stride + x*4 + 0]  = guint8(pixbuf_data[y*pb_stride + x*4 + 2]*alpha);
       cairo_data[y*c_stride + x*4 + 1]  = guint8(pixbuf_data[y*pb_stride + x*4 + 1]*alpha);
       cairo_data[y*c_stride + x*4 + 2]  = guint8(pixbuf_data[y*pb_stride + x*4 + 0]*alpha);
@@ -70,6 +72,8 @@ Cairo::RefPtr<Cairo::ImageSurface> create_cairo_imagesurface_from_pixbuf(Glib::R
       cairo_data[y*c_stride + x*4 + 2]  = pixbuf_data[y*pb_stride + x*4 + 0];
     }
   }
+
+  cairo_image->mark_dirty();
 
   return cairo_image;
 }

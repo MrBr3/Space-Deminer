@@ -38,6 +38,8 @@
       <File Name="ColorCurveButton.cpp"/>
       <File Name="3DViewCurveTexture.cpp"/>
       <File Name="3DView.cpp"/>
+      <File Name="Splashscreen.hpp"/>
+      <File Name="Splashscreen.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Model">
       <File Name="Model.hpp"/>

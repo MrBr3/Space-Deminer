@@ -42,6 +42,8 @@ int main(int argc, char **argv)
 
   init_paths("planet-generator");
 
+  Splashscreen* splashscreen = new Splashscreen;
+
   Options options;
 
   options.load_options();
@@ -49,6 +51,14 @@ int main(int argc, char **argv)
   Gradient::init_slots();
   {
     MainWindow main_window;
+
+    main_window.show();
+    while(Gtk::Main::events_pending())
+      Gtk::Main::iteration(false);
+
+    splashscreen->hide();
+    delete splashscreen;
+    splashscreen = nullptr;
 
     kit.run(main_window);
   }
