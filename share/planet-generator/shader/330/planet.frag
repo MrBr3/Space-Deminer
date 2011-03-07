@@ -140,7 +140,6 @@ void calc_diffuse_lightning()
   world_pos.w = 1.;
   normal.xyz = world_pos.xyz;
   normal.w = 0.;
-  float n_diff = 0.;
   
   for(int i=0; i<N_LIGHTS; ++i)
   {

@@ -386,12 +386,30 @@ bool View3D::on_expose_event(GdkEventExpose* event)
     matrix_stack.top().scale(ring_planet->get_outer_radius());
     matrix_M = matrix_stack.top();
 
+    Vector3 normal = (matrix_M*Vector4(0.f, 0.f, 1.f, 0.f)).get_xyz();
+
+    // TODO wenn kamera auf der anderen Seite, normale umdrehen?
+
+    normal.glUniform4(ring_program_uniform.uni_ring_normal, 0.f);
+
     matrix_PV.glUniform(ring_program_uniform.matrix_PV);
     matrix_M.glUniform(ring_program_uniform.matrix_M);
 
+    ring_program_uniform.light[0].feed_data(0);
+    ring_program_uniform.light[1].feed_data(1);
+    ring_program_uniform.light[2].feed_data(2);
+    ring_program_uniform.light[3].feed_data(3);
+
+    ring_program_uniform.uni_ring_texture_colorcurves.feed_data(RingLayer::get_singleton()->get_imagefile()->get_color_curve());
+
+    glUniform1i(ring_program_uniform.uni_no_lightning, no_lights);
+
     glActiveTexture(GL_TEXTURE0);
     ring_texture->bind(0);
+    CurveTexture::bind(/*4*/);
+
     glUniform1i(ring_program_uniform.ring_texture, 0);
+    glUniform1i(ring_program_uniform.uni_all_curves, 4);
 
     ring_mesh.render(ring_planet->get_width(), ring_planet->get_outer_radius());
 

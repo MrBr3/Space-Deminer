@@ -167,12 +167,13 @@ PlanetGenerator
     [ ] Schatten
       [ ] manuell linear zwischen directlightshadow und pointlightshadow schalten können
       [ ] schatten auf Ring
-        [ ] schatten vom Planeten
+        [ ] schatten vom Planeten (just shadow umsetzung im Auge behalten)
       [ ] schatten auf Planeten
-        [ ] schatten vom Ring
-        [ ] schatten von Wolken
+        [ ] schatten vom Ring (just shadow umsetzung im Auge behalten)
+        [ ] schatten von Wolken (just shadow umsetzung im Auge behalten)
           [ ] mithilfen von Matrix von der Lichtquelle aus?
             [ ] Matrix, die linear zwischen othogonal und projeziet umschalten können
+      [ ] just shadow umsetzen
     [ ] Antialiasing
     [ ] gucken pb Multimapping nicht etasa schärfer geht
     [ ] Graditionsbeleuchtung

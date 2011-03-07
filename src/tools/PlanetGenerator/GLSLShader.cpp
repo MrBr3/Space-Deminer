@@ -209,6 +209,14 @@ void View3D::init_shaders()
       ring_program_uniform.matrix_PV = LOCATE_UNIFORM(ring_program, "matrix_PV");
       ring_program_uniform.matrix_M  = LOCATE_UNIFORM(ring_program, "matrix_M");
       ring_program_uniform.ring_texture  = LOCATE_UNIFORM(ring_program, "uni_ring_texture");
+      ring_program_uniform.uni_ring_texture_colorcurves.get_uniform_locations(ring_program, "uni_ringtexture_colorcurves.");
+      ring_program_uniform.uni_no_lightning = LOCATE_UNIFORM(ring_program, "uni_no_lightning");
+      ring_program_uniform.uni_all_curves = LOCATE_UNIFORM(ring_program, "uni_all_curves");
+      ring_program_uniform.uni_ring_normal = LOCATE_UNIFORM(ring_program, "uni_ring_normal");
+      ring_program_uniform.light[0].get_uniform_locations(ring_program, "light[0].");
+      ring_program_uniform.light[1].get_uniform_locations(ring_program, "light[1].");
+      ring_program_uniform.light[2].get_uniform_locations(ring_program, "light[2].");
+      ring_program_uniform.light[3].get_uniform_locations(ring_program, "light[3].");
     }
     {
       GLuint vs = glCreateShader(GL_VERTEX_SHADER);
@@ -286,6 +294,21 @@ void View3D::ColorCurveUniform::get_uniform_locations(GLuint planet_program, con
   slice_id = LOCATE_UNIFORM(planet_program, (prefix+"slice_id").c_str());
 }
 
+void View3D::RingProgramUniform::Light::get_uniform_locations(GLuint ring_program, const std::string& prefix)
+{
+  visible = LOCATE_UNIFORM(ring_program, (prefix+"visible").c_str());
+  dir = LOCATE_UNIFORM(ring_program, (prefix+"dir").c_str());
+  pos = LOCATE_UNIFORM(ring_program, (prefix+"pos").c_str());
+  color = LOCATE_UNIFORM(ring_program, (prefix+"color").c_str());
+  type = LOCATE_UNIFORM(ring_program, (prefix+"type").c_str());
+  light_on_ring = LOCATE_UNIFORM(ring_program, (prefix+"light_on_ring").c_str());
+  specular_factor = LOCATE_UNIFORM(ring_program, (prefix+"specular_factor").c_str());
+  planet_shadow = LOCATE_UNIFORM(ring_program, (prefix+"planet_shadow").c_str());
+  just_shadows = LOCATE_UNIFORM(ring_program, (prefix+"just_shadows").c_str());
+  shade_gradient.get_uniform_locations(ring_program, (prefix+"shade_gradient.").c_str());
+  ring_shade_gradient.get_uniform_locations(ring_program, (prefix+"ring_shading_gradient.").c_str());
+}
+
 void View3D::PlanetProgramUniform::Light::get_uniform_locations(GLuint planet_program, const std::string& prefix)
 {
   visible = LOCATE_UNIFORM(planet_program, (prefix+"visible").c_str());
@@ -295,15 +318,12 @@ void View3D::PlanetProgramUniform::Light::get_uniform_locations(GLuint planet_pr
   type = LOCATE_UNIFORM(planet_program, (prefix+"type").c_str());
   influence_night = LOCATE_UNIFORM(planet_program, (prefix+"influence_night").c_str());
   light_on_planet = LOCATE_UNIFORM(planet_program, (prefix+"light_on_planet").c_str());
-  //light_on_ring = LOCATE_UNIFORM(planet_program, (prefix+"light_on_ring").c_str());
   specular_factor = LOCATE_UNIFORM(planet_program, (prefix+"specular_factor").c_str());
   ring_shadow = LOCATE_UNIFORM(planet_program, (prefix+"ring_shadow").c_str());
   cloud_shadow = LOCATE_UNIFORM(planet_program, (prefix+"cloud_shadow").c_str());
-  //planet_shadow = LOCATE_UNIFORM(planet_program, (prefix+"planet_shadow").c_str());
   just_shadows = LOCATE_UNIFORM(planet_program, (prefix+"just_shadows").c_str());
   shade_gradient.get_uniform_locations(planet_program, (prefix+"shade_gradient.").c_str());
   planet_shade_gradient.get_uniform_locations(planet_program, (prefix+"planet_shading_gradient.").c_str());
-  //ring_shade_gradient.get_uniform_locations(planet_program, (prefix+"ring_shading_gradient.").c_str());
   gradient[0].get_uniform_locations(planet_program, prefix+"gradient[0].");
   gradient[1].get_uniform_locations(planet_program, prefix+"gradient[1].");
   gradient[2].get_uniform_locations(planet_program, prefix+"gradient[2].");
@@ -323,6 +343,23 @@ void View3D::PlanetProgramUniform::Light::GradientLight::get_uniform_locations(G
   light_gradient.get_uniform_locations(planet_program, prefix+"light_gradient.");
 }
 
+void View3D::RingProgramUniform::Light::feed_data(guint i)
+{
+  LightLayer& layer = *LightLayer::get_singleton(i);
+
+  glUniform1i(visible, layer.get_visible());
+  glUniform1i(type, layer.get_light_type());
+  layer.get_light_direction().glUniform4(dir, 0.f);
+  layer.get_light_position().glUniform4(pos, 1.f);
+  ColorRGBA::rgb_mult(layer.get_light_color(), layer.get_light_intensity()).glUniformRGB(color);
+  glUniform1f(light_on_ring, layer.get_light_on_ring());
+  glUniform1f(specular_factor, layer.get_specular_factor());
+  glUniform1f(planet_shadow, layer.get_planet_shadow());
+  glUniform1i(just_shadows, layer.get_just_shadows());
+  shade_gradient.feed_data(layer.get_shading_gradient());
+  ring_shade_gradient.feed_data(layer.get_ring_shading_gradient());
+}
+
 void View3D::PlanetProgramUniform::Light::feed_data(guint i)
 {
   LightLayer& layer = *LightLayer::get_singleton(i);
@@ -334,15 +371,12 @@ void View3D::PlanetProgramUniform::Light::feed_data(guint i)
   ColorRGBA::rgb_mult(layer.get_light_color(), layer.get_light_intensity()).glUniformRGB(color);
   glUniform1f(influence_night, layer.get_influence_night());
   glUniform1f(light_on_planet, layer.get_light_on_planet());
-  //glUniform1f(light_on_ring, layer.get_light_on_ring());
   glUniform1f(specular_factor, layer.get_specular_factor());
   glUniform1f(ring_shadow, layer.get_ring_shadow());
   glUniform1f(cloud_shadow, layer.get_cloud_shadow());
-  //glUniform1f(planet_shadow, layer.get_planet_shadow());
   glUniform1i(just_shadows, layer.get_just_shadows());
   shade_gradient.feed_data(layer.get_shading_gradient());
   planet_shade_gradient.feed_data(layer.get_planet_shading_gradient());
-  //ring_shade_gradient.feed_data(layer.get_ring_shading_gradient());
   gradient[0].feed_data(layer.gradient0);
   gradient[1].feed_data(layer.gradient1);
   gradient[2].feed_data(layer.gradient2);

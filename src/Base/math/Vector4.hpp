@@ -117,6 +117,11 @@ public:
 
   operator Vector3()const
   {
+    return get_xyz();
+  }
+
+  Vector3 get_xyz()const
+  {
     if(w==0.f)
     {
       //g_warning("**Vector4::operator Vector3** w==0");

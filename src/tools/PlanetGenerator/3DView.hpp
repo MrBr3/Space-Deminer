@@ -178,7 +178,6 @@ public:
   {
     GLint matrix_PV;
     GLint matrix_M;
-    GLint uni_texture_layer_visibility;
     GLint base_texture;
     GLint night_texture;
     GLint cloud_texture;
@@ -224,8 +223,8 @@ public:
 
       GLint visible, type;
       GLint dir, pos, color;
-      GLint influence_night, light_on_planet;//, light_on_ring;
-      GLint specular_factor, ring_shadow, cloud_shadow;//planet shadow
+      GLint influence_night, light_on_planet;
+      GLint specular_factor, ring_shadow, cloud_shadow;
       GLint just_shadows;
       GradientUniform shade_gradient;
       CurveUniform planet_shade_gradient;
@@ -242,6 +241,27 @@ public:
     GLint matrix_PV;
     GLint matrix_M;
     GLint ring_texture;
+    GLint uni_no_lightning;
+    GLint uni_all_curves;
+    GLint uni_ring_normal;
+
+    ColorCurveUniform uni_ring_texture_colorcurves;
+
+    struct Light
+    {
+      GLint visible, type;
+      GLint dir, pos, color;
+      GLint light_on_ring;
+      GLint specular_factor, planet_shadow;
+      GLint just_shadows;
+      GradientUniform shade_gradient;
+      CurveUniform ring_shade_gradient;
+
+      void get_uniform_locations(GLuint program, const std::string& prefix);
+      void feed_data(guint i);
+    };
+
+    Light light[4];
   }ring_program_uniform;
   struct SimpleProgramUniform
   {

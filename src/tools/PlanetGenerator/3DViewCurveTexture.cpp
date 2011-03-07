@@ -19,7 +19,7 @@
 
 #include "./MainWindow.hpp"
 
-#define N_TEXTURE_SLICES 32
+#define N_TEXTURE_SLICES 42
 #define N_SAMPLES 512
 
 GLuint View3D::CurveTexture::next_texture_slize_to_create = 0;
