@@ -343,8 +343,8 @@ bool View3D::on_expose_event(GdkEventExpose* event)
 
           matrix_M = matrix_stack.top();
 
-          matrix_PV.glUniform(ring_program_uniform.matrix_PV);
-          matrix_M.glUniform(ring_program_uniform.matrix_M);
+          matrix_PV.glUniform(simple_program_uniform.matrix_PV);
+          matrix_M.glUniform(simple_program_uniform.matrix_M);
           lightsource_mesh.point_mesh.RenderBatch();
         matrix_stack.pop();
       }else if(light_layer.get_light_type()==LightLayer::LIGHT_TYPE_DIRECTIONAL || light_layer.get_light_type()==LightLayer::LIGHT_TYPE_CUSTOM)
@@ -356,8 +356,8 @@ bool View3D::on_expose_event(GdkEventExpose* event)
 
           matrix_M = matrix_stack.top();
 
-          matrix_PV.glUniform(ring_program_uniform.matrix_PV);
-          matrix_M.glUniform(ring_program_uniform.matrix_M);
+          matrix_PV.glUniform(simple_program_uniform.matrix_PV);
+          matrix_M.glUniform(simple_program_uniform.matrix_M);
           lightsource_mesh.point_mesh.RenderBatch();
           lightsource_mesh.directional_light.RenderBatch();
         matrix_stack.pop();
