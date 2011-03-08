@@ -652,6 +652,29 @@ public:
     return *this *= tmp;
   }
 
+  /** \brief Sets this Matrix to be a billboard Matrix.
+   *
+   * After calling this function, this matrix represents a rotation Matrix, which maces the local z axis of an object at \c pos loko at \c dest.
+   * */
+  void set_look_at(const Vector3& pos, const Vector3& dest)
+  {
+    if((pos-dest).get_xy().get_square_length()==0.f)
+      return;
+
+    Vector3 z = dest-pos;
+    z.normalize();
+
+    Vector3 x = cross(Vector3(0.f, 0.f, 1.f), z);
+    //x.normalize();
+
+    Vector3 y = cross(z, x);
+
+    set(x.x, y.x, z.x, 0.f,
+        x.y, y.y, z.y, 0.f,
+        x.z, y.z, z.z, 0.f,
+        0.f, 0.f, 0.f, 1.f);
+  }
+
   /** \brief Makes the current Matrix to represent a perspective Matrix.
    *
    * Implementation based on http://www.opengl.org/sdk/docs/man/xhtml/gluPerspective.xml (2011-01-06)
