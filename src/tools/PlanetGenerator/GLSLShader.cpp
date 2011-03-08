@@ -220,6 +220,9 @@ void View3D::init_shaders()
       ring_program_uniform.uni_all_curves = LOCATE_UNIFORM(ring_program, "uni_all_curves");
       ring_program_uniform.uni_ring_normal = LOCATE_UNIFORM(ring_program, "uni_ring_normal");
       ring_program_uniform.uni_ring_translucency = LOCATE_UNIFORM(ring_program, "uni_ring_translucency");
+      ring_program_uniform.uni_part_behind_atmosphere = LOCATE_UNIFORM(ring_program, "uni_part_behind_atmosphere");
+      ring_program_uniform.uni_planet_pos = LOCATE_UNIFORM(ring_program, "uni_planet_pos");
+      ring_program_uniform.uni_planet2camera_dir = LOCATE_UNIFORM(ring_program, "uni_planet2camera_dir");
       ring_program_uniform.light[0].get_uniform_locations(ring_program, "light[0].");
       ring_program_uniform.light[1].get_uniform_locations(ring_program, "light[1].");
       ring_program_uniform.light[2].get_uniform_locations(ring_program, "light[2].");

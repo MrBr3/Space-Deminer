@@ -252,6 +252,8 @@ public:
     GLint uni_all_curves;
     GLint uni_ring_normal;
     GLint uni_ring_translucency;
+    GLint uni_part_behind_atmosphere;
+    GLint uni_planet_pos, uni_planet2camera_dir;
 
     ColorCurveUniform uni_ring_texture_colorcurves;
 
@@ -285,4 +287,6 @@ public:
   }seeming_circle;
   void init_shaders();
   void deinit_shaders();
+
+  void draw_ring(bool back, Matrix44& matrix_PV, const Vector3& camera_pos, const Vector3& planet_pos, bool no_lights);
 };

@@ -85,6 +85,8 @@ uniform bool uni_no_lightning;
 uniform ColorCurve uni_ringtexture_colorcurves;
 uniform vec4 uni_ring_normal;
 uniform float uni_ring_translucency;
+uniform bool uni_part_behind_atmosphere;
+uniform vec4 uni_planet_pos, uni_planet2camera_dir;
 
 vec4 diffuse_lightning_color = vec4(0., 0., 0., 0.);
 
@@ -152,6 +154,12 @@ void main()
 {
   if(tex_coord.x>1.)
     discard;
+
+  {
+    bool on_back_side = (dot(world_pos, uni_planet2camera_dir)<=0.);
+    if(on_back_side==uni_part_behind_atmosphere)
+      discard;
+  }
 
   calc_diffuse_lightning();
 

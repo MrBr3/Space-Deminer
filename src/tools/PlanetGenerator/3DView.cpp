@@ -383,6 +383,8 @@ bool View3D::on_expose_event(GdkEventExpose* event)
 
   matrix_stack.pop();
 
+  draw_ring(true, matrix_PV, camera_pos, planet_pos, no_lights);
+
   if(_draw_light_representation)
   {
     glUseProgram(simple_program);
@@ -426,6 +428,16 @@ bool View3D::on_expose_event(GdkEventExpose* event)
     glDisableVertexAttribArray(1);
   }
 
+  draw_ring(false, matrix_PV, camera_pos, planet_pos, no_lights);
+
+  gl_drawable->swap_buffers();
+  return true;
+}
+
+void View3D::draw_ring(bool back, Matrix44& matrix_PV, const Vector3& camera_pos, const Vector3& planet_pos, bool no_lights)
+{
+  Matrix44 matrix_M;
+
   if(RingLayer::get_singleton()->get_visible())
   {
     glUseProgram(ring_program);
@@ -448,6 +460,13 @@ bool View3D::on_expose_event(GdkEventExpose* event)
 
     Vector3 normal = (matrix_M*Vector4(0.f, 0.f, 1.f, 0.f)).get_xyz();
     normal.normalize();
+
+    Vector3 planet2camera_dir;
+
+    glUniform1i(ring_program_uniform.uni_part_behind_atmosphere, back);
+    planet_pos.glUniform4(ring_program_uniform.uni_planet_pos, 1.f);
+    planet2camera_dir = camera_pos-planet_pos;
+    planet2camera_dir.glUniform4(ring_program_uniform.uni_planet2camera_dir, 0.f);
 
     {
       Plane ring_plane;
@@ -485,9 +504,6 @@ bool View3D::on_expose_event(GdkEventExpose* event)
 
     matrix_stack.pop();
   }
-
-  gl_drawable->swap_buffers();
-  return true;
 }
 
 bool View3D::on_scroll_event(GdkEventScroll* event)
