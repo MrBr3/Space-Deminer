@@ -195,6 +195,7 @@ public:
     GLint uni_no_lightning;
     GLint uni_no_nighttexture;
     GLint uni_all_curves;
+    GLint uni_seeming_circle_radius;
 
     GradientUniform night_gradient;
     GradientUniform cloud_gradient;
@@ -273,6 +274,11 @@ public:
   }simple_program_uniform;
   GLuint planet_program, ring_program, simple_program;
   GLuint circle_gradient_texture;
+  struct SeemingCircle
+  {
+    float radius;
+    Vector2 pos;
+  }seeming_circle;
   void init_shaders();
   void deinit_shaders();
 };

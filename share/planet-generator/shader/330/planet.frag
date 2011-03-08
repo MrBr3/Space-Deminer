@@ -29,12 +29,20 @@ uniform bool uni_weight_texture_visible;
 uniform bool uni_weight_texture_warped;
 
 uniform sampler1DArray uni_all_curves;
+uniform sampler2D uni_circle_gradient_texture;
 
 #define PLANET_TEXTURE_COLOR(what, t) if(uni_##t##_texture_warped){what texture(uni_##t##_texture, tex_coord_warped);}else{what texture(uni_##t##_texture, tex_coord);}
 
 in vec2 tex_coord;
 in vec2 tex_coord_warped;
 in vec4 world_pos_;
+in vec2 rel_pos;
+float distance_to_planet_center;
+
+float get_circle_gradient_value(float x, float y)
+{
+  return texture(uni_circle_gradient_texture, vec2(abs(x), abs(y))).x;
+}
 
 // ==== Material ========
 
@@ -121,7 +129,6 @@ uniform ColorCurve uni_base_texture_colorcurves;
 uniform ColorCurve uni_night_texture_colorcurves;
 uniform Curve uni_cloud_texture_curve;
 uniform ColorCurve uni_weight_texture_colorcurves;
-uniform sampler2D uni_circle_gradient_texture;
 
 float night_factor = 1.;
 vec4 diffuse_lightning_color = vec4(0., 0., 0., 0.);
@@ -209,6 +216,8 @@ void main()
     return;
   }
 
+  distance_to_planet_center = get_circle_gradient_value(rel_pos.x, rel_pos.y);
+
   calc_diffuse_lightning();
 
   resulting_color = query_surface_color();
@@ -228,6 +237,10 @@ void main()
     resulting_color = mix(resulting_color, cloud_color, thickness*cloud_color.w);
   }
   resulting_color.w = 1.;
+
+  resulting_color.x = distance_to_planet_center;
+  resulting_color.y = resulting_color.x;
+  resulting_color.z = resulting_color.x;
 }
 
 vec4 query_surface_color()

@@ -192,19 +192,18 @@ void View3D::on_realize()
     for(int x=0; x<1024; ++x)
     for(int y=0; y<1024; ++y)
     {
-      circle_gradient_texture_data[y*1024+x] = (x*x+y*y)/1024.;
+      circle_gradient_texture_data[y*1024+x] = sqrt(x*x+y*y)/1023.;
     }
 
     glActiveTexture(GL_TEXTURE0);
     glGenTextures(1, &circle_gradient_texture);
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, circle_gradient_texture);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 1024, 1024, 0, GL_RED, GL_FLOAT, circle_gradient_texture_data);
-    glGenerateMipmap(GL_TEXTURE_2D);
   }
 
   signal_wireframed_changed().connect(sigc::hide(sigc::mem_fun(sig_wireframed_changed_noparam(), &sigc::signal<void>::emit)));
@@ -282,6 +281,13 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   Vector3 camera_pos = view_matrix.get_inversion()*Vector3(0.f, 0.f, 0.f);
   Vector3 planet_pos = planet_model_matrix*Vector3(0.f, 0.f, 0.f);
 
+  // Calc seeming Circle of th planet
+  Math::Sphere planet_sphere(planet_model_matrix, 1.f);
+  planet_sphere.screen_circle_pixelscreen(seeming_circle.pos, seeming_circle.radius, projection_matrix, view_matrix, 2.f, 2.f);
+  seeming_circle.pos.x -= 1.f;
+  (seeming_circle.pos.y -= 1.f)*=-1.f;
+  //----
+
   matrix_stack.push(false);
 
   matrix_stack.top() *= planet_model_matrix;
@@ -320,6 +326,8 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   glUniform1i(planet_program_uniform.uni_weight_texture_visible, WeightTextureLayer::get_singleton()->get_visible());
   glUniform1i(planet_program_uniform.uni_weight_texture_warped, WeightTextureLayer::get_singleton()->get_imagefile()->get_needs_to_be_warped());
   planet_program_uniform.uni_weight_texture_colorcurves.feed_data(WeightTextureLayer::get_singleton()->get_imagefile()->get_color_curve());
+
+  glUniform1f(planet_program_uniform.uni_seeming_circle_radius, seeming_circle.radius);
 
   base_texture->bind(0, BaseTextureLayer::get_singleton()->get_visible());
   night_texture->bind(1, NightTextureLayer::get_singleton()->get_visible());
