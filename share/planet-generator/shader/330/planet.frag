@@ -271,8 +271,9 @@ vec4 query_surface_color()
 vec4 query_cloud_color()
 {
   vec4 cloud_diffuse = vec4(1., 1., 1., 1.);
+  float light_intensity = max_vec3(diffuse_lightning_color.xyz);
 
-  return cloud_diffuse*GET_GRADIENT_COLOR(uni_cloud_gradient, max_vec3(diffuse_lightning_color.xyz));
+  return cloud_diffuse*GET_GRADIENT_COLOR(uni_cloud_gradient, light_intensity)*diffuse_lightning_color;
 }
 
 vec4 query_night_color()

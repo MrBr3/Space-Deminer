@@ -258,12 +258,12 @@ public:
   //@{
   static ColorRGBA rgb_mult(const ColorRGBA& c1, gfloat f)
   {
-    return ColorRGBA(c1.r*f, c1.g*f, c1.g*f, c1.a);
+    return ColorRGBA(c1.r*f, c1.g*f, c1.b*f, c1.a);
   }
 
   static ColorRGBA rgb_mult(gfloat f, const ColorRGBA& c1)
   {
-    return ColorRGBA(c1.r*f, c1.g*f, c1.g*f, c1.a);
+    return ColorRGBA(c1.r*f, c1.g*f, c1.b*f, c1.a);
   }
   //@}
 

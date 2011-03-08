@@ -151,11 +151,10 @@ PlanetGenerator
       [X] pointlight
       [X] customlight
       [X] durchleuchtet
-    [ ] bugfixes
-      [ ] warum sind die Ringe dunkel?
-      [ ] warum tut Lichtfarbe blaux nicht?
-      [ ] warum reagieren Wolen nicht auf Lightfarbe?
-      [ ] Raytracer
+    [X] bugfixes
+      [X] warum sind die Ringe dunkel?
+      [X] warum tut Lichtfarbe blaux nicht?
+      [X] warum reagieren Wolen nicht auf Lightfarbe?
     [ ] Glanzlichter
       [ ] Planet
         [ ] Weighttextur
