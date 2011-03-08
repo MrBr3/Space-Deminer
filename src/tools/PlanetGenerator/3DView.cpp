@@ -213,6 +213,16 @@ void View3D::on_realize()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 1024, 1024, 0, GL_RED, GL_FLOAT, circle_gradient_texture_data);
   }
+  {
+    atmosphere_mesh.BeginBatch();
+      atmosphere_mesh.Begin(NS_GLIM::GLIM_QUADS);
+        atmosphere_mesh.Vertex(-1.f, -1.f);
+        atmosphere_mesh.Vertex( 1.f, -1.f);
+        atmosphere_mesh.Vertex( 1.f,  1.f);
+        atmosphere_mesh.Vertex(-1.f,  1.f);
+      atmosphere_mesh.End();
+    atmosphere_mesh.EndBatch();
+  }
 
   signal_wireframed_changed().connect(sigc::hide(sigc::mem_fun(sig_wireframed_changed_noparam(), &sigc::signal<void>::emit)));
   signal_draw_light_representation_changed().connect(sigc::hide(sigc::mem_fun(sig_draw_light_representation_changed_noparam(), &sigc::signal<void>::emit)));
@@ -329,6 +339,8 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   glUniform1i(planet_program_uniform.uni_no_lightning, no_lights);
   glUniform1i(planet_program_uniform.uni_no_nighttexture, no_nighttexture||!NightTextureLayer::get_singleton()->get_visible());
 
+  bool atmosphere_visible = AtmosphereLayer::get_singleton()->get_visible();
+
   glUniform1i(planet_program_uniform.uni_just_one_texture_visible, LayerModel::just_one_texture_layer_visible() && !BaseTextureLayer::get_singleton()->get_visible());
   glUniform1i(planet_program_uniform.uni_base_texture_visible, BaseTextureLayer::get_singleton()->get_visible());
   glUniform1i(planet_program_uniform.uni_base_texture_warped, BaseTextureLayer::get_singleton()->get_imagefile()->get_needs_to_be_warped());
@@ -342,7 +354,7 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   glUniform1i(planet_program_uniform.uni_weight_texture_visible, WeightTextureLayer::get_singleton()->get_visible());
   glUniform1i(planet_program_uniform.uni_weight_texture_warped, WeightTextureLayer::get_singleton()->get_imagefile()->get_needs_to_be_warped());
   planet_program_uniform.uni_weight_texture_colorcurves.feed_data(WeightTextureLayer::get_singleton()->get_imagefile()->get_color_curve());
-  glUniform1i(planet_program_uniform.uni_atmosphere_visible, AtmosphereLayer::get_singleton()->get_visible());
+  glUniform1i(planet_program_uniform.uni_atmosphere_visible, atmosphere_visible);
 
   seeming_circle.radius.glUniform2(planet_program_uniform.uni_seeming_circle_radius);
 
@@ -382,8 +394,6 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   unbind_all_textures();
 
   matrix_stack.pop();
-
-  draw_ring(true, matrix_PV, camera_pos, planet_pos, no_lights);
 
   if(_draw_light_representation)
   {
@@ -426,6 +436,26 @@ bool View3D::on_expose_event(GdkEventExpose* event)
       }
     }
     glDisableVertexAttribArray(1);
+  }
+
+  draw_ring(true, matrix_PV, camera_pos, planet_pos, no_lights);
+
+  if(atmosphere_visible)
+  {
+    glUseProgram(atmosphere_program);
+
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    matrix_stack.push(false);
+      matrix_stack.top().set_look_at(planet_pos, camera_pos);
+      matrix_stack.top().scale(AtmosphereLayer::get_singleton()->get_outer_radius());
+
+      matrix_M = matrix_stack.top();
+
+      matrix_PV.glUniform(atmosphere_program_uniform.matrix_PV);
+      matrix_M.glUniform(atmosphere_program_uniform.matrix_M);
+      atmosphere_mesh.RenderBatch();
+    matrix_stack.pop();
   }
 
   draw_ring(false, matrix_PV, camera_pos, planet_pos, no_lights);

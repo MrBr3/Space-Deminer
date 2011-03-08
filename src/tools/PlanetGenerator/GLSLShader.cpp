@@ -262,6 +262,39 @@ void View3D::init_shaders()
       simple_program_uniform.matrix_PV = LOCATE_UNIFORM(simple_program, "matrix_PV");
       simple_program_uniform.matrix_M  = LOCATE_UNIFORM(simple_program, "matrix_M");
     }
+    {
+      GLuint vs = glCreateShader(GL_VERTEX_SHADER);
+      //gluint gs = glCreateShader(GL_GEOMETRY_SHADER);
+      GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
+
+      glShaderSource(vs, 1, load_shader("atmosphere.vert"), 0);
+      glShaderSource(fs, 1, load_shader("atmosphere.frag"), 0);
+
+      glCompileShader(vs);
+      glCompileShader(fs);
+
+      possible_shader_error(vs, "Vertex", "Atmosphere");
+      possible_shader_error(fs, "Fragment", "Atmosphere");
+
+      atmosphere_program = glCreateProgram();
+
+      glAttachShader(atmosphere_program, vs);
+      glAttachShader(atmosphere_program, fs);
+
+      glDeleteShader(vs);
+      glDeleteShader(fs);
+
+      glBindAttribLocation(atmosphere_program, 0, "att_vertex");
+
+      glBindFragDataLocation(atmosphere_program, 0, "resulting_color");
+
+      glLinkProgram(atmosphere_program);
+
+      possible_program_error(atmosphere_program, "Simple");
+
+      atmosphere_program_uniform.matrix_PV = LOCATE_UNIFORM(atmosphere_program, "matrix_PV");
+      atmosphere_program_uniform.matrix_M  = LOCATE_UNIFORM(atmosphere_program, "matrix_M");
+    }
   }catch(const std::exception& e)
   {
     deinit_shaders();

@@ -278,8 +278,14 @@ public:
     GLint matrix_PV;
     GLint matrix_M;
   }simple_program_uniform;
-  GLuint planet_program, ring_program, simple_program;
+  struct AtmosphereProgramUniform
+  {
+    GLint matrix_PV;
+    GLint matrix_M;
+  }atmosphere_program_uniform;
+  GLuint planet_program, ring_program, simple_program, atmosphere_program;
   GLuint circle_gradient_texture;
+  NS_GLIM::GLIM_BATCH atmosphere_mesh;
   struct SeemingCircle
   {
     Vector2 radius;

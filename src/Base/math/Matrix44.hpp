@@ -665,9 +665,10 @@ public:
     z.normalize();
 
     Vector3 x = cross(Vector3(0.f, 0.f, 1.f), z);
-    //x.normalize();
+    x.normalize();
 
     Vector3 y = cross(z, x);
+    y.normalize();
 
     set(x.x, y.x, z.x, 0.f,
         x.y, y.y, z.y, 0.f,

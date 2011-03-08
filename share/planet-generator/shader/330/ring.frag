@@ -157,7 +157,7 @@ void main()
 
   {
     bool on_back_side = (dot(world_pos, uni_planet2camera_dir)<=0.);
-    if(on_back_side==uni_part_behind_atmosphere)
+    if(on_back_side!=uni_part_behind_atmosphere)
       discard;
   }
 
