@@ -137,7 +137,7 @@ PlanetGenerator
       [X] in GUI verstecken
     [ ] Uniform Buffer?
     [X] gradientenstand mit mehreren Lichtern testen
-    [ ] weitere Gradients einsetzen
+    [X] weitere Gradients einsetzen
       [X] getrennte & gemeinsame kurven für Ring & Planetbeleuchtung
         [X] flexibler machen (nicht mehr per multiplikation, sondern eher wie graditionskurve)
       [X] Kurve für übergang von Nachttextur
@@ -151,6 +151,11 @@ PlanetGenerator
       [X] pointlight
       [X] customlight
       [X] durchleuchtet
+    [ ] bugfixes
+      [ ] warum sind die Ringe dunkel?
+      [ ] warum tut Lichtfarbe blaux nicht?
+      [ ] warum reagieren Wolen nicht auf Lightfarbe?
+      [ ] Raytracer
     [ ] Glanzlichter
       [ ] Planet
         [ ] Weighttextur
