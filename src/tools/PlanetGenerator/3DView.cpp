@@ -289,8 +289,8 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   matrix_stack.top() *= view_matrix;
   matrix_PV = matrix_stack.top();
 
-  Vector3 camera_pos = view_matrix.get_inversion()*Vector3(0.f, 0.f, 0.f);
-  Vector3 planet_pos = planet_model_matrix*Vector3(0.f, 0.f, 0.f);
+  Vector3 camera_pos = view_matrix.get_inversion().transform(Vector3(0.f, 0.f, 0.f), 1.f);
+  Vector3 planet_pos = planet_model_matrix.transform(Vector3(0.f, 0.f, 0.f), 0.f);
 
   // Calc seeming Circle of th planet
   {

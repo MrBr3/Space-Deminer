@@ -28,8 +28,8 @@ public:
 
   void transform(const Matrix44& m)
   {
-    dir = m * dir;
-    origin  = m * origin;
+    dir = m.transform(dir, 0.f);
+    origin  = m.transform(origin, 1.f);
   }
 
   Ray()

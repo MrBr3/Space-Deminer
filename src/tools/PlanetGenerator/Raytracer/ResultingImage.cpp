@@ -378,7 +378,7 @@ namespace Raytracer
     Vector3 screen_pos;
 
     if(drc>=DRC_WORLD)
-      screen_pos = rp->projection_matrix  * rp->view_matrix * p;
+      screen_pos = (rp->projection_matrix  * rp->view_matrix).transform(p, 1.f);
     else
     {
       screen_pos  = p;

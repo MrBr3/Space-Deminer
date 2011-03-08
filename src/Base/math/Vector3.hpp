@@ -96,6 +96,11 @@ public:
     z = other.z;
   }
 
+  Vector2 get_xy()const
+  {
+    return Vector2(x, y);
+  }
+
   /** @name Add & Subtract
    * */
   //@{

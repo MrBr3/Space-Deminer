@@ -307,9 +307,16 @@ public:
     return Vector4(get_row(1)*b, get_row(2)*b, get_row(3)*b, get_row(4)*b);
   }
 
-  Vector3 operator * (const Vector3& b)const throw()
+  Vector3 transform(const Vector3& b, gfloat w)const throw()
   {
-    return (*this) * Vector4(b);
+    Vector4 v(b, w);
+
+    v = (*this) * v;
+
+    if(v.w!=0.)
+      v /= v.w;
+
+    return v.get_xyz();
   }
 
   Matrix44& operator *= (gfloat n)throw()

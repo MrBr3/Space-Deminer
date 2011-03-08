@@ -115,20 +115,9 @@ public:
     w = other.w;
   }
 
-  operator Vector3()const
-  {
-    return get_xyz();
-  }
-
   Vector3 get_xyz()const
   {
-    if(w==0.f)
-    {
-      //g_warning("**Vector4::operator Vector3** w==0");
-      return Vector3(x, y, z);
-    }
-    gfloat inv_w  = 1.f/w;
-    return Vector3(x*inv_w, y*inv_w, z*inv_w);
+    return Vector3(x, y, z);
   }
 
   /* TODO make to doxygen comment* @name Add & Subtract
@@ -175,14 +164,25 @@ public:
    *
    * \return A reference to the Vector
    * */
-  /*Vector4& operator*=(gfloat a) throw()
+  Vector4& operator*=(gfloat a) throw()
   {
    x  *= a;
    y  *= a;
    z  *= a;
-    w TODO decide what todo here
+   w  *= a;
    return *this;
-  }*/
+  }
+
+  /** \brief Multiplies each component of the Vector with a.
+   *
+   * \param a a real number
+   *
+   * \return A reference to the Vector
+   * */
+  Vector4& operator/=(gfloat a) throw()
+  {
+   return *this *= 1.f/a;;
+  }
 
   /** \brief Calcs the Scalar product of this and the second vector
    *

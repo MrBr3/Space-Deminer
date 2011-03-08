@@ -26,7 +26,7 @@ public:
   Matrix44 transformation;
   Matrix44 inv_transformation;
 
-  Vector3 get_position()const{return transformation.get_column(4);}
+  Vector3 get_position()const{return transformation.get_column(4).get_xyz();}
 
   /** \brief Gets the nearest intersection of a ray in global local space
    * */

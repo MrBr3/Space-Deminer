@@ -237,7 +237,7 @@ void LightLayer::recalc_pos()
   m.set_rotate_z(z_rotation);
   m.rotate_x(x_rotation);
 
-  position = m * Vector3(0.f, distance, 0.f);
+  position = m.transform(Vector3(0.f, distance, 0.f), 1.f);
 
   if(position.get_square_length()>0.1f)
     direction = -position*(1.f/position.get_length());

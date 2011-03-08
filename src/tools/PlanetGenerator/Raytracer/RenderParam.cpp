@@ -140,12 +140,12 @@ namespace Raytracer
 
         for(int i=0; i<8; ++i)
         {
-          tmp[i]  = ring_matrix * (tmp[i]*ring.outer_radius);
+          tmp[i]  = ring_matrix.transform(tmp[i]*ring.outer_radius, 1.f);
           if(camera_plane.check_point(tmp[i])==Math::BACKSIDE)
           {
             culling=false;
           }
-          tmp[i]  = projection_matrix * view_matrix * tmp[i];
+          tmp[i]  = (projection_matrix * view_matrix).transform(tmp[i], 1.f);
           bounding_ngon[i].x  = (tmp[i].x+1.f)*0.5f;
           bounding_ngon[i].y  = (tmp[i].y-1.f)*-0.5f;
           bounding_ngon[i].x *= img_width;
@@ -215,14 +215,14 @@ namespace Raytracer
 
   void RenderParam::get_ray_dir(Vector3& dir, gfloat x, gfloat y)
   {
-    dir = singletonA()->inv_projection_matrix * Vector3(x, y, 0.f);
-    dir = singletonA()->inv_view_matrix * Vector4(dir, 0.f);
+    dir = singletonA()->inv_projection_matrix.transform(Vector3(x, y, 0.f), 1.f);
+    dir = singletonA()->inv_view_matrix.transform(dir, 0.f);
     dir.normalize();
   }
 
   void RenderParam::get_camera_pos(Vector3& pos)
   {
-    pos = singletonA()->inv_view_matrix * Vector3(0.f, 0.f, 0.f);
+    pos = singletonA()->inv_view_matrix.transform(Vector3(0.f, 0.f, 0.f), 1.f);
   }
 
   bool RenderParam::is_something_visible_within(int x, int y, int w, int h)

@@ -25,7 +25,7 @@ namespace Raytracer
   {
     inv_transformation.invert();
 
-    normal  = ring_transformation * Vector4(0.f, 0.f, 1.f, 0.f);
+    normal  = ring_transformation.transform(Vector3(0.f, 0.f, 1.f), 0.f);
     normal.normalize();
     inv_normal  = normal;
     inv_normal  *= -1.f;
