@@ -217,6 +217,7 @@ void register_base_texture_layer();
 #include "CloudTextureLayer.hpp"
 #include "NightTextureLayer.hpp"
 #include "WeightTextureLayer.hpp"
+#include "AtmosphereLayer.hpp"
 
 #include "RingLayer.hpp"
 #include "LightLayer.hpp"

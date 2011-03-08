@@ -23,7 +23,7 @@ namespace Private
 {
   const GLchar** load_shader(const Glib::ustring& filename)
   {
-    const gsize buffer_size = 8192;
+    const gsize buffer_size = 16384;
     static char buffer[buffer_size+1];
     static char* buffer_ptr;
 
@@ -172,6 +172,10 @@ void View3D::init_shaders()
       planet_program_uniform.cloud_gradient.get_uniform_locations(planet_program, "uni_cloud_gradient.");
       planet_program_uniform.uni_circle_gradient_texture = LOCATE_UNIFORM(planet_program, "uni_circle_gradient_texture");
       planet_program_uniform.uni_seeming_circle_radius = LOCATE_UNIFORM(planet_program, "uni_seeming_circle_radius");
+      planet_program_uniform.uni_atmosphere_visible = LOCATE_UNIFORM(planet_program, "uni_atmosphere_visible");
+      planet_program_uniform.uni_inner_atmosphere_gradient.get_uniform_locations(planet_program, "uni_inner_atmosphere_gradient.");
+      planet_program_uniform.uni_inner_atmosphere_gradient_alpha.get_uniform_locations(planet_program, "uni_inner_atmosphere_gradient_alpha.");
+      planet_program_uniform.uni_inner_atmosphere_gradient_additive.get_uniform_locations(planet_program, "uni_inner_atmosphere_gradient_additive.");
       planet_program_uniform.light[0].get_uniform_locations(planet_program, "light[0].");
       planet_program_uniform.light[1].get_uniform_locations(planet_program, "light[1].");
       planet_program_uniform.light[2].get_uniform_locations(planet_program, "light[2].");

@@ -163,7 +163,15 @@ void View3D::on_realize()
     exit(-1);
   }
 
-  init_shaders();
+  try
+  {
+    init_shaders();
+  }catch(BadShader)
+  {
+    Gtk::MessageDialog dlg(_("Couldn't start Shader!"), false, Gtk::MESSAGE_ERROR);
+    dlg.run();
+    exit(-1);
+  }
 
   sphere_mesh.init(view_settings->get_n_sphere_segments());
   ring_mesh.init(view_settings->get_n_ring_segments());
@@ -244,6 +252,9 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   if(!gl_drawable)
     return false;
 
+  if(get_width()<=0 || get_height()<=0)
+    return false;
+
   Matrix44 matrix_PV, matrix_M;
 
   matrix_stack.clear();
@@ -282,10 +293,15 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   Vector3 planet_pos = planet_model_matrix*Vector3(0.f, 0.f, 0.f);
 
   // Calc seeming Circle of th planet
+  {
   Math::Sphere planet_sphere(planet_model_matrix, 1.f);
-  planet_sphere.screen_circle_pixelscreen(seeming_circle.pos, seeming_circle.radius, projection_matrix, view_matrix, 2.f, 2.f);
-  seeming_circle.pos.x -= 1.f;
-  (seeming_circle.pos.y -= 1.f)*=-1.f;
+  gfloat width = get_width();
+  gfloat height = get_height();
+  gfloat r;
+  planet_sphere.screen_circle_pixelscreen(seeming_circle.pos, r, projection_matrix, view_matrix, 2.f*width, 2.f*height);
+  seeming_circle.radius.x = r/width;
+  seeming_circle.radius.y = r/height;
+  }
   //----
 
   matrix_stack.push(false);
@@ -326,8 +342,9 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   glUniform1i(planet_program_uniform.uni_weight_texture_visible, WeightTextureLayer::get_singleton()->get_visible());
   glUniform1i(planet_program_uniform.uni_weight_texture_warped, WeightTextureLayer::get_singleton()->get_imagefile()->get_needs_to_be_warped());
   planet_program_uniform.uni_weight_texture_colorcurves.feed_data(WeightTextureLayer::get_singleton()->get_imagefile()->get_color_curve());
+  glUniform1i(planet_program_uniform.uni_atmosphere_visible, AtmosphereLayer::get_singleton()->get_visible());
 
-  glUniform1f(planet_program_uniform.uni_seeming_circle_radius, seeming_circle.radius);
+  seeming_circle.radius.glUniform2(planet_program_uniform.uni_seeming_circle_radius);
 
   base_texture->bind(0, BaseTextureLayer::get_singleton()->get_visible());
   night_texture->bind(1, NightTextureLayer::get_singleton()->get_visible());
@@ -356,6 +373,9 @@ bool View3D::on_expose_event(GdkEventExpose* event)
   glUniform1i(planet_program_uniform.uni_night_gradient_depends_on_diffuse, NightTextureLayer::get_singleton()->get_diffuse_depending());
 
   planet_program_uniform.cloud_gradient.feed_data(CloudTextureLayer::get_singleton()->get_cloud_gradient());
+  planet_program_uniform.uni_inner_atmosphere_gradient.feed_data(AtmosphereLayer::get_singleton()->get_inner_gradient());
+  planet_program_uniform.uni_inner_atmosphere_gradient_alpha.feed_data(AtmosphereLayer::get_singleton()->get_inner_gradient_alpha());
+  planet_program_uniform.uni_inner_atmosphere_gradient_additive.feed_data(AtmosphereLayer::get_singleton()->get_inner_gradient_additive());
 
   sphere_mesh.render();
 

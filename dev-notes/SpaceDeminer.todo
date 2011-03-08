@@ -157,8 +157,8 @@ PlanetGenerator
           [ ] Textur mit vier Kanälen (alpha invertiert?), wobie jede der vier Texturen für ein eigenes Material steht
             z.B Rot: Wüsten, Grün: ka, schwarz: kein glanzlicht, Blau: Eis, Alpha-Invertiert: Wasser
       [ ] Glanzlichter für Ring? Wie beim durchleuchten?
+      [ ] Möglichkeit, nur Glanzlichter, ohne Diffuse anzeigen zu können (für Gradients)
     [ ] Atmosphären effekt
-      [ ] Farbverlauf soll Material beeinflussen
       [ ] Entfernung, mit der der Strahl an der Kugel vorbeifliegt bestimmen können
       [ ] Atmosphäre soll auch Ringe beeinflussen?
     [ ] Normalmap?

@@ -71,6 +71,8 @@
       <File Name="ColorCurve.hpp"/>
       <File Name="ColorCurve.cpp"/>
       <File Name="ColorCurveAsString.cpp"/>
+      <File Name="AtmosphereLayer.hpp"/>
+      <File Name="AtmosphereLayer.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Both">
       <File Name="Options.cpp"/>

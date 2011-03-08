@@ -208,6 +208,10 @@ public:
     //CurveUniform uni_height_texture_colorcurves;
     CurveUniform uni_cloud_texture_curve;
 
+    GradientUniform uni_inner_atmosphere_gradient, uni_inner_atmosphere_gradient_additive;
+    CurveUniform uni_inner_atmosphere_gradient_alpha;
+    GLint uni_atmosphere_visible;
+
     struct Light
     {
       struct GradientLight
@@ -276,7 +280,7 @@ public:
   GLuint circle_gradient_texture;
   struct SeemingCircle
   {
-    float radius;
+    Vector2 radius;
     Vector2 pos;
   }seeming_circle;
   void init_shaders();

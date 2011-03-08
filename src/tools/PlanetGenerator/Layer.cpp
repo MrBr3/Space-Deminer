@@ -39,8 +39,8 @@ LayerModel::LayerModel()
   register_night_texture_layer();
   register_weight_texture_layer();
   register_cloud_texture_layer();
+  register_atmosphere_layer();
   register_ring_layer();
-  //register_atmosphere_layer();//TODO
   for(gsize i=0; i<N_LIGHT_LAYERS; ++i)
     register_light_layer(i);
 }

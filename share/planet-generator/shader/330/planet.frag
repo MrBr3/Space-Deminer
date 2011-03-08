@@ -27,6 +27,7 @@ uniform bool uni_cloud_texture_visible;
 uniform bool uni_cloud_texture_warped;
 uniform bool uni_weight_texture_visible;
 uniform bool uni_weight_texture_warped;
+uniform bool uni_atmosphere_visible;
 
 uniform sampler1DArray uni_all_curves;
 uniform sampler2D uni_circle_gradient_texture;
@@ -129,6 +130,8 @@ uniform ColorCurve uni_base_texture_colorcurves;
 uniform ColorCurve uni_night_texture_colorcurves;
 uniform Curve uni_cloud_texture_curve;
 uniform ColorCurve uni_weight_texture_colorcurves;
+uniform Gradient uni_inner_atmosphere_gradient, uni_inner_atmosphere_gradient_additive;
+uniform Curve uni_inner_atmosphere_gradient_alpha;
 
 float night_factor = 1.;
 vec4 diffuse_lightning_color = vec4(0., 0., 0., 0.);
@@ -236,11 +239,18 @@ void main()
     
     resulting_color = mix(resulting_color, cloud_color, thickness*cloud_color.w);
   }
-  resulting_color.w = 1.;
 
-  resulting_color.x = distance_to_planet_center;
-  resulting_color.y = resulting_color.x;
-  resulting_color.z = resulting_color.x;
+  if(uni_atmosphere_visible)
+  {
+    vec4 atm_color = GET_GRADIENT_COLOR(uni_inner_atmosphere_gradient, min(1., distance_to_planet_center)) * diffuse_lightning_color;
+    atm_color.w *= GET_CURVE_VALUE(uni_inner_atmosphere_gradient_alpha, max_vec3(diffuse_lightning_color.xyz));
+
+    vec4 atm_additive = GET_GRADIENT_COLOR(uni_inner_atmosphere_gradient_additive, min(1., distance_to_planet_center)) * diffuse_lightning_color;
+
+    resulting_color = mix(resulting_color, atm_color, atm_color.w)+atm_additive;
+  }
+
+  resulting_color.w = 1.;
 }
 
 vec4 query_surface_color()

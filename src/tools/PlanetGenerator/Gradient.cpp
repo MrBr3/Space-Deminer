@@ -294,7 +294,11 @@ void Gradient::update_samples()
     gdouble c3 = curve3->get_value(offset);
     gdouble c4 = curve4->get_value(offset);
     gdouble c_def = 1. - CLAMP(c1+c2+c3+c4, 0., 1.);
-    gdouble c_color_def = defcolor.a*c_def;
+    gdouble c_color_def = c_def;
+
+    if(get_use_alpha())
+      c_color_def*=defcolor.a;
+
     gdouble inv_c = c1+c2+c3+c4+c_def;
     gdouble inv_col_c = c1+c2+c3+c4+c_color_def;
     if(inv_c>0.)
