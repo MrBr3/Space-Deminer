@@ -71,7 +71,7 @@ View3D::View3D() : Gtk::GL::DrawingArea(Gdk::GL::Config::create(Gdk::GL::MODE_DE
   weight_texture  = Texture::create(WeightTextureLayer::get_imagefile());
   ring_texture  = Texture::create(RingLayer::get_imagefile());
 
-  planet_program = ring_program = simple_program = 0;
+  planet_program = ring_program = simple_program = atmosphere_program = 0;
 }
 
 View3D::~View3D()throw()
@@ -85,6 +85,7 @@ void View3D::unbind_all_textures()
   Texture::unbind(2);
   Texture::unbind(3);
   CurveTexture::unbind(/*4*/);
+  Texture::unbind(5);
 }
 
 void View3D::deinit()
@@ -442,14 +443,23 @@ bool View3D::on_expose_event(GdkEventExpose* event)
 
   draw_ring(true, matrix_PV, camera_pos, planet_pos, no_lights);
 
-  if(atmosphere_visible)
+  if(atmosphere_visible && AtmosphereLayer::get_singleton()->get_outer_radius()>1.)
   {
     glUseProgram(atmosphere_program);
+
+    glActiveTexture(GL_TEXTURE0+4);
+    CurveTexture::bind(/*4*/);
+    //glActiveTexture(GL_TEXTURE0+5);
+    //glBindTexture(GL_TEXTURE_2D, circle_gradient_texture);
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     matrix_stack.push(false);
       matrix_stack.top().set_look_at(planet_pos, camera_pos);
       seeming_circle.radius.glUniform2(atmosphere_program_uniform.uni_seeming_circle_radius);
+      glUniform1f(atmosphere_program_uniform.uni_outer_radius, AtmosphereLayer::get_singleton()->get_outer_radius());
+      atmosphere_program_uniform.uni_outer_gradient.feed_data(AtmosphereLayer::get_singleton()->get_outer_gradient());
+      glUniform1i(atmosphere_program_uniform.uni_all_curves, 4);
+//      glUniform1i(atmosphere_program_uniform.uni_circle_gradient_texture, 5);
 
       matrix_M = matrix_stack.top();
 
@@ -457,6 +467,8 @@ bool View3D::on_expose_event(GdkEventExpose* event)
       matrix_M.glUniform(atmosphere_program_uniform.matrix_M);
       atmosphere_mesh.RenderBatch();
     matrix_stack.pop();
+
+    unbind_all_textures();
   }
   glDepthMask(GL_TRUE);
 

@@ -283,6 +283,11 @@ public:
     GLint matrix_PV;
     GLint matrix_M;
     GLint uni_seeming_circle_radius;
+    GLint uni_outer_radius;
+    GLint uni_all_curves;
+    //GLint uni_circle_gradient_texture;
+
+    GradientUniform uni_outer_gradient;
   }atmosphere_program_uniform;
   GLuint planet_program, ring_program, simple_program, atmosphere_program;
   GLuint circle_gradient_texture;

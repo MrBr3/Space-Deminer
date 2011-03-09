@@ -289,9 +289,13 @@ void View3D::init_shaders()
 
       glLinkProgram(atmosphere_program);
 
-      possible_program_error(atmosphere_program, "Simple");
+      possible_program_error(atmosphere_program, "Atmosphere");
 
       atmosphere_program_uniform.uni_seeming_circle_radius = LOCATE_UNIFORM(atmosphere_program, "uni_seeming_circle_radius");
+      atmosphere_program_uniform.uni_outer_radius = LOCATE_UNIFORM(atmosphere_program, "uni_outer_radius");
+      //atmosphere_program_uniform.uni_outer_gradient.get_uniform_locations(atmosphere_program, "uni_outer_gradient.");
+      //atmosphere_program_uniform.uni_all_curves = LOCATE_UNIFORM(atmosphere_program, "uni_all_curves");
+      //atmosphere_program_uniform.uni_circle_gradient_texture = LOCATE_UNIFORM(atmosphere_program, "uni_circle_gradient_texture");
       atmosphere_program_uniform.matrix_PV = LOCATE_UNIFORM(atmosphere_program, "matrix_PV");
       atmosphere_program_uniform.matrix_M  = LOCATE_UNIFORM(atmosphere_program, "matrix_M");
     }
@@ -314,8 +318,10 @@ void View3D::deinit_shaders()
     glDeleteProgram(ring_program);
   if(simple_program)
     glDeleteProgram(simple_program);
+  if(atmosphere_program)
+    glDeleteProgram(atmosphere_program);
 
-  planet_program = ring_program = simple_program = 0;
+  planet_program = ring_program = simple_program = atmosphere_program = 0;
 }
 
 //--------
