@@ -1,5 +1,7 @@
 #version 330 core
 
+#extension GL_EXT_texture_array: enable
+
 struct Gradient
 {
   float slice_id;
@@ -10,6 +12,7 @@ struct Gradient
 
 uniform float uni_outer_radius;
 uniform sampler1DArray uni_all_curves;
+uniform Gradient uni_outer_gradient;
 //uniform sampler2D uni_circle_gradient_texture;
 
 in vec2 rel_pos;
@@ -20,11 +23,11 @@ void main()
 {
   float inv_outer_radius = 1./uni_outer_radius;
   float d = (length(rel_pos)-1.)*1./(uni_outer_radius-1.);
+  //float d = (texture(uni_circle_gradient_texture, abs(rel_pos)*inv_outer_radius).x-inv_outer_radius)/(1.-inv_outer_radius);
 
   if(d>1.)
    discard;
 
 
-  //float d = (texture(uni_circle_gradient_texture, abs(rel_pos)*inv_outer_radius).x-inv_outer_radius)/(1.-inv_outer_radius);
-  resulting_color = vec4(d, d, d, 1.);
+  resulting_color = GET_GRADIENT_COLOR(uni_outer_gradient, d);
 }

@@ -293,8 +293,8 @@ void View3D::init_shaders()
 
       atmosphere_program_uniform.uni_seeming_circle_radius = LOCATE_UNIFORM(atmosphere_program, "uni_seeming_circle_radius");
       atmosphere_program_uniform.uni_outer_radius = LOCATE_UNIFORM(atmosphere_program, "uni_outer_radius");
-      //atmosphere_program_uniform.uni_outer_gradient.get_uniform_locations(atmosphere_program, "uni_outer_gradient.");
-      //atmosphere_program_uniform.uni_all_curves = LOCATE_UNIFORM(atmosphere_program, "uni_all_curves");
+      atmosphere_program_uniform.uni_outer_gradient.get_uniform_locations(atmosphere_program, "uni_outer_gradient.");
+      atmosphere_program_uniform.uni_all_curves = LOCATE_UNIFORM(atmosphere_program, "uni_all_curves");
       //atmosphere_program_uniform.uni_circle_gradient_texture = LOCATE_UNIFORM(atmosphere_program, "uni_circle_gradient_texture");
       atmosphere_program_uniform.matrix_PV = LOCATE_UNIFORM(atmosphere_program, "matrix_PV");
       atmosphere_program_uniform.matrix_M  = LOCATE_UNIFORM(atmosphere_program, "matrix_M");

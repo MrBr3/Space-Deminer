@@ -453,6 +453,8 @@ bool View3D::on_expose_event(GdkEventExpose* event)
     //glBindTexture(GL_TEXTURE_2D, circle_gradient_texture);
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+    glEnable(GL_CULL_FACE);
     matrix_stack.push(false);
       matrix_stack.top().set_look_at(planet_pos, camera_pos);
       seeming_circle.radius.glUniform2(atmosphere_program_uniform.uni_seeming_circle_radius);
