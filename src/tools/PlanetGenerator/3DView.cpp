@@ -438,6 +438,8 @@ bool View3D::on_expose_event(GdkEventExpose* event)
     glDisableVertexAttribArray(1);
   }
 
+  glDepthMask(GL_FALSE);
+
   draw_ring(true, matrix_PV, camera_pos, planet_pos, no_lights);
 
   if(atmosphere_visible)
@@ -445,10 +447,9 @@ bool View3D::on_expose_event(GdkEventExpose* event)
     glUseProgram(atmosphere_program);
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
     matrix_stack.push(false);
       matrix_stack.top().set_look_at(planet_pos, camera_pos);
-      matrix_stack.top().scale(AtmosphereLayer::get_singleton()->get_outer_radius());
+      seeming_circle.radius.glUniform2(atmosphere_program_uniform.uni_seeming_circle_radius);
 
       matrix_M = matrix_stack.top();
 
@@ -457,6 +458,7 @@ bool View3D::on_expose_event(GdkEventExpose* event)
       atmosphere_mesh.RenderBatch();
     matrix_stack.pop();
   }
+  glDepthMask(GL_TRUE);
 
   draw_ring(false, matrix_PV, camera_pos, planet_pos, no_lights);
 
@@ -494,7 +496,6 @@ void View3D::draw_ring(bool back, Matrix44& matrix_PV, const Vector3& camera_pos
     Vector3 planet2camera_dir;
 
     glUniform1i(ring_program_uniform.uni_part_behind_atmosphere, back);
-    planet_pos.glUniform4(ring_program_uniform.uni_planet_pos, 1.f);
     planet2camera_dir = camera_pos-planet_pos;
     planet2camera_dir.glUniform4(ring_program_uniform.uni_planet2camera_dir, 0.f);
 

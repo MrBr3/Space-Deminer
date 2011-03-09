@@ -253,7 +253,7 @@ public:
     GLint uni_ring_normal;
     GLint uni_ring_translucency;
     GLint uni_part_behind_atmosphere;
-    GLint uni_planet_pos, uni_planet2camera_dir;
+    GLint uni_planet2camera_dir;
 
     ColorCurveUniform uni_ring_texture_colorcurves;
 
@@ -282,6 +282,7 @@ public:
   {
     GLint matrix_PV;
     GLint matrix_M;
+    GLint uni_seeming_circle_radius;
   }atmosphere_program_uniform;
   GLuint planet_program, ring_program, simple_program, atmosphere_program;
   GLuint circle_gradient_texture;
