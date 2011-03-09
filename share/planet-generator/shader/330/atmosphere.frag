@@ -21,13 +21,12 @@ out vec4 resulting_color;
 
 void main()
 {
+  if(rel_pos.x*rel_pos.x+rel_pos.y*rel_pos.y > uni_outer_radius*uni_outer_radius)
+   discard;
+
   float inv_outer_radius = 1./uni_outer_radius;
   float d = (length(rel_pos)-1.)*1./(uni_outer_radius-1.);
   //float d = (texture(uni_circle_gradient_texture, abs(rel_pos)*inv_outer_radius).x-inv_outer_radius)/(1.-inv_outer_radius);
-
-  if(d>1.)
-   discard;
-
 
   resulting_color = GET_GRADIENT_COLOR(uni_outer_gradient, d);
 }
